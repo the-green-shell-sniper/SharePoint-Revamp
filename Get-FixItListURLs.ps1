@@ -18,6 +18,7 @@
       - Other folder: one row per breaking embedded URL in non-document content.
 #>
 
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost', '', Justification = 'Interactive script intentionally writes status and prompts to the host.')]
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
@@ -99,6 +100,7 @@ function Connect-ValidatedPnP {
                 }
             }
             catch {
+                Write-Verbose "Could not update CSOM request timeout on the current connection."
             }
 
             if ($AdminConnection) {
@@ -153,10 +155,13 @@ function Invoke-WithRetry {
 }
 
 function New-DirectoryIfMissing {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([Parameter(Mandatory = $true)][string]$Path)
 
     if (-not (Test-Path -Path $Path)) {
-        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+        if ($PSCmdlet.ShouldProcess($Path, 'Create directory')) {
+            New-Item -ItemType Directory -Path $Path -Force | Out-Null
+        }
     }
 }
 
@@ -217,10 +222,11 @@ function Get-CleanedValue {
     return $decoded.Trim().TrimEnd("'", '"', ':', ',', ')', ']', '}', '.', ';')
 }
 
-function Get-OfficeDocReferences {
+function Get-OfficeDocReference {
     param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
 
     $found = New-Object System.Collections.Generic.List[Object]
+    $relationsByXml = @{}
     $archive = [System.IO.Compression.ZipArchive]::new($Stream, [System.IO.Compression.ZipArchiveMode]::Read)
     try {
         foreach ($entry in $archive.Entries) {
@@ -233,13 +239,20 @@ function Get-OfficeDocReferences {
 
                 try {
                     [xml]$xml = $xmlText
+                    $xmlPath = $entry.FullName -replace '/_rels/([^/]+)\.rels$', '/$1'
+                    $relationMap = @{}
                     foreach ($rel in $xml.Relationships.Relationship) {
                         if ($rel.TargetMode -eq "External" -and $rel.Target) {
-                            $found.Add([PSCustomObject]@{ Value = $rel.Target; Confidence = "High"; Kind = "hyperlink" })
+                            $relationMap[$rel.Id] = $rel.Target
                         }
+                    }
+
+                    if ($relationMap.Count -gt 0) {
+                        $relationsByXml[$xmlPath] = $relationMap
                     }
                 }
                 catch {
+                    Write-Verbose "Could not parse relationship XML in $($entry.FullName)."
                 }
             }
             elseif ($entry.FullName -match '\.xml$' -and
@@ -251,9 +264,33 @@ function Get-OfficeDocReferences {
                 $r.Close()
                 $s.Close()
 
+                if ($relationsByXml.ContainsKey($entry.FullName)) {
+                    try {
+                        [xml]$xml = $text
+                        $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+                        $ns.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+                        $ns.AddNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+
+                        foreach ($hyperlink in $xml.SelectNodes('//w:hyperlink[@r:id]', $ns)) {
+                            $relId = $hyperlink.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+                            if ($relationsByXml[$entry.FullName].ContainsKey($relId)) {
+                                $displayText = ([regex]::Replace($hyperlink.OuterXml, '<[^>]+>', ' ')).Trim()
+                                if ([string]::IsNullOrWhiteSpace($displayText)) {
+                                    $displayText = $relationsByXml[$entry.FullName][$relId]
+                                }
+
+                                $found.Add([PSCustomObject]@{ Value = $relationsByXml[$entry.FullName][$relId]; Text = $displayText; Confidence = "High"; Kind = "hyperlink" })
+                            }
+                        }
+                    }
+                    catch {
+                        Write-Verbose "Could not parse hyperlink display text in $($entry.FullName)."
+                    }
+                }
+
                 $plain = [regex]::Replace($text, '<[^>]+>', ' ')
                 foreach ($m in [regex]::Matches($plain, 'https?://[^\s"<>]+')) {
-                    $found.Add([PSCustomObject]@{ Value = $m.Value; Confidence = "Medium"; Kind = "plaintext" })
+                    $found.Add([PSCustomObject]@{ Value = $m.Value; Text = $m.Value; Confidence = "Medium"; Kind = "plaintext" })
                 }
             }
         }
@@ -262,10 +299,10 @@ function Get-OfficeDocReferences {
         $archive.Dispose()
     }
 
-    return $found | Sort-Object Value, Kind -Unique
+    return $found | Sort-Object Value, Kind, Text -Unique
 }
 
-function Get-PdfReferences {
+function Get-PdfReference {
     param([Parameter(Mandatory = $true)][byte[]]$Bytes)
 
     $found = New-Object System.Collections.Generic.List[Object]
@@ -276,10 +313,10 @@ function Get-PdfReferences {
         if ($hostMatch.Success -and ($PdfNoiseHosts -contains $hostMatch.Groups[1].Value.ToLower())) {
             continue
         }
-        $found.Add([PSCustomObject]@{ Value = $m.Value; Confidence = "Low"; Kind = "plaintext-pdf" })
+        $found.Add([PSCustomObject]@{ Value = $m.Value; Text = $m.Value; Confidence = "Low"; Kind = "plaintext-pdf" })
     }
 
-    return $found | Sort-Object Value, Kind -Unique
+    return $found | Sort-Object Value, Kind, Text -Unique
 }
 
 function Get-UrlMappingMatch {
@@ -338,7 +375,7 @@ function Get-UrlMappingMatch {
     return $null
 }
 
-function Get-RoleAssignmentsTopLevel {
+function Get-RoleAssignmentTopLevel {
     param(
         [Parameter(Mandatory = $true)]$Securable,
         [Parameter(Mandatory = $true)][string]$CacheKey,
@@ -351,6 +388,7 @@ function Get-RoleAssignmentsTopLevel {
 
     $entries = New-Object System.Collections.Generic.List[string]
     $assignments = $null
+    $null = $Securable
     try {
         $assignments = Invoke-WithRetry -Label "Get role assignments" -MaxAttempts 4 -Operation {
             Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
@@ -413,7 +451,7 @@ function Get-RoleAssignmentsTopLevel {
     return $result
 }
 
-function Get-EffectiveTopLevelPermissions {
+function Get-EffectiveTopLevelPermission {
     param(
         [Parameter(Mandatory = $true)]$Item,
         [Parameter(Mandatory = $true)]$List,
@@ -428,23 +466,25 @@ function Get-EffectiveTopLevelPermissions {
         $itemUnique = [bool](Get-PnPProperty -ClientObject $Item -Property HasUniqueRoleAssignments)
     }
     catch {
+        Write-Verbose "Could not determine item-level unique permissions for item $($Item.Id)."
     }
 
     try {
         $listUnique = [bool](Get-PnPProperty -ClientObject $List -Property HasUniqueRoleAssignments)
     }
     catch {
+        Write-Verbose "Could not determine list-level unique permissions for list $($List.Title)."
     }
 
     if ($itemUnique) {
-        return Get-RoleAssignmentsTopLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache
+        return Get-RoleAssignmentTopLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache
     }
 
     if ($listUnique) {
-        return Get-RoleAssignmentsTopLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache
+        return Get-RoleAssignmentTopLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache
     }
 
-    return Get-RoleAssignmentsTopLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache
+    return Get-RoleAssignmentTopLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache
 }
 
 function Test-IsExternalBrokenUrl {
@@ -548,6 +588,7 @@ function Get-FolderDisplayName {
         }
     }
     catch {
+        Write-Verbose "Could not resolve folder display name for $FolderPath in list $($List.Title)."
     }
 
     $Cache[$cacheKey] = $fallback
@@ -797,7 +838,13 @@ $urlMappingsForMatch = @($urlMappings | Sort-Object { $_.OldBaseUrl.Length } -De
 
 $scanOther = Get-BooleanPrompt -Message "After documents, scan additional content (site pages/list text fields) to a separate CSV?" -DefaultYes $false
 
-$scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
+$scanDocumentContent = $false
+if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
+    $scanDocumentContent = [bool]$EnableDocumentContentScan
+}
+else {
+    $scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
+}
 
 $runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $docReportPath = Join-Path -Path $DocumentsOutputFolder -ChildPath ("Documents-BreakingUrls-" + $runStamp + ".csv")
@@ -879,7 +926,7 @@ foreach ($site in $scanSiteCollections) {
 
         $web = $null
         try {
-            $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+            $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
         }
         catch {
             Write-Warning "  Could not read web metadata for $webUrl"
@@ -906,7 +953,7 @@ foreach ($site in $scanSiteCollections) {
             if ($libraryCounterInWeb % 5 -eq 0) {
                 try {
                     $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
                 }
                 catch {
                     Write-Warning "    Could not refresh web connection; continuing with current connection."
@@ -918,16 +965,23 @@ foreach ($site in $scanSiteCollections) {
 
             $libraryRootPath = $list.RootFolder.ServerRelativeUrl.TrimEnd('/')
 
-            $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Author', 'Editor', 'ID')
+            $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Author', 'Editor', 'Modified', 'ID')
             $items = $null
+            $retryState = @{
+                WebConn = $webConn
+                Web = $web
+            }
 
             try {
                 $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                    $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                    $retryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    $retryState.Web = Get-PnPWeb -Connection $retryState.WebConn -Includes Id, Url, Title
                 } -Operation {
-                    Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
+                    Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
                 }
+
+                $webConn = $retryState.WebConn
+                $web = $retryState.Web
             }
             catch {
                 Write-Warning "    Could not read items for library $($list.Title): $($_.Exception.Message)"
@@ -969,7 +1023,7 @@ foreach ($site in $scanSiteCollections) {
 
                 $topLevelPermissions = ''
                 try {
-                    $topLevelPermissions = Get-EffectiveTopLevelPermissions -Item $item -List $list -Web $web -Cache $permissionCache
+                    $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $item -List $list -Web $web -Cache $permissionCache
                 }
                 catch {
                     $topLevelPermissions = "(could not read permissions: $($_.Exception.Message))"
@@ -977,18 +1031,22 @@ foreach ($site in $scanSiteCollections) {
 
                 $refs = @()
                 try {
+                    $fileRetryState = @{ WebConn = $webConn; Web = $web }
                     $ms = Invoke-WithRetry -Label ("Get file stream: " + $fileRef) -MaxAttempts 4 -OnTimeout {
-                        $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                        $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                        $fileRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $fileRetryState.Web = Get-PnPWeb -Connection $fileRetryState.WebConn -Includes Id, Url, Title
                     } -Operation {
-                        Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $webConn
+                        Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $fileRetryState.WebConn
                     }
 
+                    $webConn = $fileRetryState.WebConn
+                    $web = $fileRetryState.Web
+
                     if ($ext -eq '.pdf') {
-                        $refs = Get-PdfReferences -Bytes $ms.ToArray()
+                        $refs = Get-PdfReference -Bytes $ms.ToArray()
                     }
                     else {
-                        $refs = Get-OfficeDocReferences -Stream $ms
+                        $refs = Get-OfficeDocReference -Stream $ms
                     }
                 }
                 catch {
@@ -1003,20 +1061,26 @@ foreach ($site in $scanSiteCollections) {
                         continue
                     }
 
-                    $oldUrlValue = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
+                    $siteTitle = if ([string]::IsNullOrWhiteSpace($web.Title)) { $webUrl } else { $web.Title }
+                    $modifiedValue = $item.FieldValues['Modified']
+                    $modifiedText = if ($modifiedValue -is [datetime]) { $modifiedValue.ToString('o') } elseif ($modifiedValue) { [string]$modifiedValue } else { '' }
+                    $brokenEmbeddedUrl = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
+                    $brokenUrlText = if (-not [string]::IsNullOrWhiteSpace([string]$ref.Text)) { [string]$ref.Text } else { $cleanEmbedded }
                     $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
 
-                    $row = [PSCustomObject]@{
-                        'Document URL' = $docUrl
-                        'Document Folder URL' = $folderUrl
-                        'Document Folder Name' = $folderName
-                        'Document File Name' = $fileLeaf
-                        'Document Owner(s)' = $createdBy
-                        'Last Modified' = $lastModifiedBy
+                    $row = [PSCustomObject][ordered]@{
+                        'Site Title' = $siteTitle
+                        'URL' = $docUrl
+                        'Folder URL' = $folderUrl
+                        'Folder' = $folderName
+                        'File Name' = $fileLeaf
+                        'Created By' = $createdBy
+                        'Last Modified By' = $lastModifiedBy
+                        'Last Modified Date' = $modifiedText
                         'Permissions' = $topLevelPermissions
+                        'Broken Embedded URL' = $brokenEmbeddedUrl
+                        'Broken URL Text' = $brokenUrlText
                         'New URL' = $newUrlValue
-                        'Site Collection Containing Document' = $siteUrl
-                        'Web Containing Document' = $webUrl
                     }
 
                     Write-DocumentFinding -OutputPath $docReportPath -Row $row
@@ -1050,7 +1114,7 @@ if ($scanOther) {
 
         $webUrls = New-Object System.Collections.Generic.List[string]
         try {
-            $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url
+            $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url, Title
             $webUrls.Add($rootWeb.Url)
             $subs = Get-PnPSubWeb -Connection $siteConn -Recurse -Includes Url
             foreach ($s in $subs) { $webUrls.Add($s.Url) }
@@ -1064,6 +1128,14 @@ if ($scanOther) {
             $webConn = $null
             try {
                 $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+            }
+            catch {
+                continue
+            }
+
+            $web = $null
+            try {
+                $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
             }
             catch {
                 continue
@@ -1089,6 +1161,7 @@ if ($scanOther) {
                         $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
                     }
                     catch {
+                        Write-Verbose "Could not refresh non-document scan web connection for $webUrl; continuing with current connection."
                     }
                 }
 
@@ -1110,11 +1183,14 @@ if ($scanOther) {
 
                 $items = $null
                 try {
+                    $otherRetryState = @{ WebConn = $webConn }
                     $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                        $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $otherRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
                     } -Operation {
-                        Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 200
+                        Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
                     }
+
+                    $webConn = $otherRetryState.WebConn
                 }
                 catch {
                     continue
@@ -1124,13 +1200,22 @@ if ($scanOther) {
                     $itemId = $item.Id
                     $itemTitle = [string]$item.FieldValues['Title']
 
-                    $itemUrl = ''
-                    if ($item.FieldValues.ContainsKey('FileRef') -and $item.FieldValues['FileRef']) {
-                        $itemUrl = $siteTenantBase + [string]$item.FieldValues['FileRef']
+                    $location = $list.Title
+                    if ($item.FieldValues.ContainsKey('FileDirRef') -and $item.FieldValues['FileDirRef']) {
+                        try {
+                            $location = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -Cache $folderNameCache
+                        }
+                        catch {
+                            $location = $list.Title
+                        }
                     }
-                    elseif ($list.DefaultDisplayFormUrl) {
-                        $itemUrl = $siteTenantBase + $list.DefaultDisplayFormUrl + "?ID=$itemId"
+
+                    $contentType = [string]$item.FieldValues['ContentType']
+                    if ([string]::IsNullOrWhiteSpace($contentType)) {
+                        $contentType = if ($list.BaseTemplate -eq 119) { 'Page' } else { 'List Item' }
                     }
+
+                    $siteTitle = if ([string]::IsNullOrWhiteSpace($web.Title)) { $webUrl } else { $web.Title }
 
                     foreach ($field in $textFields) {
                         $raw = $item.FieldValues[$field.InternalName]
@@ -1159,20 +1244,16 @@ if ($scanOther) {
                                     continue
                                 }
 
-                                $cleanEmbedded = Get-CleanedValue -Value $url
-                                $oldUrlValue = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
                                 $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
 
-                                $row = [PSCustomObject]@{
-                                    'Content Type' = 'ListOrPageItem'
-                                    'Site Collection' = $siteUrl
-                                    'Web URL' = $webUrl
-                                    'List Title' = $list.Title
-                                    'Item ID' = $itemId
+                                $row = [PSCustomObject][ordered]@{
+                                    'Site Title' = $siteTitle
+                                    'Content Type' = $contentType
+                                    'Location' = $location
                                     'Item Title' = $itemTitle
-                                    'Item URL' = $itemUrl
+                                    'URL' = $url
                                     'Field Name' = $field.InternalName
-                                    'Old URL' = $oldUrlValue
+                                    'Item ID' = $itemId
                                     'New URL' = $newUrlValue
                                 }
 
