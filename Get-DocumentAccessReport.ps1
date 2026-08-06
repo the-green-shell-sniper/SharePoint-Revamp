@@ -1,133 +1,50 @@
 <#
 .SYNOPSIS
-    Per-document pre-migration report for a single site being promoted out of
-    the classic subsite tree: every document's current URL, its future URL
-    after promotion, owner (Created By), last modified date/person, which AD
-    groups and SharePoint groups have access, who it has been directly shared
-    with, and the exact embedded URLs that need fixing.
+    Tenant-wide link-risk audit for site migration planning.
 
 .DESCRIPTION
-    Run with no arguments to pick the site interactively from a numbered menu
-    of the 37 subsites in plan/WHA_Subsite_Migration_Worksheet_v2.xlsx (a
-    static list - no root-site enumeration, no extra sign-in; paste a full URL
-    at the prompt for anything not listed). The promotion target defaults to
-    /sites/<site name> (press Enter to accept, or type a different path), and
-    the output CSVs are named after the site (e.g. hr-document-access.csv).
-    All of this can also be supplied explicitly via -SiteUrl / -TargetSitePath
-    / -*OutputPath for scripted runs.
+    This script:
+      1) Verifies required modules and installs missing modules.
+      2) Verifies connection/access to the SharePoint admin endpoint every run.
+      3) Uses cached PnP sign-in (PersistLogin) after first successful auth.
+      4) Enumerates SharePoint site collections (no OneDrive personal sites).
+      5) Lets the operator pick one site collection/Teams-connected site scope.
+      6) Prompts for the old URL base and new URL base.
+      7) Scans documents tenant-wide for embedded URLs that will break.
+      8) Optionally scans additional list/page content into a separate CSV.
 
-    Scans the chosen site and its subwebs. Produces two CSVs joined by
-    DocumentUrl:
-
-      1. Access report (one row per document, every file type):
-         Site, Library, DocumentUrl (canonical), DocumentBrowserUrl (the
-         address-bar form with /:w:/r/ viewer prefix and ?d=<guid> redirect
-         parameter), FutureDocumentUrl, FolderName (the library's DISPLAY
-         title - which can differ from the URL segment - plus subfolder path),
-         FolderUrl (classic Forms/AllItems.aspx?CID=<list guid> view URL),
-         FileName, Owner/Created/Modified/LastModifiedBy, PermissionMode
-         (Inherited-from-site / Inherited-from-library / Unique),
-         ADGroupsWithAccess, SharePointGroupsWithAccess (expanded one level so
-         AD groups nested inside SP groups are surfaced), DirectUserAccess,
-         SharingLinks (link kind + named recipients), SharedWithUsers,
-         ScannedForLinks, BrokenLinkCount.
-
-      2. Links report (one row per EMBEDDED URL per document - every URL
-         found, verbatim, even benign external ones):
-         DocumentUrl, FutureDocumentUrl, ReferenceKind, Confidence, RiskType
-         (Absolute-Internal / Server-Relative / Modern-Site-Reference, plus
-         already-broken-today categories Local-File-Link and
-         Legacy-Intranet-Host; "None" for links that won't break), EmbeddedUrl (exactly as stored
-         in the document), CleanedUrl (HTML-decoded/trimmed, used for
-         classification), SuggestedReplacement - filled in automatically when
-         a risky link points at content inside this same site (rewrite to the
-         /sites/ path); left blank when it points at another classic site
-         whose target address isn't decided yet.
-
-    Scope decisions (agreed 2026-07-30):
-      - Documents only. Pages, navigation, and list columns are covered by the
-        tenant-wide Find-DocumentLinkRisks.ps1 scan and are not repeated here.
-      - AD groups are reported by NAME only; membership expansion is done
-        on-prem with Get-ADGroupMember, not via Graph.
-      - Permissions: most documents inherit from the library/site, so their
-        access columns repeat the site-level answer with PermissionMode noting
-        the inheritance. Documents with broken inheritance get their own
-        item-level breakdown - that is where individual sharing lives (modern
-        sharing links appear as SharingLinks.* role assignments whose group
-        membership holds the named recipients).
-
-    Same caveats as the original scanner: legacy .doc/.xls/.ppt are not parsed
-    for links (flagged ScannedForLinks=No-legacy); PDFs only surface absolute
-    http(s) URLs, not server-relative paths. Results append to the CSVs as
-    found, so a crash partway through keeps prior progress.
-
-.PARAMETER RootUrl
-    Root site collection URL, prefixed onto menu picks when -SiteUrl is not
-    supplied. Default https://whallc.sharepoint.com
-
-.PARAMETER SiteUrl
-    The classic site being promoted. Omit to pick from an interactive menu.
-
-.PARAMETER TargetSitePath
-    Server-relative path the site will live at after promotion. Omit to be
-    prompted, defaulting to /sites/<site name>.
-
-.PARAMETER ClientId
-    Entra ID App Registration Client ID for interactive sign-in.
-
-.PARAMETER AccessOutputPath
-    Per-document access CSV. Default .\<site name>-document-access.csv
-
-.PARAMETER LinksOutputPath
-    Per-link fix CSV. Default .\<site name>-links-to-fix.csv
-
-.EXAMPLE
-    # Interactive: pick the site from a menu, accept the derived target path
-    .\Get-DocumentAccessReport.ps1 -ClientId "..."
-
-.EXAMPLE
-    # Scripted: everything explicit, no prompts
-    .\Get-DocumentAccessReport.ps1 -SiteUrl "https://whallc.sharepoint.com/HR" -TargetSitePath "/sites/HR" -ClientId "..."
+    Output is written to timestamped CSV files:
+      - Documents folder: one row per breaking embedded URL in documents.
+      - Other folder: one row per breaking embedded URL in non-document content.
 #>
 
+[CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
     [string]$RootUrl = "https://whallc.sharepoint.com",
 
     [Parameter(Mandatory = $false)]
-    [string]$SiteUrl,
-
-    [Parameter(Mandatory = $false)]
-    [string]$TargetSitePath,
+    [string]$AdminUrl = "https://whallc-admin.sharepoint.com",
 
     [Parameter(Mandatory = $false)]
     [string]$ClientId,
 
     [Parameter(Mandatory = $false)]
-    [string]$AccessOutputPath,
+    [switch]$EnableDocumentContentScan,
 
     [Parameter(Mandatory = $false)]
-    [string]$LinksOutputPath
+    [string]$DocumentsOutputFolder = "P:\IT\Private\zzBPosey\whaitapp09\SharePoint-Revamp\FixItList-Audits\Documents",
+
+    [Parameter(Mandatory = $false)]
+    [string]$OtherOutputFolder = "P:\IT\Private\zzBPosey\whaitapp09\SharePoint-Revamp\FixItList-Audits\Other"
 )
 
 $ErrorActionPreference = "Stop"
-$RootUrl = $RootUrl.TrimEnd('/')
 
 $SupportedExtensions = @('.docx', '.xlsx', '.pptx', '.pdf')
 $LegacyExtensions = @('.doc', '.xls', '.ppt')
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
 
-if (-not (Get-Module -ListAvailable -Name PnP.PowerShell)) {
-    Write-Host "PnP.PowerShell module not found - installing for current user..."
-    Install-Module -Name PnP.PowerShell -Scope CurrentUser -Force -AllowClobber
-}
-Import-Module PnP.PowerShell
-
-# --- URL construction helpers ------------------------------------------------
-
-# Office web-viewer prefix per extension: /:w:/r/... for Word, :x: Excel,
-# :p: PowerPoint, :b: PDF. Same letter is reused in the ?d=<letter><guid>
-# redirect parameter SharePoint shows in the address bar.
 $DocLinkPrefixByExt = @{
     '.docx' = 'w'; '.doc' = 'w'
     '.xlsx' = 'x'; '.xls' = 'x'
@@ -135,155 +52,130 @@ $DocLinkPrefixByExt = @{
     '.pdf'  = 'b'
 }
 
-function Get-EncodedServerRelativePath {
-    param([string]$Path)
-    (($Path -split '/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+$PdfNoiseHosts = @(
+    'ns.adobe.com', 'www.w3.org', 'w3.org', 'purl.org',
+    'www.iec.ch', 'iec.ch', 'www.color.org', 'www.npes.org', 'www.aiim.org'
+)
+
+function Install-RequiredModule {
+    param([Parameter(Mandatory = $true)][string]$Name)
+
+    if (-not (Get-Module -ListAvailable -Name $Name)) {
+        Write-Host "Module $Name was not found. Installing for current user..."
+        Install-Module -Name $Name -Scope CurrentUser -Force -AllowClobber
+    }
+
+    Import-Module $Name -ErrorAction Stop
 }
 
-function Get-BrowserUrl {
-    # The URL as it appears when a user navigates to the document:
-    # https://host/:w:/r/<path>.docx?d=w<uniqueid>&csf=1&web=1
-    # (the per-share "e=" token is deliberately omitted - it's minted per
-    # sharing action, not derivable, and the link resolves without it).
-    # Non-Office/PDF types have no viewer form; they get the canonical URL.
-    param([string]$FileRef, [string]$Ext, $UniqueId)
+function Connect-ValidatedPnP {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $false)][switch]$AdminConnection
+    )
+
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        try {
+            Write-Host "Connecting to $Url (attempt $attempt of 3)..."
+
+            $connectParams = @{
+                Url         = $Url
+                Interactive = $true
+                PersistLogin = $true
+                ReturnConnection = $true
+            }
+            if ($ClientId) {
+                $connectParams.ClientId = $ClientId
+            }
+
+            $conn = Connect-PnPOnline @connectParams
+
+            if ($AdminConnection) {
+                Get-PnPTenantSite -Connection $conn -Detailed | Select-Object -First 1 | Out-Null
+            }
+            else {
+                Get-PnPWeb -Connection $conn -Includes Url | Out-Null
+            }
+
+            return $conn
+        }
+        catch {
+            Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $_.Exception.Message)
+            if ($attempt -eq 3) {
+                throw "Unable to establish a validated connection to $Url after 3 attempts."
+            }
+        }
+    }
+}
+
+function New-DirectoryIfMissing {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    if (-not (Test-Path -Path $Path)) {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    }
+}
+
+function Get-TimestampedReportPath {
+    param(
+        [Parameter(Mandatory = $true)][string]$Folder,
+        [Parameter(Mandatory = $true)][string]$Prefix
+    )
+
+    $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+    return Join-Path -Path $Folder -ChildPath "$Prefix-$stamp.csv"
+}
+
+function Get-EncodedServerRelativePath {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    return (($Path -split '/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+}
+
+function Get-DocumentBrowserUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$TenantBase,
+        [Parameter(Mandatory = $true)][string]$FileRef,
+        [Parameter(Mandatory = $true)][string]$Extension,
+        [Parameter(Mandatory = $false)]$UniqueId
+    )
+
     $encPath = Get-EncodedServerRelativePath -Path $FileRef
-    $prefix = $DocLinkPrefixByExt[$Ext]
-    if (-not $prefix -or -not $UniqueId) { return $TenantBase + $encPath }
+    $prefix = $DocLinkPrefixByExt[$Extension]
+    if (-not $prefix -or -not $UniqueId) {
+        return $TenantBase + $encPath
+    }
+
     $guid = ([Guid]$UniqueId).ToString('N')
     return "$TenantBase/:${prefix}:/r$encPath" + "?d=$prefix$guid&csf=1&web=1"
 }
 
-function Get-FolderInfo {
-    # Folder NAME is the library's display Title (which can diverge from the
-    # URL segment), plus any subfolder path. Folder URL is the classic library
-    # view: <libraryRoot>/Forms/AllItems.aspx?CID=<list guid>, plus RootFolder
-    # when the document sits in a subfolder.
-    param([string]$FileDirRef, $List, [string]$LibraryRootPath)
+function Get-FolderBrowserUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$TenantBase,
+        [Parameter(Mandatory = $true)][string]$LibraryRootPath,
+        [Parameter(Mandatory = $true)][Guid]$ListId,
+        [Parameter(Mandatory = $true)][string]$FileDirRef
+    )
 
-    $sub = ""
-    if ($FileDirRef.Length -gt $LibraryRootPath.Length) {
-        $sub = $FileDirRef.Substring($LibraryRootPath.Length).Trim('/')
-    }
-    $name = if ($sub) { "$($List.Title) / $($sub -replace '/', ' / ')" } else { $List.Title }
-
-    $url = $TenantBase + (Get-EncodedServerRelativePath -Path "$LibraryRootPath/Forms/AllItems.aspx") + "?CID=$($List.Id.ToString().ToLower())"
-    if ($sub) { $url += "&RootFolder=" + [Uri]::EscapeDataString($FileDirRef) }
-
-    return [PSCustomObject]@{ Name = $name; Url = $url }
-}
-
-# --- URL rewrite helpers -----------------------------------------------------
-
-function Get-FutureUrl {
-    param([string]$ServerRelativeFileRef)
-    # /clinicians/Shared Documents/x.docx -> https://host/sites/clinicians/Shared Documents/x.docx
-    if ($ServerRelativeFileRef -and $ServerRelativeFileRef.ToLower().StartsWith($SourceSitePath.ToLower())) {
-        return $TenantBase + $TargetSitePath + $ServerRelativeFileRef.Substring($SourceSitePath.Length)
-    }
-    return ""
-}
-
-# Old on-prem SharePoint hostnames whose path structure matches the tenant
-# (http://centralpark/Clinicians/... = whallc.sharepoint.com/Clinicians/...).
-# Links to these hosts are already dead; treat their paths as tenant paths so
-# ones pointing into the scanned site get a rewrite suggestion.
-$LegacyHostnames = @('centralpark')
-
-function Get-SuggestedReplacement {
-    param([string]$Value)
-    # Only links pointing INTO this site get an automatic rewrite; links to
-    # other classic sites stay blank until their target names are decided.
-    foreach ($h in $LegacyHostnames) {
-        if ($Value -match "^(?i)https?://$([regex]::Escape($h))(?=[/:?#]|$)") {
-            $Value = $TenantBase + ($Value -replace "^(?i)https?://$([regex]::Escape($h))", '')
-            break
-        }
-    }
-    # Matches plain URLs AND the Office viewer form https://host/:w:/r/<path>
-    # (everything after /r is an ordinary server-relative path). Viewer links
-    # that locate the file by GUID (Doc.aspx?sourcedoc={...}, ?d=...) keep
-    # their GUID in the rewrite - those only stay valid if the migration
-    # preserves document UniqueIds (ShareGate does by default for documents).
-    $pattern = '^(?i)' + [regex]::Escape($TenantBase) + '(/:[a-z]:/[rtu])?' + [regex]::Escape($SourceSitePath) + '(?=$|[/?#])'
-    $m = [regex]::Match($Value, $pattern)
-    if ($m.Success) {
-        return $TenantBase + $m.Groups[1].Value + $TargetSitePath + $Value.Substring($m.Length)
-    }
-    if ($Value.ToLower().StartsWith($SourceSitePath.ToLower())) {
-        $rest = $Value.Substring($SourceSitePath.Length)
-        if ($rest -eq "" -or $rest[0] -in '/', '?', '#') {
-            return $TargetSitePath + $rest
-        }
-    }
-    return ""
-}
-
-# --- link-risk helpers (same classification as Find-DocumentLinkRisks.ps1) ---
-
-function Test-IsModernManagedPath {
-    param([string]$Value)
-    $path = $Value
-    if ($Value -match [regex]::Escape($TenantHostname)) {
-        try { $path = ([Uri]$Value).AbsolutePath } catch { }
-    }
-    return $path -match '^/(sites|teams)/'
-}
-
-function Test-IsDeprecatedPortalPath {
-    param([string]$Value)
-    $path = $Value
-    if ($Value -match [regex]::Escape($TenantHostname)) {
-        try { $path = ([Uri]$Value).AbsolutePath } catch { }
-    }
-    return $path -match '^/portals/'
-}
-
-function Test-IsSystemAsset {
-    param([string]$Value)
-    if ($Value -notmatch '_layouts/') { return $false }
-    $pathOnly = ($Value -split '\?')[0]
-    $ext = [System.IO.Path]::GetExtension($pathOnly).ToLower()
-    if (@('.gif', '.png', '.jpg', '.jpeg', '.css', '.js', '.ico', '.woff', '.woff2', '.svg') -contains $ext) {
-        return $true
-    }
-    if ($ext -eq '.aspx' -and ($Value -notmatch '\?')) { return $true }
-    return $false
-}
-
-function Get-ReferenceRisk {
-    param([string]$Value)
-    if ([string]::IsNullOrWhiteSpace($Value)) { return $null }
-    if (Test-IsSystemAsset -Value $Value) { return $null }
-    if (Test-IsDeprecatedPortalPath -Value $Value) { return $null }
-
-    # Links that are broken TODAY, before any migration - flagged for owner
-    # cleanup (confirmed in scope 7/30):
-    # file:// and UNC links point at local drives or old file servers and are
-    # dead for anyone but the original author's machine.
-    if ($Value -match '^(?i)file:' -or $Value -match '^\\\\') { return "Local-File-Link" }
-    # http(s) to a single-label hostname (no dot, e.g. http://centralpark) is
-    # an old intranet server name - unreachable outside the LAN if it
-    # resolves at all.
-    if ($Value -match '^(?i)https?://[^./:?#]+([:/?#]|$)') { return "Legacy-Intranet-Host" }
-
-    $isInternal = $Value -match [regex]::Escape($TenantHostname)
-    $isServerRelative = $Value -match '^/[^/]'
-    if (-not $isInternal -and -not $isServerRelative) { return $null }
-
-    if (Test-IsModernManagedPath -Value $Value) { return "Modern-Site-Reference" }
-    if ($isInternal) { return "Absolute-Internal" }
-    return "Server-Relative"
+    $cid = $ListId.ToString().ToLower()
+    return ("{0}{1}?CID={2}&RootFolder={3}" -f
+        $TenantBase,
+        (Get-EncodedServerRelativePath -Path "$LibraryRootPath/Forms/AllItems.aspx"),
+        $cid,
+        [Uri]::EscapeDataString($FileDirRef))
 }
 
 function Get-CleanedValue {
-    param([string]$Value)
+    param([Parameter(Mandatory = $true)][string]$Value)
+
     $decoded = [System.Net.WebUtility]::HtmlDecode($Value)
-    return $decoded.TrimEnd("'", '"', ':', ',', ')', ']', '}', '.', ';')
+    return $decoded.Trim().TrimEnd("'", '"', ':', ',', ')', ']', '}', '.', ';')
 }
 
 function Get-OfficeDocReferences {
-    param([System.IO.Stream]$Stream)
+    param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
 
     $found = New-Object System.Collections.Generic.List[Object]
     $archive = [System.IO.Compression.ZipArchive]::new($Stream, [System.IO.Compression.ZipArchiveMode]::Read)
@@ -293,7 +185,9 @@ function Get-OfficeDocReferences {
                 $s = $entry.Open()
                 $r = New-Object System.IO.StreamReader($s)
                 $xmlText = $r.ReadToEnd()
-                $r.Close(); $s.Close()
+                $r.Close()
+                $s.Close()
+
                 try {
                     [xml]$xml = $xmlText
                     foreach ($rel in $xml.Relationships.Relationship) {
@@ -301,464 +195,735 @@ function Get-OfficeDocReferences {
                             $found.Add([PSCustomObject]@{ Value = $rel.Target; Confidence = "High"; Kind = "hyperlink" })
                         }
                     }
-                } catch { }
+                }
+                catch {
+                }
             }
             elseif ($entry.FullName -match '\.xml$' -and
-                    ($entry.FullName -match 'document\.xml$|sheet\d*\.xml$|slide\d*\.xml$|header\d*\.xml$|footer\d*\.xml$|notesSlide\d*\.xml$')) {
+                ($entry.FullName -match 'document\.xml$|sheet\d*\.xml$|slide\d*\.xml$|header\d*\.xml$|footer\d*\.xml$|notesSlide\d*\.xml$')) {
+
                 $s = $entry.Open()
                 $r = New-Object System.IO.StreamReader($s)
                 $text = $r.ReadToEnd()
-                $r.Close(); $s.Close()
+                $r.Close()
+                $s.Close()
+
                 $plain = [regex]::Replace($text, '<[^>]+>', ' ')
                 foreach ($m in [regex]::Matches($plain, 'https?://[^\s"<>]+')) {
                     $found.Add([PSCustomObject]@{ Value = $m.Value; Confidence = "Medium"; Kind = "plaintext" })
                 }
             }
         }
-    } finally {
+    }
+    finally {
         $archive.Dispose()
     }
+
     return $found | Sort-Object Value, Kind -Unique
 }
 
-# Hosts that appear inside every PDF's internal metadata (XMP namespaces,
-# RDF/Dublin Core schemas, ICC/PDF-X/PDF-A identifiers) - format plumbing,
-# not links anyone embedded. In the clinicians pilot these were 93% of all
-# extracted PDF URLs, so they're dropped at extraction.
-$PdfNoiseHosts = @('ns.adobe.com', 'www.w3.org', 'w3.org', 'purl.org',
-                   'www.iec.ch', 'iec.ch', 'www.color.org', 'www.npes.org', 'www.aiim.org')
-
 function Get-PdfReferences {
-    param([byte[]]$Bytes)
+    param([Parameter(Mandatory = $true)][byte[]]$Bytes)
 
     $found = New-Object System.Collections.Generic.List[Object]
     $text = [System.Text.Encoding]::Latin1.GetString($Bytes)
+
     foreach ($m in [regex]::Matches($text, 'https?://[^\s\)"<>\\]+')) {
         $hostMatch = [regex]::Match($m.Value, '^https?://([^/:?#]+)')
-        if ($hostMatch.Success -and ($PdfNoiseHosts -contains $hostMatch.Groups[1].Value.ToLower())) { continue }
+        if ($hostMatch.Success -and ($PdfNoiseHosts -contains $hostMatch.Groups[1].Value.ToLower())) {
+            continue
+        }
         $found.Add([PSCustomObject]@{ Value = $m.Value; Confidence = "Low"; Kind = "plaintext-pdf" })
     }
+
     return $found | Sort-Object Value, Kind -Unique
 }
 
-# --- permission helpers ------------------------------------------------------
+function Test-IsBreakingUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$Value,
+        [Parameter(Mandatory = $true)][string]$OldBaseUrl,
+        [Parameter(Mandatory = $true)][string]$TenantBase,
+        [Parameter(Mandatory = $true)][string]$OldBasePath
+    )
 
-# Cache of expanded SP-group membership keyed by group Id, so the same group
-# (e.g. "Clinicians Members") is only expanded once no matter how many
-# uniquely-permissioned items reference it.
-$GroupMemberCache = @{}
-
-function Get-GroupMemberSummary {
-    param($Group)
-    if ($GroupMemberCache.ContainsKey($Group.Id)) { return $GroupMemberCache[$Group.Id] }
-
-    $adGroups = New-Object System.Collections.Generic.List[string]
-    $users = New-Object System.Collections.Generic.List[string]
-    try {
-        $members = Get-PnPProperty -ClientObject $Group -Property Users
-        foreach ($u in $members) {
-            if ($u.PrincipalType -eq 'SecurityGroup') {
-                $adGroups.Add($u.Title)
-            } elseif ($u.PrincipalType -eq 'User') {
-                $label = if ($u.Email) { "$($u.Title) <$($u.Email)>" } else { $u.Title }
-                $users.Add($label)
-            }
-        }
-    } catch {
-        $users.Add("(could not expand: $($_.Exception.Message))")
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        return $false
     }
-    $summary = [PSCustomObject]@{ ADGroups = $adGroups; Users = $users }
-    $GroupMemberCache[$Group.Id] = $summary
-    return $summary
+
+    $clean = Get-CleanedValue -Value $Value
+
+    if ($clean.StartsWith($OldBaseUrl, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+
+    $viewerPattern = '^(?i)' + [regex]::Escape($TenantBase) + '/:[a-z]:/[rtu]' + [regex]::Escape($OldBasePath) + '(?=$|[/?#])'
+    if ([regex]::IsMatch($clean, $viewerPattern)) {
+        return $true
+    }
+
+    return $false
 }
 
-function Get-PermissionBreakdown {
-    <#
-        Given a securable object (web, list, or list item), enumerate its role
-        assignments and return the access picture:
-          ADGroups      - AD security groups granted access (directly, or nested
-                          one level inside a SharePoint group), with role
-          SPGroups      - SharePoint groups with role and expanded membership
-          DirectUsers   - individual users granted access directly, with role
-          SharingLinks  - modern sharing links (kind + named recipients)
-        "Limited Access" assignments are skipped - they're plumbing, not access.
-    #>
-    param($Securable)
+function Get-RoleAssignmentsWithOwnerLevel {
+    param(
+        [Parameter(Mandatory = $true)]$Securable,
+        [Parameter(Mandatory = $true)][string]$CacheKey,
+        [Parameter(Mandatory = $true)][hashtable]$Cache
+    )
 
-    $adGroups = New-Object System.Collections.Generic.List[string]
-    $spGroups = New-Object System.Collections.Generic.List[string]
-    $directUsers = New-Object System.Collections.Generic.List[string]
-    $sharingLinks = New-Object System.Collections.Generic.List[string]
+    if ($Cache.ContainsKey($CacheKey)) {
+        return $Cache[$CacheKey]
+    }
 
-    $roleAssignments = Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
+    $names = New-Object System.Collections.Generic.List[string]
+    $assignments = Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
 
-    foreach ($ra in $roleAssignments) {
+    foreach ($ra in $assignments) {
         $member = Get-PnPProperty -ClientObject $ra -Property Member
         $bindings = Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings
+        $roles = @($bindings | Select-Object -ExpandProperty Name)
 
-        $roles = @($bindings | Where-Object { $_.Name -ne 'Limited Access' } | Select-Object -ExpandProperty Name)
-        if ($roles.Count -eq 0) { continue }
-        $roleText = $roles -join '/'
+        if ($roles.Count -eq 0) {
+            continue
+        }
 
-        if ($member.PrincipalType -eq 'SecurityGroup') {
-            $adGroups.Add("$($member.Title) [$roleText]")
+        $ownerRole = $roles | Where-Object {
+            $_ -match '^(?i)full control$' -or $_ -match 'owner'
         }
-        elseif ($member.PrincipalType -eq 'User') {
-            $label = if ($member.Email) { "$($member.Title) <$($member.Email)>" } else { $member.Title }
-            $directUsers.Add("$label [$roleText]")
+
+        if ($ownerRole.Count -gt 0) {
+            $names.Add($member.Title)
         }
-        elseif ($member.PrincipalType -eq 'SharePointGroup') {
-            if ($member.LoginName -like 'SharingLinks.*') {
-                # SharingLinks.<itemGuid>.<kind>.<linkGuid> - the group's members
-                # are the people the link was issued to (specific-people links)
-                # or who have redeemed it (org-wide links).
-                $kind = ($member.LoginName -split '\.')[2]
-                $m = Get-GroupMemberSummary -Group $member
-                $who = @($m.Users + $m.ADGroups)
-                $whoText = if ($who.Count -gt 0) { $who -join ', ' } else { '(no named recipients yet)' }
-                $sharingLinks.Add("$kind link [$roleText] -> $whoText")
-            } else {
-                $m = Get-GroupMemberSummary -Group $member
-                foreach ($g in $m.ADGroups) { $adGroups.Add("$g [via SP group '$($member.Title)', $roleText]") }
-                $memberText = if ($m.Users.Count -gt 0) { " {members: $($m.Users -join ', ')}" } else { "" }
-                $spGroups.Add("$($member.Title) [$roleText]$memberText")
+    }
+
+    $result = ($names | Sort-Object -Unique) -join "`n"
+    $Cache[$CacheKey] = $result
+    return $result
+}
+
+function Get-EffectiveOwnerPermissions {
+    param(
+        [Parameter(Mandatory = $true)]$Item,
+        [Parameter(Mandatory = $true)]$List,
+        [Parameter(Mandatory = $true)]$Web,
+        [Parameter(Mandatory = $true)][hashtable]$Cache
+    )
+
+    $itemUnique = $false
+    $listUnique = $false
+
+    try {
+        $itemUnique = [bool](Get-PnPProperty -ClientObject $Item -Property HasUniqueRoleAssignments)
+    }
+    catch {
+    }
+
+    try {
+        $listUnique = [bool](Get-PnPProperty -ClientObject $List -Property HasUniqueRoleAssignments)
+    }
+    catch {
+    }
+
+    if ($itemUnique) {
+        return Get-RoleAssignmentsWithOwnerLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache
+    }
+
+    if ($listUnique) {
+        return Get-RoleAssignmentsWithOwnerLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache
+    }
+
+    return Get-RoleAssignmentsWithOwnerLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache
+}
+
+function Get-FolderDisplayName {
+    param(
+        [Parameter(Mandatory = $true)]$List,
+        [Parameter(Mandatory = $true)][string]$FolderPath,
+        [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][hashtable]$Cache
+    )
+
+    $cacheKey = "$($List.Id)|$FolderPath"
+    if ($Cache.ContainsKey($cacheKey)) {
+        return $Cache[$cacheKey]
+    }
+
+    $fallback = ($FolderPath.Trim('/') -split '/')[-1]
+
+    $query = @"
+<View Scope='RecursiveAll'>
+  <Query>
+    <Where>
+      <And>
+        <Eq><FieldRef Name='FSObjType'/><Value Type='Integer'>1</Value></Eq>
+        <Eq><FieldRef Name='FileRef'/><Value Type='Text'>$FolderPath</Value></Eq>
+      </And>
+    </Where>
+  </Query>
+  <RowLimit>1</RowLimit>
+</View>
+"@
+
+    try {
+        $folderItem = Get-PnPListItem -List $List.Title -Connection $Connection -Query $query -Fields "Title", "FileLeafRef"
+        if ($folderItem -and $folderItem.Count -gt 0) {
+            $title = [string]$folderItem[0].FieldValues["Title"]
+            $leaf = [string]$folderItem[0].FieldValues["FileLeafRef"]
+            if (-not [string]::IsNullOrWhiteSpace($title)) {
+                $fallback = $title
+            }
+            elseif (-not [string]::IsNullOrWhiteSpace($leaf)) {
+                $fallback = $leaf
             }
         }
     }
-
-    return [PSCustomObject]@{
-        ADGroups     = ($adGroups | Sort-Object -Unique) -join '; '
-        SPGroups     = ($spGroups | Sort-Object -Unique) -join '; '
-        DirectUsers  = ($directUsers | Sort-Object -Unique) -join '; '
-        SharingLinks = ($sharingLinks | Sort-Object -Unique) -join '; '
+    catch {
     }
+
+    $Cache[$cacheKey] = $fallback
+    return $fallback
 }
 
-# --- output helpers ----------------------------------------------------------
+function Select-SiteForScope {
+    param([Parameter(Mandatory = $true)][array]$Sites)
 
-function Write-AccessRow {
-    param($Row)
-    $Row | Export-Csv -Path $AccessOutputPath -NoTypeInformation -Append
-}
+    $teamsSites = @($Sites | Where-Object {
+            ($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*'
+        } | Sort-Object Url)
 
-function Write-LinkRow {
-    param(
-        [string]$DocumentUrl,
-        [string]$FutureDocumentUrl,
-        [string]$Kind,
-        [string]$Confidence,
-        [string]$RiskType,
-        [string]$EmbeddedUrl,
-        [string]$CleanedUrl,
-        [string]$SuggestedReplacement
-    )
-    [PSCustomObject]@{
-        DocumentUrl          = $DocumentUrl
-        FutureDocumentUrl    = $FutureDocumentUrl
-        ReferenceKind        = $Kind
-        Confidence           = $Confidence
-        RiskType             = $RiskType
-        EmbeddedUrl          = $EmbeddedUrl
-        CleanedUrl           = $CleanedUrl
-        SuggestedReplacement = $SuggestedReplacement
-    } | Export-Csv -Path $LinksOutputPath -NoTypeInformation -Append
-}
-
-# --- site selection ----------------------------------------------------------
-
-if (-not $SiteUrl) {
-    # Static menu from plan/WHA_Subsite_Migration_Worksheet_v2.xlsx (the 37
-    # subsites with URL paths in the migration worksheet). No live enumeration:
-    # the root-level subweb walk was slow and kept hitting access-denied.
-    # Update this list here if the worksheet changes; sites not listed can
-    # still be scanned by pasting their full URL at the prompt (or -SiteUrl).
-    $PromotionSites = @(
-        @{ Path = '/IT&HIM';                    Name = 'IT & HIM Department' }
-        @{ Path = '/train';                     Name = 'Training' }
-        @{ Path = '/Clinicians';                Name = 'Clinicians' }
-        @{ Path = '/HR';                        Name = 'Human Resources' }
-        @{ Path = '/Safety';                    Name = 'Safety' }
-        @{ Path = '/whasites';                  Name = 'WHA Sites' }
-        @{ Path = '/PFS';                       Name = 'Patient Financial Services' }
-        @{ Path = '/CS';                        Name = 'Clinical Services' }
-        @{ Path = '/Epic';                      Name = 'Epic' }
-        @{ Path = '/Accounting';                Name = 'Accounting' }
-        @{ Path = '/Forms';                     Name = 'Forms' }
-        @{ Path = '/QI';                        Name = 'Quality Improvement' }
-        @{ Path = '/Committees';                Name = 'Committees' }
-        @{ Path = '/HelpDeskSelfServicePortal'; Name = 'Help Desk Self-Service Portal' }
-        @{ Path = '/LLCM';                      Name = 'LLC Members' }
-        @{ Path = '/Int';                       Name = 'Interiors Committee' }
-        @{ Path = '/TPE';                       Name = 'The Patient Experience' }
-        @{ Path = '/LegacySharing';             Name = 'Legacy Sharing' }
-        @{ Path = '/hipaa';                     Name = 'HIPAA' }
-        @{ Path = '/himcommittee';              Name = 'HIM Committee' }
-        @{ Path = '/CRL';                       Name = 'Clinician Resource Library' }
-        @{ Path = '/Comp';                      Name = 'Compensation Committee' }
-        @{ Path = '/IT-Internal';               Name = 'IT Internal' }
-        @{ Path = '/Ops';                       Name = 'Operations Committee' }
-        @{ Path = '/Private';                   Name = 'Private' }
-        @{ Path = '/Fin';                       Name = 'Finance Committee' }
-        @{ Path = '/emr';                       Name = 'EMR' }
-        @{ Path = '/PFTC';                      Name = 'Patient Focus Team Care' }
-        @{ Path = '/SP';                        Name = 'Strategic Plan' }
-        @{ Path = '/ClinicianResources';        Name = 'Clinician Resources' }
-        @{ Path = '/IS';                        Name = 'Information Security' }
-        @{ Path = '/EMRWeeklyMeeting';          Name = 'Weekly EMR Meeting (deprecated workspace)' }
-        @{ Path = '/HIMCommittee';              Name = 'HIM Committee (Meeting Workspace, deprecated)' }
-        @{ Path = '/RecruitmentCommittee';      Name = 'Recruitment Committee' }
-        @{ Path = '/CtrlAltDelight_Newsletter'; Name = 'Ctrl + Alt + Delight Newsletter' }
-        @{ Path = '/HIM';                       Name = 'HIM (found in 7/17 scan)' }
-        @{ Path = '/whaiis01';                  Name = 'whaiis01 (found in 7/17 scan)' }
-    )
+    $sharePointSites = @($Sites | Where-Object {
+            -not ((($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*'))
+        } | Sort-Object Url)
 
     Write-Host ""
-    for ($i = 0; $i -lt $PromotionSites.Count; $i++) {
-        Write-Host ("  {0,3}. {1,-28} {2}" -f ($i + 1), $PromotionSites[$i].Path, $PromotionSites[$i].Name)
+    Write-Host "Show which category first?"
+    Write-Host "  1. SharePoint site collections"
+    Write-Host "  2. Teams-connected sites"
+
+    $firstChoice = $null
+    while (-not $firstChoice) {
+        $in = Read-Host "Enter 1 or 2"
+        if ($in -in @('1', '2')) {
+            $firstChoice = $in
+        }
+        else {
+            Write-Host "  Invalid choice. Enter 1 or 2."
+        }
     }
 
-    while (-not $SiteUrl) {
-        $choice = Read-Host "`nSite to scan (number from the list, or paste a full site URL)"
-        if ($choice -match '^\d+$' -and [int]$choice -ge 1 -and [int]$choice -le $PromotionSites.Count) {
-            $SiteUrl = $RootUrl + $PromotionSites[[int]$choice - 1].Path
-        } elseif ($choice -match '^https?://') {
-            $SiteUrl = $choice
-        } elseif ($choice) {
-            Write-Host "  not a valid number or URL - try again."
+    $ordered = @()
+    if ($firstChoice -eq '1') {
+        $ordered += $sharePointSites
+        $ordered += $teamsSites
+    }
+    else {
+        $ordered += $teamsSites
+        $ordered += $sharePointSites
+    }
+
+    if ($ordered.Count -eq 0) {
+        throw "No eligible SharePoint site collections were found."
+    }
+
+    Write-Host ""
+    for ($i = 0; $i -lt $ordered.Count; $i++) {
+        $kind = if ((($ordered[$i].GroupId -and $ordered[$i].GroupId -ne [Guid]::Empty) -or $ordered[$i].Template -like 'GROUP*')) {
+            'Teams-connected'
+        }
+        else {
+            'SharePoint'
+        }
+        Write-Host ("  {0,4}. [{1}] {2}" -f ($i + 1), $kind, $ordered[$i].Url)
+    }
+
+    $selected = $null
+    while (-not $selected) {
+        $pick = Read-Host "`nPick exactly one site by number"
+        if ($pick -match '^\d+$') {
+            $idx = [int]$pick
+            if ($idx -ge 1 -and $idx -le $ordered.Count) {
+                $selected = $ordered[$idx - 1]
+            }
+        }
+        if (-not $selected) {
+            Write-Host "  Invalid selection."
+        }
+    }
+
+    return $selected
+}
+
+function Get-BooleanPrompt {
+    param(
+        [Parameter(Mandatory = $true)][string]$Message,
+        [Parameter(Mandatory = $false)][bool]$DefaultYes = $false
+    )
+
+    $suffix = if ($DefaultYes) { "[Y/n]" } else { "[y/N]" }
+    while ($true) {
+        $value = Read-Host "$Message $suffix"
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            return $DefaultYes
+        }
+        switch ($value.Trim().ToLower()) {
+            'y' { return $true }
+            'yes' { return $true }
+            'n' { return $false }
+            'no' { return $false }
+            default { Write-Host "  Please enter y or n." }
         }
     }
 }
 
-$SiteUrl = $SiteUrl.TrimEnd('/')
-$siteUri = [Uri]$SiteUrl
-$TenantBase = $siteUri.GetLeftPart([UriPartial]::Authority)
-$TenantHostname = $siteUri.Host
-$SourceSitePath = $siteUri.AbsolutePath.TrimEnd('/')
-$siteLeaf = ($SourceSitePath.Trim('/') -split '/')[-1]
+function Find-UrlsInText {
+    param([Parameter(Mandatory = $true)][string]$Text)
 
-if (-not $TargetSitePath) {
-    $defaultTarget = "/sites/$siteLeaf"
-    $entered = Read-Host "Target path after promotion [$defaultTarget]"
-    $TargetSitePath = if ([string]::IsNullOrWhiteSpace($entered)) { $defaultTarget } else { $entered }
-}
-$TargetSitePath = "/" + $TargetSitePath.Trim('/')
+    $hits = New-Object System.Collections.Generic.List[string]
+    foreach ($m in [regex]::Matches($Text, 'https?://[^\s"''<>\)\]]+')) {
+        $hits.Add($m.Value)
+    }
 
-if (-not $AccessOutputPath) { $AccessOutputPath = ".\" + $siteLeaf.ToLower() + "-document-access.csv" }
-if (-not $LinksOutputPath) { $LinksOutputPath = ".\" + $siteLeaf.ToLower() + "-links-to-fix.csv" }
-
-Write-Host "`nSite:    $SiteUrl"
-Write-Host "Target:  $TargetSitePath"
-Write-Host "Reports: $AccessOutputPath / $LinksOutputPath"
-
-# --- connect and enumerate webs ----------------------------------------------
-
-Write-Host "`nConnecting to $SiteUrl (interactive sign-in)..."
-if ($ClientId) {
-    Connect-PnPOnline -Url $SiteUrl -Interactive -ClientId $ClientId
-} else {
-    Connect-PnPOnline -Url $SiteUrl -Interactive
+    return $hits | Sort-Object -Unique
 }
 
-$rootWeb = Get-PnPWeb -Includes Url
-$allWebs = New-Object System.Collections.Generic.List[string]
-$allWebs.Add($rootWeb.Url)
+function Write-DocumentFinding {
+    param(
+        [Parameter(Mandatory = $true)][string]$OutputPath,
+        [Parameter(Mandatory = $true)][pscustomobject]$Row
+    )
+
+    $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
+}
+
+function Write-OtherFinding {
+    param(
+        [Parameter(Mandatory = $true)][string]$OutputPath,
+        [Parameter(Mandatory = $true)][pscustomobject]$Row
+    )
+
+    $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
+}
+
+Install-RequiredModule -Name "PnP.PowerShell"
+
+New-DirectoryIfMissing -Path $DocumentsOutputFolder
+New-DirectoryIfMissing -Path $OtherOutputFolder
+
+$RootUrl = $RootUrl.TrimEnd('/')
+$AdminUrl = $AdminUrl.TrimEnd('/')
+
+$adminConn = Connect-ValidatedPnP -Url $AdminUrl -ClientId $ClientId -AdminConnection
+$rootConn = Connect-ValidatedPnP -Url $RootUrl -ClientId $ClientId
+
+Write-Host "`nCollecting tenant sites (excluding OneDrive personal sites)..."
+$tenantSites = Get-PnPTenantSite -Connection $adminConn -Detailed
+$tenantSites = $tenantSites |
+Where-Object {
+    $_.Url -and
+    $_.Url -notmatch '-my\.sharepoint\.com' -and
+    $_.Template -notlike 'SPSPERS*'
+} |
+Sort-Object Url -Unique
+
+if ($tenantSites.Count -eq 0) {
+    throw "No eligible SharePoint site collections found (excluding OneDrive)."
+}
+
+Write-Host ("`nRoot subsite inventory under {0}:" -f $RootUrl)
 try {
-    $subWebs = Get-PnPSubWeb -Recurse -Includes Url
-    foreach ($w in $subWebs) { $allWebs.Add($w.Url) }
-} catch {
-    Write-Warning "could not enumerate subwebs: $($_.Exception.Message)"
+    $rootSubsites = Get-PnPSubWeb -Connection $rootConn -Recurse -Includes Url, Title
+    if ($rootSubsites.Count -eq 0) {
+        Write-Host "  (none found)"
+    }
+    else {
+        foreach ($web in $rootSubsites | Sort-Object Url) {
+            $title = if ($web.Title) { $web.Title } else { '(no title)' }
+            Write-Host "  $($web.Url)  |  $title"
+        }
+    }
 }
-Write-Host "$($allWebs.Count) web(s) in scope under $SiteUrl."
+catch {
+    Write-Warning "Could not enumerate root subsites: $($_.Exception.Message)"
+}
 
-foreach ($path in @($AccessOutputPath, $LinksOutputPath)) {
-    if (Test-Path $path) { Remove-Item -Path $path -Force }
+$selectedScope = Select-SiteForScope -Sites $tenantSites
+Write-Host "`nSelected scope site: $($selectedScope.Url)"
+
+$oldBaseInput = Read-Host "Old base URL to find (press Enter to use selected scope URL) [$($selectedScope.Url)]"
+$OldBaseUrl = if ([string]::IsNullOrWhiteSpace($oldBaseInput)) {
+    $selectedScope.Url.TrimEnd('/')
+}
+else {
+    $oldBaseInput.TrimEnd('/')
+}
+
+if (-not $OldBaseUrl.StartsWith($selectedScope.Url.TrimEnd('/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Old base URL must stay within the selected scope site collection for this run."
+}
+
+$NewBaseUrl = Read-Host "New base URL (required)"
+if ([string]::IsNullOrWhiteSpace($NewBaseUrl)) {
+    throw "New base URL is required."
+}
+$NewBaseUrl = $NewBaseUrl.TrimEnd('/')
+
+$scanOther = Get-BooleanPrompt -Message "After documents, scan additional content (site pages/list text fields) to a separate CSV?" -DefaultYes $false
+
+$scanDocumentContent = $false
+if ($EnableDocumentContentScan) {
+    $scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
+}
+else {
+    Write-Warning "Document content scan is disabled by default. Use -EnableDocumentContentScan to allow this step."
+}
+
+$runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$docReportPath = Join-Path -Path $DocumentsOutputFolder -ChildPath ("Documents-BreakingUrls-" + $runStamp + ".csv")
+$otherReportPath = Join-Path -Path $OtherOutputFolder -ChildPath ("OtherContent-BreakingUrls-" + $runStamp + ".csv")
+
+$oldUri = [Uri]$OldBaseUrl
+$TenantBase = $oldUri.GetLeftPart([UriPartial]::Authority)
+$OldBasePath = $oldUri.AbsolutePath.TrimEnd('/')
+
+Write-Host "`nAudit configuration:"
+Write-Host "  Selected scope site:  $($selectedScope.Url)"
+Write-Host "  Old base URL:         $OldBaseUrl"
+Write-Host "  New base URL:         $NewBaseUrl"
+Write-Host "  Documents report:     $docReportPath"
+Write-Host "  Document content scan: $scanDocumentContent"
+if ($scanOther) {
+    Write-Host "  Other report:         $otherReportPath"
 }
 
 $stats = [PSCustomObject]@{
-    DocsRecorded    = 0
-    UniquePermDocs  = 0
-    LinksFlagged    = 0
-    ReplacementsSet = 0
-    FilesScanned    = 0
-    FoldersSkipped  = 0
-    LibrariesRead   = 0
+    SitesVisited = 0
+    WebsVisited = 0
+    LibrariesVisited = 0
+    DocumentsRead = 0
+    DocumentLinkRows = 0
+    OtherLinkRows = 0
+    DocumentsSkippedLegacy = 0
+    DocumentsSkippedUnsupported = 0
 }
 
-# --- main loop ---------------------------------------------------------------
+$permissionCache = @{}
+$folderNameCache = @{}
 
-foreach ($webUrl in $allWebs) {
-    Write-Host "`nWeb: $webUrl"
+$scanSiteCollections = @($tenantSites | Sort-Object Url)
+
+Write-Host "`nStarting tenant-wide document scan (SharePoint only, no OneDrive)..."
+if ($scanDocumentContent) {
+foreach ($site in $scanSiteCollections) {
+    $siteUrl = $site.Url.TrimEnd('/')
+    $stats.SitesVisited++
+    Write-Host "`n[$($stats.SitesVisited)/$($scanSiteCollections.Count)] Site collection: $siteUrl"
+
+    $siteConn = $null
     try {
-        if ($ClientId) {
-            $webConn = Connect-PnPOnline -Url $webUrl -Interactive -ClientId $ClientId -ReturnConnection
-        } else {
-            $webConn = Connect-PnPOnline -Url $webUrl -Interactive -ReturnConnection
-        }
-    } catch {
-        Write-Warning "  could not connect to $webUrl : $($_.Exception.Message)"
+        $siteConn = Connect-ValidatedPnP -Url $siteUrl -ClientId $ClientId
+    }
+    catch {
+        Write-Warning "Skipping site collection due to connection/auth failure: $siteUrl"
         continue
     }
 
-    # Site-level permission picture, computed once - inheriting documents
-    # reference this instead of re-enumerating per item.
-    Write-Host "  reading site-level permissions..."
-    $web = Get-PnPWeb -Connection $webConn
-    $webPerms = Get-PermissionBreakdown -Securable $web
-
-    $lists = $null
+    $webUrls = New-Object System.Collections.Generic.List[string]
     try {
-        $lists = Get-PnPList -Connection $webConn -Includes BaseTemplate, Hidden, Title, ItemCount, HasUniqueRoleAssignments, Id, RootFolder.ServerRelativeUrl
-    } catch {
-        Write-Warning "  could not read lists for $webUrl : $($_.Exception.Message)"
+        $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url
+        $webUrls.Add($rootWeb.Url)
+        $subs = Get-PnPSubWeb -Connection $siteConn -Recurse -Includes Url
+        foreach ($s in $subs) { $webUrls.Add($s.Url) }
+    }
+    catch {
+        Write-Warning ("Could not enumerate all webs in {0}: {1}" -f $siteUrl, $_.Exception.Message)
         continue
     }
 
-    foreach ($list in $lists) {
-        if ($list.Hidden) { continue }
-        if ($SkipListTitles -contains $list.Title) { continue }
-        if ($list.ItemCount -eq 0) { continue }
-        if ($list.BaseTemplate -ne 101) { continue }   # document libraries only
+    foreach ($webUrl in $webUrls | Sort-Object -Unique) {
+        $stats.WebsVisited++
+        Write-Host "  Web: $webUrl"
 
-        Write-Host "  library: $($list.Title) ($($list.ItemCount) items)"
-        $stats.LibrariesRead++
-
-        $libraryRootPath = $list.RootFolder.ServerRelativeUrl.TrimEnd('/')
-
-        $listPerms = $null
-        $inheritedSource = "Inherited-from-site"
-        $inheritedPerms = $webPerms
-        if ($list.HasUniqueRoleAssignments) {
-            Write-Host "    (library has unique permissions - reading them)"
-            $listPerms = Get-PermissionBreakdown -Securable $list
-            $inheritedSource = "Inherited-from-library"
-            $inheritedPerms = $listPerms
-        }
-
-        $fields = @("FileRef", "FileLeafRef", "FileDirRef", "UniqueId", "FSObjType", "Modified", "Created", "Author", "Editor", "SharedWithUsers")
+        $webConn = $null
         try {
-            $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
-        } catch {
-            # SharedWithUsers isn't guaranteed to exist on every library
-            $fields = $fields | Where-Object { $_ -ne "SharedWithUsers" }
-            $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
+            $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+        }
+        catch {
+            Write-Warning "  Skipping web due to connection/auth failure: $webUrl"
+            continue
         }
 
-        $itemIndex = 0
-        foreach ($item in $items) {
-            $itemIndex++
-            if ($itemIndex % 50 -eq 0) { Write-Host "    ...$itemIndex / $($items.Count)" }
-            if ($item.FieldValues["FSObjType"] -eq 1) { $stats.FoldersSkipped++; continue }
+        $web = $null
+        try {
+            $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+        }
+        catch {
+            Write-Warning "  Could not read web metadata for $webUrl"
+            continue
+        }
 
-            $fileRef = $item.FieldValues["FileRef"]
-            $fileLeaf = $item.FieldValues["FileLeafRef"]
-            if (-not $fileRef) { continue }
+        $lists = $null
+        try {
+            $lists = Get-PnPList -Connection $webConn -Includes BaseTemplate, Hidden, Title, ItemCount, Id, HasUniqueRoleAssignments, RootFolder.ServerRelativeUrl
+        }
+        catch {
+            Write-Warning "  Could not read lists for $webUrl"
+            continue
+        }
 
-            $ext = [System.IO.Path]::GetExtension($fileLeaf).ToLower()
-            $docUrl = $TenantBase + $fileRef
-            $futureUrl = Get-FutureUrl -ServerRelativeFileRef $fileRef
-            $browserUrl = Get-BrowserUrl -FileRef $fileRef -Ext $ext -UniqueId $item.FieldValues["UniqueId"]
-            $folder = Get-FolderInfo -FileDirRef $item.FieldValues["FileDirRef"] -List $list -LibraryRootPath $libraryRootPath
+        foreach ($list in $lists) {
+            if ($list.Hidden) { continue }
+            if ($SkipListTitles -contains $list.Title) { continue }
+            if ($list.ItemCount -eq 0) { continue }
+            if ($list.BaseTemplate -ne 101) { continue }
 
-            $authorValue = $item.FieldValues["Author"]
-            $owner = if ($authorValue -and $authorValue.LookupValue) { $authorValue.LookupValue } else { "" }
-            $editorValue = $item.FieldValues["Editor"]
-            $editor = if ($editorValue -and $editorValue.LookupValue) { $editorValue.LookupValue } else { "" }
+            $stats.LibrariesVisited++
+            Write-Host "    Library: $($list.Title)"
 
-            $sharedWith = ""
-            $swValue = $item.FieldValues["SharedWithUsers"]
-            if ($swValue) {
-                $sharedWith = (@($swValue) | ForEach-Object {
-                    if ($_.Email) { "$($_.LookupValue) <$($_.Email)>" } else { $_.LookupValue }
-                }) -join '; '
-            }
+            $libraryRootPath = $list.RootFolder.ServerRelativeUrl.TrimEnd('/')
 
-            # Permission mode: one extra round trip per item to learn whether
-            # inheritance is broken; full enumeration only when it is.
-            $permMode = $inheritedSource
-            $perms = $inheritedPerms
+            $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Author', 'Editor', 'ID')
+            $items = $null
+
             try {
-                $hasUnique = Get-PnPProperty -ClientObject $item -Property HasUniqueRoleAssignments
-                if ($hasUnique) {
-                    $permMode = "Unique"
-                    $perms = Get-PermissionBreakdown -Securable $item
-                    $stats.UniquePermDocs++
-                }
-            } catch {
-                $permMode = "Unknown ($($_.Exception.Message))"
+                $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
+            }
+            catch {
+                Write-Warning "    Could not read items for library $($list.Title): $($_.Exception.Message)"
+                continue
             }
 
-            # Link scan (documents only, same file-type support as before).
-            # EVERY extracted URL is written verbatim (EmbeddedUrl), even
-            # benign external ones - RiskType classifies instead of filtering.
-            $scanned = "No-othertype"
-            $brokenCount = ""
-            if ($LegacyExtensions -contains $ext) {
-                $scanned = "No-legacy"
-            }
-            elseif ($SupportedExtensions -contains $ext) {
+            foreach ($item in $items) {
+                if ($item.FieldValues['FSObjType'] -eq 1) {
+                    continue
+                }
+
+                $fileRef = [string]$item.FieldValues['FileRef']
+                $fileLeaf = [string]$item.FieldValues['FileLeafRef']
+                if ([string]::IsNullOrWhiteSpace($fileRef) -or [string]::IsNullOrWhiteSpace($fileLeaf)) {
+                    continue
+                }
+
+                $stats.DocumentsRead++
+
+                $ext = [System.IO.Path]::GetExtension($fileLeaf).ToLower()
+                if ($LegacyExtensions -contains $ext) {
+                    $stats.DocumentsSkippedLegacy++
+                    continue
+                }
+                if (-not ($SupportedExtensions -contains $ext)) {
+                    $stats.DocumentsSkippedUnsupported++
+                    continue
+                }
+
+                $docUrl = Get-DocumentBrowserUrl -TenantBase $TenantBase -FileRef $fileRef -Extension $ext -UniqueId $item.FieldValues['UniqueId']
+                $folderUrl = Get-FolderBrowserUrl -TenantBase $TenantBase -LibraryRootPath $libraryRootPath -ListId $list.Id -FileDirRef $item.FieldValues['FileDirRef']
+                $folderName = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -Cache $folderNameCache
+
+                $authorValue = $item.FieldValues['Author']
+                $createdBy = if ($authorValue -and $authorValue.LookupValue) { $authorValue.LookupValue } else { '' }
+
+                $editorValue = $item.FieldValues['Editor']
+                $lastModifiedBy = if ($editorValue -and $editorValue.LookupValue) { $editorValue.LookupValue } else { '' }
+
+                $ownerPermissions = Get-EffectiveOwnerPermissions -Item $item -List $list -Web $web -Cache $permissionCache
+
+                $refs = @()
                 try {
                     $ms = Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $webConn
-                    $stats.FilesScanned++
-                    $refs = if ($ext -eq '.pdf') {
-                        Get-PdfReferences -Bytes $ms.ToArray()
-                    } else {
-                        Get-OfficeDocReferences -Stream $ms
+                    if ($ext -eq '.pdf') {
+                        $refs = Get-PdfReferences -Bytes $ms.ToArray()
                     }
-                    $scanned = "Yes"
-                    $brokenCount = 0
-                    foreach ($ref in $refs) {
-                        $cleanValue = Get-CleanedValue -Value $ref.Value
-                        $risk = Get-ReferenceRisk -Value $cleanValue
-                        $replacement = ""
-                        if ($risk -and $risk -ne "Modern-Site-Reference") {
-                            $brokenCount++
-                            $replacement = Get-SuggestedReplacement -Value $cleanValue
-                            if ($replacement) { $stats.ReplacementsSet++ }
-                        }
-                        if (-not $risk) { $risk = "None" }
-                        Write-LinkRow -DocumentUrl $docUrl -FutureDocumentUrl $futureUrl `
-                            -Kind $ref.Kind -Confidence $ref.Confidence -RiskType $risk `
-                            -EmbeddedUrl $ref.Value -CleanedUrl $cleanValue -SuggestedReplacement $replacement
-                        $stats.LinksFlagged++
+                    else {
+                        $refs = Get-OfficeDocReferences -Stream $ms
                     }
-                } catch {
-                    $scanned = "Error ($($_.Exception.Message))"
+                }
+                catch {
+                    continue
+                }
+
+                foreach ($ref in $refs) {
+                    if (-not (Test-IsBreakingUrl -Value $ref.Value -OldBaseUrl $OldBaseUrl -TenantBase $TenantBase -OldBasePath $OldBasePath)) {
+                        continue
+                    }
+
+                    $row = [PSCustomObject]@{
+                        'Document URL' = $docUrl
+                        'Document Folder URL' = $folderUrl
+                        'Document Folder Name' = $folderName
+                        'Document File Name' = $fileLeaf
+                        'Created By' = $createdBy
+                        'Last Modified' = $lastModifiedBy
+                        'Permissions' = $ownerPermissions
+                        'Every Embedded URL that will break' = $ref.Value
+                        'Old Base URL' = $OldBaseUrl
+                        'New Base URL' = $NewBaseUrl
+                        'Site Collection Containing Document' = $siteUrl
+                        'Web Containing Document' = $webUrl
+                    }
+
+                    Write-DocumentFinding -OutputPath $docReportPath -Row $row
+                    $stats.DocumentLinkRows++
                 }
             }
+        }
+    }
+}
+}
+else {
+    Write-Warning "Document content scan was skipped to preserve last-access signal integrity. Documents CSV may be empty/not created for this run."
+}
 
-            Write-AccessRow -Row ([PSCustomObject]@{
-                Site                      = $webUrl
-                Library                   = $list.Title
-                DocumentUrl               = $docUrl
-                DocumentBrowserUrl        = $browserUrl
-                FutureDocumentUrl         = $futureUrl
-                FolderName                = $folder.Name
-                FolderUrl                 = $folder.Url
-                FileName                  = $fileLeaf
-                Owner                     = $owner
-                Created                   = $item.FieldValues["Created"]
-                Modified                  = $item.FieldValues["Modified"]
-                LastModifiedBy            = $editor
-                PermissionMode            = $permMode
-                ADGroupsWithAccess        = $perms.ADGroups
-                SharePointGroupsWithAccess = $perms.SPGroups
-                DirectUserAccess          = $perms.DirectUsers
-                SharingLinks              = $perms.SharingLinks
-                SharedWithUsers           = $sharedWith
-                ScannedForLinks           = $scanned
-                BrokenLinkCount           = $brokenCount
-            })
-            $stats.DocsRecorded++
+if ($scanOther) {
+    Write-Host "`nStarting optional scan for additional content..."
+
+    foreach ($site in $scanSiteCollections) {
+        $siteUrl = $site.Url.TrimEnd('/')
+        Write-Host "`nOther-content scan site collection: $siteUrl"
+
+        $siteConn = $null
+        try {
+            $siteConn = Connect-ValidatedPnP -Url $siteUrl -ClientId $ClientId
+        }
+        catch {
+            Write-Warning "Skipping other-content scan for $siteUrl due to auth/connection failure."
+            continue
+        }
+
+        $webUrls = New-Object System.Collections.Generic.List[string]
+        try {
+            $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url
+            $webUrls.Add($rootWeb.Url)
+            $subs = Get-PnPSubWeb -Connection $siteConn -Recurse -Includes Url
+            foreach ($s in $subs) { $webUrls.Add($s.Url) }
+        }
+        catch {
+            Write-Warning "Could not enumerate webs for other-content scan in $siteUrl"
+            continue
+        }
+
+        foreach ($webUrl in $webUrls | Sort-Object -Unique) {
+            $webConn = $null
+            try {
+                $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+            }
+            catch {
+                continue
+            }
+
+            $lists = $null
+            try {
+                $lists = Get-PnPList -Connection $webConn -Includes BaseTemplate, Hidden, Title, ItemCount, DefaultDisplayFormUrl, RootFolder.ServerRelativeUrl
+            }
+            catch {
+                continue
+            }
+
+            foreach ($list in $lists) {
+                if ($list.Hidden) { continue }
+                if ($list.ItemCount -eq 0) { continue }
+                if ($list.BaseTemplate -eq 101) { continue }
+
+                $fields = $null
+                try {
+                    $fields = Get-PnPField -List $list.Title -Connection $webConn
+                }
+                catch {
+                    continue
+                }
+
+                $textFields = @($fields | Where-Object {
+                        -not $_.Hidden -and -not $_.ReadOnlyField -and $_.TypeAsString -in @('Text', 'Note', 'URL')
+                    })
+
+                if ($textFields.Count -eq 0) {
+                    continue
+                }
+
+                $items = $null
+                try {
+                    $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 200
+                }
+                catch {
+                    continue
+                }
+
+                foreach ($item in $items) {
+                    $itemId = $item.Id
+                    $itemTitle = [string]$item.FieldValues['Title']
+
+                    $itemUrl = ''
+                    if ($item.FieldValues.ContainsKey('FileRef') -and $item.FieldValues['FileRef']) {
+                        $itemUrl = $TenantBase + [string]$item.FieldValues['FileRef']
+                    }
+                    elseif ($list.DefaultDisplayFormUrl) {
+                        $itemUrl = $TenantBase + $list.DefaultDisplayFormUrl + "?ID=$itemId"
+                    }
+
+                    foreach ($field in $textFields) {
+                        $raw = $item.FieldValues[$field.InternalName]
+                        if (-not $raw) {
+                            continue
+                        }
+
+                        $textValues = New-Object System.Collections.Generic.List[string]
+
+                        if ($raw -is [string]) {
+                            $textValues.Add($raw)
+                        }
+                        elseif ($raw -is [Microsoft.SharePoint.Client.FieldUrlValue]) {
+                            if ($raw.Url) { $textValues.Add($raw.Url) }
+                            if ($raw.Description) { $textValues.Add($raw.Description) }
+                        }
+                        else {
+                            $textValues.Add([string]$raw)
+                        }
+
+                        foreach ($text in $textValues) {
+                            foreach ($url in (Find-UrlsInText -Text $text)) {
+                                if (-not (Test-IsBreakingUrl -Value $url -OldBaseUrl $OldBaseUrl -TenantBase $TenantBase -OldBasePath $OldBasePath)) {
+                                    continue
+                                }
+
+                                $row = [PSCustomObject]@{
+                                    'Content Type' = 'ListOrPageItem'
+                                    'Site Collection' = $siteUrl
+                                    'Web URL' = $webUrl
+                                    'List Title' = $list.Title
+                                    'Item ID' = $itemId
+                                    'Item Title' = $itemTitle
+                                    'Item URL' = $itemUrl
+                                    'Field Name' = $field.InternalName
+                                    'Every Embedded URL that will break' = $url
+                                    'Old Base URL' = $OldBaseUrl
+                                    'New Base URL' = $NewBaseUrl
+                                }
+
+                                Write-OtherFinding -OutputPath $otherReportPath -Row $row
+                                $stats.OtherLinkRows++
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
-Write-Host "`nDone."
-Write-Host "Documents recorded: $($stats.DocsRecorded)  (folders skipped: $($stats.FoldersSkipped), libraries: $($stats.LibrariesRead))"
-Write-Host "Documents with unique permissions: $($stats.UniquePermDocs)"
-Write-Host "Files link-scanned: $($stats.FilesScanned)"
-Write-Host "Link findings: $($stats.LinksFlagged)  (auto-replacement suggested for $($stats.ReplacementsSet))"
-Write-Host "-> $AccessOutputPath"
-Write-Host "-> $LinksOutputPath"
+Write-Host "`nAudit complete."
+Write-Host "  Site collections visited:       $($stats.SitesVisited)"
+Write-Host "  Webs visited:                   $($stats.WebsVisited)"
+Write-Host "  Libraries visited:              $($stats.LibrariesVisited)"
+Write-Host "  Documents inspected:            $($stats.DocumentsRead)"
+Write-Host "  Document rows written:          $($stats.DocumentLinkRows)"
+Write-Host "  Legacy docs skipped:            $($stats.DocumentsSkippedLegacy)"
+Write-Host "  Unsupported docs skipped:       $($stats.DocumentsSkippedUnsupported)"
+if ($scanOther) {
+    Write-Host "  Other-content rows written:     $($stats.OtherLinkRows)"
+}
+Write-Host "`nDocuments CSV: $docReportPath"
+if ($scanOther) {
+    Write-Host "Other CSV:     $otherReportPath"
+}
 
-Disconnect-PnPOnline
+Disconnect-PnPOnline -ErrorAction SilentlyContinue
