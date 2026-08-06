@@ -397,7 +397,7 @@ function Select-SiteForScope {
         } | Sort-Object Url)
 
     Write-Host ""
-    Write-Host "Show which category first?"
+    Write-Host "Choose which category to select from:"
     Write-Host "  1. SharePoint site collections"
     Write-Host "  2. Teams-connected sites"
 
@@ -412,29 +412,27 @@ function Select-SiteForScope {
         }
     }
 
-    $ordered = @()
+    $categorySites = @()
     if ($firstChoice -eq '1') {
-        $ordered += $sharePointSites
-        $ordered += $teamsSites
+        $categorySites = $sharePointSites
     }
     else {
-        $ordered += $teamsSites
-        $ordered += $sharePointSites
+        $categorySites = $teamsSites
     }
 
-    if ($ordered.Count -eq 0) {
-        throw "No eligible SharePoint site collections were found."
+    if ($categorySites.Count -eq 0) {
+        throw "No sites were found in the selected category."
     }
 
     Write-Host ""
-    for ($i = 0; $i -lt $ordered.Count; $i++) {
-        $kind = if ((($ordered[$i].GroupId -and $ordered[$i].GroupId -ne [Guid]::Empty) -or $ordered[$i].Template -like 'GROUP*')) {
+    for ($i = 0; $i -lt $categorySites.Count; $i++) {
+        $kind = if ((($categorySites[$i].GroupId -and $categorySites[$i].GroupId -ne [Guid]::Empty) -or $categorySites[$i].Template -like 'GROUP*')) {
             'Teams-connected'
         }
         else {
             'SharePoint'
         }
-        Write-Host ("  {0,4}. [{1}] {2}" -f ($i + 1), $kind, $ordered[$i].Url)
+        Write-Host ("  {0,4}. [{1}] {2}" -f ($i + 1), $kind, $categorySites[$i].Url)
     }
 
     $selected = $null
@@ -442,8 +440,8 @@ function Select-SiteForScope {
         $pick = Read-Host "`nPick exactly one site by number"
         if ($pick -match '^\d+$') {
             $idx = [int]$pick
-            if ($idx -ge 1 -and $idx -le $ordered.Count) {
-                $selected = $ordered[$idx - 1]
+            if ($idx -ge 1 -and $idx -le $categorySites.Count) {
+                $selected = $categorySites[$idx - 1]
             }
         }
         if (-not $selected) {
@@ -530,25 +528,31 @@ if ($tenantSites.Count -eq 0) {
     throw "No eligible SharePoint site collections found (excluding OneDrive)."
 }
 
-Write-Host ("`nRoot subsite inventory under {0}:" -f $RootUrl)
-try {
-    $rootSubsites = Get-PnPSubWeb -Connection $rootConn -Recurse -Includes Url, Title
-    if ($rootSubsites.Count -eq 0) {
-        Write-Host "  (none found)"
-    }
-    else {
-        foreach ($web in $rootSubsites | Sort-Object Url) {
-            $title = if ($web.Title) { $web.Title } else { '(no title)' }
-            Write-Host "  $($web.Url)  |  $title"
-        }
-    }
-}
-catch {
-    Write-Warning "Could not enumerate root subsites: $($_.Exception.Message)"
-}
-
 $selectedScope = Select-SiteForScope -Sites $tenantSites
 Write-Host "`nSelected scope site: $($selectedScope.Url)"
+
+$showRootInventory = Get-BooleanPrompt -Message "Show root subsite inventory under $RootUrl?" -DefaultYes $false
+if ($showRootInventory) {
+    Write-Host ("`nRoot subsite inventory under {0}:" -f $RootUrl)
+    try {
+        $rootSubsites = Get-PnPSubWeb -Connection $rootConn -Recurse -Includes Url, Title
+        if ($rootSubsites.Count -eq 0) {
+            Write-Host "  (none found)"
+        }
+        else {
+            foreach ($web in $rootSubsites | Sort-Object Url) {
+                $title = if ($web.Title) { $web.Title } else { '(no title)' }
+                Write-Host "  $($web.Url)  |  $title"
+            }
+        }
+    }
+    catch {
+        Write-Warning "Could not enumerate root subsites: $($_.Exception.Message)"
+    }
+}
+else {
+    Write-Host "Root subsite inventory skipped."
+}
 
 $oldBaseInput = Read-Host "Old base URL to find (press Enter to use selected scope URL) [$($selectedScope.Url)]"
 $OldBaseUrl = if ([string]::IsNullOrWhiteSpace($oldBaseInput)) {
@@ -926,4 +930,3 @@ if ($scanOther) {
     Write-Host "Other CSV:     $otherReportPath"
 }
 
-Disconnect-PnPOnline -ErrorAction SilentlyContinue
