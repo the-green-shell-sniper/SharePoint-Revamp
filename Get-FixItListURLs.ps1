@@ -91,6 +91,16 @@ function Connect-ValidatedPnP {
 
             $conn = Connect-PnPOnline @connectParams
 
+            # Increase CSOM request timeout to reduce long-running permission/read failures.
+            try {
+                $ctx = Get-PnPContext -Connection $conn
+                if ($ctx) {
+                    $ctx.RequestTimeout = -1
+                }
+            }
+            catch {
+            }
+
             if ($AdminConnection) {
                 Get-PnPTenantSite -Connection $conn -Detailed | Select-Object -First 1 | Out-Null
             }
@@ -104,6 +114,39 @@ function Connect-ValidatedPnP {
             Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $_.Exception.Message)
             if ($attempt -eq 3) {
                 throw "Unable to establish a validated connection to $Url after 3 attempts."
+            }
+        }
+    }
+}
+
+function Test-IsTimeoutFailure {
+    param([Parameter(Mandatory = $true)]$ErrorRecord)
+
+    $msg = [string]$ErrorRecord.Exception.Message
+    return ($msg -match '(?i)timed out|timeout|request was canceled|HttpClient\.Timeout|The operation has timed out')
+}
+
+function Invoke-WithRetry {
+    param(
+        [Parameter(Mandatory = $true)][scriptblock]$Operation,
+        [Parameter(Mandatory = $false)][scriptblock]$OnTimeout,
+        [Parameter(Mandatory = $false)][int]$MaxAttempts = 3,
+        [Parameter(Mandatory = $false)][string]$Label = "operation"
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            return & $Operation
+        }
+        catch {
+            $isTimeout = Test-IsTimeoutFailure -ErrorRecord $_
+            if ((-not $isTimeout) -or ($attempt -eq $MaxAttempts)) {
+                throw
+            }
+
+            Write-Warning ("{0} timed out (attempt {1}/{2}); refreshing and retrying..." -f $Label, $attempt, $MaxAttempts)
+            if ($OnTimeout) {
+                & $OnTimeout
             }
         }
     }
@@ -307,11 +350,33 @@ function Get-RoleAssignmentsTopLevel {
     }
 
     $entries = New-Object System.Collections.Generic.List[string]
-    $assignments = Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
+    $assignments = $null
+    try {
+        $assignments = Invoke-WithRetry -Label "Get role assignments" -MaxAttempts 4 -Operation {
+            Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
+        }
+    }
+    catch {
+        $msg = $_.Exception.Message
+        $result = "(could not read permissions: $msg)"
+        $Cache[$CacheKey] = $result
+        return $result
+    }
 
     foreach ($ra in $assignments) {
-        $member = Get-PnPProperty -ClientObject $ra -Property Member
-        $bindings = Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings
+        $member = $null
+        $bindings = $null
+        try {
+            $member = Invoke-WithRetry -Label "Get role assignment member" -MaxAttempts 4 -Operation {
+                Get-PnPProperty -ClientObject $ra -Property Member
+            }
+            $bindings = Invoke-WithRetry -Label "Get role assignment bindings" -MaxAttempts 4 -Operation {
+                Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings
+            }
+        }
+        catch {
+            continue
+        }
         $roles = @($bindings | Where-Object { $_.Name -ne 'Limited Access' } | Select-Object -ExpandProperty Name)
 
         if ($roles.Count -eq 0) {
@@ -830,11 +895,23 @@ foreach ($site in $scanSiteCollections) {
             continue
         }
 
+        $libraryCounterInWeb = 0
         foreach ($list in $lists) {
             if ($list.Hidden) { continue }
             if ($SkipListTitles -contains $list.Title) { continue }
             if ($list.ItemCount -eq 0) { continue }
             if ($list.BaseTemplate -ne 101) { continue }
+
+            $libraryCounterInWeb++
+            if ($libraryCounterInWeb % 5 -eq 0) {
+                try {
+                    $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                }
+                catch {
+                    Write-Warning "    Could not refresh web connection; continuing with current connection."
+                }
+            }
 
             $stats.LibrariesVisited++
             Write-Host "    Library: $($list.Title)"
@@ -845,7 +922,12 @@ foreach ($site in $scanSiteCollections) {
             $items = $null
 
             try {
-                $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
+                $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
+                    $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                } -Operation {
+                    Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 500 -Fields $fields
+                }
             }
             catch {
                 Write-Warning "    Could not read items for library $($list.Title): $($_.Exception.Message)"
@@ -885,11 +967,23 @@ foreach ($site in $scanSiteCollections) {
                 $editorValue = $item.FieldValues['Editor']
                 $lastModifiedBy = if ($editorValue -and $editorValue.LookupValue) { $editorValue.LookupValue } else { '' }
 
-                $topLevelPermissions = Get-EffectiveTopLevelPermissions -Item $item -List $list -Web $web -Cache $permissionCache
+                $topLevelPermissions = ''
+                try {
+                    $topLevelPermissions = Get-EffectiveTopLevelPermissions -Item $item -List $list -Web $web -Cache $permissionCache
+                }
+                catch {
+                    $topLevelPermissions = "(could not read permissions: $($_.Exception.Message))"
+                }
 
                 $refs = @()
                 try {
-                    $ms = Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $webConn
+                    $ms = Invoke-WithRetry -Label ("Get file stream: " + $fileRef) -MaxAttempts 4 -OnTimeout {
+                        $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $web = Get-PnPWeb -Connection $webConn -Includes Id, Url
+                    } -Operation {
+                        Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $webConn
+                    }
+
                     if ($ext -eq '.pdf') {
                         $refs = Get-PdfReferences -Bytes $ms.ToArray()
                     }
@@ -920,8 +1014,6 @@ foreach ($site in $scanSiteCollections) {
                         'Document Owner(s)' = $createdBy
                         'Last Modified' = $lastModifiedBy
                         'Permissions' = $topLevelPermissions
-                        'Every Embedded URL that will break' = $ref.Value
-                        'Old URL' = $oldUrlValue
                         'New URL' = $newUrlValue
                         'Site Collection Containing Document' = $siteUrl
                         'Web Containing Document' = $webUrl
@@ -985,10 +1077,20 @@ if ($scanOther) {
                 continue
             }
 
+            $otherLibraryCounterInWeb = 0
             foreach ($list in $lists) {
                 if ($list.Hidden) { continue }
                 if ($list.ItemCount -eq 0) { continue }
                 if ($list.BaseTemplate -eq 101) { continue }
+
+                $otherLibraryCounterInWeb++
+                if ($otherLibraryCounterInWeb % 5 -eq 0) {
+                    try {
+                        $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    }
+                    catch {
+                    }
+                }
 
                 $fields = $null
                 try {
@@ -1008,7 +1110,11 @@ if ($scanOther) {
 
                 $items = $null
                 try {
-                    $items = Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 200
+                    $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
+                        $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    } -Operation {
+                        Get-PnPListItem -List $list.Title -Connection $webConn -PageSize 200
+                    }
                 }
                 catch {
                     continue
