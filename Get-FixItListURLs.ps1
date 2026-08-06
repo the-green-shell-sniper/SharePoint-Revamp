@@ -239,33 +239,63 @@ function Get-PdfReferences {
     return $found | Sort-Object Value, Kind -Unique
 }
 
-function Test-IsBreakingUrl {
+function Get-UrlMappingMatch {
     param(
         [Parameter(Mandatory = $true)][string]$Value,
-        [Parameter(Mandatory = $true)][string]$OldBaseUrl,
-        [Parameter(Mandatory = $true)][string]$TenantBase,
-        [Parameter(Mandatory = $true)][string]$OldBasePath
+        [Parameter(Mandatory = $true)][array]$Mappings
     )
 
     if ([string]::IsNullOrWhiteSpace($Value)) {
-        return $false
+        return $null
     }
 
     $clean = Get-CleanedValue -Value $Value
 
-    if ($clean.StartsWith($OldBaseUrl, [System.StringComparison]::OrdinalIgnoreCase)) {
-        return $true
+    foreach ($m in $Mappings) {
+        $idx = $clean.IndexOf($m.OldBaseUrl, [System.StringComparison]::OrdinalIgnoreCase)
+        if ($idx -ge 0) {
+            $suffix = $clean.Substring($idx + $m.OldBaseUrl.Length)
+            $oldUrl = $clean.Substring($idx)
+            $newUrl = $m.NewBaseUrl + $suffix
+            return [PSCustomObject]@{
+                OldBaseUrl = $m.OldBaseUrl
+                NewBaseUrl = $m.NewBaseUrl
+                OldUrl     = $oldUrl
+                NewUrl     = $newUrl
+            }
+        }
+
+        $viewerPattern = '^(?i)' + [regex]::Escape($m.TenantBase) + '/:[a-z]:/[rtu]' + [regex]::Escape($m.OldBasePath) + '(?=$|[/?#])'
+        $vm = [regex]::Match($clean, $viewerPattern)
+        if ($vm.Success) {
+            $suffix = $clean.Substring($vm.Length)
+            $oldUrl = $m.OldBaseUrl + $suffix
+            $newUrl = $m.NewBaseUrl + $suffix
+            return [PSCustomObject]@{
+                OldBaseUrl = $m.OldBaseUrl
+                NewBaseUrl = $m.NewBaseUrl
+                OldUrl     = $oldUrl
+                NewUrl     = $newUrl
+            }
+        }
+
+        if ($clean.StartsWith($m.OldBasePath, [System.StringComparison]::OrdinalIgnoreCase)) {
+            $suffix = $clean.Substring($m.OldBasePath.Length)
+            $oldUrl = $m.OldBaseUrl + $suffix
+            $newUrl = $m.NewBaseUrl + $suffix
+            return [PSCustomObject]@{
+                OldBaseUrl = $m.OldBaseUrl
+                NewBaseUrl = $m.NewBaseUrl
+                OldUrl     = $oldUrl
+                NewUrl     = $newUrl
+            }
+        }
     }
 
-    $viewerPattern = '^(?i)' + [regex]::Escape($TenantBase) + '/:[a-z]:/[rtu]' + [regex]::Escape($OldBasePath) + '(?=$|[/?#])'
-    if ([regex]::IsMatch($clean, $viewerPattern)) {
-        return $true
-    }
-
-    return $false
+    return $null
 }
 
-function Get-RoleAssignmentsWithOwnerLevel {
+function Get-RoleAssignmentsTopLevel {
     param(
         [Parameter(Mandatory = $true)]$Securable,
         [Parameter(Mandatory = $true)][string]$CacheKey,
@@ -276,33 +306,49 @@ function Get-RoleAssignmentsWithOwnerLevel {
         return $Cache[$CacheKey]
     }
 
-    $names = New-Object System.Collections.Generic.List[string]
+    $entries = New-Object System.Collections.Generic.List[string]
     $assignments = Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
 
     foreach ($ra in $assignments) {
         $member = Get-PnPProperty -ClientObject $ra -Property Member
         $bindings = Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings
-        $roles = @($bindings | Select-Object -ExpandProperty Name)
+        $roles = @($bindings | Where-Object { $_.Name -ne 'Limited Access' } | Select-Object -ExpandProperty Name)
 
         if ($roles.Count -eq 0) {
             continue
         }
 
-        $ownerRole = $roles | Where-Object {
-            $_ -match '^(?i)full control$' -or $_ -match 'owner'
+        $roleText = $roles -join '/'
+        if ($member.PrincipalType -eq 'SharePointGroup' -and $member.LoginName -like 'SharingLinks.*') {
+            $kind = ($member.LoginName -split '\.')[2]
+            if ([string]::IsNullOrWhiteSpace($kind)) { $kind = 'sharing' }
+            $entries.Add("Link: $kind [$roleText]")
         }
-
-        if ($ownerRole.Count -gt 0) {
-            $names.Add($member.Title)
+        elseif ($member.PrincipalType -eq 'SharePointGroup') {
+            $entries.Add("Group: $($member.Title) [$roleText]")
+        }
+        elseif ($member.PrincipalType -eq 'SecurityGroup') {
+            $entries.Add("Security Group: $($member.Title) [$roleText]")
+        }
+        elseif ($member.PrincipalType -eq 'User') {
+            if ($member.Email) {
+                $entries.Add("User: $($member.Title) <$($member.Email)> [$roleText]")
+            }
+            else {
+                $entries.Add("User: $($member.Title) [$roleText]")
+            }
+        }
+        else {
+            $entries.Add("$($member.Title) [$roleText]")
         }
     }
 
-    $result = ($names | Sort-Object -Unique) -join "`n"
+    $result = ($entries | Sort-Object -Unique) -join "`n"
     $Cache[$CacheKey] = $result
     return $result
 }
 
-function Get-EffectiveOwnerPermissions {
+function Get-EffectiveTopLevelPermissions {
     param(
         [Parameter(Mandatory = $true)]$Item,
         [Parameter(Mandatory = $true)]$List,
@@ -326,14 +372,72 @@ function Get-EffectiveOwnerPermissions {
     }
 
     if ($itemUnique) {
-        return Get-RoleAssignmentsWithOwnerLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache
+        return Get-RoleAssignmentsTopLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache
     }
 
     if ($listUnique) {
-        return Get-RoleAssignmentsWithOwnerLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache
+        return Get-RoleAssignmentsTopLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache
     }
 
-    return Get-RoleAssignmentsWithOwnerLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache
+    return Get-RoleAssignmentsTopLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache
+}
+
+function Test-IsExternalBrokenUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][string[]]$TenantHosts,
+        [Parameter(Mandatory = $true)][hashtable]$Cache,
+        [Parameter(Mandatory = $true)]$HttpClient
+    )
+
+    $clean = Get-CleanedValue -Value $Url
+    if ([string]::IsNullOrWhiteSpace($clean)) {
+        return $false
+    }
+
+    if ($Cache.ContainsKey($clean)) {
+        return [bool]$Cache[$clean]
+    }
+
+    $uri = $null
+    if (-not [Uri]::TryCreate($clean, [UriKind]::Absolute, [ref]$uri)) {
+        $Cache[$clean] = $false
+        return $false
+    }
+
+    if ($uri.Scheme -notin @('http', 'https')) {
+        $Cache[$clean] = $false
+        return $false
+    }
+
+    $urlHost = $uri.Host.ToLower()
+    $isSharePointHost = $urlHost -eq 'sharepoint.com' -or $urlHost.EndsWith('.sharepoint.com')
+    if ($isSharePointHost -or ($TenantHosts -contains $urlHost)) {
+        $Cache[$clean] = $false
+        return $false
+    }
+
+    $broken = $false
+    try {
+        $headReq = New-Object System.Net.Http.HttpRequestMessage([System.Net.Http.HttpMethod]::Head, $uri)
+        $headResp = $HttpClient.Send($headReq)
+        if ([int]$headResp.StatusCode -ge 400) {
+            if ([int]$headResp.StatusCode -in 405, 501) {
+                $getReq = New-Object System.Net.Http.HttpRequestMessage([System.Net.Http.HttpMethod]::Get, $uri)
+                $getResp = $HttpClient.Send($getReq, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead)
+                $broken = [int]$getResp.StatusCode -ge 400
+            }
+            else {
+                $broken = $true
+            }
+        }
+    }
+    catch {
+        $broken = $true
+    }
+
+    $Cache[$clean] = $broken
+    return $broken
 }
 
 function Get-FolderDisplayName {
@@ -512,7 +616,6 @@ $RootUrl = $RootUrl.TrimEnd('/')
 $AdminUrl = $AdminUrl.TrimEnd('/')
 
 $adminConn = Connect-ValidatedPnP -Url $AdminUrl -ClientId $ClientId -AdminConnection
-$rootConn = Connect-ValidatedPnP -Url $RootUrl -ClientId $ClientId
 
 Write-Host "`nCollecting tenant sites (excluding OneDrive personal sites)..."
 $tenantSites = Get-PnPTenantSite -Connection $adminConn -Detailed
@@ -529,71 +632,118 @@ if ($tenantSites.Count -eq 0) {
 }
 
 $selectedScope = Select-SiteForScope -Sites $tenantSites
-Write-Host "`nSelected scope site: $($selectedScope.Url)"
+$selectedScopeUrl = $selectedScope.Url.TrimEnd('/')
+Write-Host "`nSelected inventory scope: $selectedScopeUrl"
 
-$showRootInventory = Get-BooleanPrompt -Message "Show root subsite inventory under $RootUrl?" -DefaultYes $false
-if ($showRootInventory) {
-    Write-Host ("`nRoot subsite inventory under {0}:" -f $RootUrl)
-    try {
-        $rootSubsites = Get-PnPSubWeb -Connection $rootConn -Recurse -Includes Url, Title
-        if ($rootSubsites.Count -eq 0) {
-            Write-Host "  (none found)"
-        }
-        else {
-            foreach ($web in $rootSubsites | Sort-Object Url) {
-                $title = if ($web.Title) { $web.Title } else { '(no title)' }
-                Write-Host "  $($web.Url)  |  $title"
-            }
-        }
-    }
-    catch {
-        Write-Warning "Could not enumerate root subsites: $($_.Exception.Message)"
+$scopeConn = Connect-ValidatedPnP -Url $selectedScopeUrl -ClientId $ClientId
+
+Write-Host ("`nSubsite inventory under selected scope {0}:" -f $selectedScopeUrl)
+$scopeSubsites = $null
+try {
+    $scopeRootWeb = Get-PnPWeb -Connection $scopeConn -Includes Url, Title
+    $scopeSubsites = New-Object System.Collections.Generic.List[Object]
+    $scopeSubsites.Add([PSCustomObject]@{ Url = $scopeRootWeb.Url; Title = $scopeRootWeb.Title })
+
+    $children = @(Get-PnPSubWeb -Connection $scopeConn -Recurse -Includes Url, Title | Sort-Object Url)
+    foreach ($child in $children) {
+        $scopeSubsites.Add([PSCustomObject]@{ Url = $child.Url; Title = $child.Title })
     }
 }
-else {
-    Write-Host "Root subsite inventory skipped."
+catch {
+    throw "Could not enumerate subsites under ${selectedScopeUrl}: $($_.Exception.Message)"
 }
 
-$oldBaseInput = Read-Host "Old base URL to find (press Enter to use selected scope URL) [$($selectedScope.Url)]"
-$OldBaseUrl = if ([string]::IsNullOrWhiteSpace($oldBaseInput)) {
-    $selectedScope.Url.TrimEnd('/')
-}
-else {
-    $oldBaseInput.TrimEnd('/')
+if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
+    throw "No sites were found under $selectedScopeUrl."
 }
 
-if (-not $OldBaseUrl.StartsWith($selectedScope.Url.TrimEnd('/'), [System.StringComparison]::OrdinalIgnoreCase)) {
-    throw "Old base URL must stay within the selected scope site collection for this run."
+for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
+    $title = if ($scopeSubsites[$i].Title) { $scopeSubsites[$i].Title } else { '(no title)' }
+    Write-Host ("  {0,4}. {1}  |  {2}" -f ($i + 1), $scopeSubsites[$i].Url, $title)
 }
 
-$NewBaseUrl = Read-Host "New base URL (required)"
-if ([string]::IsNullOrWhiteSpace($NewBaseUrl)) {
-    throw "New base URL is required."
+$selectedIndices = $null
+while (-not $selectedIndices) {
+    $pickRaw = Read-Host "`nPick one or more subsites by number (comma-separated, e.g. 1,4,7)"
+    if ([string]::IsNullOrWhiteSpace($pickRaw)) {
+        Write-Host "  Selection is required."
+        continue
+    }
+
+    $parts = @($pickRaw -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    $valid = $true
+    $numbers = New-Object System.Collections.Generic.List[int]
+
+    foreach ($p in $parts) {
+        if ($p -notmatch '^\d+$') {
+            $valid = $false
+            break
+        }
+        $n = [int]$p
+        if ($n -lt 1 -or $n -gt $scopeSubsites.Count) {
+            $valid = $false
+            break
+        }
+        $numbers.Add($n)
+    }
+
+    if (-not $valid -or $numbers.Count -eq 0) {
+        Write-Host "  Invalid selection. Use comma-separated numbers from the list."
+        continue
+    }
+
+    $selectedIndices = @($numbers | Sort-Object -Unique)
 }
-$NewBaseUrl = $NewBaseUrl.TrimEnd('/')
+
+$selectedSubsites = @()
+foreach ($idx in $selectedIndices) {
+    $selectedSubsites += $scopeSubsites[$idx - 1]
+}
+
+$urlMappings = New-Object System.Collections.Generic.List[object]
+foreach ($sub in $selectedSubsites) {
+    $oldBase = $sub.Url.TrimEnd('/')
+    $newBase = $null
+
+    while (-not $newBase) {
+        $inputNew = Read-Host ("New base URL for {0}" -f $oldBase)
+        if ([string]::IsNullOrWhiteSpace($inputNew)) {
+            Write-Host "  New base URL is required."
+            continue
+        }
+        $candidate = $inputNew.TrimEnd('/')
+        if ($candidate -notmatch '^https?://') {
+            Write-Host "  Enter a valid absolute URL (https://...)."
+            continue
+        }
+        $newBase = $candidate
+    }
+
+    $oldUri = [Uri]$oldBase
+    $urlMappings.Add([PSCustomObject]@{
+            OldBaseUrl = $oldBase
+            NewBaseUrl = $newBase
+            TenantBase = $oldUri.GetLeftPart([UriPartial]::Authority)
+            OldBasePath = $oldUri.AbsolutePath.TrimEnd('/')
+        })
+}
+
+$urlMappingsForMatch = @($urlMappings | Sort-Object { $_.OldBaseUrl.Length } -Descending)
 
 $scanOther = Get-BooleanPrompt -Message "After documents, scan additional content (site pages/list text fields) to a separate CSV?" -DefaultYes $false
 
-$scanDocumentContent = $false
-if ($EnableDocumentContentScan) {
-    $scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
-}
-else {
-    Write-Warning "Document content scan is disabled by default. Use -EnableDocumentContentScan to allow this step."
-}
+$scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
 
 $runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $docReportPath = Join-Path -Path $DocumentsOutputFolder -ChildPath ("Documents-BreakingUrls-" + $runStamp + ".csv")
 $otherReportPath = Join-Path -Path $OtherOutputFolder -ChildPath ("OtherContent-BreakingUrls-" + $runStamp + ".csv")
 
-$oldUri = [Uri]$OldBaseUrl
-$TenantBase = $oldUri.GetLeftPart([UriPartial]::Authority)
-$OldBasePath = $oldUri.AbsolutePath.TrimEnd('/')
-
 Write-Host "`nAudit configuration:"
-Write-Host "  Selected scope site:  $($selectedScope.Url)"
-Write-Host "  Old base URL:         $OldBaseUrl"
-Write-Host "  New base URL:         $NewBaseUrl"
+Write-Host "  Selected subsite mappings:"
+foreach ($m in $urlMappings) {
+    Write-Host ("    OLD: {0}" -f $m.OldBaseUrl)
+    Write-Host ("    NEW: {0}" -f $m.NewBaseUrl)
+}
 Write-Host "  Documents report:     $docReportPath"
 Write-Host "  Document content scan: $scanDocumentContent"
 if ($scanOther) {
@@ -613,6 +763,10 @@ $stats = [PSCustomObject]@{
 
 $permissionCache = @{}
 $folderNameCache = @{}
+$externalUrlStatusCache = @{}
+$tenantHosts = @($tenantSites | ForEach-Object { try { ([Uri]$_.Url).Host.ToLower() } catch { $null } } | Where-Object { $_ } | Sort-Object -Unique)
+$httpClient = [System.Net.Http.HttpClient]::new()
+$httpClient.Timeout = [TimeSpan]::FromSeconds(8)
 
 $scanSiteCollections = @($tenantSites | Sort-Object Url)
 
@@ -620,6 +774,7 @@ Write-Host "`nStarting tenant-wide document scan (SharePoint only, no OneDrive).
 if ($scanDocumentContent) {
 foreach ($site in $scanSiteCollections) {
     $siteUrl = $site.Url.TrimEnd('/')
+    $siteTenantBase = ([Uri]$siteUrl).GetLeftPart([UriPartial]::Authority)
     $stats.SitesVisited++
     Write-Host "`n[$($stats.SitesVisited)/$($scanSiteCollections.Count)] Site collection: $siteUrl"
 
@@ -720,8 +875,8 @@ foreach ($site in $scanSiteCollections) {
                     continue
                 }
 
-                $docUrl = Get-DocumentBrowserUrl -TenantBase $TenantBase -FileRef $fileRef -Extension $ext -UniqueId $item.FieldValues['UniqueId']
-                $folderUrl = Get-FolderBrowserUrl -TenantBase $TenantBase -LibraryRootPath $libraryRootPath -ListId $list.Id -FileDirRef $item.FieldValues['FileDirRef']
+                $docUrl = Get-DocumentBrowserUrl -TenantBase $siteTenantBase -FileRef $fileRef -Extension $ext -UniqueId $item.FieldValues['UniqueId']
+                $folderUrl = Get-FolderBrowserUrl -TenantBase $siteTenantBase -LibraryRootPath $libraryRootPath -ListId $list.Id -FileDirRef $item.FieldValues['FileDirRef']
                 $folderName = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -Cache $folderNameCache
 
                 $authorValue = $item.FieldValues['Author']
@@ -730,7 +885,7 @@ foreach ($site in $scanSiteCollections) {
                 $editorValue = $item.FieldValues['Editor']
                 $lastModifiedBy = if ($editorValue -and $editorValue.LookupValue) { $editorValue.LookupValue } else { '' }
 
-                $ownerPermissions = Get-EffectiveOwnerPermissions -Item $item -List $list -Web $web -Cache $permissionCache
+                $topLevelPermissions = Get-EffectiveTopLevelPermissions -Item $item -List $list -Web $web -Cache $permissionCache
 
                 $refs = @()
                 try {
@@ -747,21 +902,27 @@ foreach ($site in $scanSiteCollections) {
                 }
 
                 foreach ($ref in $refs) {
-                    if (-not (Test-IsBreakingUrl -Value $ref.Value -OldBaseUrl $OldBaseUrl -TenantBase $TenantBase -OldBasePath $OldBasePath)) {
+                    $cleanEmbedded = Get-CleanedValue -Value $ref.Value
+                    $matched = Get-UrlMappingMatch -Value $ref.Value -Mappings $urlMappingsForMatch
+                    $externalBroken = Test-IsExternalBrokenUrl -Url $ref.Value -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
+                    if ((-not $matched) -and (-not $externalBroken)) {
                         continue
                     }
+
+                    $oldUrlValue = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
+                    $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
 
                     $row = [PSCustomObject]@{
                         'Document URL' = $docUrl
                         'Document Folder URL' = $folderUrl
                         'Document Folder Name' = $folderName
                         'Document File Name' = $fileLeaf
-                        'Created By' = $createdBy
+                        'Document Owner(s)' = $createdBy
                         'Last Modified' = $lastModifiedBy
-                        'Permissions' = $ownerPermissions
+                        'Permissions' = $topLevelPermissions
                         'Every Embedded URL that will break' = $ref.Value
-                        'Old Base URL' = $OldBaseUrl
-                        'New Base URL' = $NewBaseUrl
+                        'Old URL' = $oldUrlValue
+                        'New URL' = $newUrlValue
                         'Site Collection Containing Document' = $siteUrl
                         'Web Containing Document' = $webUrl
                     }
@@ -783,6 +944,7 @@ if ($scanOther) {
 
     foreach ($site in $scanSiteCollections) {
         $siteUrl = $site.Url.TrimEnd('/')
+        $siteTenantBase = ([Uri]$siteUrl).GetLeftPart([UriPartial]::Authority)
         Write-Host "`nOther-content scan site collection: $siteUrl"
 
         $siteConn = $null
@@ -858,10 +1020,10 @@ if ($scanOther) {
 
                     $itemUrl = ''
                     if ($item.FieldValues.ContainsKey('FileRef') -and $item.FieldValues['FileRef']) {
-                        $itemUrl = $TenantBase + [string]$item.FieldValues['FileRef']
+                        $itemUrl = $siteTenantBase + [string]$item.FieldValues['FileRef']
                     }
                     elseif ($list.DefaultDisplayFormUrl) {
-                        $itemUrl = $TenantBase + $list.DefaultDisplayFormUrl + "?ID=$itemId"
+                        $itemUrl = $siteTenantBase + $list.DefaultDisplayFormUrl + "?ID=$itemId"
                     }
 
                     foreach ($field in $textFields) {
@@ -885,9 +1047,15 @@ if ($scanOther) {
 
                         foreach ($text in $textValues) {
                             foreach ($url in (Find-UrlsInText -Text $text)) {
-                                if (-not (Test-IsBreakingUrl -Value $url -OldBaseUrl $OldBaseUrl -TenantBase $TenantBase -OldBasePath $OldBasePath)) {
+                                $matched = Get-UrlMappingMatch -Value $url -Mappings $urlMappingsForMatch
+                                $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
+                                if ((-not $matched) -and (-not $externalBroken)) {
                                     continue
                                 }
+
+                                $cleanEmbedded = Get-CleanedValue -Value $url
+                                $oldUrlValue = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
+                                $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
 
                                 $row = [PSCustomObject]@{
                                     'Content Type' = 'ListOrPageItem'
@@ -898,9 +1066,8 @@ if ($scanOther) {
                                     'Item Title' = $itemTitle
                                     'Item URL' = $itemUrl
                                     'Field Name' = $field.InternalName
-                                    'Every Embedded URL that will break' = $url
-                                    'Old Base URL' = $OldBaseUrl
-                                    'New Base URL' = $NewBaseUrl
+                                    'Old URL' = $oldUrlValue
+                                    'New URL' = $newUrlValue
                                 }
 
                                 Write-OtherFinding -OutputPath $otherReportPath -Row $row
