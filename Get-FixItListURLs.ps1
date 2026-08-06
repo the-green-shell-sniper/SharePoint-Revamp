@@ -33,10 +33,10 @@ param(
     [switch]$EnableDocumentContentScan,
 
     [Parameter(Mandatory = $false)]
-    [string]$DocumentsOutputFolder = "P:\IT\Private\zzBPosey\whaitapp09\SharePoint-Revamp\FixItList-Audits\Documents",
+    [string]$DocumentsOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\Documents",
 
     [Parameter(Mandatory = $false)]
-    [string]$OtherOutputFolder = "P:\IT\Private\zzBPosey\whaitapp09\SharePoint-Revamp\FixItList-Audits\Other"
+    [string]$OtherOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\NonDocuments"
 )
 
 $ErrorActionPreference = "Stop"
