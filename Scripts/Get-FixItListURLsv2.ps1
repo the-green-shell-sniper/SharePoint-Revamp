@@ -71,6 +71,112 @@ function Install-RequiredModule {
     Import-Module $Name -ErrorAction Stop
 }
 
+function Test-ConnectedAccountPermissions {
+    param(
+        [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $false)][switch]$AdminConnection
+    )
+
+    $issues = New-Object System.Collections.Generic.List[string]
+    $requiredScopes = @('Sites.Read.All', 'User.Read', 'Directory.Read.All')
+
+    try {
+        if ($AdminConnection) {
+            Get-PnPTenantSite -Connection $Connection -Detailed | Select-Object -First 1 | Out-Null
+        }
+        else {
+            Get-PnPWeb -Connection $Connection -Includes Url | Out-Null
+        }
+    }
+    catch {
+        $issues.Add(("SharePoint access validation failed for {0}: {1}" -f $Url, $_.Exception.Message))
+    }
+
+    $graphValidated = $false
+    $graphMessage = ''
+    try {
+        if (-not (Get-Module -ListAvailable -Name 'Microsoft.Graph.Authentication')) {
+            Write-Host 'Installing Microsoft.Graph.Authentication to validate Graph permissions for the signed-in account...'
+            Install-Module -Name 'Microsoft.Graph.Authentication' -Scope CurrentUser -Force -AllowClobber
+        }
+
+        Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
+
+        if (-not (Get-Command -Name 'Invoke-MgGraphRequest' -ErrorAction SilentlyContinue)) {
+            throw 'Microsoft Graph PowerShell module is not available after import.'
+        }
+
+        if (-not (Get-MgContext -ErrorAction SilentlyContinue)) {
+            Connect-MgGraph -Scopes $requiredScopes -NoWelcome -ClientId $ClientId -ErrorAction Stop
+        }
+
+        $null = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/organization?$select=id,displayName'
+        $graphValidated = $true
+    }
+    catch {
+        $graphMessage = $_.Exception.Message
+        $issues.Add("Graph access validation failed: $graphMessage")
+    }
+
+    if ($issues.Count -gt 0) {
+        throw [PSCustomObject]@{
+            Message = "Connected account does not have the required scope/permissions for this script. Missing or insufficient permissions: $($issues -join '; ')"
+            RequiredScopes = $requiredScopes
+            Issues = @($issues)
+        }
+    }
+
+    if (-not $graphValidated) {
+        Write-Warning "Graph permission check could not be completed for the signed-in account. Continuing with SharePoint validation only. $graphMessage"
+    }
+
+    return [PSCustomObject]@{
+        SharePointValidated = $true
+        GraphValidated = $graphValidated
+        GraphMessage = $graphMessage
+        RequiredScopes = $requiredScopes
+        Issues = @()
+    }
+}
+
+function Show-PermissionReauthPrompt {
+    param(
+        [Parameter(Mandatory = $true)][string]$AccountName,
+        [Parameter(Mandatory = $true)][string]$Message,
+        [Parameter(Mandatory = $true)][string[]]$RequiredScopes
+    )
+
+    Write-Host ""
+    Write-Host "The current account '$AccountName' does not have the required permissions for this script."
+    Write-Host $Message
+    Write-Host "Required scopes/permissions:"
+    foreach ($scope in $RequiredScopes) {
+        Write-Host "  - $scope"
+    }
+
+    while ($true) {
+        $choice = Read-Host "Request these permissions for the current account (R) or sign in with a different account (S)? [R/S]"
+        if ([string]::IsNullOrWhiteSpace($choice)) {
+            $choice = 'R'
+        }
+
+        switch ($choice.Trim().ToLowerInvariant()) {
+            'r' {
+                Write-Host "Please request the required permissions for account '$AccountName' through your admin or consent process."
+                return 'request'
+            }
+            's' {
+                return 'switch'
+            }
+            default {
+                Write-Host '  Please enter R or S.'
+            }
+        }
+    }
+}
+
 function Connect-ValidatedPnP {
     param(
         [Parameter(Mandatory = $true)][string]$Url,
@@ -115,12 +221,42 @@ function Connect-ValidatedPnP {
             return $conn
         }
         catch {
-            Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $_.Exception.Message)
+            $message = $_.Exception.Message
+            $isAuthFailure = Test-IsAuthFailureMessage -Message $message
+            Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $message)
+            if ($isAuthFailure -and $attempt -lt 3) {
+                Write-Warning "Reinitiating sign-in flow and retrying connection validation."
+                try {
+                    Disconnect-PnPOnline -ErrorAction SilentlyContinue
+                }
+                catch {
+                    Write-Verbose "Could not disconnect the previous PnP session cleanly: $($_.Exception.Message)"
+                }
+                continue
+            }
             if ($attempt -eq 3) {
                 throw "Unable to establish a validated connection to $Url after 3 attempts."
             }
         }
     }
+}
+
+function Reconnect-ForAuthenticationRefresh {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $false)][switch]$AdminConnection
+    )
+
+    Write-Warning "Authentication issue detected; forcing a fresh sign-in prompt for $Url."
+    try {
+        Disconnect-PnPOnline -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Verbose "Could not disconnect the previous PnP session cleanly: $($_.Exception.Message)"
+    }
+
+    return Connect-ValidatedPnP -Url $Url -ClientId $ClientId -AdminConnection:$AdminConnection
 }
 
 function Test-IsTimeoutFailure {
@@ -133,7 +269,11 @@ function Test-IsTimeoutFailure {
 function Test-IsAuthFailureMessage {
     param([Parameter(Mandatory = $true)][string]$Message)
 
-    return ($Message -match '(?i)not signed in|use connect-pnponline|sign in|signin|token|unauthorized|forbidden|access denied')
+    if ([string]::IsNullOrWhiteSpace($Message)) {
+        return $false
+    }
+
+    return ($Message -match '(?i)(not signed in|use connect-pnponline|sign in|signin|token|unauthorized|authentication failed|authentication required|401|expired token)')
 }
 
 function Invoke-WithRetry {
@@ -901,7 +1041,7 @@ function Get-BooleanPrompt {
         [Parameter(Mandatory = $false)][bool]$DefaultYes = $false
     )
 
-    $suffix = if ($DefaultYes) { "[Y/n]" } else { "[y/N]" }
+    $suffix = '[Y/N]'
     while ($true) {
         $value = Read-Host "$Message $suffix"
         if ([string]::IsNullOrWhiteSpace($value)) {
@@ -992,6 +1132,30 @@ $RootUrl = $RootUrl.TrimEnd('/')
 $AdminUrl = $AdminUrl.TrimEnd('/')
 
 $adminConn = Connect-ValidatedPnP -Url $AdminUrl -ClientId $ClientId -AdminConnection
+$permissionCheck = $null
+$accountName = $null
+try {
+    $permissionCheck = Test-ConnectedAccountPermissions -Connection $adminConn -Url $AdminUrl -ClientId $ClientId -AdminConnection
+}
+catch {
+    $permissionFailure = $_.Exception
+    $accountName = if ($permissionFailure.PSObject.Properties['RequiredScopes']) { 'current account' } else { 'current account' }
+    Write-Warning "Initial permission/scope validation failed: $($permissionFailure.Message)"
+
+    $accountName = 'current account'
+    $action = Show-PermissionReauthPrompt -AccountName $accountName -Message $permissionFailure.Message -RequiredScopes $permissionFailure.RequiredScopes
+    if ($action -eq 'switch') {
+        $adminConn = Reconnect-ForAuthenticationRefresh -Url $AdminUrl -ClientId $ClientId -AdminConnection
+        $permissionCheck = Test-ConnectedAccountPermissions -Connection $adminConn -Url $AdminUrl -ClientId $ClientId -AdminConnection
+    }
+    else {
+        throw $permissionFailure.Message
+    }
+}
+
+if (-not $permissionCheck.SharePointValidated) {
+    throw 'The connected account did not pass the required SharePoint permission validation.'
+}
 
 Write-Host "`nCollecting tenant sites (excluding OneDrive personal sites)..."
 $tenantSites = Get-PnPTenantSite -Connection $adminConn -Detailed
@@ -1270,7 +1434,7 @@ foreach ($site in $scanSiteCollections) {
 
             try {
                 $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                    $retryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                    $retryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                     $retryState.Web = Get-PnPWeb -Connection $retryState.WebConn -Includes Id, Url, Title
                 } -Operation {
                     Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
@@ -1280,8 +1444,25 @@ foreach ($site in $scanSiteCollections) {
                 $web = $retryState.Web
             }
             catch {
-                Write-Warning "    Could not read items for library $($list.Title): $($_.Exception.Message)"
-                continue
+                $message = [string]$_.Exception.Message
+                if (Test-IsAuthFailureMessage -Message $message) {
+                    Write-Warning "    Authentication issue while reading list items for $($list.Title); prompting for a fresh sign-in."
+                    try {
+                        $retryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
+                        $retryState.Web = Get-PnPWeb -Connection $retryState.WebConn -Includes Id, Url, Title
+                        $items = Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
+                        $webConn = $retryState.WebConn
+                        $web = $retryState.Web
+                    }
+                    catch {
+                        Write-Warning "    Could not read items for library $($list.Title) after re-authentication: $($_.Exception.Message)"
+                        continue
+                    }
+                }
+                else {
+                    Write-Warning "    Could not read items for library $($list.Title): $($_.Exception.Message)"
+                    continue
+                }
             }
 
             foreach ($item in $items) {
@@ -1328,16 +1509,16 @@ foreach ($site in $scanSiteCollections) {
                         $permMsg = $topLevelPermissions -replace '^\(could not read permissions:\s*', ''
                         $permMsg = $permMsg.TrimEnd(')')
                         if (Test-IsAuthFailureMessage -Message $permMsg) {
-                            Write-Warning "Auth failure while reading permissions for $fileRef. Reconnecting and retrying this row."
+                            Write-Verbose "Auth failure while reading permissions for $fileRef. Prompting for fresh sign-in and retrying this row."
 
-                            $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                            $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                             $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
 
                             $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
                             $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
 
                             $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
-                                $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                                $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                                 $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
                                 $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
                                 $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
@@ -1353,7 +1534,7 @@ foreach ($site in $scanSiteCollections) {
                 try {
                     $fileRetryState = @{ WebConn = $webConn; Web = $web }
                     $ms = Invoke-WithRetry -Label ("Get file stream: " + $fileRef) -MaxAttempts 4 -OnTimeout {
-                        $fileRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $fileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                         $fileRetryState.Web = Get-PnPWeb -Connection $fileRetryState.WebConn -Includes Id, Url, Title
                     } -Operation {
                         Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $fileRetryState.WebConn
@@ -1373,7 +1554,33 @@ foreach ($site in $scanSiteCollections) {
                     }
                 }
                 catch {
-                    continue
+                    $message = [string]$_.Exception.Message
+                    if (Test-IsAuthFailureMessage -Message $message) {
+                        Write-Warning "    Authentication issue while reading file content for $fileRef; prompting for a fresh sign-in."
+                        try {
+                            $fileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
+                            $fileRetryState.Web = Get-PnPWeb -Connection $fileRetryState.WebConn -Includes Id, Url, Title
+                            $ms = Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $fileRetryState.WebConn
+                            $webConn = $fileRetryState.WebConn
+                            $web = $fileRetryState.Web
+
+                            if ($ext -eq '.pdf') {
+                                $refs = Get-PdfReference -Bytes $ms.ToArray()
+                            }
+                            elseif ($OpenXmlExtensions -contains $ext) {
+                                $refs = Get-OfficeDocReference -Stream $ms
+                            }
+                            else {
+                                $refs = Get-TextReferenceFromBytes -Bytes $ms.ToArray() -Kind 'plaintext-doc'
+                            }
+                        }
+                        catch {
+                            continue
+                        }
+                    }
+                    else {
+                        continue
+                    }
                 }
 
                 foreach ($ref in $refs) {
@@ -1507,7 +1714,7 @@ if ($scanOther) {
                 try {
                     $otherRetryState = @{ WebConn = $webConn }
                     $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                        $otherRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $otherRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                     } -Operation {
                         Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
                     }
@@ -1515,7 +1722,21 @@ if ($scanOther) {
                     $webConn = $otherRetryState.WebConn
                 }
                 catch {
-                    continue
+                    $message = [string]$_.Exception.Message
+                    if (Test-IsAuthFailureMessage -Message $message) {
+                        Write-Warning "    Authentication issue while reading other-content list items for $($list.Title); prompting for a fresh sign-in."
+                        try {
+                            $otherRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
+                            $items = Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
+                            $webConn = $otherRetryState.WebConn
+                        }
+                        catch {
+                            continue
+                        }
+                    }
+                    else {
+                        continue
+                    }
                 }
 
                 foreach ($item in $items) {
@@ -1572,16 +1793,16 @@ if ($scanOther) {
                             $permMsg = $otherTopLevelPermissions -replace '^\(could not read permissions:\s*', ''
                             $permMsg = $permMsg.TrimEnd(')')
                             if (Test-IsAuthFailureMessage -Message $permMsg) {
-                                Write-Warning "Auth failure while reading permissions for Other item $($item.Id) in list $($list.Title). Reconnecting and retrying this row."
+                                Write-Verbose "Auth failure while reading permissions for Other item $($item.Id) in list $($list.Title). Prompting for fresh sign-in and retrying this row."
 
-                                $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                                $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                                 $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
 
                                 $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
                                 $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
 
                                 $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
-                                    $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                                    $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                                     $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
                                     $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
                                     $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
@@ -1601,7 +1822,7 @@ if ($scanOther) {
                             try {
                                 $otherFileRetryState = @{ WebConn = $webConn }
                                 $ms = Invoke-WithRetry -Label ("Get non-document file stream: " + $itemFileRef) -MaxAttempts 4 -OnTimeout {
-                                    $otherFileRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                                    $otherFileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
                                 } -Operation {
                                     Get-PnPFile -Url $itemFileRef -AsMemoryStream -Connection $otherFileRetryState.WebConn
                                 }
