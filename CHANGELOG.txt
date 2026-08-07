@@ -1,0 +1,67 @@
+SCRIPT CHANGELOG
+================
+
+--- Get-FixItListURLsv1 → Get-FixItListURLsv2  [2026-08-07 ~9:30–11:02 AM PT, ~1:01–1:44 PM PT] ---
+
+- Permission validation: replaced Connect-ValidatedPnP with Test-ConnectedAccountPermissionSet
+  (now also validates Graph scopes: Sites.Read.All, User.Read, Directory.Read.All) +
+  Show-PermissionReauthPrompt for reauth/account-switch flow; added Update-PnPConnection /
+  Reset-PnPAuthenticationConnection for mid-run refresh without full re-auth.
+- Extension sets: replaced $SupportedExtensions/$LegacyExtensions with four explicit sets:
+    $DocumentScannableExtensions : .docx .xlsx .pptx .pdf .doc .xls .ppt .txt .csv .rtf
+    $OtherFileScannableExtensions: .htm .aspx
+    $OpenXmlExtensions           : .docx .xlsx .pptx (ZIP-parsed separately)
+    $AlwaysSkipExtensions        : .jpg .png .vsdx .one
+- Output columns expanded: added Link Type, Document Title; split Last Modified into
+  Created By / Last Modified By / Last Modified Date (see Schema E below).
+- New helpers: Get-CentralParkCorrection, Get-LinkTypeLabel, Get-NormalizedExtension, Add-ExtensionCount.
+- Added Set-ScriptWindowTitle — shows script name + Pacific start time in terminal title
+  so long-running jobs are identifiable without opening the session.
+- CSVs always written; placeholder row when findings = 0.
+- File naming: now prefixes site title slug + script slug + report type + timestamp.
+
+
+--- Get-FixItListDocsOnly → Get-FixItListOverviewOnly  [2026-08-07 ~9:30–11:02 AM PT, ~1:01–1:44 PM PT] ---
+
+- Renamed: "DocsOnly" → "OverviewOnly" so output CSVs are distinguishable from
+  URL-detail reports at a glance in the file listing.
+- Permission validation: same swap as URLsv2 — Connect-ValidatedPnP replaced with
+  Test-ConnectedAccountPermissionSet + Show-PermissionReauthPrompt.
+- Added Set-ScriptWindowTitle (same as URLsv2) — script name + Pacific start time in
+  terminal title for easy identification during long runs.
+- Extension arrays ($SupportedExtensions, $LegacyExtensions) unchanged — expansion
+  applies to URLsv2 only.
+
+
+--- CSV Output Schema Evolution  [2026-07-31 – 2026-08-07] (from Reports/ run history) ---
+
+Schema A  ~2026-07-31  (Documents-BreakingUrls-20260731-*)  12 cols, one row per doc
+  Document URL | Document Folder URL | Document Folder Name | Document File Name |
+  Document Owner(s) | Last Modified | Permissions |
+  Every Embedded URL that will break | Old URL | New URL |
+  Site Collection Containing Document | Web Containing Document
+
+Schema B  ~2026-08-05/06  (Documents-BreakingUrls-202608*)  11 cols
+  Same as A; dropped "Web Containing Document".
+
+Schema C  2026-08-06 3:46 PM PT  (Clincians_ITHIM_*-154603.csv)  12 cols, first per-URL rows
+  Site Title | URL | Folder URL | Folder | File Name |
+  Created By | Last Modified By | Last Modified Date | Permissions |
+  Broken Embedded URL | Broken URL Text | New URL
+  vs B: added Site Title; split Last Modified → Created By/Last Modified By/Last Modified Date;
+        renamed URL/Folder fields; renamed broken-URL field; removed Owner, Old URL, Site Collection.
+
+Schema D  2026-08-06 4:13 PM PT  (Clincians_ITHIM_*-161349.csv)  18 cols — OverviewOnly schema
+  Site Title | Site URL | Library | Document Path | Document URL | Folder URL | Folder |
+  File Name | File Extension | Created By | Last Modified By | Last Modified Date | Permissions |
+  Broken URL Occurrences | Matched Old Base URL Count | Matched Old Base URLs | Matched New Base URLs
+
+Schema E  2026-08-07 1:01–1:25 PM PT  (PatientFinancialServices-Get-FixItListURLs-*.csv)  13 cols — URLsv2 final
+  Link Type | Site Title | Document Title | Document URL | Document Folder | Document Folder URL |
+  Broken URL Text | Broken Embedded URL | New URL |
+  Created By | Last Modified By | Last Modified Date | Permissions
+  vs C: added Link Type, Document Title; renamed URL→Document URL, Folder→Document Folder;
+        reordered Broken URL Text before Broken Embedded URL.
+
+File naming: Troubleshooting-Outputs/ used  ReportType-Timestamp.csv
+             Reports/ (current) uses         SiteSlug-ScriptName-ReportType-Timestamp.csv

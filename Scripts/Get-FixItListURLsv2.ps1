@@ -42,6 +42,31 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Set-ScriptWindowTitle {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param([Parameter(Mandatory = $true)][string]$ScriptName)
+
+    try {
+        $startedAt = Get-Date
+        $pacificTz = [System.TimeZoneInfo]::FindSystemTimeZoneById('Pacific Standard Time')
+        $startedAtPacific = if ($startedAt.Kind -eq [System.DateTimeKind]::Utc) {
+            [System.TimeZoneInfo]::ConvertTimeFromUtc($startedAt, $pacificTz)
+        }
+        else {
+            [System.TimeZoneInfo]::ConvertTime($startedAt, $pacificTz)
+        }
+
+        if ($PSCmdlet.ShouldProcess($ScriptName, 'Set console window title')) {
+            $Host.UI.RawUI.WindowTitle = ('{0} | Started {1} PT' -f $ScriptName, $startedAtPacific.ToString('yyyy-MM-dd HH:mm:ss'))
+        }
+    }
+    catch {
+        Write-Verbose 'Could not set the console window title.'
+    }
+}
+
+Set-ScriptWindowTitle -ScriptName 'Get-FixItListURLsv2.ps1'
+
 $DocumentScannableExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.doc', '.xls', '.ppt', '.txt', '.csv', '.rtf')
 $OtherFileScannableExtensions = @('.htm', '.aspx')
 $OpenXmlExtensions = @('.docx', '.xlsx', '.pptx')
@@ -71,11 +96,10 @@ function Install-RequiredModule {
     Import-Module $Name -ErrorAction Stop
 }
 
-function Test-ConnectedAccountPermissions {
+function Test-ConnectedAccountPermissionSet {
     param(
         [Parameter(Mandatory = $true)]$Connection,
         [Parameter(Mandatory = $true)][string]$Url,
-        [Parameter(Mandatory = $false)][string]$ClientId,
         [Parameter(Mandatory = $false)][switch]$AdminConnection
     )
 
@@ -109,7 +133,7 @@ function Test-ConnectedAccountPermissions {
         }
 
         if (-not (Get-MgContext -ErrorAction SilentlyContinue)) {
-            Connect-MgGraph -Scopes $requiredScopes -NoWelcome -ClientId $ClientId -ErrorAction Stop
+            Connect-MgGraph -Scopes $requiredScopes -NoWelcome -ErrorAction Stop
         }
 
         $null = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/organization?$select=id,displayName'
@@ -121,11 +145,12 @@ function Test-ConnectedAccountPermissions {
     }
 
     if ($issues.Count -gt 0) {
-        throw [PSCustomObject]@{
-            Message = "Connected account does not have the required scope/permissions for this script. Missing or insufficient permissions: $($issues -join '; ')"
-            RequiredScopes = $requiredScopes
-            Issues = @($issues)
-        }
+        $permissionException = [System.InvalidOperationException]::new(
+            "Connected account does not have the required scope/permissions for this script. Missing or insufficient permissions: $($issues -join '; ')"
+        )
+        $permissionException.Data['RequiredScopes'] = $requiredScopes
+        $permissionException.Data['Issues'] = @($issues)
+        throw $permissionException
     }
 
     if (-not $graphValidated) {
@@ -221,19 +246,7 @@ function Connect-ValidatedPnP {
             return $conn
         }
         catch {
-            $message = $_.Exception.Message
-            $isAuthFailure = Test-IsAuthFailureMessage -Message $message
-            Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $message)
-            if ($isAuthFailure -and $attempt -lt 3) {
-                Write-Warning "Reinitiating sign-in flow and retrying connection validation."
-                try {
-                    Disconnect-PnPOnline -ErrorAction SilentlyContinue
-                }
-                catch {
-                    Write-Verbose "Could not disconnect the previous PnP session cleanly: $($_.Exception.Message)"
-                }
-                continue
-            }
+            Write-Warning ("Connection validation failed for {0}: {1}" -f $Url, $_.Exception.Message)
             if ($attempt -eq 3) {
                 throw "Unable to establish a validated connection to $Url after 3 attempts."
             }
@@ -241,22 +254,34 @@ function Connect-ValidatedPnP {
     }
 }
 
-function Reconnect-ForAuthenticationRefresh {
+function Update-PnPConnection {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)][string]$Url,
         [Parameter(Mandatory = $false)][string]$ClientId,
         [Parameter(Mandatory = $false)][switch]$AdminConnection
     )
 
-    Write-Warning "Authentication issue detected; forcing a fresh sign-in prompt for $Url."
-    try {
-        Disconnect-PnPOnline -ErrorAction SilentlyContinue
-    }
-    catch {
-        Write-Verbose "Could not disconnect the previous PnP session cleanly: $($_.Exception.Message)"
-    }
+    Write-Warning "Refreshing connection for $Url after a timeout or transient failure."
 
-    return Connect-ValidatedPnP -Url $Url -ClientId $ClientId -AdminConnection:$AdminConnection
+    if ($PSCmdlet.ShouldProcess($Url, 'Refresh PnP connection')) {
+        return Connect-ValidatedPnP -Url $Url -ClientId $ClientId -AdminConnection:$AdminConnection
+    }
+}
+
+function Reset-PnPAuthenticationConnection {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $false)][switch]$AdminConnection
+    )
+
+    Write-Warning "Authentication issue detected for $Url; retrying the interactive PnP connection."
+
+    if ($PSCmdlet.ShouldProcess($Url, 'Reset PnP authentication connection')) {
+        return Connect-ValidatedPnP -Url $Url -ClientId $ClientId -AdminConnection:$AdminConnection
+    }
 }
 
 function Test-IsTimeoutFailure {
@@ -299,6 +324,34 @@ function Invoke-WithRetry {
                 & $OnTimeout
             }
         }
+    }
+}
+
+function Invoke-PnPConnectionOperation {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][scriptblock]$Operation,
+        [Parameter(Mandatory = $false)][string]$Label = 'PnP operation',
+        [Parameter(Mandatory = $false)][int]$MaxAttempts = 4,
+        [Parameter(Mandatory = $false)][switch]$AdminConnection
+    )
+
+    $targetUrl = $Url
+    $targetClientId = $ClientId
+    $operationToRun = $Operation
+    $useAdminConnection = $AdminConnection
+    $state = @{ Connection = $Connection }
+    $result = Invoke-WithRetry -Label $Label -MaxAttempts $MaxAttempts -OnTimeout {
+        $state.Connection = Update-PnPConnection -Url $targetUrl -ClientId $targetClientId -AdminConnection:$useAdminConnection
+    } -Operation {
+        & $operationToRun $state.Connection
+    }
+
+    return [PSCustomObject]@{
+        Connection = $state.Connection
+        Result = $result
     }
 }
 
@@ -358,7 +411,7 @@ function Get-NormalizedExtension {
 function Add-ExtensionCount {
     param(
         [Parameter(Mandatory = $true)][hashtable]$Bucket,
-        [Parameter(Mandatory = $true)][string]$Extension,
+        [Parameter(Mandatory = $true)][AllowEmptyString()][string]$Extension,
         [Parameter(Mandatory = $false)][int]$Increment = 1
     )
 
@@ -599,7 +652,7 @@ function Get-PdfReference {
     return $found | Sort-Object Value, Kind, Text -Unique
 }
 
-function Get-TextReferenceFromBytes {
+function Get-TextReferenceFromByteContent {
     param(
         [Parameter(Mandatory = $true)][byte[]]$Bytes,
         [Parameter(Mandatory = $false)][string]$Kind = 'plaintext'
@@ -611,12 +664,16 @@ function Get-TextReferenceFromBytes {
     try {
         $decodedTexts.Add([System.Text.Encoding]::UTF8.GetString($Bytes))
     }
-    catch { }
+    catch {
+        Write-Verbose 'Could not decode byte content as UTF-8.'
+    }
 
     try {
         $decodedTexts.Add([System.Text.Encoding]::Unicode.GetString($Bytes))
     }
-    catch { }
+    catch {
+        Write-Verbose 'Could not decode byte content as UTF-16.'
+    }
 
     $decodedTexts.Add([System.Text.Encoding]::Latin1.GetString($Bytes))
 
@@ -736,9 +793,11 @@ function Get-LinkTypeLabel {
 function Get-RoleAssignmentTopLevel {
     param(
         [Parameter(Mandatory = $true)]$Securable,
+        [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][string]$ConnectionUrl,
+        [Parameter(Mandatory = $false)][string]$ClientId,
         [Parameter(Mandatory = $true)][string]$CacheKey,
-        [Parameter(Mandatory = $true)][hashtable]$Cache,
-        [Parameter(Mandatory = $false)][scriptblock]$OnAuthFailure
+        [Parameter(Mandatory = $true)][hashtable]$Cache
     )
 
     if ($Cache.ContainsKey($CacheKey)) {
@@ -746,44 +805,47 @@ function Get-RoleAssignmentTopLevel {
     }
 
     $entries = New-Object System.Collections.Generic.List[string]
+    $assignmentExpansionFailures = 0
     $assignments = $null
     $null = $Securable
-    $maxAuthAttempts = if ($OnAuthFailure) { 2 } else { 1 }
-    for ($authAttempt = 1; $authAttempt -le $maxAuthAttempts; $authAttempt++) {
-        try {
-            $assignments = Invoke-WithRetry -Label "Get role assignments" -MaxAttempts 4 -Operation {
-                Get-PnPProperty -ClientObject $Securable -Property RoleAssignments
-            }
-            break
+    $null = $Connection
+    try {
+        $assignmentResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label 'Get role assignments' -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPProperty -ClientObject $Securable -Property RoleAssignments -Connection $activeConnection
         }
-        catch {
-            $msg = $_.Exception.Message
-            if (($authAttempt -lt $maxAuthAttempts) -and (Test-IsAuthFailureMessage -Message $msg) -and $OnAuthFailure) {
-                Write-Warning "Permission read hit an auth issue; reconnecting and retrying role assignments once."
-                & $OnAuthFailure
-                continue
-            }
-
-            $result = "(could not read permissions: $msg)"
-            if (-not (Test-IsAuthFailureMessage -Message $msg)) {
-                $Cache[$CacheKey] = $result
-            }
-            return $result
+        $Connection = $assignmentResult.Connection
+        $assignments = $assignmentResult.Result
+    }
+    catch {
+        $msg = $_.Exception.Message
+        $result = "(could not read permissions: $msg)"
+        if (-not (Test-IsAuthFailureMessage -Message $msg)) {
+            $Cache[$CacheKey] = $result
         }
+        return $result
     }
 
     foreach ($ra in $assignments) {
         $member = $null
         $bindings = $null
         try {
-            $member = Invoke-WithRetry -Label "Get role assignment member" -MaxAttempts 4 -Operation {
-                Get-PnPProperty -ClientObject $ra -Property Member
+            $memberResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label 'Get role assignment member' -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPProperty -ClientObject $ra -Property Member -Connection $activeConnection
             }
-            $bindings = Invoke-WithRetry -Label "Get role assignment bindings" -MaxAttempts 4 -Operation {
-                Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings
+            $Connection = $memberResult.Connection
+            $member = $memberResult.Result
+
+            $bindingResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label 'Get role assignment bindings' -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPProperty -ClientObject $ra -Property RoleDefinitionBindings -Connection $activeConnection
             }
+            $Connection = $bindingResult.Connection
+            $bindings = $bindingResult.Result
         }
         catch {
+            $assignmentExpansionFailures++
             continue
         }
         $roles = @($bindings | Where-Object { $_.Name -ne 'Limited Access' } | Select-Object -ExpandProperty Name)
@@ -817,6 +879,12 @@ function Get-RoleAssignmentTopLevel {
         }
     }
 
+    if ($entries.Count -eq 0 -and $assignmentExpansionFailures -gt 0) {
+        $result = '(could not read permissions: failed to expand one or more role assignments)'
+        $Cache[$CacheKey] = $result
+        return $result
+    }
+
     $result = ($entries | Sort-Object -Unique) -join "`n"
     $Cache[$CacheKey] = $result
     return $result
@@ -827,36 +895,48 @@ function Get-EffectiveTopLevelPermission {
         [Parameter(Mandatory = $true)]$Item,
         [Parameter(Mandatory = $true)]$List,
         [Parameter(Mandatory = $true)]$Web,
-        [Parameter(Mandatory = $true)][hashtable]$Cache,
-        [Parameter(Mandatory = $false)][scriptblock]$OnAuthFailure
+        [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][string]$ConnectionUrl,
+        [Parameter(Mandatory = $false)][string]$ClientId,
+        [Parameter(Mandatory = $true)][hashtable]$Cache
     )
 
     $itemUnique = $false
     $listUnique = $false
 
     try {
-        $itemUnique = [bool](Get-PnPProperty -ClientObject $Item -Property HasUniqueRoleAssignments)
+        $itemUniqueResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label 'Get item unique permission flag' -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPProperty -ClientObject $Item -Property HasUniqueRoleAssignments -Connection $activeConnection
+        }
+        $Connection = $itemUniqueResult.Connection
+        $itemUnique = [bool]$itemUniqueResult.Result
     }
     catch {
         Write-Verbose "Could not determine item-level unique permissions for item $($Item.Id)."
     }
 
     try {
-        $listUnique = [bool](Get-PnPProperty -ClientObject $List -Property HasUniqueRoleAssignments)
+        $listUniqueResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label 'Get list unique permission flag' -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPProperty -ClientObject $List -Property HasUniqueRoleAssignments -Connection $activeConnection
+        }
+        $Connection = $listUniqueResult.Connection
+        $listUnique = [bool]$listUniqueResult.Result
     }
     catch {
         Write-Verbose "Could not determine list-level unique permissions for list $($List.Title)."
     }
 
     if ($itemUnique) {
-        return Get-RoleAssignmentTopLevel -Securable $Item -CacheKey ("Item:" + $Item.Id) -Cache $Cache -OnAuthFailure $OnAuthFailure
+        return Get-RoleAssignmentTopLevel -Securable $Item -Connection $Connection -ConnectionUrl $ConnectionUrl -ClientId $ClientId -CacheKey ("Item:" + $List.Id + ":" + $Item.Id) -Cache $Cache
     }
 
     if ($listUnique) {
-        return Get-RoleAssignmentTopLevel -Securable $List -CacheKey ("List:" + $List.Id) -Cache $Cache -OnAuthFailure $OnAuthFailure
+        return Get-RoleAssignmentTopLevel -Securable $List -Connection $Connection -ConnectionUrl $ConnectionUrl -ClientId $ClientId -CacheKey ("List:" + $Web.Id + ":" + $List.Id) -Cache $Cache
     }
 
-    return Get-RoleAssignmentTopLevel -Securable $Web -CacheKey ("Web:" + $Web.Id) -Cache $Cache -OnAuthFailure $OnAuthFailure
+    return Get-RoleAssignmentTopLevel -Securable $Web -Connection $Connection -ConnectionUrl $ConnectionUrl -ClientId $ClientId -CacheKey ("Web:" + $Web.Id) -Cache $Cache
 }
 
 function Test-IsExternalBrokenUrl {
@@ -922,6 +1002,8 @@ function Get-FolderDisplayName {
         [Parameter(Mandatory = $true)]$List,
         [Parameter(Mandatory = $true)][string]$FolderPath,
         [Parameter(Mandatory = $true)]$Connection,
+        [Parameter(Mandatory = $true)][string]$ConnectionUrl,
+        [Parameter(Mandatory = $false)][string]$ClientId,
         [Parameter(Mandatory = $true)][hashtable]$Cache
     )
 
@@ -947,7 +1029,11 @@ function Get-FolderDisplayName {
 "@
 
     try {
-        $folderItem = Get-PnPListItem -List $List.Title -Connection $Connection -Query $query -Fields "Title", "FileLeafRef"
+        $folderResult = Invoke-PnPConnectionOperation -Url $ConnectionUrl -ClientId $ClientId -Connection $Connection -Label ('Get folder display name: ' + $FolderPath) -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPListItem -List $List.Title -Connection $activeConnection -Query $query -Fields "Title", "FileLeafRef"
+        }
+        $folderItem = $folderResult.Result
         if ($folderItem -and $folderItem.Count -gt 0) {
             $title = [string]$folderItem[0].FieldValues["Title"]
             $leaf = [string]$folderItem[0].FieldValues["FileLeafRef"]
@@ -1068,7 +1154,7 @@ function Find-UrlsInText {
     return $hits | Sort-Object -Unique
 }
 
-function New-NoFindingsDocumentRow {
+function Get-NoFindingsDocumentRow {
     return [PSCustomObject][ordered]@{
         'Link Type' = ''
         'Site Title' = ''
@@ -1086,7 +1172,7 @@ function New-NoFindingsDocumentRow {
     }
 }
 
-function New-NoFindingsOtherRow {
+function Get-NoFindingsOtherRow {
     return [PSCustomObject][ordered]@{
         'Link Type' = ''
         'Site Title' = ''
@@ -1135,21 +1221,38 @@ $adminConn = Connect-ValidatedPnP -Url $AdminUrl -ClientId $ClientId -AdminConne
 $permissionCheck = $null
 $accountName = $null
 try {
-    $permissionCheck = Test-ConnectedAccountPermissions -Connection $adminConn -Url $AdminUrl -ClientId $ClientId -AdminConnection
+    $permissionCheck = Test-ConnectedAccountPermissionSet -Connection $adminConn -Url $AdminUrl -AdminConnection
 }
 catch {
     $permissionFailure = $_.Exception
-    $accountName = if ($permissionFailure.PSObject.Properties['RequiredScopes']) { 'current account' } else { 'current account' }
-    Write-Warning "Initial permission/scope validation failed: $($permissionFailure.Message)"
-
-    $accountName = 'current account'
-    $action = Show-PermissionReauthPrompt -AccountName $accountName -Message $permissionFailure.Message -RequiredScopes $permissionFailure.RequiredScopes
-    if ($action -eq 'switch') {
-        $adminConn = Reconnect-ForAuthenticationRefresh -Url $AdminUrl -ClientId $ClientId -AdminConnection
-        $permissionCheck = Test-ConnectedAccountPermissions -Connection $adminConn -Url $AdminUrl -ClientId $ClientId -AdminConnection
+    $permissionFailureMessage = if ($permissionFailure -and -not [string]::IsNullOrWhiteSpace($permissionFailure.Message)) {
+        $permissionFailure.Message
+    }
+    elseif ($_.TargetObject -and $_.TargetObject.PSObject.Properties['Message']) {
+        [string]$_.TargetObject.Message
     }
     else {
-        throw $permissionFailure.Message
+        $_.ToString()
+    }
+
+    Write-Warning "Initial permission/scope validation failed: $permissionFailureMessage"
+
+    $requiredScopes = @('Sites.Read.All', 'User.Read', 'Directory.Read.All')
+    if ($permissionFailure -and $permissionFailure.Data -is [System.Collections.IDictionary] -and $permissionFailure.Data.Contains('RequiredScopes') -and $permissionFailure.Data['RequiredScopes']) {
+        $requiredScopes = @($permissionFailure.Data['RequiredScopes'])
+    }
+    elseif ($_.TargetObject -and $_.TargetObject.PSObject.Properties['RequiredScopes'] -and $_.TargetObject.RequiredScopes) {
+        $requiredScopes = @($_.TargetObject.RequiredScopes)
+    }
+
+    $accountName = 'current account'
+    $action = Show-PermissionReauthPrompt -AccountName $accountName -Message $permissionFailureMessage -RequiredScopes $requiredScopes
+    if ($action -eq 'switch') {
+        $adminConn = Connect-ValidatedPnP -Url $AdminUrl -ClientId $ClientId -AdminConnection
+        $permissionCheck = Test-ConnectedAccountPermissionSet -Connection $adminConn -Url $AdminUrl -AdminConnection
+    }
+    else {
+        throw $permissionFailureMessage
     }
 }
 
@@ -1158,7 +1261,12 @@ if (-not $permissionCheck.SharePointValidated) {
 }
 
 Write-Host "`nCollecting tenant sites (excluding OneDrive personal sites)..."
-$tenantSites = Get-PnPTenantSite -Connection $adminConn -Detailed
+$tenantSiteResult = Invoke-PnPConnectionOperation -Url $AdminUrl -ClientId $ClientId -Connection $adminConn -AdminConnection -Label 'Get tenant sites' -MaxAttempts 4 -Operation {
+    param($activeConnection)
+    Get-PnPTenantSite -Connection $activeConnection -Detailed
+}
+$adminConn = $tenantSiteResult.Connection
+$tenantSites = $tenantSiteResult.Result
 $tenantSites = $tenantSites |
 Where-Object {
     $_.Url -and
@@ -1180,11 +1288,21 @@ $scopeConn = Connect-ValidatedPnP -Url $selectedScopeUrl -ClientId $ClientId
 Write-Host ("`nSubsite inventory under selected scope {0}:" -f $selectedScopeUrl)
 $scopeSubsites = $null
 try {
-    $scopeRootWeb = Get-PnPWeb -Connection $scopeConn -Includes Url, Title
+    $scopeRootResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope root web' -MaxAttempts 4 -Operation {
+        param($activeConnection)
+        Get-PnPWeb -Connection $activeConnection -Includes Url, Title
+    }
+    $scopeConn = $scopeRootResult.Connection
+    $scopeRootWeb = $scopeRootResult.Result
     $scopeSubsites = New-Object System.Collections.Generic.List[Object]
     $scopeSubsites.Add([PSCustomObject]@{ Url = $scopeRootWeb.Url; Title = $scopeRootWeb.Title })
 
-    $children = @(Get-PnPSubWeb -Connection $scopeConn -Recurse -Includes Url, Title | Sort-Object Url)
+    $scopeChildResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope child webs' -MaxAttempts 4 -Operation {
+        param($activeConnection)
+        Get-PnPSubWeb -Connection $activeConnection -Recurse -Includes Url, Title
+    }
+    $scopeConn = $scopeChildResult.Connection
+    $children = @($scopeChildResult.Result | Sort-Object Url)
     foreach ($child in $children) {
         $scopeSubsites.Add([PSCustomObject]@{ Url = $child.Url; Title = $child.Title })
     }
@@ -1361,9 +1479,19 @@ foreach ($site in $scanSiteCollections) {
 
     $webUrls = New-Object System.Collections.Generic.List[string]
     try {
-        $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url
+        $siteRootResult = Invoke-PnPConnectionOperation -Url $siteUrl -ClientId $ClientId -Connection $siteConn -Label ('Get site root web: ' + $siteUrl) -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPWeb -Connection $activeConnection -Includes Url
+        }
+        $siteConn = $siteRootResult.Connection
+        $rootWeb = $siteRootResult.Result
         $webUrls.Add($rootWeb.Url)
-        $subs = Get-PnPSubWeb -Connection $siteConn -Recurse -Includes Url
+        $siteSubwebResult = Invoke-PnPConnectionOperation -Url $siteUrl -ClientId $ClientId -Connection $siteConn -Label ('Get child webs: ' + $siteUrl) -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPSubWeb -Connection $activeConnection -Recurse -Includes Url
+        }
+        $siteConn = $siteSubwebResult.Connection
+        $subs = $siteSubwebResult.Result
         foreach ($s in $subs) { $webUrls.Add($s.Url) }
     }
     catch {
@@ -1386,7 +1514,12 @@ foreach ($site in $scanSiteCollections) {
 
         $web = $null
         try {
-            $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+            $webResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Get web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+            }
+            $webConn = $webResult.Connection
+            $web = $webResult.Result
         }
         catch {
             Write-Warning "  Could not read web metadata for $webUrl"
@@ -1395,7 +1528,12 @@ foreach ($site in $scanSiteCollections) {
 
         $lists = $null
         try {
-            $lists = Get-PnPList -Connection $webConn -Includes BaseTemplate, Hidden, Title, ItemCount, Id, HasUniqueRoleAssignments, RootFolder.ServerRelativeUrl
+            $listResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Get lists: ' + $webUrl) -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPList -Connection $activeConnection -Includes BaseTemplate, Hidden, Title, ItemCount, Id, HasUniqueRoleAssignments, RootFolder.ServerRelativeUrl
+            }
+            $webConn = $listResult.Connection
+            $lists = $listResult.Result
         }
         catch {
             Write-Warning "  Could not read lists for $webUrl"
@@ -1413,7 +1551,12 @@ foreach ($site in $scanSiteCollections) {
             if ($libraryCounterInWeb % 5 -eq 0) {
                 try {
                     $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                    $webRefreshResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Refresh web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                        param($activeConnection)
+                        Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+                    }
+                    $webConn = $webRefreshResult.Connection
+                    $web = $webRefreshResult.Result
                 }
                 catch {
                     Write-Warning "    Could not refresh web connection; continuing with current connection."
@@ -1434,8 +1577,7 @@ foreach ($site in $scanSiteCollections) {
 
             try {
                 $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                    $retryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                    $retryState.Web = Get-PnPWeb -Connection $retryState.WebConn -Includes Id, Url, Title
+                    $retryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                 } -Operation {
                     Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
                 }
@@ -1448,9 +1590,19 @@ foreach ($site in $scanSiteCollections) {
                 if (Test-IsAuthFailureMessage -Message $message) {
                     Write-Warning "    Authentication issue while reading list items for $($list.Title); prompting for a fresh sign-in."
                     try {
-                        $retryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                        $retryState.Web = Get-PnPWeb -Connection $retryState.WebConn -Includes Id, Url, Title
-                        $items = Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
+                        $retryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $retryWebResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $retryState.WebConn -Label ('Re-auth web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                            param($activeConnection)
+                            Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+                        }
+                        $retryState.WebConn = $retryWebResult.Connection
+                        $retryState.Web = $retryWebResult.Result
+                        $retryItemResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $retryState.WebConn -Label ('Re-auth list items: ' + $list.Title) -MaxAttempts 4 -Operation {
+                            param($activeConnection)
+                            Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 500 -Fields $fields
+                        }
+                        $retryState.WebConn = $retryItemResult.Connection
+                        $items = $retryItemResult.Result
                         $webConn = $retryState.WebConn
                         $web = $retryState.Web
                     }
@@ -1493,7 +1645,7 @@ foreach ($site in $scanSiteCollections) {
 
                 $docUrl = Get-DocumentBrowserUrl -TenantBase $siteTenantBase -FileRef $fileRef -Extension $ext -UniqueId $item.FieldValues['UniqueId']
                 $folderUrl = Get-FolderBrowserUrl -TenantBase $siteTenantBase -LibraryRootPath $libraryRootPath -ListId $list.Id -FileDirRef $item.FieldValues['FileDirRef']
-                $folderName = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -Cache $folderNameCache
+                $folderName = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -ConnectionUrl $webUrl -ClientId $ClientId -Cache $folderNameCache
 
                 $authorValue = $item.FieldValues['Author']
                 $createdBy = if ($authorValue -and $authorValue.LookupValue) { $authorValue.LookupValue } else { '' }
@@ -1503,28 +1655,7 @@ foreach ($site in $scanSiteCollections) {
 
                 $topLevelPermissions = ''
                 try {
-                    $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $item -List $list -Web $web -Cache $permissionCache
-
-                    if ((-not [string]::IsNullOrWhiteSpace($topLevelPermissions)) -and ($topLevelPermissions -like '(could not read permissions:*')) {
-                        $permMsg = $topLevelPermissions -replace '^\(could not read permissions:\s*', ''
-                        $permMsg = $permMsg.TrimEnd(')')
-                        if (Test-IsAuthFailureMessage -Message $permMsg) {
-                            Write-Verbose "Auth failure while reading permissions for $fileRef. Prompting for fresh sign-in and retrying this row."
-
-                            $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                            $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
-
-                            $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                            $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
-
-                            $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
-                                $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                                $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
-                                $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
-                            }
-                        }
-                    }
+                    $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $item -List $list -Web $web -Connection $webConn -ConnectionUrl $webUrl -ClientId $ClientId -Cache $permissionCache
                 }
                 catch {
                     $topLevelPermissions = "(could not read permissions: $($_.Exception.Message))"
@@ -1534,8 +1665,7 @@ foreach ($site in $scanSiteCollections) {
                 try {
                     $fileRetryState = @{ WebConn = $webConn; Web = $web }
                     $ms = Invoke-WithRetry -Label ("Get file stream: " + $fileRef) -MaxAttempts 4 -OnTimeout {
-                        $fileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                        $fileRetryState.Web = Get-PnPWeb -Connection $fileRetryState.WebConn -Includes Id, Url, Title
+                        $fileRetryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                     } -Operation {
                         Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $fileRetryState.WebConn
                     }
@@ -1550,7 +1680,7 @@ foreach ($site in $scanSiteCollections) {
                         $refs = Get-OfficeDocReference -Stream $ms
                     }
                     else {
-                        $refs = Get-TextReferenceFromBytes -Bytes $ms.ToArray() -Kind 'plaintext-doc'
+                        $refs = Get-TextReferenceFromByteContent -Bytes $ms.ToArray() -Kind 'plaintext-doc'
                     }
                 }
                 catch {
@@ -1558,9 +1688,19 @@ foreach ($site in $scanSiteCollections) {
                     if (Test-IsAuthFailureMessage -Message $message) {
                         Write-Warning "    Authentication issue while reading file content for $fileRef; prompting for a fresh sign-in."
                         try {
-                            $fileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                            $fileRetryState.Web = Get-PnPWeb -Connection $fileRetryState.WebConn -Includes Id, Url, Title
-                            $ms = Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $fileRetryState.WebConn
+                            $fileRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                            $fileRetryWebResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $fileRetryState.WebConn -Label ('Re-auth web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                                param($activeConnection)
+                                Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+                            }
+                            $fileRetryState.WebConn = $fileRetryWebResult.Connection
+                            $fileRetryState.Web = $fileRetryWebResult.Result
+                            $fileStreamResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $fileRetryState.WebConn -Label ('Re-auth file stream: ' + $fileRef) -MaxAttempts 4 -Operation {
+                                param($activeConnection)
+                                Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $activeConnection
+                            }
+                            $fileRetryState.WebConn = $fileStreamResult.Connection
+                            $ms = $fileStreamResult.Result
                             $webConn = $fileRetryState.WebConn
                             $web = $fileRetryState.Web
 
@@ -1571,7 +1711,7 @@ foreach ($site in $scanSiteCollections) {
                                 $refs = Get-OfficeDocReference -Stream $ms
                             }
                             else {
-                                $refs = Get-TextReferenceFromBytes -Bytes $ms.ToArray() -Kind 'plaintext-doc'
+                                $refs = Get-TextReferenceFromByteContent -Bytes $ms.ToArray() -Kind 'plaintext-doc'
                             }
                         }
                         catch {
@@ -1647,9 +1787,19 @@ if ($scanOther) {
 
         $webUrls = New-Object System.Collections.Generic.List[string]
         try {
-            $rootWeb = Get-PnPWeb -Connection $siteConn -Includes Url, Title
+            $otherRootResult = Invoke-PnPConnectionOperation -Url $siteUrl -ClientId $ClientId -Connection $siteConn -Label ('Get site root web: ' + $siteUrl) -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPWeb -Connection $activeConnection -Includes Url, Title
+            }
+            $siteConn = $otherRootResult.Connection
+            $rootWeb = $otherRootResult.Result
             $webUrls.Add($rootWeb.Url)
-            $subs = Get-PnPSubWeb -Connection $siteConn -Recurse -Includes Url
+            $otherSubwebResult = Invoke-PnPConnectionOperation -Url $siteUrl -ClientId $ClientId -Connection $siteConn -Label ('Get child webs: ' + $siteUrl) -MaxAttempts 4 -Operation {
+                param($activeConnection)
+                Get-PnPSubWeb -Connection $activeConnection -Recurse -Includes Url
+            }
+            $siteConn = $otherSubwebResult.Connection
+            $subs = $otherSubwebResult.Result
             foreach ($s in $subs) { $webUrls.Add($s.Url) }
         }
         catch {
@@ -1668,7 +1818,12 @@ if ($scanOther) {
 
             $web = $null
             try {
-                $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                $otherWebResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Get web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                    param($activeConnection)
+                    Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+                }
+                $webConn = $otherWebResult.Connection
+                $web = $otherWebResult.Result
             }
             catch {
                 continue
@@ -1676,7 +1831,12 @@ if ($scanOther) {
 
             $lists = $null
             try {
-                $lists = Get-PnPList -Connection $webConn -Includes BaseTemplate, Hidden, Title, ItemCount, DefaultDisplayFormUrl, RootFolder.ServerRelativeUrl
+                $otherListResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Get lists: ' + $webUrl) -MaxAttempts 4 -Operation {
+                    param($activeConnection)
+                    Get-PnPList -Connection $activeConnection -Includes BaseTemplate, Hidden, Title, ItemCount, DefaultDisplayFormUrl, RootFolder.ServerRelativeUrl
+                }
+                $webConn = $otherListResult.Connection
+                $lists = $otherListResult.Result
             }
             catch {
                 continue
@@ -1692,6 +1852,11 @@ if ($scanOther) {
                 if ($otherLibraryCounterInWeb % 5 -eq 0) {
                     try {
                         $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                        $webRefreshResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Refresh web metadata: ' + $webUrl) -MaxAttempts 4 -Operation {
+                            param($activeConnection)
+                            Get-PnPWeb -Connection $activeConnection -Includes Id, Url, Title
+                        }
+                        $webConn = $webRefreshResult.Connection
                     }
                     catch {
                         Write-Verbose "Could not refresh non-document scan web connection for $webUrl; continuing with current connection."
@@ -1700,7 +1865,12 @@ if ($scanOther) {
 
                 $fields = $null
                 try {
-                    $fields = Get-PnPField -List $list.Title -Connection $webConn
+                    $fieldResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $webConn -Label ('Get fields: ' + $list.Title) -MaxAttempts 4 -Operation {
+                        param($activeConnection)
+                        Get-PnPField -List $list.Title -Connection $activeConnection
+                    }
+                    $webConn = $fieldResult.Connection
+                    $fields = $fieldResult.Result
                 }
                 catch {
                     continue
@@ -1714,7 +1884,7 @@ if ($scanOther) {
                 try {
                     $otherRetryState = @{ WebConn = $webConn }
                     $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
-                        $otherRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
+                        $otherRetryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                     } -Operation {
                         Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
                     }
@@ -1726,8 +1896,13 @@ if ($scanOther) {
                     if (Test-IsAuthFailureMessage -Message $message) {
                         Write-Warning "    Authentication issue while reading other-content list items for $($list.Title); prompting for a fresh sign-in."
                         try {
-                            $otherRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                            $items = Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
+                            $otherRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                            $otherItemResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $otherRetryState.WebConn -Label ('Re-auth list items: ' + $list.Title) -MaxAttempts 4 -Operation {
+                                param($activeConnection)
+                                Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 200
+                            }
+                            $otherRetryState.WebConn = $otherItemResult.Connection
+                            $items = $otherItemResult.Result
                             $webConn = $otherRetryState.WebConn
                         }
                         catch {
@@ -1757,7 +1932,7 @@ if ($scanOther) {
                     $siteContentsFolder = $list.Title
                     if (-not [string]::IsNullOrWhiteSpace($siteContentsFolderPath)) {
                         try {
-                            $siteContentsFolder = Get-FolderDisplayName -List $list -FolderPath $siteContentsFolderPath -Connection $webConn -Cache $folderNameCache
+                            $siteContentsFolder = Get-FolderDisplayName -List $list -FolderPath $siteContentsFolderPath -Connection $webConn -ConnectionUrl $webUrl -ClientId $ClientId -Cache $folderNameCache
                         }
                         catch {
                             $siteContentsFolder = $list.Title
@@ -1787,28 +1962,7 @@ if ($scanOther) {
                     $otherTopLevelPermissions = ''
 
                     try {
-                        $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $item -List $list -Web $web -Cache $permissionCache
-
-                        if ((-not [string]::IsNullOrWhiteSpace($otherTopLevelPermissions)) -and ($otherTopLevelPermissions -like '(could not read permissions:*')) {
-                            $permMsg = $otherTopLevelPermissions -replace '^\(could not read permissions:\s*', ''
-                            $permMsg = $permMsg.TrimEnd(')')
-                            if (Test-IsAuthFailureMessage -Message $permMsg) {
-                                Write-Verbose "Auth failure while reading permissions for Other item $($item.Id) in list $($list.Title). Prompting for fresh sign-in and retrying this row."
-
-                                $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                                $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
-
-                                $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
-
-                                $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
-                                    $webConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
-                                    $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
-                                    $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                    $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
-                                }
-                            }
-                        }
+                        $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $item -List $list -Web $web -Connection $webConn -ConnectionUrl $webUrl -ClientId $ClientId -Cache $permissionCache
                     }
                     catch {
                         $otherTopLevelPermissions = "(could not read permissions: $($_.Exception.Message))"
@@ -1822,14 +1976,14 @@ if ($scanOther) {
                             try {
                                 $otherFileRetryState = @{ WebConn = $webConn }
                                 $ms = Invoke-WithRetry -Label ("Get non-document file stream: " + $itemFileRef) -MaxAttempts 4 -OnTimeout {
-                                    $otherFileRetryState.WebConn = Reconnect-ForAuthenticationRefresh -Url $webUrl -ClientId $ClientId
+                                    $otherFileRetryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                                 } -Operation {
                                     Get-PnPFile -Url $itemFileRef -AsMemoryStream -Connection $otherFileRetryState.WebConn
                                 }
 
                                 $webConn = $otherFileRetryState.WebConn
 
-                                $fileRefs = Get-TextReferenceFromBytes -Bytes $ms.ToArray() -Kind 'plaintext-other'
+                                $fileRefs = Get-TextReferenceFromByteContent -Bytes $ms.ToArray() -Kind 'plaintext-other'
                                 foreach ($fileRef in $fileRefs) {
                                     $url = $fileRef.Value
                                     $matched = Get-UrlMappingMatch -Value $url -Mappings $urlMappingsForMatch
@@ -1865,7 +2019,61 @@ if ($scanOther) {
                                 }
                             }
                             catch {
-                                Write-Verbose "Could not parse file content for non-document file $itemFileRef"
+                                $message = [string]$_.Exception.Message
+                                if (Test-IsAuthFailureMessage -Message $message) {
+                                    try {
+                                        $otherFileRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
+                                        $otherFileResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $otherFileRetryState.WebConn -Label ('Re-auth file stream: ' + $itemFileRef) -MaxAttempts 4 -Operation {
+                                            param($activeConnection)
+                                            Get-PnPFile -Url $itemFileRef -AsMemoryStream -Connection $activeConnection
+                                        }
+
+                                        $otherFileRetryState.WebConn = $otherFileResult.Connection
+                                        $ms = $otherFileResult.Result
+
+                                        $webConn = $otherFileRetryState.WebConn
+                                        $fileRefs = Get-TextReferenceFromByteContent -Bytes $ms.ToArray() -Kind 'plaintext-other'
+                                        foreach ($fileRef in $fileRefs) {
+                                            $url = $fileRef.Value
+                                            $matched = Get-UrlMappingMatch -Value $url -Mappings $urlMappingsForMatch
+                                            $centralParkFix = Get-CentralParkCorrection -Url $url
+                                            $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
+                                            if ((-not $matched) -and (-not $externalBroken) -and (-not $centralParkFix)) {
+                                                continue
+                                            }
+
+                                            $newUrlValue = if ($centralParkFix) { $centralParkFix.NewUrl } elseif ($matched) { $matched.NewUrl } else { '' }
+                                            $displayText = $siteContentsFolder
+                                            $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
+
+                                            $row = [PSCustomObject][ordered]@{
+                                                'Link Type' = $linkType
+                                                'Site Title' = $siteTitle
+                                                'Content Type' = $contentType
+                                                'Item ID' = $itemId
+                                                'Item Title' = $itemTitle
+                                                'Display Text' = $displayText
+                                                'Item URL' = $url
+                                                'Site Contents Folder' = $siteContentsFolder
+                                                'Site Contents Folder URL' = $siteContentsFolderUrl
+                                                'New Item URL' = $newUrlValue
+                                                'Created By' = $createdBy
+                                                'Last Modified By' = $lastModifiedBy
+                                                'Last Modified Date' = $modifiedText
+                                                'Permissions' = $otherTopLevelPermissions
+                                            }
+
+                                            Write-OtherFinding -OutputPath $otherReportPath -Row $row
+                                            $stats.OtherLinkRows++
+                                        }
+                                    }
+                                    catch {
+                                        Write-Verbose "Could not parse file content for non-document file $itemFileRef"
+                                    }
+                                }
+                                else {
+                                    Write-Verbose "Could not parse file content for non-document file $itemFileRef"
+                                }
                             }
                         }
                         elseif (-not ($OtherFileScannableExtensions -contains $itemExt)) {
@@ -1939,11 +2147,11 @@ if ($scanOther) {
 }
 
 if ($stats.DocumentLinkRows -eq 0) {
-    New-NoFindingsDocumentRow | Export-Csv -Path $docReportPath -NoTypeInformation
+    Get-NoFindingsDocumentRow | Export-Csv -Path $docReportPath -NoTypeInformation
 }
 
 if ($scanOther -and $stats.OtherLinkRows -eq 0) {
-    New-NoFindingsOtherRow | Export-Csv -Path $otherReportPath -NoTypeInformation
+    Get-NoFindingsOtherRow | Export-Csv -Path $otherReportPath -NoTypeInformation
 }
 
 Write-Host "`nAudit complete."

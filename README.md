@@ -4,77 +4,54 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 
 ## Scripts
 
-- [Get-DocumentAccessReport.ps1](Get-DocumentAccessReport.ps1)
-- [Get-FixItListDocsOnly.ps1](Get-FixItListDocsOnly.ps1)
-- [Get-FixItListURLs.ps1](Get-FixItListURLs.ps1)
+- [Get-DocumentAccessReport.ps1](Scripts/Get-DocumentAccessReport.ps1)
+- [Get-FixItListOverviewOnly.ps1](Scripts/Get-FixItListOverviewOnly.ps1)
+- [Get-FixItListURLsv2.ps1](Scripts/Get-FixItListURLsv2.ps1)
 
-## Get-FixItListDocsOnly.ps1 Overview
+Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
-[Get-FixItListDocsOnly.ps1](Get-FixItListDocsOnly.ps1) is a tenant-wide remediation finder that uses operator-selected migration mappings.
+## Get-FixItListOverviewOnly.ps1
 
-Its workflow is:
-1. Connect to SharePoint admin and list eligible site collections (excluding OneDrive personal sites).
-2. Let the operator pick site collection/subsite targets that are being migrated.
-3. Prompt for old base URL -> new base URL pairs for those selected targets.
-4. Run tenant-wide scanning to find impacted references anywhere in SharePoint content.
-5. Write action-oriented CSVs with one row per affected entity and occurrence counts.
+Tenant-wide remediation finder. Returns one row per affected document/item with broken URL occurrence counts.
 
-Important behavior:
-- Site/subsite selection drives mapping definitions only.
-- The actual detection pass runs tenant-wide (excluding OneDrive personal sites).
-- The document report writes one row per affected document.
-- The optional non-document report writes one row per affected item.
-- Repeated occurrences of the same matched URL inside one document/item increase the occurrence count.
+Workflow:
+1. Connect to SharePoint admin; list eligible site collections (excluding OneDrive personal sites).
+2. Operator picks site collection/subsite targets being migrated.
+3. Prompt for old base URL → new base URL pairs for selected targets.
+4. Scan tenant-wide for impacted references (selection drives mapping only, not scan scope).
+5. Write timestamped CSVs — one row per affected document or non-document item.
 
-## Get-FixItListDocsOnly.ps1 Output
-
-Output files are timestamped and written to:
-- Documents output folder: Documents-BreakingUrls-yyyymmdd-hhmmss.csv
-- NonDocuments output folder: OtherContent-BreakingUrls-yyyymmdd-hhmmss.csv (only when optional scan is enabled)
+### Output File Naming
+`SiteSlug-Get-FixItListOverviewOnly-ReportType-yyyyMMdd-HHmmss.csv`
 
 ### Documents Report Columns
-
-- Site Title
-- Site URL
-- Library
-- Document Path
-- Document URL
-- Folder URL
-- Folder
-- File Name
-- File Extension
-- Created By
-- Last Modified By
-- Last Modified Date
-- Permissions
-- Broken URL Occurrences
-- Matched Old Base URL Count
-- Matched Old Base URLs
-- Matched New Base URLs
-
-Each row represents one document with at least one URL match against the configured migration mappings.
+Site Title | Site URL | Library | Document Path | Document URL | Folder URL | Folder |
+File Name | File Extension | Created By | Last Modified By | Last Modified Date | Permissions |
+Broken URL Occurrences | Matched Old Base URL Count | Matched Old Base URLs | Matched New Base URLs
 
 ### Non-Document Report Columns
+Site Title | Site URL | List | Content Type | Location | Item Title | Item ID | Item URL |
+Broken URL Occurrences | Field Count With Broken URLs | Fields With Broken URLs |
+Matched Old Base URL Count | Matched Old Base URLs | Matched New Base URLs
 
-- Site Title
-- Site URL
-- List
-- Content Type
-- Location
-- Item Title
-- Item ID
-- Item URL
-- Broken URL Occurrences
-- Field Count With Broken URLs
-- Fields With Broken URLs
-- Matched Old Base URL Count
-- Matched Old Base URLs
-- Matched New Base URLs
 
-Each row represents one non-document list/page item with at least one URL match against the configured migration mappings.
+## Get-FixItListURLsv2.ps1
+
+Tenant-wide link-risk audit. Returns one row per individual broken URL found, with full URL-level detail and link classification.
+
+### Output File Naming
+`SiteSlug-Get-FixItListURLs-ReportType-yyyyMMdd-HHmmss.csv`
+
+### Documents Report Columns
+Link Type | Site Title | Document Title | Document URL | Document Folder | Document Folder URL |
+Broken URL Text | Broken Embedded URL | New URL |
+Created By | Last Modified By | Last Modified Date | Permissions
+
 
 ## Functional Split
 
-- Use [Get-DocumentAccessReport.ps1](Get-DocumentAccessReport.ps1) when you need deep per-document permissions/access context for a specific site migration package.
-- Use [Get-FixItListDocsOnly.ps1](Get-FixItListDocsOnly.ps1) when you need tenant-wide remediation targeting based on selected old/new migration URL mappings.
-- [Get-FixItListURLs.ps1](Get-FixItListURLs.ps1) remains in the repository for legacy/alternate fix-list workflows.
+| Need | Script |
+|------|--------|
+| Per-document/item summary with occurrence counts | Get-FixItListOverviewOnly.ps1 |
+| Full per-URL detail with link type classification | Get-FixItListURLsv2.ps1 |
+| Deep per-document permissions/access context for a specific site | Get-DocumentAccessReport.ps1 |
