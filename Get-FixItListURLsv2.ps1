@@ -304,6 +304,64 @@ function Get-CleanedValue {
     return $decoded.Trim().TrimEnd("'", '"', ':', ',', ')', ']', '}', '.', ';')
 }
 
+function Format-ReportDatePacific {
+    param([Parameter(Mandatory = $false)]$Value)
+
+    if (-not $Value) {
+        return ''
+    }
+
+    $dt = $null
+    if ($Value -is [datetime]) {
+        $dt = [datetime]$Value
+    }
+    else {
+        $parsed = $null
+        if (-not [datetime]::TryParse([string]$Value, [ref]$parsed)) {
+            return [string]$Value
+        }
+        $dt = $parsed
+    }
+
+    try {
+        $pacificTz = [System.TimeZoneInfo]::FindSystemTimeZoneById('Pacific Standard Time')
+        $utcDate = if ($dt.Kind -eq [System.DateTimeKind]::Utc) { $dt } else { $dt.ToUniversalTime() }
+        $pacificDate = [System.TimeZoneInfo]::ConvertTimeFromUtc($utcDate, $pacificTz)
+        return $pacificDate.ToString('yyyy-MM-dd HH:mm:ss')
+    }
+    catch {
+        return $dt.ToString('yyyy-MM-dd HH:mm:ss')
+    }
+}
+
+function Get-UrlDisplayText {
+    param(
+        [Parameter(Mandatory = $true)][string]$SourceText,
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][int]$MaxLength = 180
+    )
+
+    $normalized = ([string]$SourceText -replace '\s+', ' ').Trim()
+    if ([string]::IsNullOrWhiteSpace($normalized)) {
+        return $Url
+    }
+
+    $idx = $normalized.IndexOf($Url, [System.StringComparison]::OrdinalIgnoreCase)
+    if ($idx -lt 0) {
+        if ($normalized.Length -le $MaxLength) {
+            return $normalized
+        }
+        return $normalized.Substring(0, $MaxLength)
+    }
+
+    $start = [Math]::Max(0, $idx - 60)
+    $len = [Math]::Min($MaxLength, $normalized.Length - $start)
+    $snippet = $normalized.Substring($start, $len).Trim()
+    if ($start -gt 0) { $snippet = '...' + $snippet }
+    if (($start + $len) -lt $normalized.Length) { $snippet += '...' }
+    return $snippet
+}
+
 function Get-OfficeDocReference {
     param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
 
@@ -485,6 +543,54 @@ function Get-UrlMappingMatch {
     }
 
     return $null
+}
+
+function Get-CentralParkCorrection {
+    param([Parameter(Mandatory = $true)][string]$Url)
+
+    $clean = Get-CleanedValue -Value $Url
+    if ([string]::IsNullOrWhiteSpace($clean)) {
+        return $null
+    }
+
+    $prefixPattern = '^(?i)https?://centralpark(?=$|[/:?#])'
+    if ($clean -notmatch $prefixPattern) {
+        return $null
+    }
+
+    $newUrl = [regex]::Replace($clean, $prefixPattern, 'https://whallc.sharepoint.com')
+    return [PSCustomObject]@{
+        OldUrl = $clean
+        NewUrl = $newUrl
+    }
+}
+
+function Get-LinkTypeLabel {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $false)][string[]]$TenantHosts = @()
+    )
+
+    $clean = Get-CleanedValue -Value $Url
+    if ([string]::IsNullOrWhiteSpace($clean)) {
+        return 'External'
+    }
+
+    if (Get-CentralParkCorrection -Url $clean) {
+        return 'Internal'
+    }
+
+    $uri = $null
+    if (-not [Uri]::TryCreate($clean, [UriKind]::Absolute, [ref]$uri)) {
+        return 'External'
+    }
+
+    $host = $uri.Host.ToLowerInvariant()
+    if ($host -eq 'whallc.sharepoint.com' -or $host.EndsWith('.whallc.sharepoint.com') -or ($TenantHosts -contains $host)) {
+        return 'Internal'
+    }
+
+    return 'External'
 }
 
 function Get-RoleAssignmentTopLevel {
@@ -768,7 +874,8 @@ function Select-SiteForScope {
         else {
             'SharePoint'
         }
-        Write-Host ("  {0,4}. [{1}] {2}" -f ($i + 1), $kind, $categorySites[$i].Url)
+        $title = if (-not [string]::IsNullOrWhiteSpace([string]$categorySites[$i].Title)) { [string]$categorySites[$i].Title } else { '(no title)' }
+        Write-Host ("  {0,4}. [{1}] {2}  |  {3}" -f ($i + 1), $kind, $categorySites[$i].Url, $title)
     }
 
     $selected = $null
@@ -823,32 +930,38 @@ function Find-UrlsInText {
 
 function New-NoFindingsDocumentRow {
     return [PSCustomObject][ordered]@{
+        'Link Type' = ''
         'Site Title' = ''
-        'URL' = ''
-        'Folder URL' = ''
-        'Folder' = ''
-        'File Name' = ''
+        'Document Title' = ''
+        'Document URL' = ''
+        'Document Folder' = ''
+        'Document Folder URL' = ''
+        'Broken URL Text' = ''
+        'Broken Embedded URL' = 'No findings to report'
+        'New URL' = ''
         'Created By' = ''
         'Last Modified By' = ''
         'Last Modified Date' = ''
         'Permissions' = ''
-        'Broken Embedded URL' = 'No findings to report'
-        'Broken URL Text' = ''
-        'New URL' = ''
     }
 }
 
 function New-NoFindingsOtherRow {
     return [PSCustomObject][ordered]@{
+        'Link Type' = ''
         'Site Title' = ''
         'Content Type' = ''
-        'Location' = ''
-        'Item Title' = ''
-        'Permissions' = ''
-        'URL' = 'No findings to report'
-        'Field Name' = ''
         'Item ID' = ''
-        'New URL' = ''
+        'Item Title' = ''
+        'Display Text' = ''
+        'Item URL' = 'No findings to report'
+        'Site Contents Folder' = ''
+        'Site Contents Folder URL' = ''
+        'New Item URL' = ''
+        'Created By' = ''
+        'Last Modified By' = ''
+        'Last Modified Date' = ''
+        'Permissions' = ''
     }
 }
 
@@ -1266,31 +1379,34 @@ foreach ($site in $scanSiteCollections) {
                 foreach ($ref in $refs) {
                     $cleanEmbedded = Get-CleanedValue -Value $ref.Value
                     $matched = Get-UrlMappingMatch -Value $ref.Value -Mappings $urlMappingsForMatch
+                    $centralParkFix = Get-CentralParkCorrection -Url $ref.Value
                     $externalBroken = Test-IsExternalBrokenUrl -Url $ref.Value -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
-                    if ((-not $matched) -and (-not $externalBroken)) {
+                    if ((-not $matched) -and (-not $externalBroken) -and (-not $centralParkFix)) {
                         continue
                     }
 
                     $siteTitle = if ([string]::IsNullOrWhiteSpace($web.Title)) { $webUrl } else { $web.Title }
                     $modifiedValue = $item.FieldValues['Modified']
-                    $modifiedText = if ($modifiedValue -is [datetime]) { $modifiedValue.ToString('o') } elseif ($modifiedValue) { [string]$modifiedValue } else { '' }
-                    $brokenEmbeddedUrl = if ($matched) { $matched.OldUrl } else { $cleanEmbedded }
+                    $modifiedText = Format-ReportDatePacific -Value $modifiedValue
+                    $brokenEmbeddedUrl = if ($matched) { $matched.OldUrl } elseif ($centralParkFix) { $centralParkFix.OldUrl } else { $cleanEmbedded }
                     $brokenUrlText = if (-not [string]::IsNullOrWhiteSpace([string]$ref.Text)) { [string]$ref.Text } else { $cleanEmbedded }
-                    $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
+                    $newUrlValue = if ($centralParkFix) { $centralParkFix.NewUrl } elseif ($matched) { $matched.NewUrl } else { '' }
+                    $linkType = Get-LinkTypeLabel -Url $ref.Value -TenantHosts $tenantHosts
 
                     $row = [PSCustomObject][ordered]@{
+                        'Link Type' = $linkType
                         'Site Title' = $siteTitle
-                        'URL' = $docUrl
-                        'Folder URL' = $folderUrl
-                        'Folder' = $folderName
-                        'File Name' = $fileLeaf
+                        'Document Title' = $fileLeaf
+                        'Document URL' = $docUrl
+                        'Document Folder' = $folderName
+                        'Document Folder URL' = $folderUrl
+                        'Broken URL Text' = $brokenUrlText
+                        'Broken Embedded URL' = $brokenEmbeddedUrl
+                        'New URL' = $newUrlValue
                         'Created By' = $createdBy
                         'Last Modified By' = $lastModifiedBy
                         'Last Modified Date' = $modifiedText
                         'Permissions' = $topLevelPermissions
-                        'Broken Embedded URL' = $brokenEmbeddedUrl
-                        'Broken URL Text' = $brokenUrlText
-                        'New URL' = $newUrlValue
                     }
 
                     Write-DocumentFinding -OutputPath $docReportPath -Row $row
@@ -1415,14 +1531,24 @@ if ($scanOther) {
                         continue
                     }
 
-                    $location = $list.Title
-                    if ($item.FieldValues.ContainsKey('FileDirRef') -and $item.FieldValues['FileDirRef']) {
+                    $siteContentsFolderPath = if ($item.FieldValues.ContainsKey('FileDirRef') -and $item.FieldValues['FileDirRef']) { [string]$item.FieldValues['FileDirRef'] } else { [string]$list.RootFolder.ServerRelativeUrl }
+
+                    $siteContentsFolder = $list.Title
+                    if (-not [string]::IsNullOrWhiteSpace($siteContentsFolderPath)) {
                         try {
-                            $location = Get-FolderDisplayName -List $list -FolderPath $item.FieldValues['FileDirRef'] -Connection $webConn -Cache $folderNameCache
+                            $siteContentsFolder = Get-FolderDisplayName -List $list -FolderPath $siteContentsFolderPath -Connection $webConn -Cache $folderNameCache
                         }
                         catch {
-                            $location = $list.Title
+                            $siteContentsFolder = $list.Title
                         }
+                    }
+
+                    $siteContentsFolderUrl = ''
+                    try {
+                        $siteContentsFolderUrl = Get-FolderBrowserUrl -TenantBase $siteTenantBase -LibraryRootPath $list.RootFolder.ServerRelativeUrl.TrimEnd('/') -ListId $list.Id -FileDirRef $siteContentsFolderPath
+                    }
+                    catch {
+                        $siteContentsFolderUrl = ''
                     }
 
                     $contentType = [string]$item.FieldValues['ContentType']
@@ -1431,6 +1557,12 @@ if ($scanOther) {
                     }
 
                     $siteTitle = if ([string]::IsNullOrWhiteSpace($web.Title)) { $webUrl } else { $web.Title }
+                    $authorValue = $item.FieldValues['Author']
+                    $createdBy = if ($authorValue -and $authorValue.LookupValue) { $authorValue.LookupValue } else { '' }
+                    $editorValue = $item.FieldValues['Editor']
+                    $lastModifiedBy = if ($editorValue -and $editorValue.LookupValue) { $editorValue.LookupValue } else { '' }
+                    $modifiedValue = $item.FieldValues['Modified']
+                    $modifiedText = Format-ReportDatePacific -Value $modifiedValue
                     $otherTopLevelPermissions = ''
 
                     try {
@@ -1480,23 +1612,31 @@ if ($scanOther) {
                                 foreach ($fileRef in $fileRefs) {
                                     $url = $fileRef.Value
                                     $matched = Get-UrlMappingMatch -Value $url -Mappings $urlMappingsForMatch
+                                    $centralParkFix = Get-CentralParkCorrection -Url $url
                                     $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
-                                    if ((-not $matched) -and (-not $externalBroken)) {
+                                    if ((-not $matched) -and (-not $externalBroken) -and (-not $centralParkFix)) {
                                         continue
                                     }
 
-                                    $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
+                                    $newUrlValue = if ($centralParkFix) { $centralParkFix.NewUrl } elseif ($matched) { $matched.NewUrl } else { '' }
+                                    $displayText = $siteContentsFolder
+                                    $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
 
                                     $row = [PSCustomObject][ordered]@{
+                                        'Link Type' = $linkType
                                         'Site Title' = $siteTitle
                                         'Content Type' = $contentType
-                                        'Location' = $location
-                                        'Item Title' = $itemTitle
-                                        'Permissions' = $otherTopLevelPermissions
-                                        'URL' = $url
-                                        'Field Name' = 'FileContent'
                                         'Item ID' = $itemId
-                                        'New URL' = $newUrlValue
+                                        'Item Title' = $itemTitle
+                                        'Display Text' = $displayText
+                                        'Item URL' = $url
+                                        'Site Contents Folder' = $siteContentsFolder
+                                        'Site Contents Folder URL' = $siteContentsFolderUrl
+                                        'New Item URL' = $newUrlValue
+                                        'Created By' = $createdBy
+                                        'Last Modified By' = $lastModifiedBy
+                                        'Last Modified Date' = $modifiedText
+                                        'Permissions' = $otherTopLevelPermissions
                                     }
 
                                     Write-OtherFinding -OutputPath $otherReportPath -Row $row
@@ -1539,23 +1679,31 @@ if ($scanOther) {
                         foreach ($text in $textValues) {
                             foreach ($url in (Find-UrlsInText -Text $text)) {
                                 $matched = Get-UrlMappingMatch -Value $url -Mappings $urlMappingsForMatch
+                                $centralParkFix = Get-CentralParkCorrection -Url $url
                                 $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
-                                if ((-not $matched) -and (-not $externalBroken)) {
+                                if ((-not $matched) -and (-not $externalBroken) -and (-not $centralParkFix)) {
                                     continue
                                 }
 
-                                $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
+                                $newUrlValue = if ($centralParkFix) { $centralParkFix.NewUrl } elseif ($matched) { $matched.NewUrl } else { '' }
+                                $displayText = $siteContentsFolder
+                                $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
 
                                 $row = [PSCustomObject][ordered]@{
+                                    'Link Type' = $linkType
                                     'Site Title' = $siteTitle
                                     'Content Type' = $contentType
-                                    'Location' = $location
-                                    'Item Title' = $itemTitle
-                                    'Permissions' = $otherTopLevelPermissions
-                                    'URL' = $url
-                                    'Field Name' = $field.InternalName
                                     'Item ID' = $itemId
-                                    'New URL' = $newUrlValue
+                                    'Item Title' = $itemTitle
+                                    'Display Text' = $displayText
+                                    'Item URL' = $url
+                                    'Site Contents Folder' = $siteContentsFolder
+                                    'Site Contents Folder URL' = $siteContentsFolderUrl
+                                    'New Item URL' = $newUrlValue
+                                    'Created By' = $createdBy
+                                    'Last Modified By' = $lastModifiedBy
+                                    'Last Modified Date' = $modifiedText
+                                    'Permissions' = $otherTopLevelPermissions
                                 }
 
                                 Write-OtherFinding -OutputPath $otherReportPath -Row $row
