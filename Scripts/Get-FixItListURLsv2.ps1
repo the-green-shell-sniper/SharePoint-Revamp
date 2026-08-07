@@ -585,8 +585,8 @@ function Get-LinkTypeLabel {
         return 'External'
     }
 
-    $hostName = $uri.Host.ToLowerInvariant()
-    if ($hostName -eq 'whallc.sharepoint.com' -or $hostName.EndsWith('.whallc.sharepoint.com') -or ($TenantHosts -contains $hostName)) {
+    $tenantHostValue = $uri.Host.ToLowerInvariant()
+    if ($tenantHostValue -eq 'whallc.sharepoint.com' -or $tenantHostValue.EndsWith('.whallc.sharepoint.com') -or ($TenantHosts -contains $tenantHostValue)) {
         return 'Internal'
     }
 
