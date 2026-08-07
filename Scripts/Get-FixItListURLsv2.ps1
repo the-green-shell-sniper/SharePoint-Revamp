@@ -585,8 +585,8 @@ function Get-LinkTypeLabel {
         return 'External'
     }
 
-    $host = $uri.Host.ToLowerInvariant()
-    if ($host -eq 'whallc.sharepoint.com' -or $host.EndsWith('.whallc.sharepoint.com') -or ($TenantHosts -contains $host)) {
+    $hostName = $uri.Host.ToLowerInvariant()
+    if ($hostName -eq 'whallc.sharepoint.com' -or $hostName.EndsWith('.whallc.sharepoint.com') -or ($TenantHosts -contains $hostName)) {
         return 'Internal'
     }
 
@@ -1331,16 +1331,16 @@ foreach ($site in $scanSiteCollections) {
                             Write-Warning "Auth failure while reading permissions for $fileRef. Reconnecting and retrying this row."
 
                             $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                            $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                            $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
 
                             $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                            $itemRefreshed = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
+                            $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
 
-                            $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $itemRefreshed -List $listRefreshed -Web $web -Cache $permissionCache -OnAuthFailure {
+                            $topLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
                                 $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                                $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                                $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
                                 $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                $itemRefreshed = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
+                                $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn -Fields $fields
                             }
                         }
                     }
@@ -1575,16 +1575,16 @@ if ($scanOther) {
                                 Write-Warning "Auth failure while reading permissions for Other item $($item.Id) in list $($list.Title). Reconnecting and retrying this row."
 
                                 $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                                $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                                $refreshedWeb = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
 
                                 $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                $itemRefreshed = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
+                                $refreshedItem = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
 
-                                $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $itemRefreshed -List $listRefreshed -Web $web -Cache $permissionCache -OnAuthFailure {
+                                $otherTopLevelPermissions = Get-EffectiveTopLevelPermission -Item $refreshedItem -List $listRefreshed -Web $refreshedWeb -Cache $permissionCache -OnAuthFailure {
                                     $webConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
-                                    $web = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
+                                    $null = Get-PnPWeb -Connection $webConn -Includes Id, Url, Title
                                     $listRefreshed = Get-PnPList -Identity $list.Id -Connection $webConn -Includes Id, Title, HasUniqueRoleAssignments
-                                    $itemRefreshed = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
+                                    $null = Get-PnPListItem -List $listRefreshed.Title -Id $item.Id -Connection $webConn
                                 }
                             }
                         }
