@@ -1388,6 +1388,115 @@ function Write-OtherFinding {
     $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
 }
 
+function Get-OverviewOnlyReportPath {
+    param([Parameter(Mandatory = $true)][string]$SourceReportPath)
+
+    $folder = Split-Path -Path $SourceReportPath -Parent
+    $baseName = [System.IO.Path]::GetFileNameWithoutExtension($SourceReportPath)
+    $ext = [System.IO.Path]::GetExtension($SourceReportPath)
+    return (Join-Path -Path $folder -ChildPath ($baseName + '_OverviewOnly' + $ext))
+}
+
+function Get-NoFindingsDocumentOverviewRow {
+    return [PSCustomObject][ordered]@{
+        'Site Title' = ''
+        'Document Title' = ''
+        'Document URL' = 'No findings to report'
+        'Document Folder' = ''
+        'Document Folder URL' = ''
+        'Broken Link Count' = 0
+        'Broken Embedded URLs' = ''
+    }
+}
+
+function Get-NoFindingsOtherOverviewRow {
+    return [PSCustomObject][ordered]@{
+        'Site Title' = ''
+        'Content Type' = ''
+        'Item ID' = ''
+        'Item Title' = ''
+        'Site Contents Folder' = ''
+        'Site Contents Folder URL' = 'No findings to report'
+        'Broken Link Count' = 0
+        'Broken Item URLs' = ''
+    }
+}
+
+function Export-OverviewOnlyReports {
+    param(
+        [Parameter(Mandatory = $true)][string]$DocumentReportPath,
+        [Parameter(Mandatory = $false)][string]$OtherReportPath,
+        [Parameter(Mandatory = $true)][bool]$IncludeOther
+    )
+
+    $documentOverviewPath = Get-OverviewOnlyReportPath -SourceReportPath $DocumentReportPath
+    $otherOverviewPath = ''
+
+    $docRows = @()
+    if (Test-Path -Path $DocumentReportPath) {
+        $docRows = @(Import-Csv -Path $DocumentReportPath)
+    }
+
+    $docFindingRows = @($docRows | Where-Object { $_.'Broken Embedded URL' -and $_.'Broken Embedded URL' -ne 'No findings to report' })
+    if ($docFindingRows.Count -eq 0) {
+        Get-NoFindingsDocumentOverviewRow | Export-Csv -Path $documentOverviewPath -NoTypeInformation
+    }
+    else {
+        $docOverviewRows = foreach ($grp in ($docFindingRows | Group-Object 'Document URL')) {
+            $first = $grp.Group[0]
+            $brokenUrls = @($grp.Group | ForEach-Object { $_.'Broken Embedded URL' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+            [PSCustomObject][ordered]@{
+                'Site Title' = $first.'Site Title'
+                'Document Title' = $first.'Document Title'
+                'Document URL' = $first.'Document URL'
+                'Document Folder' = $first.'Document Folder'
+                'Document Folder URL' = $first.'Document Folder URL'
+                'Broken Link Count' = $brokenUrls.Count
+                'Broken Embedded URLs' = ($brokenUrls -join ' | ')
+            }
+        }
+
+        @($docOverviewRows | Sort-Object 'Site Title', 'Document Title', 'Document URL') | Export-Csv -Path $documentOverviewPath -NoTypeInformation
+    }
+
+    if ($IncludeOther -and -not [string]::IsNullOrWhiteSpace($OtherReportPath)) {
+        $otherOverviewPath = Get-OverviewOnlyReportPath -SourceReportPath $OtherReportPath
+
+        $otherRows = @()
+        if (Test-Path -Path $OtherReportPath) {
+            $otherRows = @(Import-Csv -Path $OtherReportPath)
+        }
+
+        $otherFindingRows = @($otherRows | Where-Object { $_.'Item URL' -and $_.'Item URL' -ne 'No findings to report' })
+        if ($otherFindingRows.Count -eq 0) {
+            Get-NoFindingsOtherOverviewRow | Export-Csv -Path $otherOverviewPath -NoTypeInformation
+        }
+        else {
+            $otherOverviewRows = foreach ($grp in ($otherFindingRows | Group-Object 'Site Title', 'Content Type', 'Item ID', 'Item Title', 'Site Contents Folder', 'Site Contents Folder URL')) {
+                $first = $grp.Group[0]
+                $brokenUrls = @($grp.Group | ForEach-Object { $_.'Item URL' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+                [PSCustomObject][ordered]@{
+                    'Site Title' = $first.'Site Title'
+                    'Content Type' = $first.'Content Type'
+                    'Item ID' = $first.'Item ID'
+                    'Item Title' = $first.'Item Title'
+                    'Site Contents Folder' = $first.'Site Contents Folder'
+                    'Site Contents Folder URL' = $first.'Site Contents Folder URL'
+                    'Broken Link Count' = $brokenUrls.Count
+                    'Broken Item URLs' = ($brokenUrls -join ' | ')
+                }
+            }
+
+            @($otherOverviewRows | Sort-Object 'Site Title', 'Content Type', 'Item ID', 'Item Title') | Export-Csv -Path $otherOverviewPath -NoTypeInformation
+        }
+    }
+
+    return [PSCustomObject]@{
+        DocumentOverviewPath = $documentOverviewPath
+        OtherOverviewPath = $otherOverviewPath
+    }
+}
+
 Install-RequiredModule -Name "PnP.PowerShell"
 
 New-DirectoryIfMissing -Path $DocumentsOutputFolder
@@ -2397,6 +2506,8 @@ if ($scanOther -and $stats.OtherLinkRows -eq 0) {
     Get-NoFindingsOtherRow | Export-Csv -Path $otherReportPath -NoTypeInformation
 }
 
+$overviewReportPaths = Export-OverviewOnlyReports -DocumentReportPath $docReportPath -OtherReportPath $otherReportPath -IncludeOther:$scanOther
+
 $extensionDetailsRows = New-Object 'System.Collections.Generic.List[object]'
 Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Scanned' -Bucket $docScannedByExt
 $extensionDetailsRows.Add([PSCustomObject][ordered]@{
@@ -2434,7 +2545,9 @@ if ($scanOther) {
 }
 Write-Host "  Extension details CSV:         $extensionDetailsPath"
 Write-Host "`nDocuments CSV: $docReportPath"
+Write-Host "Documents Overview CSV: $($overviewReportPaths.DocumentOverviewPath)"
 if ($scanOther) {
     Write-Host "Other CSV:     $otherReportPath"
+    Write-Host "Other Overview CSV: $($overviewReportPaths.OtherOverviewPath)"
 }
 
