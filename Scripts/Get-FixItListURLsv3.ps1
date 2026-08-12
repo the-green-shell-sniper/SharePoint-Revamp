@@ -68,13 +68,21 @@ function Set-ScriptWindowTitle {
     }
 }
 
-Set-ScriptWindowTitle -ScriptName 'Get-FixItListURLsv2.ps1'
+Set-ScriptWindowTitle -ScriptName 'Get-FixItListURLsv3.ps1'
 
 $DocumentScannableExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.doc', '.xls', '.ppt', '.txt', '.csv', '.rtf')
 $OtherFileScannableExtensions = @('.htm', '.aspx')
 $OpenXmlExtensions = @('.docx', '.xlsx', '.pptx')
 $AlwaysSkipExtensions = @('.jpg', '.png', '.vsdx', '.one')
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
+
+$SkipSiteUrls = @(
+    'https://whallc.sharepoint.com/sites/zzBackup',
+    'https://whallc.sharepoint.com/sites/zzCentralParkBackup',
+    'https://whallc.sharepoint.com/sites/zzRootBackup',
+    'https://whallc.sharepoint.com/sites/zzzTestGroup',
+    'https://whallc.sharepoint.com/sites/zzzTestGroup2'
+)
 
 $DocLinkPrefixByExt = @{
     '.docx' = 'w'; '.doc' = 'w'
@@ -455,7 +463,7 @@ function Write-ExtensionCountBlock {
 
 function Add-ExtensionDetailRows {
     param(
-        [Parameter(Mandatory = $true)][System.Collections.Generic.List[object]]$Rows,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.List[object]]$Rows,
         [Parameter(Mandatory = $true)][string]$Category,
         [Parameter(Mandatory = $true)][hashtable]$Bucket
     )
@@ -593,10 +601,40 @@ function Test-IsNonActionableUrl {
         return $true
     }
 
+    # XML / PDF / Office metadata namespaces and schema anchors are not user-authored content.
     if ($clean -match '(?i)^https?://(?:www\.)?w3\.org(?:/|$)' -or
         $clean -match '(?i)^https?://(?:www\.)?ns\.adobe\.com(?:/|$)' -or
         $clean -match '(?i)^https?://(?:www\.)?purl\.org(?:/|$)' -or
-        $clean -match '(?i)^https?://schemas\.openxmlformats\.org(?:/|$)') {
+        $clean -match '(?i)^https?://(?:www\.)?dublincore\.org(?:/|$)' -or
+        $clean -match '(?i)^https?://(?:www\.)?iptc\.org(?:/|$)' -or
+        $clean -match '(?i)^https?://schemas\.openxmlformats\.org(?:/|$)' -or
+        $clean -match '(?i)^https?://schemas\.microsoft\.com(?:/|$)' -or
+        $clean -match '(?i)^https?://schemas\.') {
+        return $true
+    }
+
+    # SharePoint auto-generated form/view/list URLs and doc metadata redirects are not human-placed content.
+    if ($clean -match '(?i)/_layouts/(?:15/)?(?:DocIdRedir|ListForm|ViewForm|EditForm|NewForm|DisplayForm|FormServer|Redirector|Dialog|ErrorPage)\.aspx(?:\?|$)' -or
+        $clean -match '(?i)/_layouts/(?:15/)?(?:docidredir|listform|viewform|editform|newform|displayform|formserver|redirector|dialog|errorpage)\.aspx(?:\?|$)' -or
+        $clean -match '(?i)(?:^|/)_layouts/(?:15/)?[^/?#]+\.aspx\?(?:.*(?:PageType=|Source=|ListId=|ID=|CID=|RootFolder=))' -or
+        $clean -match '(?i)(?:^|/)_layouts/(?:15/)?[^/?#]+\.aspx(?:$|[?#])') {
+        return $true
+    }
+
+    # DTD file references embedded in document/PDF binary metadata; not human-placed.
+    if ($clean -match '(?i)/DTDs/[^/?#]+\.dtd(?:$|[?#])') {
+        return $true
+    }
+
+    # Office relationship/metadata package URLs are internal document scaffolding, not authored content.
+    if ($clean -match '(?i)(?:^|/)(?:_rels|docProps|package|relationships)(?:/|$)' -or
+        $clean -match '(?i)(?:^|/)(?:document|core|extended-properties|custom-properties)\.xml(?:$|[?#])') {
+        return $true
+    }
+
+    # Discard URLs whose host portion is too short to be a real hostname (binary scan artifact).
+    $uri = $null
+    if ([Uri]::TryCreate($clean, [UriKind]::Absolute, [ref]$uri) -and $uri.Host.Length -le 1) {
         return $true
     }
 
@@ -804,8 +842,8 @@ function Get-PdfReference {
     $found = New-Object System.Collections.Generic.List[Object]
     $text = [System.Text.Encoding]::Latin1.GetString($Bytes)
 
-    foreach ($m in [regex]::Matches($text, 'https?://[^\s\)"<>\\]+')) {
-        $hostMatch = [regex]::Match($m.Value, '^https?://([^/:?#]+)')
+    foreach ($m in [regex]::Matches($text, 'https?://[^\s\x00-\x1f\u0080-\uffff\)"<>\\]+')) {
+        $hostMatch = [regex]::Match($m.Value, '^https?://([^/:?#\s\x00-\x1f\u0080-\uffff]+)')
         if ($hostMatch.Success -and ($PdfNoiseHosts -contains $hostMatch.Groups[1].Value.ToLower())) {
             continue
         }
@@ -842,7 +880,7 @@ function Get-TextReferenceFromByteContent {
     $decodedTexts.Add([System.Text.Encoding]::Latin1.GetString($Bytes))
 
     foreach ($text in $decodedTexts) {
-        foreach ($m in [regex]::Matches($text, 'https?://[^\s\)"<>\\]+')) {
+        foreach ($m in [regex]::Matches($text, 'https?://[^\s\x00-\x1f\u0080-\uffff\)"<>\\]+')) {
             $context = Get-UrlDisplayText -SourceText $text -Url $m.Value
             $found.Add([PSCustomObject]@{ Value = $m.Value; Text = $m.Value; Context = $context; Confidence = 'Low'; Kind = $Kind })
         }
@@ -915,16 +953,21 @@ function Get-CentralParkCorrection {
         return $null
     }
 
+    # centralpark was the on-prem server name for the SharePoint Online tenant root.
     $prefixPattern = '^(?i)https?://centralpark(?=$|[/:?#])'
-    if ($clean -notmatch $prefixPattern) {
-        return $null
+    if ($clean -match $prefixPattern) {
+        $newUrl = [regex]::Replace($clean, $prefixPattern, 'https://whallc.sharepoint.com')
+        return [PSCustomObject]@{ OldUrl = $clean; NewUrl = $newUrl }
     }
 
-    $newUrl = [regex]::Replace($clean, $prefixPattern, 'https://whallc.sharepoint.com')
-    return [PSCustomObject]@{
-        OldUrl = $clean
-        NewUrl = $newUrl
+    # whaiis01 was the on-prem server name for the /whaiis01 site collection.
+    $whaiis01Pattern = '^(?i)https?://whaiis01(?=$|[/:?#])'
+    if ($clean -match $whaiis01Pattern) {
+        $newUrl = [regex]::Replace($clean, $whaiis01Pattern, 'https://whallc.sharepoint.com/whaiis01')
+        return [PSCustomObject]@{ OldUrl = $clean; NewUrl = $newUrl }
     }
+
+    return $null
 }
 
 function Get-LinkTypeLabel {
@@ -1405,7 +1448,6 @@ function Get-NoFindingsDocumentOverviewRow {
         'Document Folder' = ''
         'Document Folder URL' = ''
         'Broken Link Count' = 0
-        'Broken Embedded URLs' = ''
     }
 }
 
@@ -1418,7 +1460,6 @@ function Get-NoFindingsOtherOverviewRow {
         'Site Contents Folder' = ''
         'Site Contents Folder URL' = 'No findings to report'
         'Broken Link Count' = 0
-        'Broken Item URLs' = ''
     }
 }
 
@@ -1452,7 +1493,6 @@ function Export-OverviewOnlyReports {
                 'Document Folder' = $first.'Document Folder'
                 'Document Folder URL' = $first.'Document Folder URL'
                 'Broken Link Count' = $brokenUrls.Count
-                'Broken Embedded URLs' = ($brokenUrls -join ' | ')
             }
         }
 
@@ -1483,7 +1523,6 @@ function Export-OverviewOnlyReports {
                     'Site Contents Folder' = $first.'Site Contents Folder'
                     'Site Contents Folder URL' = $first.'Site Contents Folder URL'
                     'Broken Link Count' = $brokenUrls.Count
-                    'Broken Item URLs' = ($brokenUrls -join ' | ')
                 }
             }
 
@@ -1494,6 +1533,34 @@ function Export-OverviewOnlyReports {
     return [PSCustomObject]@{
         DocumentOverviewPath = $documentOverviewPath
         OtherOverviewPath = $otherOverviewPath
+    }
+}
+
+function Save-CounterCheckpoint {
+    # Persists in-memory extension counters to JSON so a mid-scan crash does not lose all per-site data.
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][hashtable]$DocScanned,
+        [Parameter(Mandatory = $true)][hashtable]$DocSkippedForced,
+        [Parameter(Mandatory = $true)][hashtable]$DocSkippedUnsupported,
+        [Parameter(Mandatory = $true)][hashtable]$OtherScanned,
+        [Parameter(Mandatory = $true)][hashtable]$OtherSkippedForced,
+        [Parameter(Mandatory = $true)][hashtable]$OtherSkippedUnsupported
+    )
+
+    try {
+        [PSCustomObject]@{
+            SavedAt               = (Get-Date -Format 'o')
+            DocScanned            = $DocScanned
+            DocSkippedForced      = $DocSkippedForced
+            DocSkippedUnsupported = $DocSkippedUnsupported
+            OtherScanned          = $OtherScanned
+            OtherSkippedForced    = $OtherSkippedForced
+            OtherSkippedUnsupported = $OtherSkippedUnsupported
+        } | ConvertTo-Json -Depth 5 | Set-Content -Path $Path -Encoding UTF8 -Force
+    }
+    catch {
+        Write-Verbose "Could not save counter checkpoint to ${Path}: $($_.Exception.Message)"
     }
 }
 
@@ -1560,7 +1627,8 @@ $tenantSites = $tenantSites |
 Where-Object {
     $_.Url -and
     $_.Url -notmatch '-my\.sharepoint\.com' -and
-    $_.Template -notlike 'SPSPERS*'
+    $_.Template -notlike 'SPSPERS*' -and
+    ($SkipSiteUrls -notcontains $_.Url.TrimEnd('/'))
 } |
 Sort-Object Url -Unique
 
@@ -1708,6 +1776,7 @@ $logStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
 $docReportPath = Join-Path -Path $DocumentsOutputFolder -ChildPath ("$reportPrefixBase-Documents-" + $runStamp + ".csv")
 $otherReportPath = Join-Path -Path $OtherOutputFolder -ChildPath ("$reportPrefixBase-OtherContent-" + $runStamp + ".csv")
 $extensionDetailsPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv3_ExtensionDetails.csv')
+$counterCheckpointPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv3_CounterCheckpoint.json')
 
 Write-Host "`nAudit configuration:"
 Write-Host "  Selected subsite mappings:"
@@ -1717,6 +1786,7 @@ foreach ($m in $urlMappings) {
 }
 Write-Host "  Documents report:     $docReportPath"
 Write-Host "  Document content scan: $scanDocumentContent"
+Write-Host "  Counter checkpoint:    $counterCheckpointPath"
 if ($scanOther) {
     Write-Host "  Other report:         $otherReportPath"
 }
@@ -2039,10 +2109,6 @@ foreach ($site in $scanSiteCollections) {
                         $externalBroken = Test-IsExternalBrokenUrl -Url $ref.Value -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
                     }
 
-                    if ($matched -and $sourceOnSelectedBase) {
-                        continue
-                    }
-
                     if ((-not $matched) -and (-not $externalBroken)) {
                         continue
                     }
@@ -2079,6 +2145,7 @@ foreach ($site in $scanSiteCollections) {
             }
         }
     }
+    Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
 }
 }
 else {
@@ -2495,6 +2562,7 @@ if ($scanOther) {
                 }
             }
         }
+        Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
     }
 }
 
@@ -2510,20 +2578,12 @@ $overviewReportPaths = Export-OverviewOnlyReports -DocumentReportPath $docReport
 
 $extensionDetailsRows = New-Object 'System.Collections.Generic.List[object]'
 Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Scanned' -Bucket $docScannedByExt
-$extensionDetailsRows.Add([PSCustomObject][ordered]@{
-        Category  = 'Documents Skipped Forced Set'
-        Extension = '.jpg/.png/.vsdx/.one (combined)'
-        Count     = (Get-ExtensionCountTotal -Bucket $docSkippedForcedByExt)
-    })
+Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Skipped Forced Set' -Bucket $docSkippedForcedByExt
 Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Skipped Unsupported' -Bucket $docSkippedUnsupportedByExt
 
 if ($scanOther) {
     Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Scanned' -Bucket $otherScannedByExt
-    $extensionDetailsRows.Add([PSCustomObject][ordered]@{
-            Category  = 'Other Files Skipped Forced Set'
-            Extension = '.jpg/.png/.vsdx/.one (combined)'
-            Count     = (Get-ExtensionCountTotal -Bucket $otherSkippedForcedByExt)
-        })
+    Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Skipped Forced Set' -Bucket $otherSkippedForcedByExt
     Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Skipped Unsupported' -Bucket $otherSkippedUnsupportedByExt
 }
 
