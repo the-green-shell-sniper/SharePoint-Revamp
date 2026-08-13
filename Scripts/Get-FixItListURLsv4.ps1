@@ -81,7 +81,7 @@ function Set-ScriptWindowTitle {
     }
 }
 
-Set-ScriptWindowTitle -ScriptName 'Get-FixItListURLsv3.ps1'
+Set-ScriptWindowTitle -ScriptName 'Get-FixItListURLsv4.ps1'
 
 $DocumentScannableExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.doc', '.xls', '.ppt', '.txt', '.csv', '.rtf')
 $OtherFileScannableExtensions = @('.htm', '.aspx')
@@ -413,6 +413,98 @@ function Get-SlugValue {
     return $slug
 }
 
+function Get-SafeFileSlug {
+    param(
+        [Parameter(Mandatory = $true)][string]$Text,
+        [Parameter(Mandatory = $false)][int]$MaxLength = 56,
+        [Parameter(Mandatory = $false)][string]$Fallback = 'Site'
+    )
+
+    $slug = Get-SlugValue -Text $Text
+    if ([string]::IsNullOrWhiteSpace($slug)) {
+        $slug = $Fallback
+    }
+
+    if ($slug.Length -le $MaxLength) {
+        return $slug
+    }
+
+    $hash = (Get-Sha256Hex -Text $slug).Substring(0, 8)
+    $prefixLength = [Math]::Max(8, $MaxLength - ($hash.Length + 1))
+    return ($slug.Substring(0, [Math]::Min($prefixLength, $slug.Length)) + '-' + $hash)
+}
+
+function Get-PerSiteReportFileName {
+    param(
+        [Parameter(Mandatory = $true)][string]$SiteSlug,
+        [Parameter(Mandatory = $true)][string]$ScriptName,
+        [Parameter(Mandatory = $true)][string]$ReportType,
+        [Parameter(Mandatory = $true)][string]$RunStamp,
+        [Parameter(Mandatory = $false)][int]$MaxFileNameLength = 110
+    )
+
+    $suffix = "${ScriptName}-${ReportType}-${RunStamp}.csv"
+    $maxSlugLength = [Math]::Max(8, $MaxFileNameLength - ($suffix.Length + 1))
+    $safeSlug = Get-SafeFileSlug -Text $SiteSlug -MaxLength $maxSlugLength -Fallback 'Site'
+    return "${safeSlug}-${suffix}"
+}
+
+function Get-SiteKeyForSourceUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$SourceUrl,
+        [Parameter(Mandatory = $true)][array]$Mappings
+    )
+
+    if ([string]::IsNullOrWhiteSpace($SourceUrl)) {
+        return ''
+    }
+
+    $clean = Get-CleanedValue -Value $SourceUrl
+    if ([string]::IsNullOrWhiteSpace($clean)) {
+        return ''
+    }
+
+    foreach ($m in $Mappings) {
+        if ($clean.Equals($m.OldBaseUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
+            $clean.StartsWith(($m.OldBaseUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+            return [string]$m.OldBaseUrl
+        }
+    }
+
+    return ''
+}
+
+function Get-UniqueSubsiteScanRootSet {
+    param([Parameter(Mandatory = $true)][array]$Subsites)
+
+    if (-not $Subsites -or $Subsites.Count -eq 0) {
+        return @()
+    }
+
+    $ordered = @($Subsites | Sort-Object { $_.Url.TrimEnd('/').Length }, Url)
+    $roots = New-Object System.Collections.Generic.List[object]
+
+    foreach ($candidate in $ordered) {
+        $candidateUrl = [string]$candidate.Url.TrimEnd('/')
+        $covered = $false
+
+        foreach ($root in $roots) {
+            $rootUrl = [string]$root.Url.TrimEnd('/')
+            if ($candidateUrl.Equals($rootUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
+                $candidateUrl.StartsWith(($rootUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+                $covered = $true
+                break
+            }
+        }
+
+        if (-not $covered) {
+            $roots.Add($candidate)
+        }
+    }
+
+    return @($roots)
+}
+
 function Get-NormalizedExtension {
     param([Parameter(Mandatory = $true)][string]$FileName)
 
@@ -476,7 +568,7 @@ function Write-ExtensionCountBlock {
     }
 }
 
-function Add-ExtensionDetailRows {
+function Add-ExtensionDetailRowSet {
     param(
         [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.List[object]]$Rows,
         [Parameter(Mandatory = $true)][string]$Category,
@@ -539,7 +631,7 @@ function Add-ExtensionDetailRows {
         return $InputObject
     }
 
-    function New-StateDirectory {
+    function Initialize-StateDirectory {
         param([Parameter(Mandatory = $true)][string]$Path)
 
         New-DirectoryIfMissing -Path $Path
@@ -622,7 +714,7 @@ function Add-ExtensionDetailRows {
         return (Join-Path -Path $StateRootFolder -ChildPath $fileName)
     }
 
-    function New-EmptyRunState {
+    function Get-EmptyRunState {
         param(
             [Parameter(Mandatory = $true)][string]$ScopeFingerprint,
             [Parameter(Mandatory = $true)][string]$ScanOptionHash,
@@ -661,7 +753,7 @@ function Add-ExtensionDetailRows {
         )
 
         if (-not (Test-Path -Path $Path)) {
-            $state = New-EmptyRunState -ScopeFingerprint $ScopeFingerprint -ScanOptionHash $ScanOptionHash -ScriptSchemaVersion $ScriptSchemaVersion -RunMode $RunMode
+            $state = Get-EmptyRunState -ScopeFingerprint $ScopeFingerprint -ScanOptionHash $ScanOptionHash -ScriptSchemaVersion $ScriptSchemaVersion -RunMode $RunMode
             return [PSCustomObject]@{ State = $state; Compatible = $false; Path = $Path }
         }
 
@@ -691,7 +783,7 @@ function Add-ExtensionDetailRows {
         }
         catch {
             Write-Warning "Could not load prior run state from $Path; starting with a fresh state bundle. $($_.Exception.Message)"
-            $state = New-EmptyRunState -ScopeFingerprint $ScopeFingerprint -ScanOptionHash $ScanOptionHash -ScriptSchemaVersion $ScriptSchemaVersion -RunMode $RunMode
+            $state = Get-EmptyRunState -ScopeFingerprint $ScopeFingerprint -ScanOptionHash $ScanOptionHash -ScriptSchemaVersion $ScriptSchemaVersion -RunMode $RunMode
             return [PSCustomObject]@{ State = $state; Compatible = $false; Path = $Path }
         }
     }
@@ -832,6 +924,12 @@ function Test-IsNonActionableUrl {
 
     $clean = Get-CleanedValue -Value $Url
     if ([string]::IsNullOrWhiteSpace($clean)) {
+        return $true
+    }
+
+    # Legacy on-prem SharePoint library/view links can appear in Word field-code internals.
+    if ($clean -match '(?i)^https?://(?:centralpark|whaiis01)(?=$|[/:?#])' -and
+        $clean -match '(?i)/forms/(?:default|allitems)\.aspx(?:$|[?#])') {
         return $true
     }
 
@@ -1484,7 +1582,7 @@ function Test-IsExternalBrokenUrl {
                 }
             }
             catch {
-                # Fall through and refresh the cache entry.
+                Write-Verbose "Could not parse cached external URL status timestamp; refreshing cache entry."
             }
         }
     }
@@ -1772,7 +1870,7 @@ function Write-OtherFinding {
     $Cache[$ItemKey] += $Row
 }
 
-function Export-ReportRows {
+function Export-ReportRowSet {
     param(
         [Parameter(Mandatory = $true)][string]$Path,
         [Parameter(Mandatory = $true)][array]$Rows,
@@ -1784,7 +1882,20 @@ function Export-ReportRows {
         return
     }
 
-    @($Rows | Sort-Object | ForEach-Object { $_ }) | Export-Csv -Path $Path -NoTypeInformation
+    $columns = @($NoFindingsRow.PSObject.Properties.Name)
+    $outputRows = foreach ($row in $Rows) {
+        $projected = [ordered]@{}
+        foreach ($column in $columns) {
+            $value = ''
+            if ($row -and $row.PSObject.Properties[$column]) {
+                $value = $row.$column
+            }
+            $projected[$column] = $value
+        }
+        [PSCustomObject]$projected
+    }
+
+    @($outputRows) | Export-Csv -Path $Path -NoTypeInformation
 }
 
 function Get-OverviewOnlyReportPath {
@@ -1819,7 +1930,7 @@ function Get-NoFindingsOtherOverviewRow {
     }
 }
 
-function Export-OverviewOnlyReports {
+function Export-OverviewOnlyReportSet {
     param(
         [Parameter(Mandatory = $true)][string]$DocumentReportPath,
         [Parameter(Mandatory = $false)][string]$OtherReportPath,
@@ -2033,15 +2144,23 @@ for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
     Write-Host ("  {0,4}. {1}  |  {2}" -f ($i + 1), $scopeSubsites[$i].Url, $title)
 }
 
+Write-Host "     0. ALL listed subsites"
+
 $selectedIndices = $null
 while (-not $selectedIndices) {
-    $pickRaw = Read-Host "`nPick one or more subsites by number (comma-separated, e.g. 1,4,7)"
+    $pickRaw = Read-Host "`nPick one or more subsites by number (comma-separated, e.g. 1,4,7). Use 0 for ALL subsites"
     if ([string]::IsNullOrWhiteSpace($pickRaw)) {
         Write-Host "  Selection is required."
         continue
     }
 
     $parts = @($pickRaw -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+
+    if ($parts -contains '0') {
+        $selectedIndices = @(1..$scopeSubsites.Count)
+        break
+    }
+
     $valid = $true
     $numbers = New-Object System.Collections.Generic.List[int]
 
@@ -2070,6 +2189,8 @@ $selectedSubsites = @()
 foreach ($idx in $selectedIndices) {
     $selectedSubsites += $scopeSubsites[$idx - 1]
 }
+
+$scanRootSubsites = Get-UniqueSubsiteScanRootSet -Subsites $selectedSubsites
 
 $urlMappings = New-Object System.Collections.Generic.List[object]
 foreach ($sub in $selectedSubsites) {
@@ -2111,31 +2232,39 @@ else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
 }
 
-$selectedSiteSlugParts = New-Object System.Collections.Generic.List[string]
-foreach ($sub in $selectedSubsites) {
-    $rawTitle = if (-not [string]::IsNullOrWhiteSpace($sub.Title)) { [string]$sub.Title } else { ([Uri]$sub.Url).AbsolutePath }
-    $titleSlug = Get-SlugValue -Text $rawTitle
-    if (-not [string]::IsNullOrWhiteSpace($titleSlug)) {
-        $selectedSiteSlugParts.Add($titleSlug)
+$runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$logStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
+$extensionDetailsPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv4_ExtensionDetails.csv')
+$counterCheckpointPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv4_CounterCheckpoint.json')
+
+$siteReportPlans = @{}
+$slugUsage = @{}
+foreach ($mapping in @($urlMappings | Sort-Object OldBaseUrl)) {
+    $siteUrl = [string]$mapping.OldBaseUrl
+    $siteNode = @($selectedSubsites | Where-Object { $_.Url.TrimEnd('/').Equals($siteUrl, [System.StringComparison]::OrdinalIgnoreCase) }) | Select-Object -First 1
+    $rawLabel = if ($siteNode -and -not [string]::IsNullOrWhiteSpace($siteNode.Title)) { [string]$siteNode.Title } else { ([Uri]$siteUrl).AbsolutePath }
+    $baseSlug = Get-SafeFileSlug -Text $rawLabel -MaxLength 56 -Fallback 'Site'
+    $uniqueSlug = $baseSlug
+    $suffix = 2
+    while ($slugUsage.ContainsKey($uniqueSlug)) {
+        $uniqueSlug = "${baseSlug}${suffix}"
+        $suffix++
+    }
+    $slugUsage[$uniqueSlug] = $true
+
+    $docName = Get-PerSiteReportFileName -SiteSlug $uniqueSlug -ScriptName 'Get-FixItListURLsv4' -ReportType 'Documents' -RunStamp $runStamp
+    $otherName = Get-PerSiteReportFileName -SiteSlug $uniqueSlug -ScriptName 'Get-FixItListURLsv4' -ReportType 'OtherContent' -RunStamp $runStamp
+    $siteReportPlans[$siteUrl] = [PSCustomObject]@{
+        SiteKey = $siteUrl
+        SiteSlug = $uniqueSlug
+        SiteTitle = if ($siteNode) { [string]$siteNode.Title } else { $siteUrl }
+        DocumentReportPath = (Join-Path -Path $DocumentsOutputFolder -ChildPath $docName)
+        OtherReportPath = (Join-Path -Path $OtherOutputFolder -ChildPath $otherName)
     }
 }
 
-$selectedSiteSlug = (@($selectedSiteSlugParts | Select-Object -Unique) -join '-')
-if ([string]::IsNullOrWhiteSpace($selectedSiteSlug)) {
-    $selectedSiteSlug = 'SelectedSites'
-}
-
-$scriptTitleSegment = 'Get-FixItListURLs'
-$reportPrefixBase = "$selectedSiteSlug-$scriptTitleSegment"
-$runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$logStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
-$docReportPath = Join-Path -Path $DocumentsOutputFolder -ChildPath ("$reportPrefixBase-Documents-" + $runStamp + ".csv")
-$otherReportPath = Join-Path -Path $OtherOutputFolder -ChildPath ("$reportPrefixBase-OtherContent-" + $runStamp + ".csv")
-$extensionDetailsPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv3_ExtensionDetails.csv')
-$counterCheckpointPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv3_CounterCheckpoint.json')
-
-New-StateDirectory -Path $StateRootFolder
-$scriptSchemaVersion = 'v4'
+Initialize-StateDirectory -Path $StateRootFolder
+$scriptSchemaVersion = 'v4.1'
 $scopeFingerprint = Get-ScopeFingerprint -SelectedSubsites $selectedSubsites -UrlMappings $urlMappings -ScanDocumentContent ([bool]$scanDocumentContent) -ScanOther ([bool]$scanOther)
 $scanOptionHash = Get-ScanOptionHash -ScanDocumentContent ([bool]$scanDocumentContent) -ScanOther ([bool]$scanOther) -SkipExternalValidation ([bool]$SkipExternalValidation) -SkipPermissionExpansion ([bool]$SkipPermissionExpansion) -DocumentScannableExtensions $DocumentScannableExtensions -OtherFileScannableExtensions $OtherFileScannableExtensions -AlwaysSkipExtensions $AlwaysSkipExtensions
 $runStatePath = Get-RunStatePath -StateRootFolder $StateRootFolder -ScopeFingerprint $scopeFingerprint -ScriptSchemaVersion $scriptSchemaVersion
@@ -2183,12 +2312,17 @@ foreach ($m in $urlMappings) {
     Write-Host ("    OLD: {0}" -f $m.OldBaseUrl)
     Write-Host ("    NEW: {0}" -f $m.NewBaseUrl)
 }
-Write-Host "  Documents report:     $docReportPath"
+Write-Host "  Per-site report set output is enabled."
+foreach ($siteKey in @($siteReportPlans.Keys | Sort-Object)) {
+    $plan = $siteReportPlans[$siteKey]
+    Write-Host ("    Site: {0}" -f $plan.SiteKey)
+    Write-Host ("      Documents: {0}" -f $plan.DocumentReportPath)
+    if ($scanOther) {
+        Write-Host ("      Other:     {0}" -f $plan.OtherReportPath)
+    }
+}
 Write-Host "  Document content scan: $scanDocumentContent"
 Write-Host "  Counter checkpoint:    $counterCheckpointPath"
-if ($scanOther) {
-    Write-Host "  Other report:         $otherReportPath"
-}
 
 $stats = [PSCustomObject]@{
     SitesVisited = 0
@@ -2224,11 +2358,21 @@ $httpHandler.MaxAutomaticRedirections = 10
 $httpClient = [System.Net.Http.HttpClient]::new($httpHandler)
 $httpClient.Timeout = [TimeSpan]::FromSeconds(8)
 
-$scanSiteCollections = @($selectedSubsites | Sort-Object Url)
+$scanSiteCollections = @($scanRootSubsites | Sort-Object Url)
 $docReportRows = New-Object System.Collections.Generic.List[object]
 $otherReportRows = New-Object System.Collections.Generic.List[object]
+$docReportRowsBySite = @{}
+$otherReportRowsBySite = @{}
+$siteDocumentOutputsWritten = [System.Collections.Generic.HashSet[string]]::new()
+foreach ($siteKey in @($siteReportPlans.Keys)) {
+    $docReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+    $otherReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+}
 
 Write-Host "`nStarting tenant-wide document scan (SharePoint only, no OneDrive)..."
+if ($scanRootSubsites.Count -lt $selectedSubsites.Count) {
+    Write-Host ("Collapsed overlapping selections into {0} unique scan roots while preserving full descendant coverage." -f $scanRootSubsites.Count)
+}
 if ($scanDocumentContent) {
 foreach ($site in $scanSiteCollections) {
     $siteUrl = $site.Url.TrimEnd('/')
@@ -2404,7 +2548,21 @@ foreach ($site in $scanSiteCollections) {
                 if ($useDeltaMode -and $runState.DocumentItemSnapshots.ContainsKey($itemKey) -and [string]$runState.DocumentItemSnapshots[$itemKey] -eq $itemSnapshot -and $runState.DocumentFindingCache.ContainsKey($itemKey)) {
                     foreach ($cachedRow in @($runState.DocumentFindingCache[$itemKey])) {
                         if (-not (Test-IsExactRowDuplicate -Row $cachedRow -SeenRows $docSeenRows)) {
+                            $cachedSiteKey = if ($cachedRow.PSObject.Properties['__SiteKey']) { [string]$cachedRow.__SiteKey } else { '' }
+                            if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                                $cachedSiteKey = Get-SiteKeyForSourceUrl -SourceUrl ($siteTenantBase + $fileRef) -Mappings $urlMappingsForMatch
+                            }
+                            if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                                $cachedSiteKey = $siteUrl
+                            }
+                            if (-not $docReportRowsBySite.ContainsKey($cachedSiteKey)) {
+                                $docReportRowsBySite[$cachedSiteKey] = New-Object System.Collections.Generic.List[object]
+                            }
+                            if (-not $cachedRow.PSObject.Properties['__SiteKey']) {
+                                $cachedRow | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $cachedSiteKey -Force
+                            }
                             $docReportRows.Add($cachedRow)
+                            $docReportRowsBySite[$cachedSiteKey].Add($cachedRow)
                             $stats.DocumentLinkRows++
                         }
                     }
@@ -2537,6 +2695,13 @@ foreach ($site in $scanSiteCollections) {
                     $brokenUrlText = if (-not [string]::IsNullOrWhiteSpace([string]$ref.Text)) { [string]$ref.Text } else { $cleanEmbedded }
                     $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
                     $linkType = Get-LinkTypeLabel -Url $ref.Value -TenantHosts $tenantHosts
+                    $siteKey = Get-SiteKeyForSourceUrl -SourceUrl $sourceDocUrl -Mappings $urlMappingsForMatch
+                    if ([string]::IsNullOrWhiteSpace($siteKey) -and $matched) {
+                        $siteKey = [string]$matched.OldBaseUrl
+                    }
+                    if ([string]::IsNullOrWhiteSpace($siteKey)) {
+                        $siteKey = $siteUrl
+                    }
 
                     $row = [PSCustomObject][ordered]@{
                         'Link Type' = $linkType
@@ -2553,9 +2718,14 @@ foreach ($site in $scanSiteCollections) {
                         'Last Modified Date' = $modifiedText
                         'Permissions' = $topLevelPermissions
                     }
+                    $row | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $siteKey -Force
 
                     if (-not (Test-IsExactRowDuplicate -Row $row -SeenRows $docSeenRows)) {
                         Write-DocumentFinding -Cache $runState.DocumentFindingCache -ItemKey $itemKey -Row $row
+                        if (-not $docReportRowsBySite.ContainsKey($siteKey)) {
+                            $docReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+                        }
+                        $docReportRowsBySite[$siteKey].Add($row)
                         $docReportRows.Add($row)
                         $stats.DocumentLinkRows++
                     }
@@ -2565,6 +2735,40 @@ foreach ($site in $scanSiteCollections) {
             }
         }
     }
+
+    # Emit document outputs for this site scope immediately before moving to the next site.
+    $siteKeysToFlush = @($siteReportPlans.Keys | Where-Object {
+            $_.Equals($siteUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
+            $_.StartsWith(($siteUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)
+        })
+
+    if ($siteKeysToFlush.Count -eq 0 -and $siteReportPlans.ContainsKey($siteUrl)) {
+        $siteKeysToFlush = @($siteUrl)
+    }
+
+    foreach ($flushSiteKey in @($siteKeysToFlush | Sort-Object -Unique)) {
+        $plan = $siteReportPlans[$flushSiteKey]
+        if (-not $plan) {
+            continue
+        }
+
+        $siteDocRows = if ($docReportRowsBySite.ContainsKey($flushSiteKey)) { @($docReportRowsBySite[$flushSiteKey]) } else { @() }
+        Export-ReportRowSet -Path $plan.DocumentReportPath -Rows $siteDocRows -NoFindingsRow (Get-NoFindingsDocumentRow)
+        $docOverviewOnly = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath '' -IncludeOther:$false
+
+        if (-not $siteDocumentOutputsWritten.Contains($flushSiteKey)) {
+            Write-Host ("  Wrote Documents + OverviewOnly for site: {0}" -f $flushSiteKey)
+            $null = $siteDocumentOutputsWritten.Add($flushSiteKey)
+        }
+        else {
+            Write-Host ("  Refreshed Documents + OverviewOnly for site: {0}" -f $flushSiteKey)
+        }
+
+        if ($docOverviewOnly -and $docOverviewOnly.PSObject.Properties['DocumentOverviewPath']) {
+            Write-Host ("    Overview: {0}" -f $docOverviewOnly.DocumentOverviewPath)
+        }
+    }
+
     Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
 }
 }
@@ -2732,7 +2936,22 @@ if ($scanOther) {
                     if ($useDeltaMode -and $runState.OtherItemSnapshots.ContainsKey($itemKey) -and [string]$runState.OtherItemSnapshots[$itemKey] -eq $itemSnapshot -and $runState.OtherFindingCache.ContainsKey($itemKey)) {
                         foreach ($cachedRow in @($runState.OtherFindingCache[$itemKey])) {
                             if (-not (Test-IsExactRowDuplicate -Row $cachedRow -SeenRows $otherSeenRows)) {
+                                $cachedSiteKey = if ($cachedRow.PSObject.Properties['__SiteKey']) { [string]$cachedRow.__SiteKey } else { '' }
+                                if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                                    $sourceUrlForCachedRow = if (-not [string]::IsNullOrWhiteSpace($itemFileRef)) { $siteTenantBase + $itemFileRef } else { $webUrl }
+                                    $cachedSiteKey = Get-SiteKeyForSourceUrl -SourceUrl $sourceUrlForCachedRow -Mappings $urlMappingsForMatch
+                                }
+                                if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                                    $cachedSiteKey = $siteUrl
+                                }
+                                if (-not $otherReportRowsBySite.ContainsKey($cachedSiteKey)) {
+                                    $otherReportRowsBySite[$cachedSiteKey] = New-Object System.Collections.Generic.List[object]
+                                }
+                                if (-not $cachedRow.PSObject.Properties['__SiteKey']) {
+                                    $cachedRow | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $cachedSiteKey -Force
+                                }
                                 $otherReportRows.Add($cachedRow)
+                                $otherReportRowsBySite[$cachedSiteKey].Add($cachedRow)
                                 $stats.OtherLinkRows++
                             }
                         }
@@ -2815,7 +3034,7 @@ if ($scanOther) {
 
                                     $externalBroken = $false
                                     if (-not $matched -and $sourceOnSelectedBase) {
-                                        $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient
+                                        $externalBroken = Test-IsExternalBrokenUrl -Url $url -TenantHosts $tenantHosts -Cache $externalUrlStatusCache -HttpClient $httpClient -SkipValidation:$SkipExternalValidation
                                     }
 
                                     if ((-not $matched) -and (-not $externalBroken)) {
@@ -2825,6 +3044,14 @@ if ($scanOther) {
                                     $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
                                     $displayText = $siteContentsFolder
                                     $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
+                                    $sourceUrlForItem = if (-not [string]::IsNullOrWhiteSpace($itemFileRef)) { $siteTenantBase + $itemFileRef } else { $webUrl }
+                                    $siteKey = Get-SiteKeyForSourceUrl -SourceUrl $sourceUrlForItem -Mappings $urlMappingsForMatch
+                                    if ([string]::IsNullOrWhiteSpace($siteKey) -and $matched) {
+                                        $siteKey = [string]$matched.OldBaseUrl
+                                    }
+                                    if ([string]::IsNullOrWhiteSpace($siteKey)) {
+                                        $siteKey = $siteUrl
+                                    }
 
                                     $row = [PSCustomObject][ordered]@{
                                         'Link Type' = $linkType
@@ -2842,9 +3069,14 @@ if ($scanOther) {
                                         'Last Modified Date' = $modifiedText
                                         'Permissions' = $otherTopLevelPermissions
                                     }
+                                    $row | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $siteKey -Force
 
                                     if (-not (Test-IsExactRowDuplicate -Row $row -SeenRows $otherSeenRows)) {
                                         Write-OtherFinding -Cache $runState.OtherFindingCache -ItemKey $itemKey -Row $row
+                                        if (-not $otherReportRowsBySite.ContainsKey($siteKey)) {
+                                            $otherReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+                                        }
+                                        $otherReportRowsBySite[$siteKey].Add($row)
                                         $otherReportRows.Add($row)
                                         $stats.OtherLinkRows++
                                     }
@@ -2886,6 +3118,14 @@ if ($scanOther) {
                                             $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
                                             $displayText = $siteContentsFolder
                                             $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
+                                            $sourceUrlForItem = if (-not [string]::IsNullOrWhiteSpace($itemFileRef)) { $siteTenantBase + $itemFileRef } else { $webUrl }
+                                            $siteKey = Get-SiteKeyForSourceUrl -SourceUrl $sourceUrlForItem -Mappings $urlMappingsForMatch
+                                            if ([string]::IsNullOrWhiteSpace($siteKey) -and $matched) {
+                                                $siteKey = [string]$matched.OldBaseUrl
+                                            }
+                                            if ([string]::IsNullOrWhiteSpace($siteKey)) {
+                                                $siteKey = $siteUrl
+                                            }
 
                                             $row = [PSCustomObject][ordered]@{
                                                 'Link Type' = $linkType
@@ -2903,9 +3143,14 @@ if ($scanOther) {
                                                 'Last Modified Date' = $modifiedText
                                                 'Permissions' = $otherTopLevelPermissions
                                             }
+                                            $row | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $siteKey -Force
 
                                             if (-not (Test-IsExactRowDuplicate -Row $row -SeenRows $otherSeenRows)) {
                                                 Write-OtherFinding -Cache $runState.OtherFindingCache -ItemKey $itemKey -Row $row
+                                                if (-not $otherReportRowsBySite.ContainsKey($siteKey)) {
+                                                    $otherReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+                                                }
+                                                $otherReportRowsBySite[$siteKey].Add($row)
                                                 $otherReportRows.Add($row)
                                                 $stats.OtherLinkRows++
                                             }
@@ -2971,6 +3216,13 @@ if ($scanOther) {
                                 $newUrlValue = if ($matched) { $matched.NewUrl } else { '' }
                                 $displayText = $siteContentsFolder
                                 $linkType = Get-LinkTypeLabel -Url $url -TenantHosts $tenantHosts
+                                $siteKey = Get-SiteKeyForSourceUrl -SourceUrl $sourceUrlForItem -Mappings $urlMappingsForMatch
+                                if ([string]::IsNullOrWhiteSpace($siteKey) -and $matched) {
+                                    $siteKey = [string]$matched.OldBaseUrl
+                                }
+                                if ([string]::IsNullOrWhiteSpace($siteKey)) {
+                                    $siteKey = $siteUrl
+                                }
 
                                 $row = [PSCustomObject][ordered]@{
                                     'Link Type' = $linkType
@@ -2988,9 +3240,14 @@ if ($scanOther) {
                                     'Last Modified Date' = $modifiedText
                                     'Permissions' = $otherTopLevelPermissions
                                 }
+                                $row | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $siteKey -Force
 
                                 if (-not (Test-IsExactRowDuplicate -Row $row -SeenRows $otherSeenRows)) {
                                     Write-OtherFinding -Cache $runState.OtherFindingCache -ItemKey $itemKey -Row $row
+                                    if (-not $otherReportRowsBySite.ContainsKey($siteKey)) {
+                                        $otherReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
+                                    }
+                                    $otherReportRowsBySite[$siteKey].Add($row)
                                     $otherReportRows.Add($row)
                                     $stats.OtherLinkRows++
                                 }
@@ -3006,22 +3263,39 @@ if ($scanOther) {
     }
 }
 
-Export-ReportRows -Path $docReportPath -Rows @($docReportRows) -NoFindingsRow (Get-NoFindingsDocumentRow)
-if ($scanOther) {
-    Export-ReportRows -Path $otherReportPath -Rows @($otherReportRows) -NoFindingsRow (Get-NoFindingsOtherRow)
+$siteOutputSummaries = New-Object System.Collections.Generic.List[object]
+foreach ($siteKey in @($siteReportPlans.Keys | Sort-Object)) {
+    $plan = $siteReportPlans[$siteKey]
+    $siteDocRows = if ($docReportRowsBySite.ContainsKey($siteKey)) { @($docReportRowsBySite[$siteKey]) } else { @() }
+    Export-ReportRowSet -Path $plan.DocumentReportPath -Rows $siteDocRows -NoFindingsRow (Get-NoFindingsDocumentRow)
+
+    $siteOtherPath = ''
+    if ($scanOther) {
+        $siteOtherRows = if ($otherReportRowsBySite.ContainsKey($siteKey)) { @($otherReportRowsBySite[$siteKey]) } else { @() }
+        Export-ReportRowSet -Path $plan.OtherReportPath -Rows $siteOtherRows -NoFindingsRow (Get-NoFindingsOtherRow)
+        $siteOtherPath = $plan.OtherReportPath
+    }
+
+    $siteOverviewPaths = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath $siteOtherPath -IncludeOther:$scanOther
+    $siteOutputSummaries.Add([PSCustomObject]@{
+            SiteKey = $siteKey
+            SiteTitle = $plan.SiteTitle
+            DocumentReportPath = $plan.DocumentReportPath
+            DocumentOverviewPath = $siteOverviewPaths.DocumentOverviewPath
+            OtherReportPath = $siteOtherPath
+            OtherOverviewPath = $siteOverviewPaths.OtherOverviewPath
+        })
 }
 
-$overviewReportPaths = Export-OverviewOnlyReports -DocumentReportPath $docReportPath -OtherReportPath $otherReportPath -IncludeOther:$scanOther
-
 $extensionDetailsRows = New-Object 'System.Collections.Generic.List[object]'
-Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Scanned' -Bucket $docScannedByExt
-Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Skipped Forced Set' -Bucket $docSkippedForcedByExt
-Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Documents Skipped Unsupported' -Bucket $docSkippedUnsupportedByExt
+Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Documents Scanned' -Bucket $docScannedByExt
+Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Documents Skipped Forced Set' -Bucket $docSkippedForcedByExt
+Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Documents Skipped Unsupported' -Bucket $docSkippedUnsupportedByExt
 
 if ($scanOther) {
-    Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Scanned' -Bucket $otherScannedByExt
-    Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Skipped Forced Set' -Bucket $otherSkippedForcedByExt
-    Add-ExtensionDetailRows -Rows $extensionDetailsRows -Category 'Other Files Skipped Unsupported' -Bucket $otherSkippedUnsupportedByExt
+    Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Other Files Scanned' -Bucket $otherScannedByExt
+    Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Other Files Skipped Forced Set' -Bucket $otherSkippedForcedByExt
+    Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Other Files Skipped Unsupported' -Bucket $otherSkippedUnsupportedByExt
 }
 
 $extensionDetailsRows | Export-Csv -Path $extensionDetailsPath -NoTypeInformation
@@ -3100,10 +3374,14 @@ if ($scanOther) {
     Write-Host "  Other files skipped unsupported: $($stats.OtherFilesSkippedUnsupported)"
 }
 Write-Host "  Extension details CSV:         $extensionDetailsPath"
-Write-Host "`nDocuments CSV: $docReportPath"
-Write-Host "Documents Overview CSV: $($overviewReportPaths.DocumentOverviewPath)"
-if ($scanOther) {
-    Write-Host "Other CSV:     $otherReportPath"
-    Write-Host "Other Overview CSV: $($overviewReportPaths.OtherOverviewPath)"
+Write-Host "`nPer-site report outputs:"
+foreach ($entry in $siteOutputSummaries) {
+    Write-Host ("  Site: {0}" -f $entry.SiteKey)
+    Write-Host ("    Documents CSV: {0}" -f $entry.DocumentReportPath)
+    Write-Host ("    Documents Overview CSV: {0}" -f $entry.DocumentOverviewPath)
+    if ($scanOther) {
+        Write-Host ("    Other CSV: {0}" -f $entry.OtherReportPath)
+        Write-Host ("    Other Overview CSV: {0}" -f $entry.OtherOverviewPath)
+    }
 }
 
