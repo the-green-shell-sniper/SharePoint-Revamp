@@ -53,7 +53,15 @@ param(
 
     [Parameter(Mandatory = $false)]
     [ValidateSet('Auto', 'DeltaOnly', 'FullRescan')]
-    [string]$RunMode = 'Auto'
+    [string]$RunMode = 'Auto',
+
+    [Parameter(Mandatory = $false)]
+    [ValidateRange(0, 5000)]
+    [int]$ThrottleSleepMs = 25,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateRange(0, 10000)]
+    [int]$ThrottleEveryNItems = 100
 )
 
 $ErrorActionPreference = "Stop"
@@ -78,6 +86,27 @@ function Set-ScriptWindowTitle {
     }
     catch {
         Write-Verbose 'Could not set the console window title.'
+    }
+}
+
+function Invoke-OptionalCpuThrottle {
+    param(
+        [Parameter(Mandatory = $false)]
+        [int]$ProcessedItems = 0,
+
+        [Parameter(Mandatory = $false)]
+        [int]$SleepMilliseconds = 0,
+
+        [Parameter(Mandatory = $false)]
+        [int]$EveryNItems = 0
+    )
+
+    if ($SleepMilliseconds -le 0 -or $EveryNItems -le 0) {
+        return
+    }
+
+    if ($ProcessedItems -gt 0 -and ($ProcessedItems % $EveryNItems) -eq 0) {
+        Start-Sleep -Milliseconds $SleepMilliseconds
     }
 }
 
@@ -110,6 +139,7 @@ $PdfNoiseHosts = @(
 )
 
 $ExternalUrlStatusCacheTtlDays = 30
+$SubsiteInventoryCacheTtlHours = 12
 
 function Install-RequiredModule {
     param([Parameter(Mandatory = $true)][string]$Name)
@@ -481,28 +511,167 @@ function Get-UniqueSubsiteScanRootSet {
         return @()
     }
 
-    $ordered = @($Subsites | Sort-Object { $_.Url.TrimEnd('/').Length }, Url)
-    $roots = New-Object System.Collections.Generic.List[object]
+    $normalized = New-Object System.Collections.Generic.List[object]
+    foreach ($sub in $Subsites) {
+        if (-not $sub) {
+            continue
+        }
 
-    foreach ($candidate in $ordered) {
-        $candidateUrl = [string]$candidate.Url.TrimEnd('/')
+        $rawUrl = ''
+        if ($sub -is [string]) {
+            $rawUrl = [string]$sub
+        }
+        elseif ($sub.PSObject -and $sub.PSObject.Properties['Url']) {
+            $rawUrl = [string]$sub.Url
+        }
+
+        if ([string]::IsNullOrWhiteSpace($rawUrl)) {
+            continue
+        }
+
+        $trimmedUrl = $rawUrl.Trim()
+        while ($trimmedUrl.EndsWith('/')) {
+            $trimmedUrl = $trimmedUrl.Substring(0, $trimmedUrl.Length - 1)
+        }
+        if ([string]::IsNullOrWhiteSpace($trimmedUrl)) {
+            continue
+        }
+
+        $normalized.Add([PSCustomObject]@{
+                Url       = $trimmedUrl
+                UrlKey    = $trimmedUrl.ToLowerInvariant()
+                UrlLength = $trimmedUrl.Length
+                Item      = $sub
+            })
+    }
+
+    if ($normalized.Count -eq 0) {
+        return @()
+    }
+
+    $ordered = @($normalized | Sort-Object -Property UrlLength, UrlKey)
+    $rootEntries = New-Object System.Collections.Generic.List[object]
+
+    foreach ($candidateEntry in $ordered) {
+        $candidateUrlKey = [string]$candidateEntry.UrlKey
         $covered = $false
 
-        foreach ($root in $roots) {
-            $rootUrl = [string]$root.Url.TrimEnd('/')
-            if ($candidateUrl.Equals($rootUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
-                $candidateUrl.StartsWith(($rootUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+        foreach ($rootEntry in $rootEntries) {
+            $rootUrlKey = [string]$rootEntry.UrlKey
+            if ([string]::IsNullOrWhiteSpace($rootUrlKey)) {
+                continue
+            }
+
+            if ($candidateUrlKey -eq $rootUrlKey -or $candidateUrlKey.StartsWith($rootUrlKey + '/')) {
                 $covered = $true
                 break
             }
         }
 
         if (-not $covered) {
-            $roots.Add($candidate)
+            $rootEntries.Add($candidateEntry)
         }
     }
 
-    return @($roots)
+    return @($rootEntries | ForEach-Object { $_.Item })
+}
+
+function Get-TopLevelMappingRootUrl {
+    param([Parameter(Mandatory = $true)][string]$Url)
+
+    $raw = $Url.Trim()
+    if ([string]::IsNullOrWhiteSpace($raw)) {
+        return ''
+    }
+
+    $uri = $null
+    if (-not [Uri]::TryCreate($raw, [UriKind]::Absolute, [ref]$uri)) {
+        return $raw.TrimEnd('/')
+    }
+
+    $base = $uri.GetLeftPart([UriPartial]::Authority)
+    $segments = @($uri.AbsolutePath.Trim('/') -split '/' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($segments.Count -eq 0) {
+        return $base
+    }
+
+    $first = $segments[0].ToLowerInvariant()
+    if ($first -in @('sites', 'teams') -and $segments.Count -ge 2) {
+        return ($base + '/' + $segments[0] + '/' + $segments[1]).TrimEnd('/')
+    }
+
+    return ($base + '/' + $segments[0]).TrimEnd('/')
+}
+
+function Get-TopLevelMappingPromptSet {
+    param([Parameter(Mandatory = $true)][array]$Subsites)
+
+    if (-not $Subsites -or $Subsites.Count -eq 0) {
+        return @()
+    }
+
+    $seenRoots = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $promptItems = New-Object System.Collections.Generic.List[object]
+
+    foreach ($sub in $Subsites) {
+        if (-not $sub -or -not $sub.PSObject -or -not $sub.PSObject.Properties['Url']) {
+            continue
+        }
+
+        $rootUrl = Get-TopLevelMappingRootUrl -Url ([string]$sub.Url)
+        if ([string]::IsNullOrWhiteSpace($rootUrl)) {
+            continue
+        }
+
+        if (-not $seenRoots.Add($rootUrl)) {
+            continue
+        }
+
+        $matching = @($Subsites | Where-Object {
+                $_ -and $_.PSObject -and $_.PSObject.Properties['Url'] -and
+                ([string]$_.Url).TrimEnd('/').Equals($rootUrl, [System.StringComparison]::OrdinalIgnoreCase)
+            } | Select-Object -First 1)
+
+        $title = if ($matching.Count -gt 0) { [string]$matching[0].Title } else { '' }
+        $promptItems.Add([PSCustomObject]@{ Url = $rootUrl; Title = $title })
+    }
+
+    return @($promptItems | Sort-Object Url)
+}
+
+function Get-UrlPathSegmentCount {
+    param([Parameter(Mandatory = $true)][string]$Url)
+
+    $uri = $null
+    if (-not [Uri]::TryCreate($Url, [UriKind]::Absolute, [ref]$uri)) {
+        return 0
+    }
+
+    $segments = @($uri.AbsolutePath.Trim('/') -split '/' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    return $segments.Count
+}
+
+function Test-IsWithinScopeDepth {
+    param(
+        [Parameter(Mandatory = $true)][string]$ScopeUrl,
+        [Parameter(Mandatory = $true)][string]$CandidateUrl,
+        [Parameter(Mandatory = $true)][int]$MaxAdditionalSegments
+    )
+
+    $scopeNorm = $ScopeUrl.TrimEnd('/')
+    $candidateNorm = $CandidateUrl.TrimEnd('/')
+    if ($candidateNorm.Equals($scopeNorm, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+
+    if (-not $candidateNorm.StartsWith($scopeNorm + '/', [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $false
+    }
+
+    $scopeDepth = Get-UrlPathSegmentCount -Url $scopeNorm
+    $candidateDepth = Get-UrlPathSegmentCount -Url $candidateNorm
+    $additionalDepth = $candidateDepth - $scopeDepth
+    return ($additionalDepth -ge 0 -and $additionalDepth -le $MaxAdditionalSegments)
 }
 
 function Get-NormalizedExtension {
@@ -712,6 +881,182 @@ function Add-ExtensionDetailRowSet {
 
         $fileName = "Get-FixItListURLsv4_${ScopeFingerprint}_${ScriptSchemaVersion}.json"
         return (Join-Path -Path $StateRootFolder -ChildPath $fileName)
+    }
+
+    function Get-StateManifestPath {
+        param(
+            [Parameter(Mandatory = $true)][string]$StateRootFolder,
+            [Parameter(Mandatory = $true)][string]$ScopeFingerprint
+        )
+
+        $fileName = "Get-FixItListURLsv4_${ScopeFingerprint}_StateManifest.json"
+        return (Join-Path -Path $StateRootFolder -ChildPath $fileName)
+    }
+
+    function Get-ResolvedFindingsPath {
+        param(
+            [Parameter(Mandatory = $true)][string]$StateRootFolder,
+            [Parameter(Mandatory = $true)][string]$ScopeFingerprint,
+            [Parameter(Mandatory = $true)][string]$RunStamp
+        )
+
+        $fileName = "Get-FixItListURLsv4_${ScopeFingerprint}_ResolvedFindings-${RunStamp}.csv"
+        return (Join-Path -Path $StateRootFolder -ChildPath $fileName)
+    }
+
+    function Get-ResolvedFindingRow {
+        param(
+            [Parameter(Mandatory = $true)][ValidateSet('Document', 'Other')][string]$FindingKind,
+            [Parameter(Mandatory = $true)][string]$ItemKey,
+            [Parameter(Mandatory = $true)]$Row
+        )
+
+        $result = [ordered]@{
+            'Finding Kind' = $FindingKind
+            'Item Key' = $ItemKey
+        }
+
+        if ($Row -and $Row.PSObject) {
+            foreach ($prop in $Row.PSObject.Properties) {
+                if ($prop.Name -eq '__SiteKey') {
+                    continue
+                }
+
+                $result[$prop.Name] = $prop.Value
+            }
+        }
+
+        if (-not $result.Contains('Resolved At')) {
+            $result['Resolved At'] = ''
+        }
+
+        return [PSCustomObject]$result
+    }
+
+    function Export-ResolvedFindingSet {
+        param(
+            [Parameter(Mandatory = $true)][string]$Path,
+            [Parameter(Mandatory = $true)][array]$Rows
+        )
+
+        if ($Rows -and $Rows.Count -gt 0) {
+            @($Rows) | Export-Csv -Path $Path -NoTypeInformation
+            return
+        }
+
+        [PSCustomObject][ordered]@{
+            'Finding Kind' = ''
+            'Item Key' = ''
+            'Resolved At' = ''
+        } | Export-Csv -Path $Path -NoTypeInformation
+    }
+
+    function Save-StateManifest {
+        param(
+            [Parameter(Mandatory = $true)][string]$Path,
+            [Parameter(Mandatory = $true)]$Manifest
+        )
+
+        try {
+            $Manifest | ConvertTo-Json -Depth 8 | Set-Content -Path $Path -Encoding UTF8 -Force
+        }
+        catch {
+            Write-Verbose "Could not save state manifest to ${Path}: $($_.Exception.Message)"
+        }
+    }
+
+    function Get-SubsiteInventoryCachePath {
+        param(
+            [Parameter(Mandatory = $true)][string]$StateRootFolder,
+            [Parameter(Mandatory = $true)][string]$ScopeUrl
+        )
+
+        $scopeHash = (Get-Sha256Hex -Text $ScopeUrl.TrimEnd('/').ToLowerInvariant()).Substring(0, 16)
+        return (Join-Path -Path $StateRootFolder -ChildPath ("Get-FixItListURLsv4_SubsiteInventory_v2_{0}.json" -f $scopeHash))
+    }
+
+    function Get-SubsiteInventoryCache {
+        param(
+            [Parameter(Mandatory = $true)][string]$Path,
+            [Parameter(Mandatory = $true)][string]$ScopeUrl
+        )
+
+        if (-not (Test-Path -Path $Path)) {
+            return $null
+        }
+
+        try {
+            $raw = Get-Content -Path $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+            if (-not $raw) {
+                return $null
+            }
+
+            $cachedScopeUrl = [string]$raw.ScopeUrl
+            if ([string]::IsNullOrWhiteSpace($cachedScopeUrl)) {
+                return $null
+            }
+
+            $normalizedRequestedScope = $ScopeUrl.TrimEnd('/')
+            $normalizedCachedScope = $cachedScopeUrl.TrimEnd('/')
+            if (-not $normalizedRequestedScope.Equals($normalizedCachedScope, [System.StringComparison]::OrdinalIgnoreCase)) {
+                return $null
+            }
+
+            $items = New-Object System.Collections.Generic.List[object]
+            foreach ($entry in @($raw.Subsites)) {
+                if (-not $entry) {
+                    continue
+                }
+
+                $entryUrl = [string]$entry.Url
+                if ([string]::IsNullOrWhiteSpace($entryUrl)) {
+                    continue
+                }
+
+                $items.Add([PSCustomObject]@{
+                        Url   = $entryUrl.TrimEnd('/')
+                        Title = [string]$entry.Title
+                    })
+            }
+
+            if ($items.Count -eq 0) {
+                return $null
+            }
+
+            return [PSCustomObject]@{
+                ScopeUrl = $normalizedCachedScope
+                CachedAt = [string]$raw.CachedAt
+                Subsites = @($items | Sort-Object Url -Unique)
+            }
+        }
+        catch {
+            Write-Verbose "Could not load subsite inventory cache from ${Path}: $($_.Exception.Message)"
+            return $null
+        }
+    }
+
+    function Save-SubsiteInventoryCache {
+        param(
+            [Parameter(Mandatory = $true)][string]$Path,
+            [Parameter(Mandatory = $true)][string]$ScopeUrl,
+            [Parameter(Mandatory = $true)][array]$Subsites
+        )
+
+        try {
+            [ordered]@{
+                SchemaVersion = 1
+                ScopeUrl = $ScopeUrl.TrimEnd('/')
+                CachedAt = (Get-Date).ToString('o')
+                Subsites = @(
+                    $Subsites |
+                        Sort-Object Url |
+                        ForEach-Object { [ordered]@{ Url = $_.Url; Title = $_.Title } }
+                )
+            } | ConvertTo-Json -Depth 6 | Set-Content -Path $Path -Encoding UTF8 -Force
+        }
+        catch {
+            Write-Verbose "Could not save subsite inventory cache to ${Path}: $($_.Exception.Message)"
+        }
     }
 
     function Get-EmptyRunState {
@@ -1794,6 +2139,233 @@ function Get-BooleanPrompt {
     }
 }
 
+function Get-NewBaseUrlMapFromCsv {
+    param(
+        [Parameter(Mandatory = $true)][string]$CsvPath,
+        [Parameter(Mandatory = $true)][array]$PromptSubsites
+    )
+
+    if (-not (Test-Path -Path $CsvPath)) {
+        throw "CSV file was not found: $CsvPath"
+    }
+
+    $rows = @(Import-Csv -Path $CsvPath)
+    if ($rows.Count -eq 0) {
+        throw 'CSV file has no data rows. Include URL and New base URL values.'
+    }
+
+    $firstRow = $rows[0]
+    $columnNames = @($firstRow.PSObject.Properties.Name)
+    $urlColumn = @($columnNames | Where-Object { $_ -ieq 'URL' } | Select-Object -First 1)
+    $newBaseColumn = @($columnNames | Where-Object { $_ -ieq 'New base URL' } | Select-Object -First 1)
+
+    if ($urlColumn.Count -eq 0 -or $newBaseColumn.Count -eq 0) {
+        throw 'CSV must include headers named URL and New base URL.'
+    }
+
+    $urlKey = [string]$urlColumn[0]
+    $newBaseKey = [string]$newBaseColumn[0]
+
+    $map = @{}
+    foreach ($row in $rows) {
+        $oldRaw = if ($row.PSObject.Properties[$urlKey]) { [string]$row.$urlKey } else { '' }
+        $newRaw = if ($row.PSObject.Properties[$newBaseKey]) { [string]$row.$newBaseKey } else { '' }
+
+        if ([string]::IsNullOrWhiteSpace($oldRaw) -and [string]::IsNullOrWhiteSpace($newRaw)) {
+            continue
+        }
+
+        $oldBase = $oldRaw.TrimEnd('/')
+        $newBase = $newRaw.TrimEnd('/')
+
+        if ([string]::IsNullOrWhiteSpace($oldBase)) {
+            throw 'CSV contains a row with a blank URL value.'
+        }
+        if ([string]::IsNullOrWhiteSpace($newBase)) {
+            throw ("CSV row for URL '{0}' has a blank New base URL value." -f $oldBase)
+        }
+        if ($oldBase -notmatch '^https?://') {
+            throw ("CSV URL value is not a valid absolute URL: {0}" -f $oldBase)
+        }
+        if ($newBase -notmatch '^https?://') {
+            throw ("CSV New base URL value is not a valid absolute URL: {0}" -f $newBase)
+        }
+
+        if ($map.ContainsKey($oldBase) -and -not ([string]$map[$oldBase]).Equals($newBase, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw ("CSV contains conflicting New base URL values for URL '{0}'." -f $oldBase)
+        }
+
+        $map[$oldBase] = $newBase
+    }
+
+    $missing = New-Object System.Collections.Generic.List[string]
+    foreach ($sub in $PromptSubsites) {
+        $oldBase = ([string]$sub.Url).TrimEnd('/')
+        if (-not $map.ContainsKey($oldBase)) {
+            $missing.Add($oldBase)
+        }
+    }
+
+    if ($missing.Count -gt 0) {
+        $preview = @($missing | Select-Object -First 8)
+        $suffix = if ($missing.Count -gt 8) { ' ...' } else { '' }
+        throw ("CSV is missing {0} required URL row(s). Missing examples: {1}{2}" -f $missing.Count, ($preview -join '; '), $suffix)
+    }
+
+    return $map
+}
+
+function Export-NewBaseUrlCsvTemplate {
+    param(
+        [Parameter(Mandatory = $true)][string]$CsvPath,
+        [Parameter(Mandatory = $true)][array]$PromptSubsites
+    )
+
+    $rows = foreach ($sub in @($PromptSubsites | Sort-Object Url)) {
+        [PSCustomObject][ordered]@{
+            'URL' = ([string]$sub.Url).TrimEnd('/')
+            'New base URL' = ''
+        }
+    }
+
+    @($rows) | Export-Csv -Path $CsvPath -NoTypeInformation
+}
+
+function Get-CsvTemplateExportPath {
+    param(
+        [Parameter(Mandatory = $false)][string]$DefaultDirectory = '',
+        [Parameter(Mandatory = $false)][string]$DefaultFileName = 'Get-FixItListURLsv4-UrlMappingTemplate.csv'
+    )
+
+    $selectedPath = ''
+
+    try {
+        Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
+
+        $saveDialog = New-Object System.Windows.Forms.SaveFileDialog
+        $saveDialog.Title = 'Save URL Mapping Template CSV'
+        $saveDialog.Filter = 'CSV files (*.csv)|*.csv|All files (*.*)|*.*'
+        $saveDialog.DefaultExt = 'csv'
+        $saveDialog.AddExtension = $true
+        $saveDialog.OverwritePrompt = $true
+        $saveDialog.CheckPathExists = $true
+        if (-not [string]::IsNullOrWhiteSpace($DefaultFileName)) {
+            $saveDialog.FileName = $DefaultFileName
+        }
+        if (-not [string]::IsNullOrWhiteSpace($DefaultDirectory) -and (Test-Path -Path $DefaultDirectory)) {
+            $saveDialog.InitialDirectory = $DefaultDirectory
+        }
+
+        $dialogResult = $saveDialog.ShowDialog()
+        if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK -and -not [string]::IsNullOrWhiteSpace($saveDialog.FileName)) {
+            $selectedPath = [string]$saveDialog.FileName
+        }
+    }
+    catch {
+        Write-Host "  Could not open file picker dialog. You can still enter a path manually."
+    }
+
+    while ([string]::IsNullOrWhiteSpace($selectedPath)) {
+        $manualPath = Read-Host 'Enter full path where the CSV template should be exported'
+        if ([string]::IsNullOrWhiteSpace($manualPath)) {
+            Write-Host '  Template export path is required.'
+            continue
+        }
+
+        $selectedPath = $manualPath
+    }
+
+    return $selectedPath
+}
+
+function Get-ExistingCsvSelectionPath {
+    param(
+        [Parameter(Mandatory = $false)][string]$DefaultDirectory = ''
+    )
+
+    try {
+        Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
+
+        $openDialog = New-Object System.Windows.Forms.OpenFileDialog
+        $openDialog.Title = 'Select URL Mapping CSV File'
+        $openDialog.Filter = 'CSV files (*.csv)|*.csv|All files (*.*)|*.*'
+        $openDialog.DefaultExt = 'csv'
+        $openDialog.CheckFileExists = $true
+        $openDialog.Multiselect = $false
+        if (-not [string]::IsNullOrWhiteSpace($DefaultDirectory) -and (Test-Path -Path $DefaultDirectory)) {
+            $openDialog.InitialDirectory = $DefaultDirectory
+        }
+
+        $dialogResult = $openDialog.ShowDialog()
+        if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK -and -not [string]::IsNullOrWhiteSpace($openDialog.FileName)) {
+            return [string]$openDialog.FileName
+        }
+    }
+    catch {
+        Write-Host '  Could not open CSV selection dialog. You can still enter a path manually.'
+    }
+
+    return ''
+}
+
+function Get-UrlMappingCsvPreferencePath {
+    param([Parameter(Mandatory = $true)][string]$StateRootFolder)
+
+    return (Join-Path -Path $StateRootFolder -ChildPath 'Get-FixItListURLsv4_UrlMappingCsvPreference.json')
+}
+
+function Get-UrlMappingCsvPreference {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    if (-not (Test-Path -Path $Path)) {
+        return [PSCustomObject]@{
+            LastTemplatePath = ''
+            LastCompletedCsvPath = ''
+            UpdatedAt = ''
+        }
+    }
+
+    try {
+        $raw = Get-Content -Path $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+        return [PSCustomObject]@{
+            LastTemplatePath = if ($raw.PSObject.Properties['LastTemplatePath']) { [string]$raw.LastTemplatePath } else { '' }
+            LastCompletedCsvPath = if ($raw.PSObject.Properties['LastCompletedCsvPath']) { [string]$raw.LastCompletedCsvPath } else { '' }
+            UpdatedAt = if ($raw.PSObject.Properties['UpdatedAt']) { [string]$raw.UpdatedAt } else { '' }
+        }
+    }
+    catch {
+        Write-Verbose "Could not load URL mapping CSV preference file from ${Path}: $($_.Exception.Message)"
+        return [PSCustomObject]@{
+            LastTemplatePath = ''
+            LastCompletedCsvPath = ''
+            UpdatedAt = ''
+        }
+    }
+}
+
+function Save-UrlMappingCsvPreference {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $false)][string]$TemplatePath = '',
+        [Parameter(Mandatory = $false)][string]$CompletedCsvPath = ''
+    )
+
+    $current = Get-UrlMappingCsvPreference -Path $Path
+    $lastTemplatePath = if ([string]::IsNullOrWhiteSpace($TemplatePath)) { [string]$current.LastTemplatePath } else { $TemplatePath }
+    $lastCompletedCsvPath = if ([string]::IsNullOrWhiteSpace($CompletedCsvPath)) { [string]$current.LastCompletedCsvPath } else { $CompletedCsvPath }
+
+    try {
+        [ordered]@{
+            LastTemplatePath = $lastTemplatePath
+            LastCompletedCsvPath = $lastCompletedCsvPath
+            UpdatedAt = (Get-Date).ToString('o')
+        } | ConvertTo-Json -Depth 4 | Set-Content -Path $Path -Encoding UTF8 -Force
+    }
+    catch {
+        Write-Verbose "Could not save URL mapping CSV preference file to ${Path}: $($_.Exception.Message)"
+    }
+}
+
 function Find-UrlsInText {
     param([Parameter(Mandatory = $true)][string]$Text)
 
@@ -2109,34 +2681,102 @@ Write-Host "`nSelected inventory scope: $selectedScopeUrl"
 
 $scopeConn = Connect-ValidatedPnP -Url $selectedScopeUrl -ClientId $ClientId
 
-Write-Host ("`nSubsite inventory under selected scope {0}:" -f $selectedScopeUrl)
+Initialize-StateDirectory -Path $StateRootFolder
+$subsiteInventoryCachePath = Get-SubsiteInventoryCachePath -StateRootFolder $StateRootFolder -ScopeUrl $selectedScopeUrl
+$subsiteInventoryCache = Get-SubsiteInventoryCache -Path $subsiteInventoryCachePath -ScopeUrl $selectedScopeUrl
 $scopeSubsites = $null
-try {
-    $scopeRootResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope root web' -MaxAttempts 4 -Operation {
-        param($activeConnection)
-        Get-PnPWeb -Connection $activeConnection -Includes Url, Title
-    }
-    $scopeConn = $scopeRootResult.Connection
-    $scopeRootWeb = $scopeRootResult.Result
-    $scopeSubsites = New-Object System.Collections.Generic.List[Object]
-    $scopeSubsites.Add([PSCustomObject]@{ Url = $scopeRootWeb.Url; Title = $scopeRootWeb.Title })
+$usingFreshSubsiteInventoryCache = $false
 
-    $scopeChildResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope child webs' -MaxAttempts 4 -Operation {
-        param($activeConnection)
-        Get-PnPSubWeb -Connection $activeConnection -Recurse -Includes Url, Title
+if ($subsiteInventoryCache -and $subsiteInventoryCache.Subsites.Count -gt 0) {
+    $cacheIsFresh = $false
+    if (-not [string]::IsNullOrWhiteSpace([string]$subsiteInventoryCache.CachedAt)) {
+        try {
+            $cachedAtValue = [datetime]::Parse([string]$subsiteInventoryCache.CachedAt)
+            $cacheIsFresh = ((Get-Date) - $cachedAtValue) -lt [TimeSpan]::FromHours($SubsiteInventoryCacheTtlHours)
+        }
+        catch {
+            $cacheIsFresh = $false
+        }
     }
-    $scopeConn = $scopeChildResult.Connection
-    $children = @($scopeChildResult.Result | Sort-Object Url)
-    foreach ($child in $children) {
-        $scopeSubsites.Add([PSCustomObject]@{ Url = $child.Url; Title = $child.Title })
+
+    if ($cacheIsFresh) {
+        Write-Host ("`nSubsite inventory under selected scope {0} (cached):" -f $selectedScopeUrl)
+        Write-Host ("Using cached subsite inventory from {0}." -f ([string]$subsiteInventoryCache.CachedAt))
+        $scopeSubsites = @($subsiteInventoryCache.Subsites)
+        $usingFreshSubsiteInventoryCache = $true
+    }
+    else {
+        Write-Host ("`nCached subsite inventory found for {0}, but it is older than {1} hours. Refreshing live inventory..." -f $selectedScopeUrl, $SubsiteInventoryCacheTtlHours)
     }
 }
-catch {
-    throw "Could not enumerate subsites under ${selectedScopeUrl}: $($_.Exception.Message)"
+
+if (-not $usingFreshSubsiteInventoryCache) {
+    Write-Host ("`nSubsite inventory under selected scope {0} (live scan):" -f $selectedScopeUrl)
+    try {
+        $scopeSubsites = New-Object System.Collections.Generic.List[Object]
+        $scopeRootResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope root web' -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPWeb -Connection $activeConnection -Includes Url, Title
+        }
+        $scopeConn = $scopeRootResult.Connection
+        $scopeRootWeb = $scopeRootResult.Result
+        $scopeSubsites.Add([PSCustomObject]@{ Url = ([string]$scopeRootWeb.Url).TrimEnd('/'); Title = [string]$scopeRootWeb.Title })
+
+        $scopeChildResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope direct child webs' -MaxAttempts 4 -Operation {
+            param($activeConnection)
+            Get-PnPSubWeb -Connection $activeConnection -Includes Url, Title
+        }
+        $scopeConn = $scopeChildResult.Connection
+        $children = @($scopeChildResult.Result | Sort-Object Url)
+        foreach ($child in $children) {
+            if (-not $child -or [string]::IsNullOrWhiteSpace([string]$child.Url)) {
+                continue
+            }
+
+            $scopeSubsites.Add([PSCustomObject]@{ Url = ([string]$child.Url).TrimEnd('/'); Title = [string]$child.Title })
+        }
+
+        $scopeSubsites = @($scopeSubsites | Sort-Object Url -Unique)
+
+        Save-SubsiteInventoryCache -Path $subsiteInventoryCachePath -ScopeUrl $selectedScopeUrl -Subsites @($scopeSubsites)
+    }
+    catch {
+        if ($selectedScopeUrl.Equals($RootUrl, [System.StringComparison]::OrdinalIgnoreCase) -and $tenantSites -and $tenantSites.Count -gt 0) {
+            Write-Warning "Could not enumerate root-scope subweb inventory; falling back to tenant site collections. $($_.Exception.Message)"
+            $scopeSubsites = @(
+                $tenantSites |
+                    Where-Object { $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Url) } |
+                    Sort-Object Url |
+                    ForEach-Object {
+                        [PSCustomObject]@{
+                            Url   = ([string]$_.Url).TrimEnd('/')
+                            Title = [string]$_.Title
+                        }
+                    }
+            )
+        }
+        elseif ($subsiteInventoryCache -and $subsiteInventoryCache.Subsites.Count -gt 0) {
+            Write-Warning "Could not refresh live subsite inventory; using cached subsite inventory instead. $($_.Exception.Message)"
+            $scopeSubsites = @($subsiteInventoryCache.Subsites)
+        }
+        else {
+            throw "Could not enumerate subsites under ${selectedScopeUrl}: $($_.Exception.Message)"
+        }
+    }
 }
 
 if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
     throw "No sites were found under $selectedScopeUrl."
+}
+
+# Keep inventory to selected scope plus one child level so operators are not forced to parse deep descendants.
+$scopeSubsites = @($scopeSubsites | Where-Object {
+        $_ -and $_.PSObject -and $_.PSObject.Properties['Url'] -and
+        (Test-IsWithinScopeDepth -ScopeUrl $selectedScopeUrl -CandidateUrl ([string]$_.Url) -MaxAdditionalSegments 1)
+    } | Sort-Object Url -Unique)
+
+if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
+    throw "No one-level subsite entries were found under $selectedScopeUrl."
 }
 
 for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
@@ -2147,6 +2787,7 @@ for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
 Write-Host "     0. ALL listed subsites"
 
 $selectedIndices = $null
+$selectedAllSubsites = $false
 while (-not $selectedIndices) {
     $pickRaw = Read-Host "`nPick one or more subsites by number (comma-separated, e.g. 1,4,7). Use 0 for ALL subsites"
     if ([string]::IsNullOrWhiteSpace($pickRaw)) {
@@ -2157,6 +2798,7 @@ while (-not $selectedIndices) {
     $parts = @($pickRaw -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
     if ($parts -contains '0') {
+        $selectedAllSubsites = $true
         $selectedIndices = @(1..$scopeSubsites.Count)
         break
     }
@@ -2190,25 +2832,176 @@ foreach ($idx in $selectedIndices) {
     $selectedSubsites += $scopeSubsites[$idx - 1]
 }
 
-$scanRootSubsites = Get-UniqueSubsiteScanRootSet -Subsites $selectedSubsites
+$mappingPromptSubsites = Get-TopLevelMappingPromptSet -Subsites $selectedSubsites
+
+if ($selectedAllSubsites) {
+    # Option 0 means process all listed subsites as entered and continue directly to URL prompts.
+    $scanRootSubsites = @($selectedSubsites)
+}
+else {
+    # Defer scan-root collapse until after URL prompts to preserve operator flow.
+    $scanRootSubsites = $null
+}
 
 $urlMappings = New-Object System.Collections.Generic.List[object]
-foreach ($sub in $selectedSubsites) {
+$useCsvMappings = $false
+$newBaseByOldBase = @{}
+$urlMappingCsvPreferencePath = Get-UrlMappingCsvPreferencePath -StateRootFolder $StateRootFolder
+$urlMappingCsvPreference = Get-UrlMappingCsvPreference -Path $urlMappingCsvPreferencePath
+
+if ($selectedAllSubsites -and $mappingPromptSubsites.Count -gt 0) {
+    Write-Host ""
+    Write-Host "All-subsites URL mapping input mode:"
+    Write-Host "  1. Enter new base URLs manually"
+    Write-Host "     - The script prompts one URL at a time in this session window."
+    Write-Host "     - Type a full absolute new base URL for each prompt."
+    Write-Host "  2. Load old/new base URLs from an existing CSV file"
+    Write-Host "     - Provide a full CSV path."
+    Write-Host "     - CSV headers must be: URL, New base URL."
+    Write-Host "     - CSV must include one row for every prompted URL."
+    Write-Host "  3. Export a CSV template, fill it out, then load it"
+    Write-Host "     - The script exports a template with URL values pre-filled."
+    Write-Host "     - You fill New base URL values, save the file, then provide that path."
+
+    $mappingMode = ''
+    while ([string]::IsNullOrWhiteSpace($mappingMode)) {
+        $choice = Read-Host "Choose mapping input mode [1/2/3]"
+        switch ($choice.Trim()) {
+            '1' { $mappingMode = 'manual' }
+            '2' { $mappingMode = 'csv' }
+            '3' { $mappingMode = 'template' }
+            default { Write-Host '  Please enter 1, 2, or 3.' }
+        }
+    }
+
+    if ($mappingMode -eq 'csv' -or $mappingMode -eq 'template') {
+        $templatePath = ''
+        while (-not $useCsvMappings) {
+            $csvPath = ''
+
+            if ($mappingMode -eq 'template') {
+                if ([string]::IsNullOrWhiteSpace($templatePath)) {
+                    $templatePath = Get-CsvTemplateExportPath -DefaultDirectory $LogsOutputFolder -DefaultFileName 'Get-FixItListURLsv4-UrlMappingTemplate.csv'
+
+                    try {
+                        Export-NewBaseUrlCsvTemplate -CsvPath $templatePath -PromptSubsites $mappingPromptSubsites
+                        Write-Host ("  CSV template exported: {0}" -f $templatePath)
+                        Write-Host '  Next step: open the CSV, fill the New base URL column for each row, and save the file.'
+                    }
+                    catch {
+                        Write-Host ("  Could not export template: {0}" -f $_.Exception.Message)
+                        $templatePath = ''
+                        continue
+                    }
+                }
+
+                $readyChoice = ''
+                while ([string]::IsNullOrWhiteSpace($readyChoice)) {
+                    $readyInput = Read-Host 'When ready, enter D (done and saved), R (re-export template), or P (provide a different completed CSV path) [D/R/P]'
+                    switch ($readyInput.Trim().ToUpperInvariant()) {
+                        'D' { $readyChoice = 'done' }
+                        'R' { $readyChoice = 'reexport' }
+                        'P' { $readyChoice = 'path' }
+                        default { Write-Host '  Please enter D, R, or P.' }
+                    }
+                }
+
+                if ($readyChoice -eq 'reexport') {
+                    $templatePath = Get-CsvTemplateExportPath -DefaultDirectory $LogsOutputFolder -DefaultFileName 'Get-FixItListURLsv4-UrlMappingTemplate.csv'
+                    try {
+                        Export-NewBaseUrlCsvTemplate -CsvPath $templatePath -PromptSubsites $mappingPromptSubsites
+                        Write-Host ("  CSV template exported: {0}" -f $templatePath)
+                        Write-Host '  Re-open the template, fill New base URL values, save, then continue.'
+                    }
+                    catch {
+                        Write-Host ("  Could not export template: {0}" -f $_.Exception.Message)
+                        $templatePath = ''
+                    }
+                    continue
+                }
+
+                if ($readyChoice -eq 'done') {
+                    $csvPath = $templatePath
+                }
+                else {
+                    $selectedCsvPath = Get-ExistingCsvSelectionPath -DefaultDirectory $LogsOutputFolder
+                    if (-not [string]::IsNullOrWhiteSpace($selectedCsvPath)) {
+                        $csvPath = $selectedCsvPath
+                    }
+                    else {
+                        $cachedCsvPath = [string]$urlMappingCsvPreference.LastCompletedCsvPath
+                        if (-not [string]::IsNullOrWhiteSpace($cachedCsvPath)) {
+                            $csvPath = Read-Host ("Enter full path to the completed CSV file (press Enter to use cached path: {0})" -f $cachedCsvPath)
+                            if ([string]::IsNullOrWhiteSpace($csvPath)) {
+                                $csvPath = $cachedCsvPath
+                            }
+                        }
+                        else {
+                            $csvPath = Read-Host 'Enter full path to the completed CSV file'
+                        }
+                    }
+                }
+            }
+            else {
+                $selectedCsvPath = Get-ExistingCsvSelectionPath -DefaultDirectory $LogsOutputFolder
+                if (-not [string]::IsNullOrWhiteSpace($selectedCsvPath)) {
+                    $csvPath = $selectedCsvPath
+                }
+                else {
+                    $cachedCsvPath = [string]$urlMappingCsvPreference.LastCompletedCsvPath
+                    if (-not [string]::IsNullOrWhiteSpace($cachedCsvPath)) {
+                        $csvPath = Read-Host ("Enter full path to CSV file (press Enter to use cached path: {0})" -f $cachedCsvPath)
+                        if ([string]::IsNullOrWhiteSpace($csvPath)) {
+                            $csvPath = $cachedCsvPath
+                        }
+                    }
+                    else {
+                        $csvPath = Read-Host 'Enter full path to CSV file'
+                    }
+                }
+            }
+
+            if ([string]::IsNullOrWhiteSpace($csvPath)) {
+                Write-Host '  CSV path is required.'
+                continue
+            }
+
+            try {
+                $newBaseByOldBase = Get-NewBaseUrlMapFromCsv -CsvPath $csvPath -PromptSubsites $mappingPromptSubsites
+                $useCsvMappings = $true
+                Save-UrlMappingCsvPreference -Path $urlMappingCsvPreferencePath -CompletedCsvPath $csvPath
+                $urlMappingCsvPreference = Get-UrlMappingCsvPreference -Path $urlMappingCsvPreferencePath
+                Write-Host ("  Loaded URL mappings from CSV for {0} prompt URL(s)." -f $mappingPromptSubsites.Count)
+            }
+            catch {
+                Write-Host ("  CSV validation failed: {0}" -f $_.Exception.Message)
+                Write-Host '  Please correct the CSV and try again. The script will continue prompting until a valid file is provided.'
+            }
+        }
+    }
+}
+
+foreach ($sub in $mappingPromptSubsites) {
     $oldBase = $sub.Url.TrimEnd('/')
     $newBase = $null
 
-    while (-not $newBase) {
-        $inputNew = Read-Host ("New base URL for {0}" -f $oldBase)
-        if ([string]::IsNullOrWhiteSpace($inputNew)) {
-            Write-Host "  New base URL is required."
-            continue
+    if ($useCsvMappings) {
+        $newBase = [string]$newBaseByOldBase[$oldBase]
+    }
+    else {
+        while (-not $newBase) {
+            $inputNew = Read-Host ("New base URL for {0}" -f $oldBase)
+            if ([string]::IsNullOrWhiteSpace($inputNew)) {
+                Write-Host "  New base URL is required."
+                continue
+            }
+            $candidate = $inputNew.TrimEnd('/')
+            if ($candidate -notmatch '^https?://') {
+                Write-Host "  Enter a valid absolute URL (https://...)."
+                continue
+            }
+            $newBase = $candidate
         }
-        $candidate = $inputNew.TrimEnd('/')
-        if ($candidate -notmatch '^https?://') {
-            Write-Host "  Enter a valid absolute URL (https://...)."
-            continue
-        }
-        $newBase = $candidate
     }
 
     $oldUri = [Uri]$oldBase
@@ -2323,6 +3116,7 @@ foreach ($siteKey in @($siteReportPlans.Keys | Sort-Object)) {
 }
 Write-Host "  Document content scan: $scanDocumentContent"
 Write-Host "  Counter checkpoint:    $counterCheckpointPath"
+Write-Host ("  CPU throttle:          {0} ms every {1} items (0 disables throttling)" -f $ThrottleSleepMs, $ThrottleEveryNItems)
 
 $stats = [PSCustomObject]@{
     SitesVisited = 0
@@ -2357,6 +3151,10 @@ $httpHandler.AllowAutoRedirect = $true
 $httpHandler.MaxAutomaticRedirections = 10
 $httpClient = [System.Net.Http.HttpClient]::new($httpHandler)
 $httpClient.Timeout = [TimeSpan]::FromSeconds(8)
+
+if (-not $selectedAllSubsites -and $null -eq $scanRootSubsites) {
+    $scanRootSubsites = Get-UniqueSubsiteScanRootSet -Subsites $selectedSubsites
+}
 
 $scanSiteCollections = @($scanRootSubsites | Sort-Object Url)
 $docReportRows = New-Object System.Collections.Generic.List[object]
@@ -2530,7 +3328,11 @@ foreach ($site in $scanSiteCollections) {
                 }
             }
 
+            $documentItemCounter = 0
             foreach ($item in $items) {
+                $documentItemCounter++
+                Invoke-OptionalCpuThrottle -ProcessedItems $documentItemCounter -SleepMilliseconds $ThrottleSleepMs -EveryNItems $ThrottleEveryNItems
+
                 if ($item.FieldValues['FSObjType'] -eq 1) {
                     continue
                 }
@@ -2923,7 +3725,11 @@ if ($scanOther) {
                     }
                 }
 
+                $otherItemCounter = 0
                 foreach ($item in $items) {
+                    $otherItemCounter++
+                    Invoke-OptionalCpuThrottle -ProcessedItems $otherItemCounter -SleepMilliseconds $ThrottleSleepMs -EveryNItems $ThrottleEveryNItems
+
                     $itemId = $item.Id
                     $itemTitle = [string]$item.FieldValues['Title']
                     $itemFileLeaf = if ($item.FieldValues.ContainsKey('FileLeafRef')) { [string]$item.FieldValues['FileLeafRef'] } else { '' }
@@ -3329,9 +4135,9 @@ foreach ($key in @($previousOtherFindingCache.Keys)) {
 
 $resolvedDocumentCount = $docResolvedRows.Count
 $resolvedOtherCount = $otherResolvedRows.Count
-Export-ResolvedFindings -Path $documentResolvedPath -Rows @($docResolvedRows)
+Export-ResolvedFindingSet -Path $documentResolvedPath -Rows @($docResolvedRows)
 if ($scanOther) {
-    Export-ResolvedFindings -Path $otherResolvedPath -Rows @($otherResolvedRows)
+    Export-ResolvedFindingSet -Path $otherResolvedPath -Rows @($otherResolvedRows)
 }
 
 $runState.DocumentFindingCache = $runState.DocumentFindingCache
