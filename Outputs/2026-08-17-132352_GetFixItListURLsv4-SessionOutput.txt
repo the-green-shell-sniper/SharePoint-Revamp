@@ -1,0 +1,385 @@
+Connecting to https://whallc-admin.sharepoint.com (attempt 1 of 3)...
+
+Collecting tenant sites (excluding OneDrive personal sites)...
+
+Choose which category to select from:
+  1. SharePoint site collections
+  2. Teams-connected sites
+Enter 1 or 2: 1
+
+     1. [SharePoint] https://whallc.sharepoint.com/  |  WHA Sharepoint - Central Park
+     2. [SharePoint] https://whallc.sharepoint.com/portals/Community  |  WHA Community
+     3. [SharePoint] https://whallc.sharepoint.com/portals/hub  |  PointPublishing Hub Site
+     4. [SharePoint] https://whallc.sharepoint.com/portals/personal/ghenderson  |  ghenderson
+     5. [SharePoint] https://whallc.sharepoint.com/portals/Training  |  Training
+     6. [SharePoint] https://whallc.sharepoint.com/search  |  (no title)
+     7. [SharePoint] https://whallc.sharepoint.com/sites/AAAHC-SiteSurveyGroup-OnsiteTeamCommunication  |  AAAHC - Site Survey Group-Onsite Team Communication
+     8. [SharePoint] https://whallc.sharepoint.com/sites/AccountingandFinanceTeam-AP  |  Accounting and Finance Team-AP
+     9. [SharePoint] https://whallc.sharepoint.com/sites/AccountingandFinanceTeam-IDRTaskforce  |  Accounting and Finance Team-IDR Taskforce
+    10. [SharePoint] https://whallc.sharepoint.com/sites/AccountingandFinanceTeam-PayrollTeam  |  Accounting and Finance Team-Payroll Team
+    11. [SharePoint] https://whallc.sharepoint.com/sites/AdviceTeam-NurseManagers  |  Advice Team-Nurse Managers
+    12. [SharePoint] https://whallc.sharepoint.com/sites/Agreements  |  Agreements
+    13. [SharePoint] https://whallc.sharepoint.com/sites/ALT-Test-CQR-Test  |  ALT-Test-CQR-Test
+    14. [SharePoint] https://whallc.sharepoint.com/sites/appcatalog  |  Apps
+    15. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-AllisonProfessionalDevelopment  |  Behavioral Health Team-Allison Professional Development
+    16. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BeckyProfessionalDevelopment  |  Behavioral Health Team-Becky Professional Development
+    17. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-Bekasupervision  |  Behavioral Health Team-Beka supervision
+    18. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHandPFSTeam  |  Behavioral Health Team-BH and PFS Team
+    19. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHCCs  |  Behavioral Health Team-BHCCs
+    20. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHLeadsandDirectorTeam  |  Behavioral Health Team-BH Leads and Director Team
+    21. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHPatientEducationalGroupDevelopment  |  Behavioral Health Team-BH Patient Educational Group Development
+    22. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHProgramManualwithworkflows  |  Behavioral Health Team-BH Program Manual with workflows
+    23. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHRecruiting  |  Behavioral Health Team-BH Recruiting
+    24. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BHTeamMeeting  |  Behavioral Health Team-BH Team Meeting
+    25. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-BobbiProfessionalDevelopment  |  Behavioral Health Team-Bobbi Professional Development
+    26. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-CareOregonFundsDispersalTracking  |  Behavioral Health Team-Care Oregon Funds Dispersal Tracking
+    27. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-CaseReview  |  Behavioral Health Team-Case Review
+    28. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-Catherine  |  Behavioral Health Team-Catherine Professional Development
+    29. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-CourtneyProfessionalDevelopment  |  Behavioral Health Team-Courtney Professional Development
+    30. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-Didactic  |  Behavioral Health Team-Didactic
+    31. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-EmaProfessionalDevelopment  |  Behavioral Health Team-Ema Professional Development
+    32. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-JennaProfessionalDevelopment  |  Behavioral Health Team-Jenna Professional Development
+    33. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-JessicaProfessionalDevelopment  |  Behavioral Health Team-Jessica Professional Development
+    34. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-KatieIPTvideos  |  Behavioral Health Team-Katie IPT videos
+    35. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-KatiemasterPDplanandnotes  |  Behavioral Health Team-Katie master PD plan and notes
+    36. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-LynseyProfessionalDevelopment  |  Behavioral Health Team-Lynsey Professional Development
+    37. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-MollyProfessionalDevelopment  |  Behavioral Health Team-Molly Professional Development
+    38. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam2-MonicaProfessionalDevelopment  |  Behavioral Health Team-Monica Professional Development
+    39. [SharePoint] https://whallc.sharepoint.com/sites/BehavioralHealthTeam-AprilProfessionalDevelopment  |  Behavioral Health Team-April Professional Development
+    40. [SharePoint] https://whallc.sharepoint.com/sites/BrandCenter  |  Brand Center
+    41. [SharePoint] https://whallc.sharepoint.com/sites/Classic-Home-Page-Conversion-SG-Test-TeamtoCommunication  |  Classic Home Page Team Site to Communication Site Conversion (ShareGate Tests)
+    42. [SharePoint] https://whallc.sharepoint.com/sites/ClinicalApplicationsTeam-Ruralhealth  |  Clinical Applications Team-Rural health
+    43. [SharePoint] https://whallc.sharepoint.com/sites/ClinicalInformaticsTeam-ClinicianBuildersandAnalysts  |  Clinical Informatics-Clinician Builders and Analysts
+    44. [SharePoint] https://whallc.sharepoint.com/sites/ClinicalInformaticsTeam-EpicUpgrade  |  Clinical Informatics-Epic Upgrade
+    45. [SharePoint] https://whallc.sharepoint.com/sites/CodingTeam-PFSProjects  |  Revenue Cycle-PFS Projects
+    46. [SharePoint] https://whallc.sharepoint.com/sites/CodingTeam-RevenueCycleLeaderGroup  |  Revenue Cycle-Revenue Cycle Leader Group
+    47. [SharePoint] https://whallc.sharepoint.com/sites/CommSiteMigrationtoTeamSiteTest  |  RedirectSite
+    48. [SharePoint] https://whallc.sharepoint.com/sites/CredentialingTeam-Projects  |  Credentialing Team-Projects
+    49. [SharePoint] https://whallc.sharepoint.com/sites/ERGLGBTQandAlliesTeam-SponsorandChairs  |  ERG - LGBTQ+ and Allies-Sponsor and Chairs
+    50. [SharePoint] https://whallc.sharepoint.com/sites/ERGParentsTeam-MarchofDimes2026  |  ERG Parents Team-March of Dimes 2026
+    51. [SharePoint] https://whallc.sharepoint.com/sites/github-GitHubAlerts  |  GitHub-GitHub Alerts
+    52. [SharePoint] https://whallc.sharepoint.com/sites/HelpDesk  |  RedirectSite
+    53. [SharePoint] https://whallc.sharepoint.com/sites/Home  |  WHA SharePoint
+    54. [SharePoint] https://whallc.sharepoint.com/sites/HospitalDivertTeam-Administrative  |  Hospital Divert Team-Administrative
+    55. [SharePoint] https://whallc.sharepoint.com/sites/HRTeam-JobAnalyses  |  HR Team-Job Analyses - Survey Evaluation    56. [SharePoint] https://whallc.sharepoint.com/sites/HR-Training-HR-Training  |  HR Collaboration-HR - Training
+    57. [SharePoint] https://whallc.sharepoint.com/sites/HR-Training-NewLeaderAcademy  |  HR Collaboration-New Leader Academy
+    58. [SharePoint] https://whallc.sharepoint.com/sites/Intranet  |  Intranet
+    59. [SharePoint] https://whallc.sharepoint.com/sites/Intranet-Copy-Insane-PostReIndex  |  RedirectSite
+    60. [SharePoint] https://whallc.sharepoint.com/sites/Intranet-Miscellaneous  |  RedirectSite
+    61. [SharePoint] https://whallc.sharepoint.com/sites/Intranet-Sandbox  |  Intranet-Sandbox
+    62. [SharePoint] https://whallc.sharepoint.com/sites/Intranet-Sandbox-Duplicate  |  Intranet-Sandbox-Duplicate
+    63. [SharePoint] https://whallc.sharepoint.com/sites/IT  |  IT & HIM Department
+    64. [SharePoint] https://whallc.sharepoint.com/sites/IT_HIM  |  IT & HIM Department - Promotion to Communication Site Test
+    65. [SharePoint] https://whallc.sharepoint.com/sites/IT-Department-NIST  |  IT Department-NIST
+    66. [SharePoint] https://whallc.sharepoint.com/sites/IT-Department-On-CallNotifications  |  IT Department-On-Call Notifications
+    67. [SharePoint] https://whallc.sharepoint.com/sites/ITHIM-PromotiontoCommunicationSiteTest  |  IT & HIM - Promotion to Communication Site Test
+    68. [SharePoint] https://whallc.sharepoint.com/sites/MarketingTeam-Communityevents  |  Marketing Team-Community events
+    69. [SharePoint] https://whallc.sharepoint.com/sites/MarketingTeam-WorkforceRecognitionDays  |  Marketing Team-Workforce Recognition Days
+    70. [SharePoint] https://whallc.sharepoint.com/sites/MedicalAdministrativeTeam-MeetingAgendas  |  Medical Administrative Team-Meeting Agendas
+    71. [SharePoint] https://whallc.sharepoint.com/sites/MFM_InPatient_Lists  |  MFM In-Patient Lists
+    72. [SharePoint] https://whallc.sharepoint.com/sites/NB-RHCTeam-ChartAudits  |  NB-RHC Team-Chart Audits
+    73. [SharePoint] https://whallc.sharepoint.com/sites/NB-RHCTeam-Credentialing  |  NB-RHC Team-Credentialing
+    74. [SharePoint] https://whallc.sharepoint.com/sites/NB-RHCTeam-EmployeeHealth  |  NB-RHC Team-Employee Health
+    75. [SharePoint] https://whallc.sharepoint.com/sites/NWP_Portal  |  NWP Portal
+    76. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-GeneticCounselors  |  NWP Team-Genetic Counselors
+    77. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-HotSpotandHolidayPlanningSOGGroup  |  NWP Team-Hot Spot and Holiday Planning SOG Group
+    78. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-InclementWeatherNWP  |  NWP Team-NWP Inclement Weather
+    79. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-Leadership  |  NWP Team-NWP Leaders
+    80. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-MFMEducation  |  NWP Team-MFM Education
+    81. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-MFMProviders  |  NWP Team-MFM Providers
+    82. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-MFMStandards  |  NWP Team-MFM Standards
+    83. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-MFMUltrasoundScrubbingPilot  |  NWP Team-Urgent MFM Ultrasound Rescheduling
+    84. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPCCC  |  NWP Team-NWP CCC
+    85. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPClinicNavigationPilot  |  NWP Team-NWP Clinic Navigation
+    86. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPFrontOffice  |  NWP Team-NWP Front Office
+    87. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPLeadership  |  NWP Team-NWP Leadership
+    88. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPNursingandClinicalTeam  |  NWP Team-NWP Nursing and Clinical Team
+    89. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-NWPProviders  |  NWP Team-MFM GC Providers
+    90. [SharePoint] https://whallc.sharepoint.com/sites/NWPTeam-Ultrasoundaddonsandmagic  |  NWP Team-Ultrasound add ons and magic
+    91. [SharePoint] https://whallc.sharepoint.com/sites/OCSiteLeadership-OCStaffCallOutTracking  |  OC Site Leadership-OC Staff Call Out Tracking
+    92. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-Archived-  |  Projects Team-Archived
+    93. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-ASCDocuments  |  Projects Team-ASC Documents
+    94. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-Aveta  |  Projects Team-Aveta
+    95. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-Awardco  |  Projects Team-Awardco
+    96. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-BRExpansion  |  Projects Team-BR Expansion
+    97. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-BridgeviewSuite535  |  Projects Team-Bridgeview Suite 535
+    98. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-ClinicSpacePlanning  |  Projects Team-WHA Space Planning
+    99. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-COA  |  Projects Team-Behavioral Health COA
+   100. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-DAXPilot  |  Projects Team-AI Scribes and DAX Copilot
+   101. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-LinguavaVRIServices  |  Projects Team-Linguava VRI Services
+   102. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-MedicareWellnessProject  |  Projects Team-PreOp and Prob Visits
+   103. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-NewbergSuiteExpansion  |  Projects Team-Newberg Suite Expansion
+   104. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-NitrousProject  |  Projects Team-Nitrous Project
+   105. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-NoShowSubgroup  |  Projects Team-No Show Workgroup   106. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-NWFertilityandWHAPartnership  |  Projects Team-PNW Fertility and WHA Partnership
+   107. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-OBBillingChangetoEMCoding  |  Projects Team-OB Global to EM Coding
+   108. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-OperationsSummerInternship  |  Projects Team-Operations Internship Team
+   109. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-PKN-Suite140  |  Projects Team-PKN - Suite 140
+   110. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-PPMCOfficeExpansion  |  Projects Team-PPMC Office Expansion
+   111. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-PrimaryHPVProject  |  Projects Team-Primary HPV Project
+   112. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-ScheduleTemplateWork  |  Projects Team-Schedule Template Work
+   113. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-SharePointRedesign  |  Projects Team-SharePoint Redesign
+   114. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-SpacePlanning  |  Projects Team-Space Planning
+   115. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-TeamsPhoneProject  |  Projects Team-Teams Phone Project
+   116. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-TestProject1  |  Projects Team-P4P
+   117. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-TestProject2  |  Projects Team-Test Project 2
+   118. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-UrogyandMIGSExpansionProject  |  Projects Team-Urogy and MIGS Expansion Project
+   119. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-WHAMenopauseServices  |  Projects Team-WHA Perimenopause and Menopause Care
+   120. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-WHAObesityMedicineProgram  |  Projects Team-WHA Obesity Medicine Program
+   121. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-WHAPolicyManagementProject  |  Projects Team-WHA Policy Management Project
+   122. [SharePoint] https://whallc.sharepoint.com/sites/ProjectsTeam-Windows11Roll-out  |  Projects Team-Windows 11 Roll-out
+   123. [SharePoint] https://whallc.sharepoint.com/sites/pwa  |  Project Web App
+   124. [SharePoint] https://whallc.sharepoint.com/sites/QIDepartment-PREQI  |  Quality Improvement Committee-PREQI
+   125. [SharePoint] https://whallc.sharepoint.com/sites/QIDepartment-QIAdmin  |  Quality Improvement Committee-QI Admin   126. [SharePoint] https://whallc.sharepoint.com/sites/QuickLaunch Testing Site-ShareGate Duplicate  |  QuickLaunch Testing Site (ShareGate Duplicate)
+   127. [SharePoint] https://whallc.sharepoint.com/sites/QuickLaunchTestingSite  |  QuickLaunch Testing Site
+   128. [SharePoint] https://whallc.sharepoint.com/sites/QuickLaunchTestingSite-ShareGatePromotion  |  QuickLaunch Testing Site (ShareGate Promotion Test)
+   129. [SharePoint] https://whallc.sharepoint.com/sites/RHCTeam-NBHRfolders  |  NB-RHC Team-Human Resources
+   130. [SharePoint] https://whallc.sharepoint.com/sites/SouthHubAdminTeam-SouthHubOBTracking  |  South Hub Admin Team-South Hub OB Tracking
+   131. [SharePoint] https://whallc.sharepoint.com/sites/SpecimenHandlingProjectWorkgroup-Admin  |  Specimen Handling Project Workgroup-Admin
+   132. [SharePoint] https://whallc.sharepoint.com/sites/TempBadges-TestOwnerAccesstoAPrivateChannel  |  Temp Badges-Test Owner Access to A Private Channel
+   133. [SharePoint] https://whallc.sharepoint.com/sites/TNClinicalTeam-ClinicalLead  |  TN Clinical Team-Clinical Lead
+   134. [SharePoint] https://whallc.sharepoint.com/sites/TNClinicalTeam-TNLab  |  TN Clinical Team-TN Lab
+   135. [SharePoint] https://whallc.sharepoint.com/sites/TNSiteLeadership-ClinicalTeam  |  TN Site Leadership-Clinical Team
+   136. [SharePoint] https://whallc.sharepoint.com/sites/TPE-ShareGate-Promotion-Test  |  The Patient Experience - ShareGate
+   137. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-Genetics-ProcedureCommunications  |  US - Department-Genetics-Procedure Communications
+   138. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-QualityCommitte  |  US - Department-Ultrasound Leadership
+   139. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-USLead  |  US - Department-US Lead
+   140. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-USOperationsTeam  |  US - Department-US Operations Team
+   141. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-USOpsAdminWorkGroup  |  US - Department-US Ops Admin Work Group
+   142. [SharePoint] https://whallc.sharepoint.com/sites/US-Department-USQualityandOperationsCommittee  |  US - Department-US Quality and Operations Committee
+   143. [SharePoint] https://whallc.sharepoint.com/sites/VivaHome  |  Viva Home
+   144. [SharePoint] https://whallc.sharepoint.com/sites/WHADocumentCenter  |  WHA Document Center
+   145. [SharePoint] https://whallc.sharepoint.com/sites/WHADocumentLibraries  |  RedirectSite
+   146. [SharePoint] https://whallc.sharepoint.com/sites/WHAMidwivesTeam-PKCNMs  |  WHA Midwives Team-PK HB CNMs
+   147. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-AMiON  |  WHA Operations Team-AMiON
+   148. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-APCContactHoursandFTETracking  |  WHA Operations Team-APC Contact Hours and FTE Tracking
+   149. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-BirthCenterAccreditation2021  |  WHA Operations Team-Birth Center Accreditation 2021
+   150. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-ChaperoneTraining  |  WHA Operations Team-Chaperone Training
+   151. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-ClinicAccessProject  |  WHA Operations Team-Clinic Access Project
+   152. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-COVIDWorkflowChanges  |  WHA Operations Team-COVID Workflow Changes
+   153. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-DEIBLeadershipBookClub  |  WHA Operations Team-OPs DEIB Leadership Development
+   154. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-DiagnosticBreastImaging  |  WHA Operations Team-Diagnostic Breast Imaging
+   155. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-GSD  |  WHA Operations Team - GSD
+   156. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-IOSAdmin  |  WHA Operations Team-IOS Admin
+   157. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-IOSAnnualAttestation  |  WHA Operations Team-IOS Annual Attestation
+   158. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-ITDowntime  |  WHA Operations Team - IT Downtime
+   159. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-ITDowntimecommunication  |  WHA Operations Team-IT Downtime communication
+   160. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-IVHydration  |  WHA Operations Team-IV Hydration
+   161. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-MammogramSubgroup  |  WHA Operations Team-Mammogram Subgroup
+   162. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-MammographyTransition  |  WHA Operations Team-Mammography Transition
+   163. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-NitrousOxideforPainManagement  |  WHA Operations Team-Nitrous Oxide for Pain Management
+   164. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-NurseManagerandSamandKirstinCheckIn  |  WHA Operations Team-Nurse Manager and Sam and Kirstin Check In
+   165. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-OperationsMeetingPlanning  |  WHA Operations Team-Operations Meeting Planning
+   166. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PatientServicesLeadership  |  WHA Operations Team-Patient Services Leadership
+   167. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PCSPSMeetingMinutesandActionItems  |  WHA Operations Team-PCS PS Meeting Minutes and Action Items
+   168. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PerDiemTriagePhysicians  |  WHA Operations Team-Per Diem Triage Schedule
+   169. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PracticeManagerWorkGroup  |  WHA Operations Team-Practice Manager Work Group
+   170. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PregnancyTerminationServices  |  WHA Operations Team-Pregnancy Termination Services
+   171. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-PrenatalIntakesWorkgroup  |  WHA Operations Team-Prenatal Intakes Workgroup
+   172. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-RuralHealthDesignation  |  WHA Operations Team-Rural Health Designation
+   173. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-UrogynServices  |  WHA Operations Team-Urogyn Services
+   174. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-WBA  |  WHA Operations Team-WBA
+   175. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-WHAUSSchedulingCoordination  |  WHA Operations Team-WHA US Scheduling Coordination
+   176. [SharePoint] https://whallc.sharepoint.com/sites/WHAOperationsTeam-WorkflowCoordination  |  WHA Operations Team-Workflow Coordination
+   177. [SharePoint] https://whallc.sharepoint.com/sites/WorkForceStablizationTeam-WFSDiscussion  |  WorkForce Stablization Team-WFS Discussion
+
+Pick exactly one site by number: 1
+
+Selected inventory scope: https://whallc.sharepoint.com
+Connecting to https://whallc.sharepoint.com (attempt 1 of 3)...
+
+Subsite inventory under selected scope https://whallc.sharepoint.com (cached):
+Using cached subsite inventory from 08/17/2026 13:09:37.
+     1. https://whallc.sharepoint.com  |  WHA Sharepoint - Central Park
+     2. https://whallc.sharepoint.com/Accounting  |  Accounting
+     3. https://whallc.sharepoint.com/ClinicianResources  |  Clinician Resources
+     4. https://whallc.sharepoint.com/Clinicians  |  Clinicians
+     5. https://whallc.sharepoint.com/Committees  |  Committees
+     6. https://whallc.sharepoint.com/Comp  |  Compensation Committee
+     7. https://whallc.sharepoint.com/CRL  |  Clinican Resource Library
+     8. https://whallc.sharepoint.com/CS  |  Clinical Services
+     9. https://whallc.sharepoint.com/CtrlAltDelight_Newsletter  |  Ctrl+Alt+Delight Newsletter
+    10. https://whallc.sharepoint.com/emr  |  EMR
+    11. https://whallc.sharepoint.com/EMRWeeklyMeeting  |  Weekly EMR Meeting
+    12. https://whallc.sharepoint.com/Epic  |  Epic
+    13. https://whallc.sharepoint.com/Fin  |  Finance Committee
+    14. https://whallc.sharepoint.com/Forms  |  Forms
+    15. https://whallc.sharepoint.com/HelpDeskSelfServicePortal  |  Help Desk Self-Service Portal
+    16. https://whallc.sharepoint.com/HIM  |  HIM Committee
+    17. https://whallc.sharepoint.com/HIMCommittee  |  HIM Committee
+    18. https://whallc.sharepoint.com/hipaa  |  HIPAA
+    19. https://whallc.sharepoint.com/HR  |  Human Resources
+    20. https://whallc.sharepoint.com/Int  |  Interiors Committee
+    21. https://whallc.sharepoint.com/IS  |  Information Security
+    22. https://whallc.sharepoint.com/IT&HIM  |  IT & HIM Department
+    23. https://whallc.sharepoint.com/IT-Internal  |  IT Internal
+    24. https://whallc.sharepoint.com/LegacySharing  |  Legacy Sharing
+    25. https://whallc.sharepoint.com/LLCM  |  LLC Members
+    26. https://whallc.sharepoint.com/Ops  |  Operations Committee
+    27. https://whallc.sharepoint.com/PFS  |  Patient Financial Services
+    28. https://whallc.sharepoint.com/PFTC  |  Patient Focus Team Care
+    29. https://whallc.sharepoint.com/Private  |  Private
+    30. https://whallc.sharepoint.com/QI  |  Quality Improvement
+    31. https://whallc.sharepoint.com/RecruitmentCommittee  |  Recruitment Committee
+    32. https://whallc.sharepoint.com/Safety  |  Safety
+    33. https://whallc.sharepoint.com/SP  |  Strategic Plan
+    34. https://whallc.sharepoint.com/TPE  |  The Patient Experience
+    35. https://whallc.sharepoint.com/train  |  Training
+    36. https://whallc.sharepoint.com/whaiis01  |  Central Park Documents & Forms
+    37. https://whallc.sharepoint.com/whasites  |  WHA Sites
+     0. ALL listed subsites
+
+Pick one or more subsites by number (comma-separated, e.g. 1,4,7). Use 0 for ALL subsites: 22
+New base URL for https://whallc.sharepoint.com/IT&HIM: https://whallc.sharepoint.com/sites/IT
+After documents, scan additional content (site pages/list text fields) to a separate CSV? [Y/N]: Y
+Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan? [Y/N]: Y
+Set the CPU throttle delay in milliseconds between item batches. Recommended range: 0-5000 ms. Default is 25 ms; 0 disables throttling. [25]: 25
+Pause after every N scanned items. Recommended range: 0-10000 items. Default is 100; 0 disables throttling. [100]: 100
+No compatible prior run state found for this scope fingerprint; running a full scan to initialize caches.
+
+Audit configuration:
+  Selected subsite mappings:
+    OLD: https://whallc.sharepoint.com/IT&HIM
+    NEW: https://whallc.sharepoint.com/sites/IT
+  Per-site report set output is enabled.
+    Site: https://whallc.sharepoint.com/IT&HIM
+      Documents: C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\Documents\ITHIMDepartment-Get-FixItListURLsv4-Documents-20260817-132439.csv
+      Other:     C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\NonDocuments\ITHIMDepartment-Get-FixItListURLsv4-OtherContent-20260817-132439.csv
+  Document content scan: True
+  Counter checkpoint:    C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\Logs\2026-08-17_132439_Get-FixItListURLsv4_CounterCheckpoint.json
+  CPU throttle:          25 ms every 100 items (0 disables throttling)
+
+Starting tenant-wide document scan (SharePoint only, no OneDrive)...
+
+[1/1] Site collection: https://whallc.sharepoint.com/IT&HIM
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+  Web: https://whallc.sharepoint.com/IT&HIM
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+    Library: Client
+    Library: Documents
+WARNING: Get file stream: /IT&HIM/Shared Documents/DataAndAnalytics/Finance/PTO/Uploaded PTO Reports/PTO Report OCMD 04-16-23 - 04-22-23.xlsx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/Clinical Applications/Centricity Handouts and Letters/Handouts/Translations/Three Hour Glucose Tolerance Test Instructions - Spanish.docx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/Clinical Applications/Centricity Handouts and Letters/Handouts/Translations/Text Only/Pre-Operative Instructions for In Office Surgery - Spanish.docx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get item unique permission flag timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Providence Rad Reports/OC/Printed/120829586.txt timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get item unique permission flag timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+    Library: EMR RFPs
+WARNING: Get file stream: /IT&HIM/EMR RFPs/Cerner/4k_Emory Healthcare Proven Model.pdf timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+    Library: Shared Documents
+WARNING: Get file stream: /IT&HIM/Shared Documents/BasecampExport072017/beveland-update-touchdown-rooms-project-1255958/all-files-images-pdfs-spreadsheets-etc/18554197-4059-bid-memo-11-08-2016.pdf timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/BasecampExport072017/Basecamp2Export08082017/projects/gateway move/attachments/240136120-rosecity rfp for gw move.doc timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/BasecampExport072017/Basecamp2Export08082017/projects/pks/attachments/126110282-fw request id 1055.pdf timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/DataAndAnalytics/Finance/Monthly Ultrasound Report.xlsx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get item unique permission flag timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/2021 Q3_Q4_Summer_Fall/Epic Fall 2021 Update Nova Note Review.xlsx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/Clinical Applications/Centricity Handouts and Letters/Handouts/Front Office Forms/Financial Aid Form.docx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/Clinical Applications/Centricity Handouts and Letters/Handouts/Translations/Text Only/Paragard IUD FAQs after IUD Insertion - Spanish - Copy (2).docx timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+WARNING: Get file stream: /IT&HIM/Shared Documents/Clinical Applications/Clinical Applications/Centricity Handouts and Letters/Handouts/Translations/Text Only/Paragard IUD FAQs after IUD Insertion - Spanish - Copy (2).docx timed out (attempt 2/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+    Library: Site Assets
+    Library: VPN
+  Web: https://whallc.sharepoint.com/IT&HIM/DR
+Connecting to https://whallc.sharepoint.com/IT&HIM/DR (attempt 1 of 3)...
+    Library: Documents
+    Library: Site Assets
+  Web: https://whallc.sharepoint.com/IT&HIM/Private
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+    Library: Documents
+WARNING: Get file stream: /IT&HIM/Private/Shared Documents/Third Party EMR Accounts/Legacy EPIC Account Applications/FugeRene.pdf timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM/Private after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+    Library: Facilities
+    Library: Infra GitHub
+    Library: Shared Documents
+WARNING: Get file stream: /IT&HIM/Private/Shared Documents/Qvera/backup/libs-20230527.txt timed out (attempt 1/4); refreshing and retrying...
+WARNING: Refreshing connection for https://whallc.sharepoint.com/IT&HIM/Private after a timeout or transient failure.
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+    Library: Site Assets
+    Library: Tools
+  Web: https://whallc.sharepoint.com/IT&HIM/Private/VideoTestARoo
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private/VideoTestARoo (attempt 1 of 3)...
+    Library: Site Assets
+WARNING: Document scan failed for site https://whallc.sharepoint.com/IT&HIM: Argument types do not match
+WARNING: Could not flush document CSVs after failed site scan for https://whallc.sharepoint.com/IT&HIM: Cannot bind argument to parameter 'DocumentOutputsWritten' because it is an empty string.
+
+Starting optional scan for additional content...
+
+Other-content scan site collection: https://whallc.sharepoint.com/IT&HIM
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/DR (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/DR (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private/VideoTestARoo (attempt 1 of 3)...
+Connecting to https://whallc.sharepoint.com/IT&HIM/Private/VideoTestARoo (attempt 1 of 3)...
+WARNING: Could not flush per-site other-content CSVs for https://whallc.sharepoint.com/IT&HIM: Cannot bind argument to parameter 'DocumentOutputsWritten' because it is an empty string.
+WARNING: Could not finalize report files for site key https://whallc.sharepoint.com/IT&HIM: Argument types do not match
+WARNING: Could not write resolved document findings CSV C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\Checkpoints-and-Caches\Get-FixItListURLsv4_8f823a21c898c85a_ResolvedFindings-20260817-132439_Document.csv: Argument types do not match
+WARNING: Could not write resolved other findings CSV C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\Checkpoints-and-Caches\Get-FixItListURLsv4_8f823a21c898c85a_ResolvedFindings-20260817-132439_Other.csv: Argument types do not match
+
+Audit complete.
+  Site collections visited:       1
+  Webs visited:                   4
+  Libraries visited:              15
+  Documents inspected:            45829
+  Document rows written:          1285
+  Documents skipped (always skip set): 828
+  Unsupported docs skipped:       35904
+  Other-content rows written:     295
+  Other files scanned (.htm/.aspx): 38
+  Other files skipped (always skip set): 21
+  Other files skipped unsupported: 3463
+  Extension details CSV:         C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\Logs\2026-08-17_132439_Get-FixItListURLsv4_ExtensionDetails.csv
+
+Per-site timing summary:
+  Site: https://whallc.sharepoint.com/IT&HIM
+    Document scan:     05:40:01
+    Other-content scan: 21:30
+    Total:             05:01:32
+
+Resilience summary (Completed run):
+  Startup recoveries:     0
+  Site-scan recoveries:   1
+  Output-write recoveries: 5
+  Unhandled errors trapped: 0
+  Early exits:            0
+
+Per-site report outputs:

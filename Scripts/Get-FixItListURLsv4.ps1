@@ -66,6 +66,41 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$resilienceSummary = [ordered]@{
+    StartupRecoveries = 0
+    SiteScanRecoveries = 0
+    OutputWriteRecoveries = 0
+    UnhandledErrors = 0
+    EarlyExits = 0
+}
+
+function Add-ResilienceEvent {
+    param([Parameter(Mandatory = $true)][string]$Category)
+
+    if (-not $resilienceSummary.Contains($Category)) {
+        $resilienceSummary[$Category] = 0
+    }
+
+    $resilienceSummary[$Category] = [int]$resilienceSummary[$Category] + 1
+}
+
+function Write-ResilienceSummary {
+    param([Parameter(Mandatory = $false)][string]$Phase = 'Run summary')
+
+    Write-Host "`nResilience summary ($Phase):"
+    Write-Host ("  Startup recoveries:     {0}" -f $resilienceSummary.StartupRecoveries)
+    Write-Host ("  Site-scan recoveries:   {0}" -f $resilienceSummary.SiteScanRecoveries)
+    Write-Host ("  Output-write recoveries:{0}" -f (' ' + $resilienceSummary.OutputWriteRecoveries))
+    Write-Host ("  Unhandled errors trapped: {0}" -f $resilienceSummary.UnhandledErrors)
+    Write-Host ("  Early exits:            {0}" -f $resilienceSummary.EarlyExits)
+}
+
+trap {
+    Add-ResilienceEvent -Category 'UnhandledErrors'
+    Write-Warning ("Unhandled error encountered; continuing where possible. {0}" -f $_.Exception.Message)
+    continue
+}
+
 function Set-ScriptWindowTitle {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param([Parameter(Mandatory = $true)][string]$ScriptName)
@@ -781,14 +816,6 @@ function Add-ExtensionDetailRowSet {
             return $result
         }
 
-        if ($InputObject -is [System.Collections.IEnumerable]) {
-            $items = New-Object System.Collections.Generic.List[object]
-            foreach ($item in $InputObject) {
-                $items.Add((ConvertFrom-JsonToHashtable -InputObject $item))
-            }
-            return @($items)
-        }
-
         if ($InputObject.PSObject -and $InputObject.PSObject.Properties.Count -gt 0) {
             $result = @{}
             foreach ($prop in $InputObject.PSObject.Properties) {
@@ -797,7 +824,28 @@ function Add-ExtensionDetailRowSet {
             return $result
         }
 
+        if ($InputObject -is [System.Collections.IEnumerable]) {
+            $items = New-Object System.Collections.Generic.List[object]
+            foreach ($item in $InputObject) {
+                $items.Add((ConvertFrom-JsonToHashtable -InputObject $item))
+            }
+            return @($items)
+        }
+
         return $InputObject
+    }
+
+    function ConvertFrom-JsonToHashtableSafe {
+        param([Parameter(Mandatory = $true)][string]$JsonText)
+
+        try {
+            $parsed = $JsonText | ConvertFrom-Json -AsHashtable
+            return (ConvertFrom-JsonToHashtable -InputObject $parsed)
+        }
+        catch {
+            $parsed = $JsonText | ConvertFrom-Json
+            return (ConvertFrom-JsonToHashtable -InputObject $parsed)
+        }
     }
 
     function Initialize-StateDirectory {
@@ -837,7 +885,7 @@ function Add-ExtensionDetailRowSet {
             UrlMappings = @(
                 $UrlMappings |
                     Sort-Object OldBaseUrl |
-                    ForEach-Object { [ordered]@{ OldBaseUrl = $_.OldBaseUrl; NewBaseUrl = $_.NewBaseUrl } }
+                    ForEach-Object { [ordered]@{ OldBaseUrl = $_.OldBaseUrl } }
             )
             ScanDocumentContent = $ScanDocumentContent
             ScanOther = $ScanOther
@@ -936,7 +984,7 @@ function Add-ExtensionDetailRowSet {
     function Export-ResolvedFindingSet {
         param(
             [Parameter(Mandatory = $true)][string]$Path,
-            [Parameter(Mandatory = $true)][array]$Rows
+            [Parameter(Mandatory = $true)][AllowEmptyCollection()][array]$Rows
         )
 
         if ($Rows -and $Rows.Count -gt 0) {
@@ -1103,8 +1151,8 @@ function Add-ExtensionDetailRowSet {
         }
 
         try {
-            $raw = Get-Content -Path $Path -Raw -Encoding UTF8 | ConvertFrom-Json
-            $state = ConvertFrom-JsonToHashtable -InputObject $raw
+            $jsonText = Get-Content -Path $Path -Raw -Encoding UTF8
+            $state = ConvertFrom-JsonToHashtableSafe -JsonText $jsonText
             if (-not $state) {
                 throw 'State file was empty or unreadable.'
             }
@@ -1156,6 +1204,23 @@ function Add-ExtensionDetailRowSet {
 
         return "$ScopePrefix|$ItemIdentity"
     }
+
+function Get-ModifiedSinceCamlQuery {
+        param([Parameter(Mandatory = $true)][string]$UtcDateTimeText)
+
+        return @"
+<View Scope='RecursiveAll'>
+    <Query>
+        <Where>
+            <Geq>
+                <FieldRef Name='Modified' />
+                <Value IncludeTimeValue='TRUE' Type='DateTime'>$UtcDateTimeText</Value>
+            </Geq>
+        </Where>
+    </Query>
+</View>
+"@
+}
 
 function Test-IsRecycleBinContainer {
     param(
@@ -1427,6 +1492,16 @@ function Get-UrlDisplayText {
     if ($start -gt 0) { $snippet = '...' + $snippet }
     if (($start + $len) -lt $normalized.Length) { $snippet += '...' }
     return $snippet
+}
+
+function Convert-ToDurationText {
+    param([Parameter(Mandatory = $true)][TimeSpan]$Duration)
+
+    if ($Duration.TotalHours -ge 1) {
+        return ('{0:00}:{1:00}:{2:00}' -f [int]$Duration.TotalHours, $Duration.Minutes, $Duration.Seconds)
+    }
+
+    return ('{0:00}:{1:00}' -f $Duration.Minutes, $Duration.Seconds)
 }
 
 function Get-OfficeDocReference {
@@ -2139,6 +2214,31 @@ function Get-BooleanPrompt {
     }
 }
 
+function Get-IntPrompt {
+    param(
+        [Parameter(Mandatory = $true)][string]$Message,
+        [Parameter(Mandatory = $true)][int]$DefaultValue,
+        [Parameter(Mandatory = $true)][int]$MinValue,
+        [Parameter(Mandatory = $true)][int]$MaxValue
+    )
+
+    while ($true) {
+        $value = Read-Host ("{0} [{1}]" -f $Message, $DefaultValue)
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            return $DefaultValue
+        }
+
+        if ($value -match '^\d+$') {
+            $parsed = [int]$value
+            if ($parsed -ge $MinValue -and $parsed -le $MaxValue) {
+                return $parsed
+            }
+        }
+
+        Write-Host ("  Please enter an integer between {0} and {1}." -f $MinValue, $MaxValue)
+    }
+}
+
 function Get-NewBaseUrlMapFromCsv {
     param(
         [Parameter(Mandatory = $true)][string]$CsvPath,
@@ -2445,7 +2545,7 @@ function Write-OtherFinding {
 function Export-ReportRowSet {
     param(
         [Parameter(Mandatory = $true)][string]$Path,
-        [Parameter(Mandatory = $true)][array]$Rows,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][array]$Rows,
         [Parameter(Mandatory = $true)][pscustomobject]$NoFindingsRow
     )
 
@@ -2603,11 +2703,92 @@ function Save-CounterCheckpoint {
     }
 }
 
+function Flush-SiteReportSets {
+    param(
+        [Parameter(Mandatory = $true)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)][hashtable]$SiteReportPlans,
+        [Parameter(Mandatory = $true)][hashtable]$DocumentRowsBySite,
+        [Parameter(Mandatory = $true)][hashtable]$OtherRowsBySite,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.HashSet[string]]$DocumentOutputsWritten,
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.HashSet[string]]$OtherOutputsWritten,
+        [Parameter(Mandatory = $true)][bool]$ScanOther
+    )
+
+    $siteKeysToFlush = @($SiteReportPlans.Keys | Where-Object {
+            $planKey = [string]$_
+            -not [string]::IsNullOrWhiteSpace($planKey) -and (
+                $planKey.Equals($SiteUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
+                $planKey.StartsWith(($SiteUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)
+            )
+        })
+
+    if ($siteKeysToFlush.Count -eq 0 -and $SiteReportPlans.ContainsKey($SiteUrl)) {
+        $siteKeysToFlush = @($SiteUrl)
+    }
+
+    foreach ($flushSiteKey in @($siteKeysToFlush | Sort-Object -Unique)) {
+        $plan = $SiteReportPlans[$flushSiteKey]
+        if (-not $plan) { continue }
+
+        $siteDocRows = if ($DocumentRowsBySite.ContainsKey($flushSiteKey)) { @($DocumentRowsBySite[$flushSiteKey]) } else { @() }
+        Export-ReportRowSet -Path $plan.DocumentReportPath -Rows $siteDocRows -NoFindingsRow (Get-NoFindingsDocumentRow)
+        $docOverviewOnly = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath '' -IncludeOther:$false
+
+        if (-not $DocumentOutputsWritten.Contains($flushSiteKey)) {
+            Write-Host ("  Wrote Documents + OverviewOnly for site: {0}" -f $flushSiteKey)
+            $null = $DocumentOutputsWritten.Add($flushSiteKey)
+        }
+        else {
+            Write-Host ("  Refreshed Documents + OverviewOnly for site: {0}" -f $flushSiteKey)
+        }
+
+        if ($docOverviewOnly -and $docOverviewOnly.PSObject.Properties['DocumentOverviewPath']) {
+            Write-Host ("    Overview: {0}" -f $docOverviewOnly.DocumentOverviewPath)
+        }
+
+        if ($ScanOther) {
+            $siteOtherRows = if ($OtherRowsBySite.ContainsKey($flushSiteKey)) { @($OtherRowsBySite[$flushSiteKey]) } else { @() }
+            Export-ReportRowSet -Path $plan.OtherReportPath -Rows $siteOtherRows -NoFindingsRow (Get-NoFindingsOtherRow)
+            $otherOverview = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath $plan.OtherReportPath -IncludeOther:$true
+
+            if (-not $OtherOutputsWritten.Contains($flushSiteKey)) {
+                Write-Host ("  Wrote Other + OverviewOnly for site: {0}" -f $flushSiteKey)
+                $null = $OtherOutputsWritten.Add($flushSiteKey)
+            }
+            else {
+                Write-Host ("  Refreshed Other + OverviewOnly for site: {0}" -f $flushSiteKey)
+            }
+
+            if ($otherOverview -and $otherOverview.PSObject.Properties['OtherOverviewPath']) {
+                Write-Host ("    Other Overview: {0}" -f $otherOverview.OtherOverviewPath)
+            }
+        }
+    }
+}
+
 Install-RequiredModule -Name "PnP.PowerShell"
 
 New-DirectoryIfMissing -Path $DocumentsOutputFolder
 New-DirectoryIfMissing -Path $OtherOutputFolder
 New-DirectoryIfMissing -Path $LogsOutputFolder
+
+$scriptSessionTranscriptPath = ''
+try {
+    $scriptSessionTranscriptPath = Join-Path -Path $LogsOutputFolder -ChildPath ((Get-Date -Format 'yyyy-MM-dd_HHmmss') + '_Get-FixItListURLsv4_SessionOutput.txt')
+    Start-Transcript -Path $scriptSessionTranscriptPath -Force | Out-Null
+
+    $invokedScriptPath = if (-not [string]::IsNullOrWhiteSpace($PSCommandPath)) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
+    if (-not [string]::IsNullOrWhiteSpace($invokedScriptPath) -and (Test-Path -Path $invokedScriptPath)) {
+        $invokedScriptHash = (Get-FileHash -Algorithm SHA256 -Path $invokedScriptPath).Hash.ToLowerInvariant()
+        Write-Host ("Script file: {0}" -f $invokedScriptPath)
+        Write-Host ("Script SHA256: {0}" -f $invokedScriptHash)
+    }
+
+    Write-Host ("Session transcript: {0}" -f $scriptSessionTranscriptPath)
+}
+catch {
+    Write-Verbose ("Could not start session transcript in {0}: {1}" -f $LogsOutputFolder, $_.Exception.Message)
+}
 
 $RootUrl = $RootUrl.TrimEnd('/')
 $AdminUrl = $AdminUrl.TrimEnd('/')
@@ -2619,6 +2800,7 @@ try {
     $permissionCheck = Test-ConnectedAccountPermissionSet -Connection $adminConn -Url $AdminUrl -AdminConnection
 }
 catch {
+    Add-ResilienceEvent -Category 'StartupRecoveries'
     $permissionFailure = $_.Exception
     $permissionFailureMessage = if ($permissionFailure -and -not [string]::IsNullOrWhiteSpace($permissionFailure.Message)) {
         $permissionFailure.Message
@@ -2652,7 +2834,10 @@ catch {
 }
 
 if (-not $permissionCheck.SharePointValidated) {
-    throw 'The connected account did not pass the required SharePoint permission validation.'
+    Add-ResilienceEvent -Category 'EarlyExits'
+    Write-Warning 'The connected account did not pass the required SharePoint permission validation. Ending run safely.'
+    Write-ResilienceSummary -Phase 'Early exit'
+    return
 }
 
 Write-Host "`nCollecting tenant sites (excluding OneDrive personal sites)..."
@@ -2672,7 +2857,10 @@ Where-Object {
 Sort-Object Url -Unique
 
 if ($tenantSites.Count -eq 0) {
-    throw "No eligible SharePoint site collections found (excluding OneDrive)."
+    Add-ResilienceEvent -Category 'EarlyExits'
+    Write-Warning "No eligible SharePoint site collections found (excluding OneDrive). Ending run safely."
+    Write-ResilienceSummary -Phase 'Early exit'
+    return
 }
 
 $selectedScope = Select-SiteForScope -Sites $tenantSites
@@ -2742,6 +2930,7 @@ if (-not $usingFreshSubsiteInventoryCache) {
     }
     catch {
         if ($selectedScopeUrl.Equals($RootUrl, [System.StringComparison]::OrdinalIgnoreCase) -and $tenantSites -and $tenantSites.Count -gt 0) {
+            Add-ResilienceEvent -Category 'StartupRecoveries'
             Write-Warning "Could not enumerate root-scope subweb inventory; falling back to tenant site collections. $($_.Exception.Message)"
             $scopeSubsites = @(
                 $tenantSites |
@@ -2756,17 +2945,22 @@ if (-not $usingFreshSubsiteInventoryCache) {
             )
         }
         elseif ($subsiteInventoryCache -and $subsiteInventoryCache.Subsites.Count -gt 0) {
+            Add-ResilienceEvent -Category 'StartupRecoveries'
             Write-Warning "Could not refresh live subsite inventory; using cached subsite inventory instead. $($_.Exception.Message)"
             $scopeSubsites = @($subsiteInventoryCache.Subsites)
         }
         else {
-            throw "Could not enumerate subsites under ${selectedScopeUrl}: $($_.Exception.Message)"
+            Add-ResilienceEvent -Category 'StartupRecoveries'
+            Write-Warning "Could not enumerate subsites under ${selectedScopeUrl}; falling back to selected scope root only. $($_.Exception.Message)"
+            $scopeSubsites = @([PSCustomObject]@{ Url = $selectedScopeUrl; Title = '(scope root fallback)' })
         }
     }
 }
 
 if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
-    throw "No sites were found under $selectedScopeUrl."
+    Add-ResilienceEvent -Category 'StartupRecoveries'
+    Write-Warning "No sites were found under $selectedScopeUrl after inventory attempts; falling back to selected scope root only."
+    $scopeSubsites = @([PSCustomObject]@{ Url = $selectedScopeUrl; Title = '(scope root fallback)' })
 }
 
 # Keep inventory to selected scope plus one child level so operators are not forced to parse deep descendants.
@@ -2776,7 +2970,9 @@ $scopeSubsites = @($scopeSubsites | Where-Object {
     } | Sort-Object Url -Unique)
 
 if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
-    throw "No one-level subsite entries were found under $selectedScopeUrl."
+    Add-ResilienceEvent -Category 'StartupRecoveries'
+    Write-Warning "No one-level subsite entries were found under $selectedScopeUrl; using selected scope root only."
+    $scopeSubsites = @([PSCustomObject]@{ Url = $selectedScopeUrl; Title = '(scope root fallback)' })
 }
 
 for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
@@ -3025,6 +3221,14 @@ else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Document embedded-link scanning reads/downloads file content and may update access analytics/last-access signals. Continue document content scan?" -DefaultYes $false
 }
 
+if (-not $PSBoundParameters.ContainsKey('ThrottleSleepMs')) {
+    $ThrottleSleepMs = Get-IntPrompt -Message 'Set the CPU throttle delay in milliseconds between item batches. Recommended range: 0-5000 ms. Default is 25 ms; 0 disables throttling.' -DefaultValue 25 -MinValue 0 -MaxValue 5000
+}
+
+if (-not $PSBoundParameters.ContainsKey('ThrottleEveryNItems')) {
+    $ThrottleEveryNItems = Get-IntPrompt -Message 'Pause after every N scanned items. Recommended range: 0-10000 items. Default is 100; 0 disables throttling.' -DefaultValue 100 -MinValue 0 -MaxValue 10000
+}
+
 $runStamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $logStamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
 $extensionDetailsPath = Join-Path -Path $LogsOutputFolder -ChildPath ($logStamp + '_Get-FixItListURLsv4_ExtensionDetails.csv')
@@ -3067,6 +3271,15 @@ $otherResolvedPath = (Get-ResolvedFindingsPath -StateRootFolder $StateRootFolder
 $loadedRunState = Get-RunState -Path $runStatePath -ScopeFingerprint $scopeFingerprint -ScanOptionHash $scanOptionHash -ScriptSchemaVersion $scriptSchemaVersion -RunMode $RunMode
 $runState = $loadedRunState.State
 $useDeltaMode = if ($RunMode -eq 'FullRescan') { $false } elseif ($RunMode -eq 'DeltaOnly') { $true } else { [bool]$loadedRunState.Compatible -and [bool]$runState.LastRunSucceeded }
+$deltaSinceIsoUtc = ''
+if ($useDeltaMode -and -not [string]::IsNullOrWhiteSpace([string]$runState.LastRunCompletedAt)) {
+    try {
+        $deltaSinceIsoUtc = ([datetime]::Parse([string]$runState.LastRunCompletedAt).ToUniversalTime()).ToString('yyyy-MM-ddTHH:mm:ssZ')
+    }
+    catch {
+        $deltaSinceIsoUtc = ''
+    }
+}
 $previousDocumentFindingCache = @{}
 foreach ($key in @($runState.DocumentFindingCache.Keys)) {
     $previousDocumentFindingCache[$key] = @($runState.DocumentFindingCache[$key])
@@ -3093,10 +3306,15 @@ if ($RunMode -eq 'Auto') {
     }
     else {
         Write-Host "Compatible prior run state found; Auto mode will use delta reuse where possible."
+        if (-not [string]::IsNullOrWhiteSpace($deltaSinceIsoUtc)) {
+            Write-Host "Delta list queries enabled (Modified >= last successful run completion timestamp)."
+        }
     }
 }
 elseif ($RunMode -eq 'DeltaOnly' -and -not $loadedRunState.Compatible) {
-    throw "DeltaOnly was requested, but no compatible prior state exists for scope fingerprint $scopeFingerprint. Run Auto or FullRescan first."
+    Add-ResilienceEvent -Category 'StartupRecoveries'
+    Write-Warning "DeltaOnly was requested, but no compatible prior state exists for scope fingerprint $scopeFingerprint. Falling back to full scan mode for this run."
+    $useDeltaMode = $false
 }
 
 Write-Host "`nAudit configuration:"
@@ -3161,7 +3379,9 @@ $docReportRows = New-Object System.Collections.Generic.List[object]
 $otherReportRows = New-Object System.Collections.Generic.List[object]
 $docReportRowsBySite = @{}
 $otherReportRowsBySite = @{}
+$siteTimingSummary = @{}
 $siteDocumentOutputsWritten = [System.Collections.Generic.HashSet[string]]::new()
+$siteOtherOutputsWritten = [System.Collections.Generic.HashSet[string]]::new()
 foreach ($siteKey in @($siteReportPlans.Keys)) {
     $docReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
     $otherReportRowsBySite[$siteKey] = New-Object System.Collections.Generic.List[object]
@@ -3174,6 +3394,8 @@ if ($scanRootSubsites.Count -lt $selectedSubsites.Count) {
 if ($scanDocumentContent) {
 foreach ($site in $scanSiteCollections) {
     $siteUrl = $site.Url.TrimEnd('/')
+    $docSiteStart = Get-Date
+    try {
     $siteTenantBase = ([Uri]$siteUrl).GetLeftPart([UriPartial]::Authority)
     $stats.SitesVisited++
     Write-Host "`n[$($stats.SitesVisited)/$($scanSiteCollections.Count)] Site collection: $siteUrl"
@@ -3281,6 +3503,7 @@ foreach ($site in $scanSiteCollections) {
 
             $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Author', 'Editor', 'Modified', 'ID')
             $items = $null
+            $docDeltaQuery = if (-not [string]::IsNullOrWhiteSpace($deltaSinceIsoUtc)) { Get-ModifiedSinceCamlQuery -UtcDateTimeText $deltaSinceIsoUtc } else { $null }
             $retryState = @{
                 WebConn = $webConn
                 Web = $web
@@ -3290,7 +3513,12 @@ foreach ($site in $scanSiteCollections) {
                 $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
                     $retryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                 } -Operation {
-                    Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
+                    if ($docDeltaQuery) {
+                        Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields -Query $docDeltaQuery
+                    }
+                    else {
+                        Get-PnPListItem -List $list.Title -Connection $retryState.WebConn -PageSize 500 -Fields $fields
+                    }
                 }
 
                 $webConn = $retryState.WebConn
@@ -3310,7 +3538,12 @@ foreach ($site in $scanSiteCollections) {
                         $retryState.Web = $retryWebResult.Result
                         $retryItemResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $retryState.WebConn -Label ('Re-auth list items: ' + $list.Title) -MaxAttempts 4 -Operation {
                             param($activeConnection)
-                            Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 500 -Fields $fields
+                            if ($docDeltaQuery) {
+                                Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 500 -Fields $fields -Query $docDeltaQuery
+                            }
+                            else {
+                                Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 500 -Fields $fields
+                            }
                         }
                         $retryState.WebConn = $retryItemResult.Connection
                         $items = $retryItemResult.Result
@@ -3540,8 +3773,11 @@ foreach ($site in $scanSiteCollections) {
 
     # Emit document outputs for this site scope immediately before moving to the next site.
     $siteKeysToFlush = @($siteReportPlans.Keys | Where-Object {
-            $_.Equals($siteUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
-            $_.StartsWith(($siteUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)
+            $planKey = [string]$_
+            -not [string]::IsNullOrWhiteSpace($planKey) -and (
+                $planKey.Equals($siteUrl, [System.StringComparison]::OrdinalIgnoreCase) -or
+                $planKey.StartsWith(($siteUrl + '/'), [System.StringComparison]::OrdinalIgnoreCase)
+            )
         })
 
     if ($siteKeysToFlush.Count -eq 0 -and $siteReportPlans.ContainsKey($siteUrl)) {
@@ -3572,6 +3808,43 @@ foreach ($site in $scanSiteCollections) {
     }
 
     Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
+    try {
+        Save-RunState -Path $runStatePath -State $runState
+    }
+    catch {
+        Write-Verbose "Could not persist incremental run state after document site $siteUrl"
+    }
+
+    $docElapsed = (Get-Date) - $docSiteStart
+    if (-not $siteTimingSummary.ContainsKey($siteUrl)) {
+        $siteTimingSummary[$siteUrl] = [ordered]@{ Document = [TimeSpan]::Zero; Other = [TimeSpan]::Zero }
+    }
+    $siteTimingSummary[$siteUrl].Document = $docElapsed
+    }
+    catch {
+        Add-ResilienceEvent -Category 'SiteScanRecoveries'
+        Write-Warning ("Document scan failed for site {0}: {1}" -f $siteUrl, $_.Exception.Message)
+        try {
+            Flush-SiteReportSets -SiteUrl $siteUrl -SiteReportPlans $siteReportPlans -DocumentRowsBySite $docReportRowsBySite -OtherRowsBySite $otherReportRowsBySite -DocumentOutputsWritten (, $siteDocumentOutputsWritten) -OtherOutputsWritten (, $siteOtherOutputsWritten) -ScanOther:$false
+        }
+        catch {
+            Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+            Write-Warning ("Could not flush document CSVs after failed site scan for {0}: {1}" -f $siteUrl, $_.Exception.Message)
+        }
+        Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
+        try {
+            Save-RunState -Path $runStatePath -State $runState
+        }
+        catch {
+            Write-Verbose "Could not persist incremental run state after failed document site $siteUrl"
+        }
+
+        $docElapsed = (Get-Date) - $docSiteStart
+        if (-not $siteTimingSummary.ContainsKey($siteUrl)) {
+            $siteTimingSummary[$siteUrl] = [ordered]@{ Document = [TimeSpan]::Zero; Other = [TimeSpan]::Zero }
+        }
+        $siteTimingSummary[$siteUrl].Document = $docElapsed
+    }
 }
 }
 else {
@@ -3583,6 +3856,8 @@ if ($scanOther) {
 
     foreach ($site in $scanSiteCollections) {
         $siteUrl = $site.Url.TrimEnd('/')
+        $otherSiteStart = Get-Date
+        try {
         $siteTenantBase = ([Uri]$siteUrl).GetLeftPart([UriPartial]::Authority)
         Write-Host "`nOther-content scan site collection: $siteUrl"
 
@@ -3692,12 +3967,18 @@ if ($scanOther) {
                     })
 
                 $items = $null
+                $otherDeltaQuery = if (-not [string]::IsNullOrWhiteSpace($deltaSinceIsoUtc)) { Get-ModifiedSinceCamlQuery -UtcDateTimeText $deltaSinceIsoUtc } else { $null }
                 try {
                     $otherRetryState = @{ WebConn = $webConn }
                     $items = Invoke-WithRetry -Label ("Get list items: " + $list.Title) -MaxAttempts 4 -OnTimeout {
                         $otherRetryState.WebConn = Update-PnPConnection -Url $webUrl -ClientId $ClientId
                     } -Operation {
-                        Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
+                        if ($otherDeltaQuery) {
+                            Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200 -Query $otherDeltaQuery
+                        }
+                        else {
+                            Get-PnPListItem -List $list.Title -Connection $otherRetryState.WebConn -PageSize 200
+                        }
                     }
 
                     $webConn = $otherRetryState.WebConn
@@ -3710,7 +3991,12 @@ if ($scanOther) {
                             $otherRetryState.WebConn = Connect-ValidatedPnP -Url $webUrl -ClientId $ClientId
                             $otherItemResult = Invoke-PnPConnectionOperation -Url $webUrl -ClientId $ClientId -Connection $otherRetryState.WebConn -Label ('Re-auth list items: ' + $list.Title) -MaxAttempts 4 -Operation {
                                 param($activeConnection)
-                                Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 200
+                                if ($otherDeltaQuery) {
+                                    Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 200 -Query $otherDeltaQuery
+                                }
+                                else {
+                                    Get-PnPListItem -List $list.Title -Connection $activeConnection -PageSize 200
+                                }
                             }
                             $otherRetryState.WebConn = $otherItemResult.Connection
                             $items = $otherItemResult.Result
@@ -4065,32 +4351,135 @@ if ($scanOther) {
                 $runState.OtherItemSnapshots[$itemKey] = $itemSnapshot
             }
         }
+        try {
+            Flush-SiteReportSets -SiteUrl $siteUrl -SiteReportPlans $siteReportPlans -DocumentRowsBySite $docReportRowsBySite -OtherRowsBySite $otherReportRowsBySite -DocumentOutputsWritten (, $siteDocumentOutputsWritten) -OtherOutputsWritten (, $siteOtherOutputsWritten) -ScanOther:$true
+        }
+        catch {
+            Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+            Write-Warning ("Could not flush per-site other-content CSVs for {0}: {1}" -f $siteUrl, $_.Exception.Message)
+        }
+
         Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
+        try {
+            Save-RunState -Path $runStatePath -State $runState
+        }
+        catch {
+            Write-Verbose "Could not persist incremental run state after other-content site $siteUrl"
+        }
+
+        $otherElapsed = (Get-Date) - $otherSiteStart
+        if (-not $siteTimingSummary.ContainsKey($siteUrl)) {
+            $siteTimingSummary[$siteUrl] = [ordered]@{ Document = [TimeSpan]::Zero; Other = [TimeSpan]::Zero }
+        }
+        $siteTimingSummary[$siteUrl].Other = $otherElapsed
+        }
+        catch {
+            Add-ResilienceEvent -Category 'SiteScanRecoveries'
+            Write-Warning ("Other-content scan failed for site {0}: {1}" -f $siteUrl, $_.Exception.Message)
+            try {
+                Flush-SiteReportSets -SiteUrl $siteUrl -SiteReportPlans $siteReportPlans -DocumentRowsBySite $docReportRowsBySite -OtherRowsBySite $otherReportRowsBySite -DocumentOutputsWritten (, $siteDocumentOutputsWritten) -OtherOutputsWritten (, $siteOtherOutputsWritten) -ScanOther:$true
+            }
+            catch {
+                Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+                Write-Warning ("Could not flush other-content CSVs after failed site scan for {0}: {1}" -f $siteUrl, $_.Exception.Message)
+            }
+            Save-CounterCheckpoint -Path $counterCheckpointPath -DocScanned $docScannedByExt -DocSkippedForced $docSkippedForcedByExt -DocSkippedUnsupported $docSkippedUnsupportedByExt -OtherScanned $otherScannedByExt -OtherSkippedForced $otherSkippedForcedByExt -OtherSkippedUnsupported $otherSkippedUnsupportedByExt
+            try {
+                Save-RunState -Path $runStatePath -State $runState
+            }
+            catch {
+                Write-Verbose "Could not persist incremental run state after failed other-content site $siteUrl"
+            }
+
+            $otherElapsed = (Get-Date) - $otherSiteStart
+            if (-not $siteTimingSummary.ContainsKey($siteUrl)) {
+                $siteTimingSummary[$siteUrl] = [ordered]@{ Document = [TimeSpan]::Zero; Other = [TimeSpan]::Zero }
+            }
+            $siteTimingSummary[$siteUrl].Other = $otherElapsed
+        }
+    }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($deltaSinceIsoUtc)) {
+    foreach ($key in @($previousDocumentFindingCache.Keys)) {
+        if ($currentDocumentItemKeys.Contains([string]$key)) {
+            continue
+        }
+
+        foreach ($cachedRow in @($previousDocumentFindingCache[$key])) {
+            if (-not (Test-IsExactRowDuplicate -Row $cachedRow -SeenRows $docSeenRows)) {
+                $cachedSiteKey = if ($cachedRow.PSObject.Properties['__SiteKey']) { [string]$cachedRow.__SiteKey } else { '' }
+                if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                    $cachedSiteKey = $selectedScopeUrl
+                }
+                if (-not $docReportRowsBySite.ContainsKey($cachedSiteKey)) {
+                    $docReportRowsBySite[$cachedSiteKey] = New-Object System.Collections.Generic.List[object]
+                }
+                if (-not $cachedRow.PSObject.Properties['__SiteKey']) {
+                    $cachedRow | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $cachedSiteKey -Force
+                }
+                $docReportRowsBySite[$cachedSiteKey].Add($cachedRow)
+                $docReportRows.Add($cachedRow)
+                $stats.DocumentLinkRows++
+            }
+        }
+    }
+
+    if ($scanOther) {
+        foreach ($key in @($previousOtherFindingCache.Keys)) {
+            if ($currentOtherItemKeys.Contains([string]$key)) {
+                continue
+            }
+
+            foreach ($cachedRow in @($previousOtherFindingCache[$key])) {
+                if (-not (Test-IsExactRowDuplicate -Row $cachedRow -SeenRows $otherSeenRows)) {
+                    $cachedSiteKey = if ($cachedRow.PSObject.Properties['__SiteKey']) { [string]$cachedRow.__SiteKey } else { '' }
+                    if ([string]::IsNullOrWhiteSpace($cachedSiteKey)) {
+                        $cachedSiteKey = $selectedScopeUrl
+                    }
+                    if (-not $otherReportRowsBySite.ContainsKey($cachedSiteKey)) {
+                        $otherReportRowsBySite[$cachedSiteKey] = New-Object System.Collections.Generic.List[object]
+                    }
+                    if (-not $cachedRow.PSObject.Properties['__SiteKey']) {
+                        $cachedRow | Add-Member -NotePropertyName '__SiteKey' -NotePropertyValue $cachedSiteKey -Force
+                    }
+                    $otherReportRowsBySite[$cachedSiteKey].Add($cachedRow)
+                    $otherReportRows.Add($cachedRow)
+                    $stats.OtherLinkRows++
+                }
+            }
+        }
     }
 }
 
 $siteOutputSummaries = New-Object System.Collections.Generic.List[object]
 foreach ($siteKey in @($siteReportPlans.Keys | Sort-Object)) {
-    $plan = $siteReportPlans[$siteKey]
-    $siteDocRows = if ($docReportRowsBySite.ContainsKey($siteKey)) { @($docReportRowsBySite[$siteKey]) } else { @() }
-    Export-ReportRowSet -Path $plan.DocumentReportPath -Rows $siteDocRows -NoFindingsRow (Get-NoFindingsDocumentRow)
+    try {
+        $plan = $siteReportPlans[$siteKey]
+        $siteDocRows = if ($docReportRowsBySite.ContainsKey($siteKey)) { @($docReportRowsBySite[$siteKey]) } else { @() }
+        Export-ReportRowSet -Path $plan.DocumentReportPath -Rows $siteDocRows -NoFindingsRow (Get-NoFindingsDocumentRow)
 
-    $siteOtherPath = ''
-    if ($scanOther) {
-        $siteOtherRows = if ($otherReportRowsBySite.ContainsKey($siteKey)) { @($otherReportRowsBySite[$siteKey]) } else { @() }
-        Export-ReportRowSet -Path $plan.OtherReportPath -Rows $siteOtherRows -NoFindingsRow (Get-NoFindingsOtherRow)
-        $siteOtherPath = $plan.OtherReportPath
+        $siteOtherPath = ''
+        if ($scanOther) {
+            $siteOtherRows = if ($otherReportRowsBySite.ContainsKey($siteKey)) { @($otherReportRowsBySite[$siteKey]) } else { @() }
+            Export-ReportRowSet -Path $plan.OtherReportPath -Rows $siteOtherRows -NoFindingsRow (Get-NoFindingsOtherRow)
+            $siteOtherPath = $plan.OtherReportPath
+        }
+
+        $siteOverviewPaths = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath $siteOtherPath -IncludeOther:$scanOther
+        $siteOutputSummaries.Add([PSCustomObject]@{
+                SiteKey = $siteKey
+                SiteTitle = $plan.SiteTitle
+                DocumentReportPath = $plan.DocumentReportPath
+                DocumentOverviewPath = $siteOverviewPaths.DocumentOverviewPath
+                OtherReportPath = $siteOtherPath
+                OtherOverviewPath = $siteOverviewPaths.OtherOverviewPath
+            })
     }
-
-    $siteOverviewPaths = Export-OverviewOnlyReportSet -DocumentReportPath $plan.DocumentReportPath -OtherReportPath $siteOtherPath -IncludeOther:$scanOther
-    $siteOutputSummaries.Add([PSCustomObject]@{
-            SiteKey = $siteKey
-            SiteTitle = $plan.SiteTitle
-            DocumentReportPath = $plan.DocumentReportPath
-            DocumentOverviewPath = $siteOverviewPaths.DocumentOverviewPath
-            OtherReportPath = $siteOtherPath
-            OtherOverviewPath = $siteOverviewPaths.OtherOverviewPath
-        })
+    catch {
+        Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+        Write-Warning ("Could not finalize report files for site key {0}: {1}" -f $siteKey, $_.Exception.Message)
+    }
 }
 
 $extensionDetailsRows = New-Object 'System.Collections.Generic.List[object]'
@@ -4104,7 +4493,13 @@ if ($scanOther) {
     Add-ExtensionDetailRowSet -Rows $extensionDetailsRows -Category 'Other Files Skipped Unsupported' -Bucket $otherSkippedUnsupportedByExt
 }
 
-$extensionDetailsRows | Export-Csv -Path $extensionDetailsPath -NoTypeInformation
+try {
+    $extensionDetailsRows | Export-Csv -Path $extensionDetailsPath -NoTypeInformation
+}
+catch {
+    Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+    Write-Warning ("Could not write extension details CSV to {0}: {1}" -f $extensionDetailsPath, $_.Exception.Message)
+}
 
 $resolvedAt = (Get-Date).ToString('o')
 foreach ($key in @($previousDocumentFindingCache.Keys)) {
@@ -4135,9 +4530,21 @@ foreach ($key in @($previousOtherFindingCache.Keys)) {
 
 $resolvedDocumentCount = $docResolvedRows.Count
 $resolvedOtherCount = $otherResolvedRows.Count
-Export-ResolvedFindingSet -Path $documentResolvedPath -Rows @($docResolvedRows)
+try {
+    Export-ResolvedFindingSet -Path $documentResolvedPath -Rows @($docResolvedRows)
+}
+catch {
+    Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+    Write-Warning ("Could not write resolved document findings CSV {0}: {1}" -f $documentResolvedPath, $_.Exception.Message)
+}
 if ($scanOther) {
-    Export-ResolvedFindingSet -Path $otherResolvedPath -Rows @($otherResolvedRows)
+    try {
+        Export-ResolvedFindingSet -Path $otherResolvedPath -Rows @($otherResolvedRows)
+    }
+    catch {
+        Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+        Write-Warning ("Could not write resolved other findings CSV {0}: {1}" -f $otherResolvedPath, $_.Exception.Message)
+    }
 }
 
 $runState.DocumentFindingCache = $runState.DocumentFindingCache
@@ -4147,23 +4554,35 @@ $runState.PermissionFlagCache = $permissionFlagCache
 $runState.FolderNameCache = $folderNameCache
 $runState.ExternalUrlStatusCache = $externalUrlStatusCache
 $runState.LastRunSucceeded = $true
-Save-RunState -Path $runStatePath -State $runState
+try {
+    Save-RunState -Path $runStatePath -State $runState
+}
+catch {
+    Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+    Write-Warning ("Could not save final run state {0}: {1}" -f $runStatePath, $_.Exception.Message)
+}
 
-Save-StateManifest -Path $stateManifestPath -Manifest ([ordered]@{
-    ScopeFingerprint = $scopeFingerprint
-    ScriptSchemaVersion = $scriptSchemaVersion
-    RunMode = $RunMode
-    CompatiblePriorState = [bool]$loadedRunState.Compatible
-    RunStatePath = $runStatePath
-    DocumentResolvedPath = $documentResolvedPath
-    OtherResolvedPath = $otherResolvedPath
-    LastRunStartedAt = $runState.LastRunStartedAt
-    LastRunCompletedAt = $runState.LastRunCompletedAt
-    DocumentsRows = $stats.DocumentLinkRows
-    OtherRows = $stats.OtherLinkRows
-    DocumentsResolvedRows = $resolvedDocumentCount
-    OtherResolvedRows = $resolvedOtherCount
-})
+try {
+    Save-StateManifest -Path $stateManifestPath -Manifest ([ordered]@{
+        ScopeFingerprint = $scopeFingerprint
+        ScriptSchemaVersion = $scriptSchemaVersion
+        RunMode = $RunMode
+        CompatiblePriorState = [bool]$loadedRunState.Compatible
+        RunStatePath = $runStatePath
+        DocumentResolvedPath = $documentResolvedPath
+        OtherResolvedPath = $otherResolvedPath
+        LastRunStartedAt = $runState.LastRunStartedAt
+        LastRunCompletedAt = $runState.LastRunCompletedAt
+        DocumentsRows = $stats.DocumentLinkRows
+        OtherRows = $stats.OtherLinkRows
+        DocumentsResolvedRows = $resolvedDocumentCount
+        OtherResolvedRows = $resolvedOtherCount
+    })
+}
+catch {
+    Add-ResilienceEvent -Category 'OutputWriteRecoveries'
+    Write-Warning ("Could not save state manifest {0}: {1}" -f $stateManifestPath, $_.Exception.Message)
+}
 
 Write-Host "`nAudit complete."
 Write-Host "  Site collections visited:       $($stats.SitesVisited)"
@@ -4180,6 +4599,22 @@ if ($scanOther) {
     Write-Host "  Other files skipped unsupported: $($stats.OtherFilesSkippedUnsupported)"
 }
 Write-Host "  Extension details CSV:         $extensionDetailsPath"
+if ($siteTimingSummary.Count -gt 0) {
+    Write-Host "`nPer-site timing summary:"
+    foreach ($siteKey in @($siteTimingSummary.Keys | Sort-Object)) {
+        $timing = $siteTimingSummary[$siteKey]
+        $docDuration = if ($timing.Document) { [TimeSpan]$timing.Document } else { [TimeSpan]::Zero }
+        $otherDuration = if ($timing.Other) { [TimeSpan]$timing.Other } else { [TimeSpan]::Zero }
+        $totalDuration = $docDuration + $otherDuration
+        Write-Host ("  Site: {0}" -f $siteKey)
+        Write-Host ("    Document scan:     {0}" -f (Convert-ToDurationText -Duration $docDuration))
+        if ($scanOther) {
+            Write-Host ("    Other-content scan:{0}" -f (' ' + (Convert-ToDurationText -Duration $otherDuration)))
+        }
+        Write-Host ("    Total:             {0}" -f (Convert-ToDurationText -Duration $totalDuration))
+    }
+}
+Write-ResilienceSummary -Phase 'Completed run'
 Write-Host "`nPer-site report outputs:"
 foreach ($entry in $siteOutputSummaries) {
     Write-Host ("  Site: {0}" -f $entry.SiteKey)
@@ -4188,6 +4623,15 @@ foreach ($entry in $siteOutputSummaries) {
     if ($scanOther) {
         Write-Host ("    Other CSV: {0}" -f $entry.OtherReportPath)
         Write-Host ("    Other Overview CSV: {0}" -f $entry.OtherOverviewPath)
+    }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($scriptSessionTranscriptPath)) {
+    try {
+        Stop-Transcript | Out-Null
+    }
+    catch {
+        Write-Verbose "Could not stop session transcript cleanly."
     }
 }
 
