@@ -847,11 +847,11 @@ function Select-SiteForScope {
     param([Parameter(Mandatory = $true)][array]$Sites)
 
     $teamsSites = @($Sites | Where-Object {
-            ($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*'
+            ($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*' -or $_.Template -like 'TEAMCHANNEL*'
         } | Sort-Object Url)
 
     $sharePointSites = @($Sites | Where-Object {
-            -not ((($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*'))
+            -not ((($_.GroupId -and $_.GroupId -ne [Guid]::Empty) -or $_.Template -like 'GROUP*' -or $_.Template -like 'TEAMCHANNEL*'))
         } | Sort-Object Url)
 
     Write-Host ""
@@ -884,7 +884,7 @@ function Select-SiteForScope {
 
     Write-Host ""
     for ($i = 0; $i -lt $categorySites.Count; $i++) {
-        $kind = if ((($categorySites[$i].GroupId -and $categorySites[$i].GroupId -ne [Guid]::Empty) -or $categorySites[$i].Template -like 'GROUP*')) {
+        $kind = if ((($categorySites[$i].GroupId -and $categorySites[$i].GroupId -ne [Guid]::Empty) -or $categorySites[$i].Template -like 'GROUP*' -or $categorySites[$i].Template -like 'TEAMCHANNEL*')) {
             'Teams-connected'
         }
         else {
