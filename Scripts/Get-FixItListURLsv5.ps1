@@ -2051,13 +2051,37 @@ function Get-NoFindingsOtherRow {
     }
 }
 
+function Export-CsvRowWithRetry {
+    param(
+        [Parameter(Mandatory = $true)][string]$OutputPath,
+        [Parameter(Mandatory = $true)][pscustomobject]$Row,
+        [Parameter(Mandatory = $false)][int]$MaxAttempts = 5,
+        [Parameter(Mandatory = $false)][int]$DelayMilliseconds = 500
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
+            return
+        }
+        catch {
+            # OneDrive/AV can transiently hold a lock right after a write; retry rather than fail the scan.
+            $isLocked = ([string]$_.Exception.Message -match '(?i)being used by another process|cannot access the file')
+            if ((-not $isLocked) -or ($attempt -eq $MaxAttempts)) {
+                throw
+            }
+            Start-Sleep -Milliseconds ($DelayMilliseconds * $attempt)
+        }
+    }
+}
+
 function Write-DocumentFinding {
     param(
         [Parameter(Mandatory = $true)][string]$OutputPath,
         [Parameter(Mandatory = $true)][pscustomobject]$Row
     )
 
-    $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
+    Export-CsvRowWithRetry -OutputPath $OutputPath -Row $Row
 }
 
 function Write-OtherFinding {
@@ -2066,7 +2090,7 @@ function Write-OtherFinding {
         [Parameter(Mandatory = $true)][pscustomobject]$Row
     )
 
-    $Row | Export-Csv -Path $OutputPath -NoTypeInformation -Append
+    Export-CsvRowWithRetry -OutputPath $OutputPath -Row $Row
 }
 
 function Get-OverviewOnlyReportPath {
