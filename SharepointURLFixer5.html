@@ -271,6 +271,162 @@ function detectOfficeCode(pathAndQuery) {
   return extMatch ? OFFICE_EXTENSION_CODES[extMatch[1].toLowerCase()] || null : null;
 }
 
+const LOOKUP_FOLDER = "/sites/SharePointURLFixer/URLLookupTables";
+let lookupFilesPromise;
+const lookupRowsByFile = new Map();
+
+function parseCsvLine(line) {
+  const values = [];
+  let value = "";
+  let quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      if (quoted && line[i + 1] === '"') { value += '"'; i++; }
+      else { quoted = !quoted; }
+    } else if (char === ',' && !quoted) {
+      values.push(value); value = "";
+    } else {
+      value += char;
+    }
+  }
+  values.push(value);
+  return values;
+}
+
+function parseLookupCsv(text) {
+  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/).filter(line => line.trim());
+  if (lines.length < 2) return [];
+  const headers = parseCsvLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const values = parseCsvLine(line);
+    return Object.fromEntries(headers.map((header, index) => [header, values[index] || ""]));
+  });
+}
+
+async function getLookupFiles() {
+  if (!lookupFilesPromise) {
+    const endpoint = `${location.origin}/sites/SharePointURLFixer/_api/web/GetFolderByServerRelativeUrl('${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
+    lookupFilesPromise = fetch(endpoint, { headers: { Accept: "application/json;odata=nometadata" } })
+      .then(response => {
+        if (!response.ok) throw new Error(`Lookup table discovery failed (${response.status}).`);
+        return response.json();
+      })
+      .then(data => (data.value || []).filter(file => /\.csv$/i.test(file.Name)));
+  }
+  return lookupFilesPromise;
+}
+
+function getLookupFileIdentifier(url) {
+  try {
+    const path = new URL(url).pathname.replace(/\/$/, "");
+    const parts = path.split("/").filter(Boolean);
+    if (parts[0]?.toLowerCase() === "sites") return `sites-${parts[1] || ""}`;
+    return parts[0] || "WHASharepointCentralPark";
+  } catch {
+    return "";
+  }
+}
+
+function decodeUrlPart(value) {
+  try { return decodeURIComponent(value).toLowerCase(); }
+  catch { return value.toLowerCase(); }
+}
+
+function getUrlSignature(url) {
+  try {
+    const parsed = new URL(url);
+    const path = decodeUrlPart(parsed.pathname).replace(/\/$/, "");
+    const params = parsed.searchParams;
+    if (/_layouts\/15\/doc\.aspx$/i.test(path)) {
+      return `doc|${decodeUrlPart(params.get("sourcedoc") || "")}|${decodeUrlPart(params.get("file") || "")}`;
+    }
+    if (params.has("id") || params.has("parent")) {
+      return `pdf|${path}|${decodeUrlPart(params.get("id") || "")}|${decodeUrlPart(params.get("parent") || "")}`;
+    }
+    if (params.has("d")) {
+      return `copy|${path}|${decodeUrlPart(params.get("d") || "")}`;
+    }
+    return `path|${path.replace(/^\/:\w:\/r/i, "")}`;
+  } catch {
+    return `raw|${url.trim().toLowerCase()}`;
+  }
+}
+
+function getOldFileRefSignature(url) {
+  try {
+    const parsed = new URL(url);
+    let path = decodeUrlPart(parsed.pathname).replace(/\/$/, "");
+    path = path.replace(/^\/:\w:\/r/i, "");
+    return path;
+  } catch {
+    return "";
+  }
+}
+
+async function findLookupRow(url) {
+  const files = await getLookupFiles();
+  const identifier = getLookupFileIdentifier(url);
+  const candidates = files.filter(file => new RegExp(`-${escapeRegex(identifier)}\\.csv$`, "i").test(file.Name));
+  const filesToCheck = candidates.length ? candidates : files;
+  const inputSignature = getUrlSignature(url);
+  const inputFileRef = getOldFileRefSignature(url);
+
+  for (const file of filesToCheck) {
+    let rows = lookupRowsByFile.get(file.Name);
+    if (!rows) {
+      const response = await fetch(`${location.origin}${file.ServerRelativeUrl}`, { credentials: "same-origin" });
+      if (!response.ok) continue;
+      rows = parseLookupCsv(await response.text());
+      lookupRowsByFile.set(file.Name, rows);
+    }
+    const row = rows.find(candidate => {
+      const exactSignatureMatch = [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl]
+        .some(value => value && getUrlSignature(value) === inputSignature);
+      const fileRefMatch = candidate.OldFileRef &&
+        getOldFileRefSignature(candidate.OldCopyLinkUrl) === inputFileRef;
+      return exactSignatureMatch || fileRefMatch;
+    });
+    if (row) return row;
+  }
+  return null;
+}
+
+async function lookupOrFixUrl(raw) {
+  const input = raw.trim();
+  if (!input) return null;
+
+  const patternResult = fixUrl(input);
+  const patternLevel = patternResult.note.slice(0, patternResult.note.indexOf(':'));
+  if (patternLevel !== 'err' && await isReachableSharePointUrl(patternResult.fixed)) {
+    return patternResult;
+  }
+
+  const lookupRow = await findLookupRow(input);
+  if (!lookupRow) return patternResult;
+
+  const isResolved = /_layouts\/15\/doc\.aspx|[?&](?:id|parent)=/i.test(input);
+  return {
+    original: input,
+    fixed: isResolved ? (lookupRow.NewResolvedUrl || lookupRow.NewCopyLinkUrl) : (lookupRow.NewCopyLinkUrl || lookupRow.NewResolvedUrl),
+    note: "ok:Pattern match was unavailable or did not resolve; found the migrated document in the SharePoint lookup table."
+  };
+}
+
+async function isReachableSharePointUrl(url) {
+  try {
+    const response = await fetch(url, {
+      method: "HEAD",
+      credentials: "same-origin",
+      redirect: "follow",
+      cache: "no-store"
+    });
+    return response.ok || (response.status >= 300 && response.status < 400);
+  } catch {
+    return false;
+  }
+}
+
 function fixUrl(raw) {
   const url = raw.trim();
   if (!url) return null;
@@ -372,7 +528,7 @@ function fixUrl(raw) {
   return { original: url, fixed: fixed, note: note };
 }
 
-function convert() {
+async function convert() {
   const input = document.getElementById('input').value;
   const lines = input.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const resultsDiv = document.getElementById('results');
@@ -389,10 +545,15 @@ function convert() {
     return;
   }
 
+  statusDiv.className = 'status warn';
+  statusDiv.textContent = 'Checking SharePoint lookup tables...';
+  statusDiv.style.display = 'block';
+
   let okCount = 0, warnCount = 0, errCount = 0;
 
-  lines.forEach(line => {
-    const result = fixUrl(line);
+  try {
+    const results = await Promise.all(lines.map(line => lookupOrFixUrl(line)));
+    results.forEach(result => {
     const sepIndex = result.note.indexOf(':');
     const level = result.note.slice(0, sepIndex);
     const note = result.note.slice(sepIndex + 1);
@@ -449,7 +610,13 @@ function convert() {
     box.appendChild(link);
     box.appendChild(actions);
     resultsDiv.appendChild(box);
-  });
+    });
+  } catch (error) {
+    statusDiv.className = 'status err';
+    statusDiv.textContent = error.message || 'Could not load the SharePoint lookup tables.';
+    statusDiv.style.display = 'block';
+    return;
+  }
 
   resultBlock.style.display = 'block';
 

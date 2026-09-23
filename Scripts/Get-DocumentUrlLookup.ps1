@@ -52,7 +52,15 @@
     this Scripts folder.
 
 .PARAMETER OutputFolder
-    Folder the per-site lookup CSVs are written to.
+    Parent folder for document lookup output files.
+
+.PARAMETER MasterFolder
+    Folder containing the per-site [sitename]-master.csv lookup inventories.
+    If omitted, defaults to a Masters subfolder under OutputFolder.
+
+.PARAMETER FixerOutputFolder
+    Folder where filtered [sitename]-fixer.csv files are written. If omitted,
+    defaults to a FixerFiles subfolder under OutputFolder.
 
 .PARAMETER StateRootFolder
     Folder used to cache the subsite scannability inventory between runs.
@@ -90,7 +98,13 @@ param(
     [string]$UrlMappingCsvPath = "",
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles",
+    [string]$OutputFolder = "C:\Users\bposey\OneDrive - Womens Healthcare Associates LLC\Shortcuts\Gary Henderson's files - SharePoint-Site-Migration-072026\Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles",
+
+    [Parameter(Mandatory = $false)]
+    [string]$MasterFolder = "",
+
+    [Parameter(Mandatory = $false)]
+    [string]$FixerOutputFolder = "",
 
     [Parameter(Mandatory = $false)]
     [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\Checkpoints-and-Caches",
@@ -118,6 +132,8 @@ $ErrorActionPreference = "Stop"
 $ScriptSchemaVersion = 'DocumentUrlLookup-v1'
 $InventoryCacheSchemaVersion = 'v1'
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
+$FixerRequiredExtensions = @('.docx', '.doc', '.pdf', '.pptx', '.xls', '.xlsx', '.ppt', '.vsdx', '.vsd', '.png', '.aspx', '.one')
+$FileLookupListBaseTemplates = @(101, 119, 850)
 
 # Office web-viewer prefix per extension: /:w:/r/... Word, :x: Excel, :p:
 # PowerPoint, :b: PDF. Same letter is reused in the ?d=<letter><guid> form.
@@ -127,17 +143,6 @@ $DocLinkPrefixByExt = @{
     '.pptx' = 'p'; '.ppt' = 'p'
     '.pdf'  = 'b'
 }
-
-# Extensions worth opening to look for embedded hyperlinks, and which of those
-# are OpenXML zip packages (parsed structurally) vs. read as raw byte/text.
-$DocumentScannableExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.doc', '.xls', '.ppt', '.txt', '.csv', '.rtf')
-$OpenXmlExtensions = @('.docx', '.xlsx', '.pptx')
-$AlwaysSkipExtensions = @('.jpg', '.png', '.vsdx', '.one')
-$PdfNoiseHosts = @(
-    'ns.adobe.com', 'www.w3.org', 'w3.org', 'purl.org',
-    'www.iec.ch', 'iec.ch', 'www.color.org', 'www.npes.org', 'www.aiim.org',
-    'www.activepdf.com', 'activepdf.com'
-)
 
 # --- Shared scaffolding, ported from Get-FixItListURLsv5.ps1 -----------------
 
@@ -452,6 +457,27 @@ function Test-IsRecycleBinContainer {
     return $false
 }
 
+function Test-IsSiteContentsInventoryList {
+    param([Parameter(Mandatory = $true)]$List)
+
+    if (-not $List) { return $false }
+    if ($List.Hidden) { return $false }
+
+    $rootFolderPath = if ($List.RootFolder -and $List.RootFolder.ServerRelativeUrl) { [string]$List.RootFolder.ServerRelativeUrl } else { '' }
+    if (Test-IsRecycleBinContainer -ListTitle $List.Title -RootFolderPath $rootFolderPath) { return $false }
+    if ($SkipListTitles -contains $List.Title) { return $false }
+    if ($List.ItemCount -eq 0) { return $false }
+
+    return $true
+}
+
+function Test-IsFileLookupList {
+    param([Parameter(Mandatory = $true)]$List)
+
+    if (-not (Test-IsSiteContentsInventoryList -List $List)) { return $false }
+    return ($FileLookupListBaseTemplates -contains [int]$List.BaseTemplate)
+}
+
 function Test-IsInventorySubsiteScannable {
     param(
         [Parameter(Mandatory = $true)][string]$WebUrl,
@@ -497,16 +523,12 @@ function Test-IsInventorySubsiteScannable {
         $lists = @($listResult.Result)
 
         foreach ($list in $lists) {
-            if ($list.Hidden) { continue }
-            if ($list.BaseTemplate -ne 101) { continue }
-            if (Test-IsRecycleBinContainer -ListTitle $list.Title -RootFolderPath $list.RootFolder.ServerRelativeUrl) { continue }
-            if ($SkipListTitles -contains $list.Title) { continue }
-            if ($list.ItemCount -eq 0) { continue }
+            if (-not (Test-IsSiteContentsInventoryList -List $list)) { continue }
 
             return [PSCustomObject]@{ IsScannable = $true; Reason = '' }
         }
 
-        return [PSCustomObject]@{ IsScannable = $false; Reason = 'No non-empty document libraries found.' }
+        return [PSCustomObject]@{ IsScannable = $false; Reason = 'No non-empty visible Site Contents lists/libraries found.' }
     }
     catch {
         return [PSCustomObject]@{ IsScannable = $false; Reason = ('Scannability probe failed: ' + $_.Exception.Message) }
@@ -1035,6 +1057,126 @@ function Add-CsvRowWithRetry {
     }
 }
 
+function Get-MasterLookupTablePath {
+    param(
+        [Parameter(Mandatory = $true)][string]$Folder,
+        [Parameter(Mandatory = $true)][string]$Identifier
+    )
+
+    return Join-Path -Path $Folder -ChildPath ("{0}-master.csv" -f $Identifier)
+}
+
+function Get-TemporaryLookupTablePath {
+    param(
+        [Parameter(Mandatory = $true)][string]$Folder,
+        [Parameter(Mandatory = $true)][string]$Identifier,
+        [Parameter(Mandatory = $true)][string]$RunStamp
+    )
+
+    return Join-Path -Path $Folder -ChildPath ("{0}-{1}-temp.csv" -f $RunStamp, $Identifier)
+}
+
+function Get-FixerLookupTablePath {
+    param(
+        [Parameter(Mandatory = $true)][string]$Folder,
+        [Parameter(Mandatory = $true)][string]$Identifier
+    )
+
+    return Join-Path -Path $Folder -ChildPath ("{0}-fixer.csv" -f $Identifier)
+}
+
+function Copy-CsvFileWithRetry {
+    param(
+        [Parameter(Mandatory = $true)][string]$SourcePath,
+        [Parameter(Mandatory = $true)][string]$DestinationPath,
+        [Parameter(Mandatory = $false)][int]$MaxAttempts = 5,
+        [Parameter(Mandatory = $false)][int]$DelayMilliseconds = 500
+    )
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            Copy-Item -Path $SourcePath -Destination $DestinationPath -Force
+            return
+        }
+        catch {
+            $isLocked = ([string]$_.Exception.Message -match '(?i)being used by another process|cannot access the file')
+            if ((-not $isLocked) -or ($attempt -eq $MaxAttempts)) {
+                throw
+            }
+            Start-Sleep -Milliseconds ($DelayMilliseconds * $attempt)
+        }
+    }
+}
+
+function Remove-FileWithRetry {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $false)][int]$MaxAttempts = 5,
+        [Parameter(Mandatory = $false)][int]$DelayMilliseconds = 500
+    )
+
+    if (-not (Test-Path -Path $Path)) {
+        return
+    }
+
+    for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
+        try {
+            Remove-Item -Path $Path -Force
+            return
+        }
+        catch {
+            $isLocked = ([string]$_.Exception.Message -match '(?i)being used by another process|cannot access the file')
+            if ((-not $isLocked) -or ($attempt -eq $MaxAttempts)) {
+                throw
+            }
+            Start-Sleep -Milliseconds ($DelayMilliseconds * $attempt)
+        }
+    }
+}
+
+function Publish-MasterLookupTable {
+    param(
+        [Parameter(Mandatory = $true)][string]$TempPath,
+        [Parameter(Mandatory = $true)][string]$MasterPath
+    )
+
+    Copy-CsvFileWithRetry -SourcePath $TempPath -DestinationPath $MasterPath
+    Remove-FileWithRetry -Path $TempPath
+}
+
+function Export-FixerLookupTableFromMaster {
+    param(
+        [Parameter(Mandatory = $true)][string]$MasterPath,
+        [Parameter(Mandatory = $true)][string]$FixerPath,
+        [Parameter(Mandatory = $true)][array]$RequiredExtensions
+    )
+
+    if (-not (Test-Path -Path $MasterPath)) {
+        throw "Master lookup table was not found: $MasterPath"
+    }
+
+    $masterRows = @(Import-Csv -Path $MasterPath)
+    $filteredRows = @($masterRows | Where-Object {
+            $extension = ([string]$_.Extension).Trim().ToLowerInvariant()
+            ($RequiredExtensions -contains $extension) -and
+            (-not [string]::IsNullOrWhiteSpace([string]$_.OldResolvedUrl))
+        })
+
+    Remove-FileWithRetry -Path $FixerPath
+    if ($filteredRows.Count -gt 0) {
+        Export-CsvTableWithRetry -Path $FixerPath -Rows $filteredRows
+    }
+    elseif ($masterRows.Count -gt 0) {
+        $headerLine = (@($masterRows[0].PSObject.Properties.Name) | ForEach-Object { '"' + ($_ -replace '"', '""') + '"' }) -join ','
+        Set-Content -Path $FixerPath -Value $headerLine -Encoding UTF8 -Force
+    }
+    else {
+        Set-Content -Path $FixerPath -Value '' -Encoding UTF8 -Force
+    }
+
+    return $filteredRows.Count
+}
+
 function Get-CounterCheckpointPath {
     param(
         [Parameter(Mandatory = $true)][string]$StateRoot,
@@ -1079,7 +1221,16 @@ function Save-CounterCheckpoint {
 Set-ScriptWindowTitle -ScriptName 'Get-DocumentUrlLookup.ps1'
 Install-RequiredModule -Name "PnP.PowerShell"
 
+if ([string]::IsNullOrWhiteSpace($MasterFolder)) {
+    $MasterFolder = Join-Path -Path $OutputFolder -ChildPath 'Masters'
+}
+if ([string]::IsNullOrWhiteSpace($FixerOutputFolder)) {
+    $FixerOutputFolder = Join-Path -Path $OutputFolder -ChildPath 'FixerFiles'
+}
+
 New-DirectoryIfMissing -Path $OutputFolder
+New-DirectoryIfMissing -Path $MasterFolder
+New-DirectoryIfMissing -Path $FixerOutputFolder
 New-DirectoryIfMissing -Path $StateRootFolder
 
 $RootUrl = $RootUrl.TrimEnd('/')
@@ -1180,7 +1331,7 @@ if ($UsePersistedInventoryCache) {
 }
 
 if ($excludedScopeSubsites.Count -gt 0) {
-    Write-Host ("Filtered out {0} subsite(s) that are not scannable by this script:" -f $excludedScopeSubsites.Count)
+    Write-Host ("Filtered out {0} site/web(s) that are not scannable by this script:" -f $excludedScopeSubsites.Count)
     foreach ($excluded in $excludedScopeSubsites) {
         Write-Host ("  - {0}  ({1})" -f $excluded.Url, $excluded.Reason)
     }
@@ -1188,18 +1339,18 @@ if ($excludedScopeSubsites.Count -gt 0) {
 
 $scopeSubsites = $scannableScopeSubsites
 if (-not $scopeSubsites -or $scopeSubsites.Count -eq 0) {
-    throw "No scannable subsites were found under $selectedScopeUrl after inventory filtering."
+    throw "No scannable sites/webs were found under $selectedScopeUrl after inventory filtering."
 }
 
 for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
     $title = if ($scopeSubsites[$i].Title) { $scopeSubsites[$i].Title } else { '(no title)' }
     Write-Host ("  {0,4}. {1}  |  {2}" -f ($i + 1), $scopeSubsites[$i].Url, $title)
 }
-Write-Host "     0. ALL listed subsites"
+Write-Host "     0. ALL listed sites/webs"
 
 $selectedIndices = $null
 while (-not $selectedIndices) {
-    $pickRaw = Read-Host "`nPick one or more subsites by number (comma-separated, e.g. 1,4,7). Use 0 for ALL subsites"
+    $pickRaw = Read-Host "`nPick one or more sites/webs by number (comma-separated, e.g. 1,4,7). Use 0 for ALL listed sites/webs"
     if ([string]::IsNullOrWhiteSpace($pickRaw)) {
         Write-Host "  Selection is required."
         continue
@@ -1309,12 +1460,10 @@ else {
 }
 
 # --- Enumeration ----------------------------------------------------------
-# One CSV per NEW/destination site (not per selected scope) - a classic scope
-# like the tenant root can contain dozens of subsites that are each being
-# promoted to their own separate new site collection. Filenames are kept short
-# (run timestamp + short site identifier only) to stay well clear of the
-# 260-character total path limit, which is the biggest recurring problem with
-# Get-FixItListURLsv5.ps1's long, descriptive filenames.
+# One master CSV per NEW/destination site (not per selected scope) - a classic
+# scope like the tenant root can contain dozens of subsites that are each being
+# promoted to their own separate new site collection. Each run writes a temp
+# file, then publishes it over the matching [site]-master.csv after the scan.
 
 function Get-ShortSiteIdentifier {
     param(
@@ -1335,23 +1484,6 @@ function Get-ShortSiteIdentifier {
     }
 
     return $identifier
-}
-
-# most recently written file for the same site identifier - regardless of which run's
-# timestamp it carries - purely to seed the already-confirmed cache below.
-function Get-LatestExistingLookupTablePath {
-    param(
-        [Parameter(Mandatory = $true)][string]$Folder,
-        [Parameter(Mandatory = $true)][string]$Identifier,
-        [Parameter(Mandatory = $false)][string]$Suffix = ''
-    )
-
-    $match = Get-ChildItem -Path $Folder -Filter ("*-{0}{1}.csv" -f $Identifier, $Suffix) -File -ErrorAction SilentlyContinue |
-    Sort-Object LastWriteTime -Descending |
-    Select-Object -First 1
-
-    if ($match) { return $match.FullName }
-    return ''
 }
 
 # Keeps exactly one CSV per site on disk: once a fresh, complete file has been written
@@ -1404,15 +1536,16 @@ foreach ($subsite in $selectedSubsites) {
     }
 
     $siteIdentifier = Get-ShortSiteIdentifier -Subsite $subsite -SiteMatch $siteMatch
-    $outputPath = Join-Path -Path $OutputFolder -ChildPath ("$runStamp-$siteIdentifier.csv")
-    $latestExistingPath = Get-LatestExistingLookupTablePath -Folder $OutputFolder -Identifier $siteIdentifier
-    $mergedRowsByKey = if ($latestExistingPath) { Import-ExistingLookupTable -Path $latestExistingPath -KeyProperty 'OldFileRef' } else { [ordered]@{} }
+    $masterPath = Get-MasterLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier
+    $outputPath = Get-TemporaryLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
+    $fixerPath = Get-FixerLookupTablePath -Folder $FixerOutputFolder -Identifier $siteIdentifier
+    $mergedRowsByKey = if (Test-Path -Path $masterPath) { Import-ExistingLookupTable -Path $masterPath -KeyProperty 'OldFileRef' } else { [ordered]@{} }
     $counterCheckpointPath = Get-CounterCheckpointPath -StateRoot $StateRootFolder -ScopeUrl $subsiteUrl -SchemaVersion $ScriptSchemaVersion
-    if ($latestExistingPath) {
-        Write-Host ("  Writing {0} (using {1} existing row(s) from {2} to skip already-confirmed lookups)" -f $outputPath, $mergedRowsByKey.Count, $latestExistingPath)
+    if (Test-Path -Path $masterPath) {
+        Write-Host ("  Writing temp scan {0} (using {1} existing row(s) from master {2} to skip already-confirmed lookups)" -f $outputPath, $mergedRowsByKey.Count, $masterPath)
     }
     else {
-        Write-Host ("  Writing {0} (no prior file found for this site)" -f $outputPath)
+        Write-Host ("  Writing temp scan {0} (no master file found yet for this site; one will be created at {1})" -f $outputPath, $masterPath)
     }
 
     if ($scanDocumentContent -and -not $embeddedLinksBySite.ContainsKey($siteIdentifier)) {
@@ -1447,15 +1580,13 @@ foreach ($subsite in $selectedSubsites) {
     }
     $subConn = $listResult.Connection
     $libraries = @($listResult.Result | Where-Object {
-            -not $_.Hidden -and
-            $_.BaseTemplate -eq 101 -and
-            $_.ItemCount -gt 0 -and
-            ($SkipListTitles -notcontains $_.Title) -and
-            -not (Test-IsRecycleBinContainer -ListTitle $_.Title -RootFolderPath $_.RootFolder.ServerRelativeUrl)
+            Test-IsSiteContentsInventoryList -List $_
         })
 
     foreach ($library in $libraries) {
-        Write-Host ("  library: {0} ({1} items)" -f $library.Title, $library.ItemCount)
+        $librarySupportsFileLookup = Test-IsFileLookupList -List $library
+        $libraryKind = if ($librarySupportsFileLookup) { 'file/page library' } else { 'site contents list' }
+        Write-Host ("  {0}: {1} ({2} items)" -f $libraryKind, $library.Title, $library.ItemCount)
 
         $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Modified')
         $itemsResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get items: ' + $library.Title) -MaxAttempts 3 -Operation {
@@ -1491,7 +1622,7 @@ foreach ($subsite in $selectedSubsites) {
 
             $rowKey = $fileRef.TrimEnd('/').ToLowerInvariant()
             $existingRow = $mergedRowsByKey[$rowKey]
-            $canSkipLiveLookup = $SkipAlreadyConfirmedDocuments -and $existingRow -and
+            $canSkipLiveLookup = $librarySupportsFileLookup -and $SkipAlreadyConfirmedDocuments -and $existingRow -and
             ($existingRow.NewFound -eq 'Yes') -and
             ([string]$existingRow.Modified -eq [string]$modifiedValue)
 
@@ -1503,6 +1634,17 @@ foreach ($subsite in $selectedSubsites) {
                 $notes = [string]$existingRow.Notes
                 $newFoundCount++
                 $newFoundFromCacheCount++
+            }
+            elseif (-not $librarySupportsFileLookup) {
+                if ($siteMatch) {
+                    $relativeWithinSite = $fileRef.Substring($oldSiteServerRelative.Length)
+                    $newFileRef = $newSiteLinkServerRelative + $relativeWithinSite
+                    $newCopyLinkUrl = $RootUrl + (Get-EncodedServerRelativePath -Path $newFileRef)
+                    $notes = 'Site Contents item inventoried only; live new-file lookup is only run for document/page libraries.'
+                }
+                else {
+                    $notes = 'Site Contents item inventoried only; site not found in Old/New Site URL CSV.'
+                }
             }
             elseif (-not $siteMatch) {
                 $notes = 'Site not found in Old/New Site URL CSV.'
@@ -1561,7 +1703,7 @@ foreach ($subsite in $selectedSubsites) {
             }
             $oldPathToNewInfo[$fileRef.TrimEnd('/').ToLowerInvariant()] = [PSCustomObject]@{ NewFound = $newFound; NewCopyLinkUrl = $newCopyLinkUrl; NewResolvedUrl = $newResolvedUrl }
 
-            if ($scanDocumentContent -and ($ContentScanExtensions -contains $ext)) {
+            if ($scanDocumentContent -and $librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)) {
                 try {
                     $contentResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Download content: ' + $fileRef) -MaxAttempts 2 -Operation {
                         param($activeConnection)
@@ -1580,7 +1722,7 @@ foreach ($subsite in $selectedSubsites) {
 
                     foreach ($link in $hyperlinks) {
                         if (-not (Test-IsInternalTenantUrl -Url $link -RootUrl $RootUrl)) { continue }
-                        $siteLinks = $embeddedLinksBySite[$siteSlug]
+                        $siteLinks = $embeddedLinksBySite[$siteIdentifier]
                         if ($siteLinks.ContainsKey($link)) {
                             $siteLinks[$link].Count++
                         }
@@ -1611,9 +1753,9 @@ foreach ($subsite in $selectedSubsites) {
                 Notes          = $notes
             }
 
-            # Appended immediately (the output file for this run starts empty), so a crash
+            # Appended immediately (the temp file for this run starts empty), so a crash
             # never loses more than the row in flight - $mergedRowsByKey is only read from
-            # (the prior run's snapshot), never written back to, since this run's file is new.
+            # the current master snapshot, never written back to until the scan publishes.
             Add-CsvRowWithRetry -Path $outputPath -Row $row
         }
 
@@ -1624,15 +1766,15 @@ foreach ($subsite in $selectedSubsites) {
         Write-Warning "  No documents were found in $subsiteUrl."
     }
     else {
-        Write-Host ("  Wrote $filesScanned row(s) to $outputPath")
+        Publish-MasterLookupTable -TempPath $outputPath -MasterPath $masterPath
+        $fixerRowsWritten = Export-FixerLookupTableFromMaster -MasterPath $masterPath -FixerPath $fixerPath -RequiredExtensions $FixerRequiredExtensions
+
+        Write-Host ("  Wrote $filesScanned row(s) to master $masterPath")
+        Write-Host ("  Wrote {0} filtered Fixer row(s) to {1}" -f $fixerRowsWritten, $fixerPath)
         Write-Host ("  New document found: {0} ({1} via cached prior confirmation)   Not found: {2}" -f $newFoundCount, $newFoundFromCacheCount, $newNotFoundCount)
         if ($notFoundCountThisSite -gt 0) {
             Write-Host ("  {0} document(s) could not be located at their expected new path - see Notes column." -f $notFoundCountThisSite)
         }
-
-        # This run's file is a complete snapshot on its own (every row is re-confirmed or
-        # reused, not diffed), so every older file for this same site is now superseded.
-        Remove-StaleLookupTables -Folder $OutputFolder -Identifier $siteIdentifier -KeepPath $outputPath
     }
 
     $filesScannedTotal += $filesScanned
@@ -1649,7 +1791,7 @@ if ($filesScannedTotal -eq 0) {
     Write-Warning "`nNo documents were found in the selected subsites. No CSVs were written."
 }
 else {
-    Write-Host ("`nAll sites combined: wrote {0} row(s) across {1} site CSV(s)." -f $filesScannedTotal, $selectedSubsites.Count)
+    Write-Host ("`nAll sites combined: refreshed {0} master row(s) across {1} site CSV(s)." -f $filesScannedTotal, $selectedSubsites.Count)
 
     Write-Host "`nExtension breakdown:"
     foreach ($extKey in @($extensionCountsTotal.Keys | Sort-Object)) {
