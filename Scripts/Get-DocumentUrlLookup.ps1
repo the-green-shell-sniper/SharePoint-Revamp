@@ -1322,21 +1322,21 @@ function Get-ShortSiteIdentifier {
         [Parameter(Mandatory = $false)]$SiteMatch
     )
 
-    if ($SiteMatch) {
-        $newBaseForNaming = if ($SiteMatch.NewLinkBase) { $SiteMatch.NewLinkBase } else { $SiteMatch.NewBase }
-        $lastSegment = ($newBaseForNaming.TrimEnd('/') -split '/')[-1]
-        if (-not [string]::IsNullOrWhiteSpace($lastSegment)) {
-            # "sites-" prefix marks this as a site with a resolved new URL (living
-            # under /sites/...), distinct from an unmapped classic subsite below.
-            return 'sites-' + (Get-SafeFileSlug -Text $lastSegment -MaxLength 30 -Fallback 'Site')
-        }
+    $scannedUrl = ([string]$Subsite.Url).TrimEnd('/')
+    $scannedPath = ([Uri]$scannedUrl).AbsolutePath.TrimEnd('/')
+    $lastSegment = ($scannedPath -split '/')[-1]
+    if ([string]::IsNullOrWhiteSpace($lastSegment)) {
+        $lastSegment = [string]$Subsite.Title
     }
 
-    $fallbackText = if (-not [string]::IsNullOrWhiteSpace([string]$Subsite.Title)) { [string]$Subsite.Title } else { ([Uri]$Subsite.Url).AbsolutePath }
-    return Get-SafeFileSlug -Text $fallbackText -MaxLength 30 -Fallback 'Site'
+    $identifier = Get-SafeFileSlug -Text $lastSegment -MaxLength 30 -Fallback 'Site'
+    if ($scannedPath -match '(?i)^/sites(?:/|$)') {
+        return 'sites-' + $identifier
+    }
+
+    return $identifier
 }
 
-# Filenames are timestamped per run (not a single stable name), so this looks up the
 # most recently written file for the same site identifier - regardless of which run's
 # timestamp it carries - purely to seed the already-confirmed cache below.
 function Get-LatestExistingLookupTablePath {
