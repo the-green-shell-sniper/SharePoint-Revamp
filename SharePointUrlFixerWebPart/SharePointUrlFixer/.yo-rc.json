@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "SharePointUrlFixer",
+    "environment": "spo",
+    "useGulp": false,
+    "componentType": "webpart",
+    "template": "react",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.14.0",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "share-point-url-fixer",
+    "libraryId": "230d4487-fc99-4aae-9194-0a71f74bfc6c",
+    "packageManager": "npm",
+    "solutionShortDescription": "SharePointUrlFixer description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false
+  }
+}
