@@ -5,6 +5,7 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 ## Scripts
 
 - [Get-DocumentAccessReport.ps1](Scripts/Get-DocumentAccessReport.ps1)
+- [Get-DocumentUrlLookup.ps1](Scripts/Get-DocumentUrlLookup.ps1)
 - [Get-FixItListOverviewOnly.ps1](Scripts/Get-FixItListOverviewOnly.ps1)
 - [Get-FixItListURLsv2.ps1](Scripts/Get-FixItListURLsv2.ps1)
 
@@ -48,6 +49,18 @@ Broken URL Text | Broken Embedded URL | New URL |
 Created By | Last Modified By | Last Modified Date | Permissions
 
 
+## Get-DocumentUrlLookup.ps1
+
+Per-site old-URL -> new-URL lookup for documents, for cases the URL Fixer HTML tool can't pattern-match (links keyed only by the old document's GUID, with no folder path to fall back on). Reuses the site/subsite selection and scannability-inventory caching from Get-FixItListURLsv5.ps1, reads the Old Site URL / New Site URL CSV, then queries the new site live to confirm each document's new path and read its real new GUID.
+
+### Output File Naming
+`SiteSlug-DocumentUrlLookup-yyyyMMdd-HHmmss.csv`
+
+### Columns
+Site | Subsite | Library | File Name | Extension | Old File Ref | Old Copy Link URL | Old Resolved URL |
+New File Ref | New Found | New Copy Link URL | New Resolved URL | Modified | Notes
+
+
 ## Functional Split
 
 | Need | Script |
@@ -55,3 +68,4 @@ Created By | Last Modified By | Last Modified Date | Permissions
 | Per-document/item summary with occurrence counts | Get-FixItListOverviewOnly.ps1 |
 | Full per-URL detail with link type classification | Get-FixItListURLsv2.ps1 |
 | Deep per-document permissions/access context for a specific site | Get-DocumentAccessReport.ps1 |
+| Old/new document URL lookup for bookmark links that can't be pattern-matched | Get-DocumentUrlLookup.ps1 |

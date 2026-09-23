@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SharePoint URL Fixer</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 32px;
+    max-width: 720px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0 0 6px;
+    color: #1a1a1a;
+  }
+  p.subtitle {
+    color: #6b6f76;
+    margin: 0 0 24px;
+    font-size: 14px;
+  }
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 6px;
+  }
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 90px;
+    padding: 10px 12px;
+    border: 1px solid #d8dade;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+  }
+  textarea:focus { outline: none; border-color: #6264a7; }
+  button {
+    margin-top: 16px;
+    background: #6264a7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: #4f5296; }
+  button.secondary {
+    background: #eceef4;
+    color: #333;
+    margin-left: 8px;
+  }
+  button.secondary:hover { background: #dcdee8; }
+  .result-block {
+    margin-top: 24px;
+    display: none;
+  }
+  .result-box {
+    background: #f7f8fa;
+    border: 1px solid #e0e2e7;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    word-break: break-all;
+    color: #222;
+    margin-top: 8px;
+  }
+  .status {
+    font-size: 13px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+  }
+  .status.ok { background: #e6f4ea; color: #1e7e34; display: block; }
+  .status.warn { background: #fff4e5; color: #a15c00; display: block; }
+  .status.err { background: #fdecea; color: #b3261e; display: block; }
+  a.result-link { color: #6264a7; text-decoration: none; }
+  a.result-link:hover { text-decoration: underline; }
+  .result-actions {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-open {
+    background: #6264a7;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+  }
+  .btn-open:hover { background: #4f5296; }
+  .ctrl-d-hint {
+    font-size: 12px;
+    color: #8b8f97;
+  }
+  .ctrl-d-hint kbd {
+    background: #eceef4;
+    border: 1px solid #d8dade;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: inherit;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>SharePoint URL Fixer</h1>
+    <p class="subtitle">Paste one or more whallc.sharepoint.com links below.</p>
+
+    <label for="input">URL(s) — one per line</label>
+    <textarea id="input" placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."></textarea>
+
+    <div>
+      <button onclick="convert()">Fix URL(s)</button>
+      <button class="secondary" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="result-block" id="resultBlock">
+      <label>Result</label>
+      <div id="results"></div>
+      <button class="secondary" onclick="copyResults()" style="margin-left:0; margin-top:10px;">Copy all</button>
+    </div>
+  </div>
+
+<script>
+// Path-segment rename rules, shared by the main URL path and by any embedded
+// document-path query parameters (id=, sourcedoc=, sourcedocument=).
+const renameRules = [
+  ["whaiis01", "DocumentsandForms"],
+  ["CS", "ClinicalandPatientServices"],
+  ["CRL", "ClinicianResourceLibrary"],
+  ["CtrlAltDelight_Newsletter", "CtrlAltDelightNewsletter"],
+  ["IT&HIM", "IT"],
+  ["LLCM", "LLCMembers"],
+  ["PFS", "PatientFinancialServices"],
+  ["PFTC", "PatientFocusTeamCare"],
+  ["Private", "Staging"],
+  ["SP", "StrategicPlan"],
+  ["TPE", "ThePatientExperience"],
+  ["train", "Training"],
+  ["COVID19%20Resources", "ClinicalandPatientServices/COVID19%20Resources"],
+  ["COVID19%20Workflows", "ClinicalandPatientServices/COVID19%20Workflows"]
+];
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Applies the /sites-insertion + segment-rename rules to a bare path (starting with "/").
+// Returns { path, addedSites, renamedSegments }.
+function fixBarePath(path) {
+  const sitesAlready = /^\/sites(\/|$)/i.test(path);
+  let result = path;
+  let addedSites = false;
+  if (!sitesAlready) {
+    result = "/sites" + result;
+    addedSites = true;
+  }
+
+  const renamedSegments = [];
+  renameRules.forEach(([from, to]) => {
+    const segmentPattern = new RegExp("\\/" + escapeRegex(from) + "(?=\\/|$)", "g");
+    if (segmentPattern.test(result)) {
+      result = result.replace(segmentPattern, "/" + to);
+      renamedSegments.push("/" + from + " → /" + to);
+    }
+  });
+
+  return { path: result, addedSites, renamedSegments };
+}
+
+// Fixes a document-path query parameter value (e.g. the value of id= or sourcedoc=).
+// These values are typically percent-encoded server-relative paths, like
+// "%2FCS%2FUltrasound%20Department%2Ffile.pdf". Values with no path separators
+// at all (e.g. a bare GUID from sourcedoc=) are left untouched.
+// Returns { value, changed, renamedSegments }.
+function fixPathQueryValue(rawValue) {
+  const usesEncodedSlash = /%2F/i.test(rawValue);
+  const usesLiteralSlash = rawValue.indexOf("/") !== -1;
+  if (!usesEncodedSlash && !usesLiteralSlash) {
+    return { value: rawValue, changed: false, renamedSegments: [] };
+  }
+
+  let normalized = usesEncodedSlash ? rawValue.replace(/%2F/gi, "/") : rawValue;
+  const hadLeadingSlash = normalized.startsWith("/");
+  if (!hadLeadingSlash) normalized = "/" + normalized;
+
+  const { path, addedSites, renamedSegments } = fixBarePath(normalized);
+  let result = hadLeadingSlash ? path : path.slice(1);
+  if (usesEncodedSlash) result = result.replace(/\//g, "%2F");
+
+  return { value: result, changed: addedSites || renamedSegments.length > 0, renamedSegments };
+}
+
+// Finds id=, sourcedoc=, sourcedocument=, and parent= query parameters in a URL and applies
+// fixPathQueryValue to each one's value. Returns { url, changed, renamedSegments }.
+function fixDocumentIdParams(url) {
+  let changed = false;
+  let renamedSegments = [];
+  const updatedUrl = url.replace(/([?&](?:id|sourcedoc|sourcedocument|parent)=)([^&]*)/gi, (match, paramPrefix, paramValue) => {
+    const fixedParam = fixPathQueryValue(paramValue);
+    if (fixedParam.changed) {
+      changed = true;
+      renamedSegments = renamedSegments.concat(fixedParam.renamedSegments);
+    }
+    return paramPrefix + fixedParam.value;
+  });
+  return { url: updatedUrl, changed, renamedSegments };
+}
+
+// "Copy link" shortcuts (:w:/r/.../file.docx?d=...&csf=1&web=1&e=...) carry a compact-encoded
+// GUID in d= (plus a csf= flag and an e= sharing-tracking token) that identifies one specific
+// copy of the file. Since migrated documents are copies with brand-new item GUIDs, this old
+// GUID can never be translated to the new one — but the folder path already in the URL (fixed
+// above) is enough on its own for SharePoint to resolve the file, so we drop these stale
+// params rather than ship a broken/mismatched identifier. Returns { url, removed }.
+function stripLegacyDocIdParams(url) {
+  if (!/[?&]d=/i.test(url)) return { url, removed: false };
+  let stripped = url.replace(/[?&](?:d|csf|e)=[^&]*/gi, "");
+  stripped = stripped.replace(/[?&]{2,}/, m => m[0]).replace(/[?&]$/, "");
+  if (!stripped.includes("?")) stripped = stripped.replace(/&/, "?");
+  return { url: stripped, removed: true };
+}
+
+// Doc.aspx links (e.g. .../CS/_layouts/15/Doc.aspx?sourcedoc={GUID}&file=Name.docx) identify the
+// file purely by a GUID with no folder path anywhere in the URL. That GUID belongs to the old
+// copy and there's no way to derive the new copy's GUID from it, so these can't be auto-fixed.
+function isUnresolvableDocAspxLink(url) {
+  return /_layouts\/15\/doc\.aspx/i.test(url) && /[?&]sourcedoc=/i.test(url);
+}
+
+// Maps a file extension to the Office "open in browser" shortcut code (:w:/:x:/:p:/:b:) so a
+// bare file link (which would otherwise launch the desktop app) gets rewritten to reliably open
+// in the web app instead.
+const OFFICE_EXTENSION_CODES = {
+  doc: "w", docx: "w", docm: "w",
+  xls: "x", xlsx: "x", xlsm: "x",
+  ppt: "p", pptx: "p", pptm: "p",
+  pdf: "b"
+};
+
+function detectOfficeCode(pathAndQuery) {
+  const lastSegment = pathAndQuery.split("?")[0].split("/").pop() || "";
+  const extMatch = lastSegment.match(/\.([a-z0-9]+)$/i);
+  return extMatch ? OFFICE_EXTENSION_CODES[extMatch[1].toLowerCase()] || null : null;
+}
+
+function fixUrl(raw) {
+  const url = raw.trim();
+  if (!url) return null;
+
+  // 1. Find the protocol + host.
+  const hostMatch = url.match(/^(https?:\/\/)?(whallc\.sharepoint\.com)/i);
+  if (!hostMatch) {
+    return { original: url, fixed: url, note: "err:Doesn't look like a whallc.sharepoint.com link — left unchanged." };
+  }
+  const protocol = hostMatch[1] || "https://";
+  const host = hostMatch[2];
+  const afterHost = url.slice(hostMatch[0].length);
+
+  // 2. Check for an Office doc-type/permission prefix right after the host,
+  //    e.g. /:w:/r/  or  /:x:/  or  /:p:/r/  (single letter code, optional access segment).
+  const prefixMatch = afterHost.match(/^\/:[a-zA-Z]:(?:\/[a-zA-Z]+)?\//);
+  let prefix = prefixMatch ? prefixMatch[0] : "";
+  let afterPrefix = prefixMatch ? afterHost.slice(prefix.length) : afterHost;
+
+  // 2b. A bare file link (no prefix, not already a Doc.aspx redirect) would launch the desktop
+  //     app by default, so synthesize the matching web-app prefix from the file's extension.
+  let addedWebPrefix = false;
+  let webPrefixCode = null;
+  if (!prefix && !/_layouts\/15\/doc\.aspx/i.test(afterHost)) {
+    const officeCode = detectOfficeCode(afterHost);
+    if (officeCode) {
+      prefix = "/:" + officeCode + ":/r/";
+      afterPrefix = afterHost.replace(/^\//, "");
+      addedWebPrefix = true;
+      webPrefixCode = officeCode;
+    }
+  }
+
+  // 3. Check whether /sites is already present in the right spot.
+  //    - With a prefix, afterPrefix has no leading slash (consumed by the prefix), so look for "sites/".
+  //    - Without one, afterPrefix still has its leading slash, so look for "/sites/".
+  const alreadyHasSites = prefix
+    ? /^sites\//i.test(afterPrefix)
+    : /^\/sites\//i.test(afterPrefix);
+
+  let fixed;
+  let addedSites;
+  if (alreadyHasSites) {
+    fixed = protocol + host + prefix + afterPrefix;
+    addedSites = false;
+  } else {
+    // 4. Insert /sites in the right place.
+    const insertedPart = prefix ? "sites/" + afterPrefix : "/sites" + afterPrefix;
+    fixed = protocol + host + prefix + insertedPart;
+    addedSites = true;
+  }
+
+  // 5. Rename known site path segments (e.g. "/CS" -> "/ClinicalandPatientServices") wherever
+  //    they appear as their own path segment, not as part of another word (so "/CSV" is untouched).
+  const renamedSegments = [];
+  renameRules.forEach(([from, to]) => {
+    const segmentPattern = new RegExp("\\/" + escapeRegex(from) + "(?=\\/|$)", "g");
+    if (segmentPattern.test(fixed)) {
+      fixed = fixed.replace(segmentPattern, "/" + to);
+      renamedSegments.push("/" + from + " → /" + to);
+    }
+  });
+  const csRenamed = renamedSegments.length > 0;
+
+  // 6. Apply the same fixes to any id=/sourcedoc=/sourcedocument= query parameter,
+  //    since these usually carry a duplicate copy of the document's path or a GUID.
+  const idFix = fixDocumentIdParams(fixed);
+  fixed = idFix.url;
+  const idParamsChanged = idFix.changed;
+
+  // 7. A Doc.aspx link has no folder path at all — only a stale GUID — so it can't be repaired.
+  if (isUnresolvableDocAspxLink(fixed)) {
+    return {
+      original: url,
+      fixed: fixed,
+      note: "err:This is a resolved Doc.aspx link keyed only by the old document's GUID (sourcedoc=), with no folder path to fall back on. The migrated copy has a new GUID that can't be derived from this link — open the document's folder in the new site and copy a fresh link instead."
+    };
+  }
+
+  // 8. Shortcut links (?d=...) carry a per-copy GUID that can't be translated either, but the
+  //    folder path is already present and fixed, so SharePoint can resolve the file without it.
+  const docIdStrip = stripLegacyDocIdParams(fixed);
+  fixed = docIdStrip.url;
+
+  let note;
+  const parts = [];
+  if (addedWebPrefix) parts.push("added :" + webPrefixCode + ":/r/ so it opens in the web app instead of a desktop app");
+  if (addedSites) parts.push("Added /sites");
+  if (csRenamed) parts.push("renamed " + renamedSegments.join(", "));
+  if (idParamsChanged) parts.push("updated the id/sourcedoc/parent path(s) in the query string to match");
+  if (docIdStrip.removed) parts.push("removed the old document's id/csf/e tracking params (the fixed folder path is enough for SharePoint to resolve the new copy)");
+
+  if (parts.length > 0) {
+    note = "ok:" + parts.join(", ") + ".";
+  } else {
+    note = "warn:Already has /sites — left unchanged.";
+  }
+
+  return { original: url, fixed: fixed, note: note };
+}
+
+function convert() {
+  const input = document.getElementById('input').value;
+  const lines = input.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const resultsDiv = document.getElementById('results');
+  const statusDiv = document.getElementById('status');
+  const resultBlock = document.getElementById('resultBlock');
+
+  resultsDiv.innerHTML = '';
+  statusDiv.style.display = 'none';
+
+  if (lines.length === 0) {
+    statusDiv.className = 'status err';
+    statusDiv.textContent = 'Please paste at least one URL.';
+    statusDiv.style.display = 'block';
+    return;
+  }
+
+  let okCount = 0, warnCount = 0, errCount = 0;
+
+  lines.forEach(line => {
+    const result = fixUrl(line);
+    const sepIndex = result.note.indexOf(':');
+    const level = result.note.slice(0, sepIndex);
+    const note = result.note.slice(sepIndex + 1);
+    if (level === 'ok') okCount++;
+    else if (level === 'warn') warnCount++;
+    else errCount++;
+
+    const box = document.createElement('div');
+    box.className = 'result-box';
+
+    const noteEl = document.createElement('div');
+    noteEl.style.marginBottom = '4px';
+    noteEl.style.fontSize = '11px';
+    noteEl.textContent = note;
+
+    if (level === 'err') {
+      // No usable fixed URL for this case — showing it as a link/copy target would look "fixed".
+      noteEl.style.color = '#b3261e';
+      noteEl.style.fontWeight = '600';
+      const original = document.createElement('div');
+      original.style.color = '#888';
+      original.style.marginTop = '4px';
+      original.textContent = 'Original (unchanged): ' + result.original;
+      box.appendChild(noteEl);
+      box.appendChild(original);
+      resultsDiv.appendChild(box);
+      return;
+    }
+
+    noteEl.style.color = '#888';
+
+    const link = document.createElement('a');
+    link.className = 'result-link';
+    link.href = result.fixed;
+    link.target = '_blank';
+    link.textContent = result.fixed;
+
+    const actions = document.createElement('div');
+    actions.className = 'result-actions';
+
+    const openBtn = document.createElement('button');
+    openBtn.className = 'btn-open';
+    openBtn.textContent = 'Open in new tab';
+    openBtn.addEventListener('click', () => window.open(result.fixed, '_blank'));
+
+    const hint = document.createElement('span');
+    hint.className = 'ctrl-d-hint';
+    hint.innerHTML = 'Once it opens, press <kbd>Ctrl+D</kbd> to save it as an Edge favorite.';
+
+    actions.appendChild(openBtn);
+    actions.appendChild(hint);
+
+    box.appendChild(noteEl);
+    box.appendChild(link);
+    box.appendChild(actions);
+    resultsDiv.appendChild(box);
+  });
+
+  resultBlock.style.display = 'block';
+
+  let summary = [];
+  if (okCount) summary.push(okCount + ' fixed');
+  if (warnCount) summary.push(warnCount + ' already correct');
+  if (errCount) summary.push(errCount + ' not recognized');
+
+  statusDiv.className = 'status ' + (errCount ? 'warn' : 'ok');
+  statusDiv.textContent = summary.join(', ') + '.';
+  statusDiv.style.display = 'block';
+}
+
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('resultBlock').style.display = 'none';
+  document.getElementById('status').style.display = 'none';
+}
+
+function copyResults() {
+  const links = Array.from(document.querySelectorAll('#results a')).map(a => a.href);
+  if (links.length === 0) return;
+  navigator.clipboard.writeText(links.join('\n')).then(() => {
+    const statusDiv = document.getElementById('status');
+    statusDiv.className = 'status ok';
+    statusDiv.textContent = 'Copied to clipboard!';
+    statusDiv.style.display = 'block';
+  });
+}
+</script>
+</body>
+</html>
