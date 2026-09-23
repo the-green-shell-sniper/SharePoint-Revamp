@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "share-point-url-fixer-client-side-solution",
+    "id": "9ba348e3-9d0d-4d23-8e2e-0c060b45230d",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "SharePointUrlFixer description"
+      },
+      "longDescription": {
+        "default": "SharePointUrlFixer description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "share-point-url-fixer Feature",
+        "description": "The feature that activates elements of the share-point-url-fixer solution.",
+        "id": "f3c91a1e-8294-4f2c-bb73-3e907c170c99",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/share-point-url-fixer.sppkg"
+  }
+}

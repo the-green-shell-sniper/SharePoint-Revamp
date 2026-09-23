@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "share-point-url-fixer-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sharePointUrlFixer/SharePointUrlFixerWebPart.js",
+          "manifest": "./src/webparts/sharePointUrlFixer/SharePointUrlFixerWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "SharePointUrlFixerWebPartStrings": "lib/webparts/sharePointUrlFixer/loc/{locale}.js"
+  }
+}
