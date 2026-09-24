@@ -56,11 +56,11 @@
 
 .PARAMETER MasterFolder
     Folder containing the per-site [sitename]-master.csv lookup inventories.
-    If omitted, defaults to a Masters subfolder under OutputFolder.
+    If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\Masters folder.
 
 .PARAMETER FixerOutputFolder
     Folder where filtered [sitename]-fixer.csv files are written. If omitted,
-    defaults to a FixerFiles subfolder under OutputFolder.
+    defaults to the server's DocumentUrlLookup-OutputFiles\FixerFiles folder.
 
 .PARAMETER StateRootFolder
     Folder used to cache the subsite scannability inventory between runs.
@@ -91,20 +91,18 @@ param(
     [Parameter(Mandatory = $false)]
     [string]$ClientId,
 
-    # Left blank by default: $PSScriptRoot is empty when this script's contents
-    # are pasted directly into a console instead of run as a .ps1 file. Leave
-    # blank to be prompted (file picker, or a typed path) at runtime.
+    # Leave blank to be prompted (file picker, or a typed path) at runtime.
     [Parameter(Mandatory = $false)]
     [string]$UrlMappingCsvPath = "",
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputFolder = "C:\Users\bposey\OneDrive - Womens Healthcare Associates LLC\Shortcuts\Gary Henderson's files - SharePoint-Site-Migration-072026\Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles",
+    [string]$OutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles",
 
     [Parameter(Mandatory = $false)]
-    [string]$MasterFolder = "",
+    [string]$MasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\Masters",
 
     [Parameter(Mandatory = $false)]
-    [string]$FixerOutputFolder = "",
+    [string]$FixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\FixerFiles",
 
     [Parameter(Mandatory = $false)]
     [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\Checkpoints-and-Caches",
@@ -1854,7 +1852,7 @@ if ($scanDocumentContent) {
                 })
         }
 
-        Export-CsvTableWithRetry -Path $embeddedOutputPath -Rows @($embeddedRows)
+        Export-CsvTableWithRetry -Path $embeddedOutputPath -Rows $embeddedRows.ToArray()
         Remove-StaleLookupTables -Folder $OutputFolder -Identifier $siteIdentifier -KeepPath $embeddedOutputPath -Suffix '-EmbeddedLinks'
         Write-Host "`nWrote $($embeddedRows.Count) unique embedded link row(s): $embeddedOutputPath"
         Write-Host ("  Resolved by GUID: {0}   By path: {1}   Not resolved (document outside this run's scope): {2}" -f $resolvedByGuid, $resolvedByPath, $unresolved)
