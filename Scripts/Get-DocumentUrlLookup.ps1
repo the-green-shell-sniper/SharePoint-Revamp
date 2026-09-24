@@ -1349,7 +1349,7 @@ for ($i = 0; $i -lt $scopeSubsites.Count; $i++) {
 Write-Host "     0. ALL listed sites/webs"
 
 $selectedIndices = $null
-while (-not $selectedIndices) {
+while ($null -eq $selectedIndices) {
     $pickRaw = Read-Host "`nPick one or more sites/webs by number (comma-separated, e.g. 1,4,7). Use 0 for ALL listed sites/webs"
     if ([string]::IsNullOrWhiteSpace($pickRaw)) {
         Write-Host "  Selection is required."
