@@ -1138,7 +1138,19 @@ function Publish-MasterLookupTable {
         [Parameter(Mandatory = $true)][string]$MasterPath
     )
 
-    Copy-CsvFileWithRetry -SourcePath $TempPath -DestinationPath $MasterPath
+    $mergedRowsByKey = Import-ExistingLookupTable -Path $MasterPath -KeyProperty 'OldFileRef'
+    foreach ($row in @(Import-Csv -Path $TempPath)) {
+        $key = ([string]$row.OldFileRef).Trim().ToLowerInvariant()
+        if ([string]::IsNullOrWhiteSpace($key)) { continue }
+        $mergedRowsByKey[$key] = $row
+    }
+
+    $mergedRows = New-Object System.Collections.Generic.List[Object]
+    foreach ($row in $mergedRowsByKey.Values) {
+        $mergedRows.Add($row)
+    }
+
+    Export-CsvTableWithRetry -Path $MasterPath -Rows $mergedRows.ToArray()
     Remove-FileWithRetry -Path $TempPath
 }
 
