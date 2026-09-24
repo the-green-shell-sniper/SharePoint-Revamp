@@ -58,6 +58,10 @@
     Folder containing the per-site [sitename]-master.csv lookup inventories.
     If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\Masters folder.
 
+.PARAMETER TempMasterFolder
+    Folder where timestamped temporary master scan files are written.
+    If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\Masters\Temp folder.
+
 .PARAMETER FixerOutputFolder
     Folder where filtered [sitename]-fixer.csv files are written. If omitted,
     defaults to the server's DocumentUrlLookup-OutputFiles\FixerFiles folder.
@@ -100,6 +104,9 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$MasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\Masters",
+
+    [Parameter(Mandatory = $false)]
+    [string]$TempMasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\Masters\Temp",
 
     [Parameter(Mandatory = $false)]
     [string]$FixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\FixerFiles",
@@ -1240,6 +1247,7 @@ if ([string]::IsNullOrWhiteSpace($FixerOutputFolder)) {
 
 New-DirectoryIfMissing -Path $OutputFolder
 New-DirectoryIfMissing -Path $MasterFolder
+New-DirectoryIfMissing -Path $TempMasterFolder
 New-DirectoryIfMissing -Path $FixerOutputFolder
 New-DirectoryIfMissing -Path $StateRootFolder
 
@@ -1547,7 +1555,7 @@ foreach ($subsite in $selectedSubsites) {
 
     $siteIdentifier = Get-ShortSiteIdentifier -Subsite $subsite -SiteMatch $siteMatch
     $masterPath = Get-MasterLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier
-    $outputPath = Get-TemporaryLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
+    $outputPath = Get-TemporaryLookupTablePath -Folder $TempMasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
     $fixerPath = Get-FixerLookupTablePath -Folder $FixerOutputFolder -Identifier $siteIdentifier
     $mergedRowsByKey = if (Test-Path -Path $masterPath) { Import-ExistingLookupTable -Path $masterPath -KeyProperty 'OldFileRef' } else { [ordered]@{} }
     $counterCheckpointPath = Get-CounterCheckpointPath -StateRoot $StateRootFolder -ScopeUrl $subsiteUrl -SchemaVersion $ScriptSchemaVersion
