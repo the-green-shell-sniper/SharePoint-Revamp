@@ -130,7 +130,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $ScriptSchemaVersion = 'DocumentUrlLookup-v1'
-$InventoryCacheSchemaVersion = 'v1'
+$InventoryCacheSchemaVersion = 'v2'
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
 $FixerRequiredExtensions = @('.docx', '.doc', '.pdf', '.pptx', '.xls', '.xlsx', '.ppt', '.vsdx', '.vsd', '.png', '.aspx', '.one')
 $FileLookupListBaseTemplates = @(101, 119, 850)
