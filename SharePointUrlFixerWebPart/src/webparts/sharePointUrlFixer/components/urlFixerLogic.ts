@@ -241,19 +241,23 @@ function decodeUrlPart(value: string): string {
   catch { return value.toLowerCase(); }
 }
 
+function normalizeDocumentGuid(value: string): string {
+  return decodeUrlPart(value).replace(/[{}-]/g, '').replace(/^[a-z](?=[0-9a-f]{32}$)/i, '');
+}
+
 function getUrlSignature(url: string): string {
   try {
     const parsed = new URL(url);
     const path = decodeUrlPart(parsed.pathname).replace(/\/$/, '');
     const params = parsed.searchParams;
     if (/_layouts\/15\/doc\.aspx$/i.test(path)) {
-      return `doc|${decodeUrlPart(params.get('sourcedoc') || '')}|${decodeUrlPart(params.get('file') || '')}`;
+      return `guid|${normalizeDocumentGuid(params.get('sourcedoc') || '')}`;
     }
     if (params.has('id') || params.has('parent')) {
       return `pdf|${path}|${decodeUrlPart(params.get('id') || '')}|${decodeUrlPart(params.get('parent') || '')}`;
     }
     if (params.has('d')) {
-      return `copy|${path}|${decodeUrlPart(params.get('d') || '')}`;
+      return `guid|${normalizeDocumentGuid(params.get('d') || '')}`;
     }
     return `path|${path.replace(/^\/:\w:\/r/i, '')}`;
   } catch {
