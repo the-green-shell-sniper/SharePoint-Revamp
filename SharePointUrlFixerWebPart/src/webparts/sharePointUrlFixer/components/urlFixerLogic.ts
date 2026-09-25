@@ -187,6 +187,7 @@ export function fixUrl(raw: string): IFixResult {
 // resolve a link (e.g. a GUID-only Doc.aspx link) or the pattern-fixed URL 404s. ---
 
 const LOOKUP_FOLDER = '/sites/SharePointURLFixer/URLLookupTables';
+const INDEX_FILE_NAME = 'URLFixerIndex.csv';
 
 function parseCsvLine(line: string): string[] {
   const values: string[] = [];
@@ -219,15 +220,20 @@ function parseLookupCsv(text: string): ILookupRow[] {
   });
 }
 
-function getLookupFileIdentifier(url: string): string {
+function normalizeUrlBase(value: string): string {
   try {
-    const path = new URL(url).pathname.replace(/\/$/, '');
-    const parts = path.split('/').filter(Boolean);
-    if (parts[0]?.toLowerCase() === 'sites') return `sites-${parts[1] || ''}`;
-    return parts[0] || 'WHASharepointCentralPark';
+    const parsed = new URL(value);
+    return `${parsed.origin}${parsed.pathname.replace(/\/$/, '')}`.toLowerCase();
   } catch {
-    return '';
+    return value.trim().replace(/\/$/, '').toLowerCase();
   }
+}
+
+function findIndexRow(url: string, indexRows: ILookupRow[]): ILookupRow | undefined {
+  const normalizedInput = normalizeUrlBase(url);
+  return indexRows
+    .filter((row) => row.OldBaseURL && normalizedInput.startsWith(normalizeUrlBase(row.OldBaseURL)))
+    .sort((a, b) => normalizeUrlBase(b.OldBaseURL).length - normalizeUrlBase(a.OldBaseURL).length)[0];
 }
 
 function decodeUrlPart(value: string): string {
@@ -273,6 +279,7 @@ export interface ILookupFile {
 
 export class LookupTableClient {
   private lookupFilesPromise: Promise<ILookupFile[]> | undefined;
+  private lookupIndexPromise: Promise<ILookupRow[]> | undefined;
   private readonly lookupRowsByFile = new Map<string, ILookupRow[]>();
 
   constructor(private readonly spHttpClient: SPHttpClient, private readonly siteAbsoluteUrl: string) {}
@@ -291,35 +298,58 @@ export class LookupTableClient {
     return this.lookupFilesPromise;
   }
 
+  private async getLookupIndex(): Promise<ILookupRow[]> {
+    if (!this.lookupIndexPromise) {
+      const files = await this.getLookupFiles();
+      const indexFile = files.find((file) => file.Name.toLowerCase() === INDEX_FILE_NAME.toLowerCase());
+      if (!indexFile) throw new Error(`Could not find ${INDEX_FILE_NAME} in the URL Lookup Tables library.`);
+
+      this.lookupIndexPromise = this.spHttpClient
+        .get(`${this.siteAbsoluteUrl}${indexFile.ServerRelativeUrl}`, SPHttpClient.configurations.v1)
+        .then((response: SPHttpClientResponse) => {
+          if (!response.ok) throw new Error(`Could not load ${INDEX_FILE_NAME} (${response.status}).`);
+          return response.text();
+        })
+        .then(parseLookupCsv);
+    }
+    return this.lookupIndexPromise;
+  }
+
   public async findLookupRow(url: string): Promise<ILookupRow | undefined> {
+    const indexRows = await this.getLookupIndex();
+    const indexRow = findIndexRow(url, indexRows);
+    if (!indexRow) return undefined;
+
+    if (!indexRow.NewBaseURL) {
+      return {
+        NewFound: 'No',
+        Notes: 'This old site has no matching new site. Contact the help desk for assistance.'
+      };
+    }
+
     const files = await this.getLookupFiles();
-    const identifier = getLookupFileIdentifier(url);
-    // eslint-disable-next-line @rushstack/security/no-unsafe-regexp -- identifier is derived from our own renameRules/site-slug logic, never raw user input
-    const candidates = files.filter((file) => new RegExp(`-${identifier.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.csv$`, 'i').test(file.Name));
-    const filesToCheck = candidates.length ? candidates : files;
+    const fixerFile = files.find((file) => file.Name.toLowerCase() === indexRow.FixerCsvFileName.toLowerCase());
+    if (!fixerFile) return undefined;
     const inputSignature = getUrlSignature(url);
     const inputFileRef = getOldFileRefSignature(url);
 
-    for (const file of filesToCheck) {
-      let rows = this.lookupRowsByFile.get(file.Name);
-      if (!rows) {
-        const response = await this.spHttpClient.get(
-          `${this.siteAbsoluteUrl}${file.ServerRelativeUrl}`,
-          SPHttpClient.configurations.v1
-        );
-        if (!response.ok) continue;
-        rows = parseLookupCsv(await response.text());
-        this.lookupRowsByFile.set(file.Name, rows);
-      }
-      const row = rows.find((candidate) => {
-        const exactSignatureMatch = [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl]
-          .some((value) => value && getUrlSignature(value) === inputSignature);
-        const fileRefMatch = candidate.OldFileRef && getOldFileRefSignature(candidate.OldCopyLinkUrl) === inputFileRef;
-        return exactSignatureMatch || fileRefMatch;
-      });
-      if (row) return row;
+    let rows = this.lookupRowsByFile.get(fixerFile.Name);
+    if (!rows) {
+      const response = await this.spHttpClient.get(
+        `${this.siteAbsoluteUrl}${fixerFile.ServerRelativeUrl}`,
+        SPHttpClient.configurations.v1
+      );
+      if (!response.ok) return undefined;
+      rows = parseLookupCsv(await response.text());
+      this.lookupRowsByFile.set(fixerFile.Name, rows);
     }
-    return undefined;
+
+    return rows.find((candidate) => {
+      const exactSignatureMatch = [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl]
+        .some((value) => value && getUrlSignature(value) === inputSignature);
+      const fileRefMatch = candidate.OldFileRef && getOldFileRefSignature(candidate.OldCopyLinkUrl) === inputFileRef;
+      return exactSignatureMatch || fileRefMatch;
+    });
   }
 }
 
@@ -351,6 +381,14 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
 
   const lookupRow = await lookupClient.findLookupRow(input);
   if (!lookupRow) return patternResult;
+
+  if (lookupRow.Notes && !lookupRow.NewCopyLinkUrl && !lookupRow.NewResolvedUrl) {
+    return {
+      original: input,
+      fixed: input,
+      note: `err:${lookupRow.Notes}`
+    };
+  }
 
   const isResolved = /_layouts\/15\/doc\.aspx|[?&](?:id|parent)=/i.test(input);
   return {
