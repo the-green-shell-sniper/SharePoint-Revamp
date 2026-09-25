@@ -886,6 +886,42 @@ function Get-PathFromEmbeddedUrl {
     return $path.TrimEnd('/').ToLowerInvariant()
 }
 
+function Get-NewDocumentLocationOverride {
+    param([Parameter(Mandatory = $true)][string]$FileRef)
+
+    $overrides = @(
+        [PSCustomObject]@{
+            OldLibraryPath = '/2021 E&M Coding Changes'
+            NewBase        = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+            NewLinkBase    = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+        }
+        [PSCustomObject]@{
+            OldLibraryPath = '/2021 EM Coding Changes'
+            NewBase        = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+            NewLinkBase    = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+        }
+        [PSCustomObject]@{
+            OldLibraryPath = '/COVID19 Resources'
+            NewBase        = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Resources'
+            NewLinkBase    = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Resources'
+        }
+        [PSCustomObject]@{
+            OldLibraryPath = '/COVID19 Workflows'
+            NewBase        = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Workflows'
+            NewLinkBase    = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Workflows'
+        }
+    )
+
+    foreach ($override in $overrides) {
+        if ($FileRef.Equals($override.OldLibraryPath, [System.StringComparison]::OrdinalIgnoreCase) -or
+            $FileRef.StartsWith(($override.OldLibraryPath + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $override
+        }
+    }
+
+    return $null
+}
+
 function Get-ExistingCsvSelectionPath {
     param([Parameter(Mandatory = $false)][string]$DefaultDirectory = '')
 
@@ -1640,7 +1676,9 @@ foreach ($subsite in $selectedSubsites) {
 
             $rowKey = $fileRef.TrimEnd('/').ToLowerInvariant()
             $existingRow = $mergedRowsByKey[$rowKey]
+            $locationOverride = Get-NewDocumentLocationOverride -FileRef $fileRef
             $canSkipLiveLookup = $librarySupportsFileLookup -and $SkipAlreadyConfirmedDocuments -and $existingRow -and
+            (-not $locationOverride) -and
             ($existingRow.NewFound -eq 'Yes') -and
             ([string]$existingRow.Modified -eq [string]$modifiedValue)
 
@@ -1670,31 +1708,44 @@ foreach ($subsite in $selectedSubsites) {
             else {
                 $relativeWithinSite = $fileRef.Substring($oldSiteServerRelative.Length)
                 $relativeDirWithinSite = $fileDirRef.Substring($oldSiteServerRelative.Length)
-                $newFileRefForQuery = $newSiteScanServerRelative + $relativeWithinSite
-                $newFileRef = $newSiteLinkServerRelative + $relativeWithinSite
-                $newFileDirRefForLink = $newSiteLinkServerRelative + $relativeDirWithinSite
+                $lookupScanBaseAbsolute = $newSiteScanBaseAbsolute
+                $lookupScanServerRelative = $newSiteScanServerRelative
+                $lookupLinkServerRelative = $newSiteLinkServerRelative
+                if ($locationOverride) {
+                    $relativeWithinOverrideLibrary = $fileRef.Substring($locationOverride.OldLibraryPath.Length)
+                    $relativeDirWithinOverrideLibrary = $fileDirRef.Substring($locationOverride.OldLibraryPath.Length)
+                    $lookupScanBaseAbsolute = $locationOverride.NewBase
+                    $lookupScanServerRelative = ([Uri]$locationOverride.NewBase).AbsolutePath.TrimEnd('/')
+                    $lookupLinkServerRelative = ([Uri]$locationOverride.NewLinkBase).AbsolutePath.TrimEnd('/')
+                    $relativeWithinSite = $relativeWithinOverrideLibrary
+                    $relativeDirWithinSite = $relativeDirWithinOverrideLibrary
+                }
 
-                if (-not $newConnectionsByBase.ContainsKey($newSiteScanBaseAbsolute)) {
+                $newFileRefForQuery = $lookupScanServerRelative + $relativeWithinSite
+                $newFileRef = $lookupLinkServerRelative + $relativeWithinSite
+                $newFileDirRefForLink = $lookupLinkServerRelative + $relativeDirWithinSite
+
+                if (-not $newConnectionsByBase.ContainsKey($lookupScanBaseAbsolute)) {
                     try {
-                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = Connect-ValidatedPnP -Url $newSiteScanBaseAbsolute -ClientId $ClientId
+                        $newConnectionsByBase[$lookupScanBaseAbsolute] = Connect-ValidatedPnP -Url $lookupScanBaseAbsolute -ClientId $ClientId
                     }
                     catch {
-                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = $null
-                        Write-Warning "  Could not connect to new site $newSiteScanBaseAbsolute : $($_.Exception.Message)"
+                        $newConnectionsByBase[$lookupScanBaseAbsolute] = $null
+                        Write-Warning "  Could not connect to new site $lookupScanBaseAbsolute : $($_.Exception.Message)"
                     }
                 }
 
-                $newConn = $newConnectionsByBase[$newSiteScanBaseAbsolute]
+                $newConn = $newConnectionsByBase[$lookupScanBaseAbsolute]
                 if (-not $newConn) {
                     $notes = 'Could not connect to new site.'
                 }
                 else {
                     try {
-                        $newItemResult = Invoke-PnPConnectionOperation -Url $newSiteScanBaseAbsolute -ClientId $ClientId -Connection $newConn -Label ('Lookup new item: ' + $newFileRefForQuery) -MaxAttempts 2 -Operation {
+                        $newItemResult = Invoke-PnPConnectionOperation -Url $lookupScanBaseAbsolute -ClientId $ClientId -Connection $newConn -Label ('Lookup new item: ' + $newFileRefForQuery) -MaxAttempts 2 -Operation {
                             param($activeConnection)
                             Get-PnPFile -Url $newFileRefForQuery -AsListItem -Connection $activeConnection
                         }
-                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = $newItemResult.Connection
+                        $newConnectionsByBase[$lookupScanBaseAbsolute] = $newItemResult.Connection
                         $newItem = $newItemResult.Result
                         $newUniqueId = $newItem.FieldValues['UniqueId']
 
