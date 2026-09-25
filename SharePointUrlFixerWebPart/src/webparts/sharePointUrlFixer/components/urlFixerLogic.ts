@@ -223,7 +223,10 @@ function parseLookupCsv(text: string): ILookupRow[] {
 function normalizeUrlBase(value: string): string {
   try {
     const parsed = new URL(value);
-    return `${parsed.origin}${parsed.pathname.replace(/\/$/, '')}`.toLowerCase();
+    const normalizedPath = parsed.pathname
+      .replace(/^\/:[a-z]:(?:\/[a-z]+)?\//i, '/')
+      .replace(/\/$/, '');
+    return `${parsed.origin}${normalizedPath}`.toLowerCase();
   } catch {
     return value.trim().replace(/\/$/, '').toLowerCase();
   }
