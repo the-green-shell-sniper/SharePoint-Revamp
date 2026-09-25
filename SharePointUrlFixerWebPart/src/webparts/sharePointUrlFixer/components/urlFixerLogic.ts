@@ -277,6 +277,20 @@ export interface ILookupFile {
   ServerRelativeUrl: string;
 }
 
+function getAbsoluteServerRelativeUrl(siteAbsoluteUrl: string, serverRelativeUrl: string): string {
+  return new URL(siteAbsoluteUrl).origin + serverRelativeUrl;
+}
+
+async function readJsonResponse<T>(response: SPHttpClientResponse, context: string): Promise<T> {
+  const text = await response.text();
+  if (!response.ok) throw new Error(`${context} failed (${response.status}).`);
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new Error(`${context} returned HTML instead of JSON. Confirm the URL Lookup Tables library path and user permissions.`);
+  }
+}
+
 export class LookupTableClient {
   private lookupFilesPromise: Promise<ILookupFile[]> | undefined;
   private lookupIndexPromise: Promise<ILookupRow[]> | undefined;
@@ -286,13 +300,10 @@ export class LookupTableClient {
 
   private async getLookupFiles(): Promise<ILookupFile[]> {
     if (!this.lookupFilesPromise) {
-      const endpoint = `${this.siteAbsoluteUrl}/_api/web/GetFolderByServerRelativeUrl('${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
+      const endpoint = `${this.siteAbsoluteUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
       this.lookupFilesPromise = this.spHttpClient
         .get(endpoint, SPHttpClient.configurations.v1, { headers: { Accept: 'application/json;odata=nometadata' } })
-        .then((response: SPHttpClientResponse) => {
-          if (!response.ok) throw new Error(`Lookup table discovery failed (${response.status}).`);
-          return response.json();
-        })
+        .then((response: SPHttpClientResponse) => readJsonResponse<{ value?: ILookupFile[] }>(response, 'Lookup table discovery'))
         .then((data: { value?: ILookupFile[] }) => (data.value || []).filter((file) => /\.csv$/i.test(file.Name)));
     }
     return this.lookupFilesPromise;
@@ -305,7 +316,7 @@ export class LookupTableClient {
       if (!indexFile) throw new Error(`Could not find ${INDEX_FILE_NAME} in the URL Lookup Tables library.`);
 
       this.lookupIndexPromise = this.spHttpClient
-        .get(`${this.siteAbsoluteUrl}${indexFile.ServerRelativeUrl}`, SPHttpClient.configurations.v1)
+        .get(getAbsoluteServerRelativeUrl(this.siteAbsoluteUrl, indexFile.ServerRelativeUrl), SPHttpClient.configurations.v1)
         .then((response: SPHttpClientResponse) => {
           if (!response.ok) throw new Error(`Could not load ${INDEX_FILE_NAME} (${response.status}).`);
           return response.text();
@@ -336,7 +347,7 @@ export class LookupTableClient {
     let rows = this.lookupRowsByFile.get(fixerFile.Name);
     if (!rows) {
       const response = await this.spHttpClient.get(
-        `${this.siteAbsoluteUrl}${fixerFile.ServerRelativeUrl}`,
+        getAbsoluteServerRelativeUrl(this.siteAbsoluteUrl, fixerFile.ServerRelativeUrl),
         SPHttpClient.configurations.v1
       );
       if (!response.ok) return undefined;
