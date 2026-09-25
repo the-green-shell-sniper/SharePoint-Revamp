@@ -892,23 +892,23 @@ function Get-NewDocumentLocationOverride {
     $overrides = @(
         [PSCustomObject]@{
             OldLibraryPath = '/2021 E&M Coding Changes'
-            NewBase        = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
-            NewLinkBase    = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+            ConnectionBase = 'https://whallc.sharepoint.com/sites/PatientFinancialServices'
+            NewLibraryPath = '/sites/PatientFinancialServices/2021 EM Coding Changes'
         }
         [PSCustomObject]@{
             OldLibraryPath = '/2021 EM Coding Changes'
-            NewBase        = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
-            NewLinkBase    = 'https://whallc.sharepoint.com/sites/PatientFinancialServices/2021 E&M Coding Changes'
+            ConnectionBase = 'https://whallc.sharepoint.com/sites/PatientFinancialServices'
+            NewLibraryPath = '/sites/PatientFinancialServices/2021 EM Coding Changes'
         }
         [PSCustomObject]@{
             OldLibraryPath = '/COVID19 Resources'
-            NewBase        = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Resources'
-            NewLinkBase    = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Resources'
+            ConnectionBase = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+            NewLibraryPath = '/sites/ClinicalandPatientServices/COVID19 Resources'
         }
         [PSCustomObject]@{
             OldLibraryPath = '/COVID19 Workflows'
-            NewBase        = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Workflows'
-            NewLinkBase    = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/COVID19 Workflows'
+            ConnectionBase = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+            NewLibraryPath = '/sites/ClinicalandPatientServices/COVID19 Workflows'
         }
     )
 
@@ -1711,12 +1711,14 @@ foreach ($subsite in $selectedSubsites) {
                 $lookupScanBaseAbsolute = $newSiteScanBaseAbsolute
                 $lookupScanServerRelative = $newSiteScanServerRelative
                 $lookupLinkServerRelative = $newSiteLinkServerRelative
+                $lookupResolvedSiteServerRelative = $newSiteLinkServerRelative
                 if ($locationOverride) {
                     $relativeWithinOverrideLibrary = $fileRef.Substring($locationOverride.OldLibraryPath.Length)
                     $relativeDirWithinOverrideLibrary = $fileDirRef.Substring($locationOverride.OldLibraryPath.Length)
-                    $lookupScanBaseAbsolute = $locationOverride.NewBase
-                    $lookupScanServerRelative = ([Uri]$locationOverride.NewBase).AbsolutePath.TrimEnd('/')
-                    $lookupLinkServerRelative = ([Uri]$locationOverride.NewLinkBase).AbsolutePath.TrimEnd('/')
+                    $lookupScanBaseAbsolute = $locationOverride.ConnectionBase
+                    $lookupScanServerRelative = $locationOverride.NewLibraryPath
+                    $lookupLinkServerRelative = $locationOverride.NewLibraryPath
+                    $lookupResolvedSiteServerRelative = ([Uri]$locationOverride.ConnectionBase).AbsolutePath.TrimEnd('/')
                     $relativeWithinSite = $relativeWithinOverrideLibrary
                     $relativeDirWithinSite = $relativeDirWithinOverrideLibrary
                 }
@@ -1751,7 +1753,7 @@ foreach ($subsite in $selectedSubsites) {
 
                         $newFound = 'Yes'
                         $newCopyLinkUrl = Get-DocumentBrowserUrl -TenantBase $RootUrl -FileRef $newFileRef -Extension $ext -UniqueId $newUniqueId
-                        $newResolvedUrl = Get-ResolvedDocumentUrl -TenantBase $RootUrl -SiteServerRelativeUrl $newSiteLinkServerRelative -FileRef $newFileRef -FolderRef $newFileDirRefForLink -FileName $fileLeaf -Extension $ext -UniqueId $newUniqueId
+                        $newResolvedUrl = Get-ResolvedDocumentUrl -TenantBase $RootUrl -SiteServerRelativeUrl $lookupResolvedSiteServerRelative -FileRef $newFileRef -FolderRef $newFileDirRefForLink -FileName $fileLeaf -Extension $ext -UniqueId $newUniqueId
                         $newFoundCount++
                     }
                     catch {
