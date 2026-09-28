@@ -1,19 +1,26 @@
 .sharePointUrlFixer {
   overflow: hidden;
   padding: 8px 0 16px;
-  color: #1a1a1a;
+  --fixer-primary: #96305B;
+  --fixer-primary-hover: #762447;
+  --fixer-accent: #DF2060;
+  --fixer-sky: #A0DBE5;
+  --fixer-surface: #EFF2F4;
+  --fixer-black: #000000;
+  --fixer-white: #FFFFFF;
+  color: var(--fixer-black);
   max-width: 720px;
 }
 
 .title {
   margin: 0 0 6px;
-  color: #1a1a1a;
+  color: var(--fixer-primary);
   font-size: 24px;
   font-weight: 650;
 }
 
 .subtitle {
-  color: #6b6f76;
+  color: #4f5963;
   margin: 0 0 24px;
   font-size: 14px;
 }
@@ -21,7 +28,7 @@
 .label {
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--fixer-black);
   display: block;
   margin-bottom: 6px;
 }
@@ -39,14 +46,15 @@
 
   &:focus {
     outline: none;
-    border-color: #6264a7;
+    border-color: var(--fixer-primary);
+    box-shadow: 0 0 0 2px rgba(160, 219, 229, 0.65);
   }
 }
 
 .button {
   margin-top: 16px;
-  background: #6264a7;
-  color: #fff;
+  background: var(--fixer-primary);
+  color: var(--fixer-white);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -54,19 +62,29 @@
   font-weight: 600;
   cursor: pointer;
 
+  &:focus-visible {
+    outline: 3px solid var(--fixer-accent);
+    outline-offset: 2px;
+  }
+
   &:hover {
-    background: #4f5296;
+    background: var(--fixer-primary-hover);
   }
 }
 
 .secondaryButton {
   composes: button;
-  background: #eceef4;
-  color: #333;
+  background: var(--fixer-surface);
+  color: var(--fixer-black);
   margin-left: 8px;
 
   &:hover {
-    background: #dcdee8;
+    background: #d8e5e9;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--fixer-accent);
+    outline-offset: 2px;
   }
 }
 
@@ -75,8 +93,8 @@
 }
 
 .resultBox {
-  background: #f7f8fa;
-  border: 1px solid #e0e2e7;
+  background: var(--fixer-surface);
+  border: 1px solid var(--fixer-sky);
   border-radius: 8px;
   padding: 12px;
   font-size: 13px;
@@ -86,7 +104,7 @@
 }
 
 .resultNote {
-  color: #555b66;
+  color: #4f5963;
   font-size: 12px;
   margin-bottom: 6px;
 }
@@ -131,11 +149,12 @@
 }
 
 .resultLink {
-  color: #6264a7;
+  color: var(--fixer-primary);
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
+    color: var(--fixer-accent);
   }
 }
 
@@ -147,9 +166,16 @@
   flex-wrap: wrap;
 }
 
+.saveReminder {
+  color: #6b6f76;
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+
 .openButton {
-  background: #6264a7;
-  color: #fff;
+  background: var(--fixer-primary);
+  color: var(--fixer-white);
   border: none;
   padding: 6px 14px;
   border-radius: 6px;
@@ -159,7 +185,7 @@
   margin: 0;
 
   &:hover {
-    background: #4f5296;
+    background: var(--fixer-primary-hover);
   }
 }
 
