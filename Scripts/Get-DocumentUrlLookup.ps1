@@ -48,8 +48,7 @@
 
 .PARAMETER UrlMappingCsvPath
     Path to the Old Site URL / New Site URL CSV (headers "Old Site URL" and
-    "New Site URL"). Defaults to OldSiteURL-NewSiteURL-Lookup.csv next to
-    this Scripts folder.
+    "New Site URL"). Defaults to the CSV in the server's Support-Files folder.
 
 .PARAMETER OutputFolder
     Parent folder for document lookup output files.
@@ -95,24 +94,24 @@ param(
     [Parameter(Mandatory = $false)]
     [string]$ClientId,
 
-    # Leave blank to be prompted (file picker, or a typed path) at runtime.
+    # Defaults to the relocated server CSV; set blank to select or enter a path at runtime.
     [Parameter(Mandatory = $false)]
-    [string]$UrlMappingCsvPath = "",
+    [string]$UrlMappingCsvPath = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Support-Files\OldSiteURL-NewSiteURL-Lookup.csv",
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles",
+    [string]$OutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles",
 
     [Parameter(Mandatory = $false)]
-    [string]$MasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\Masters",
+    [string]$MasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Masters",
 
     [Parameter(Mandatory = $false)]
-    [string]$TempMasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\Masters\Temp",
+    [string]$TempMasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Masters\Temp",
 
     [Parameter(Mandatory = $false)]
-    [string]$FixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\DocumentUrlLookup-OutputFiles\FixerFiles",
+    [string]$FixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\FixerFiles",
 
     [Parameter(Mandatory = $false)]
-    [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\Checkpoints-and-Caches",
+    [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Checkpoints-and-Caches",
 
     [Parameter(Mandatory = $false)]
     [bool]$UsePersistedInventoryCache = $true,
@@ -1462,7 +1461,7 @@ while (-not $siteUrlMap) {
     }
 
     if ([string]::IsNullOrWhiteSpace($csvPath)) {
-        $csvPath = Get-ExistingCsvSelectionPath -DefaultDirectory $StateRootFolder
+        $csvPath = Get-ExistingCsvSelectionPath -DefaultDirectory (Split-Path -Path $UrlMappingCsvPath -Parent)
     }
 
     if ([string]::IsNullOrWhiteSpace($csvPath)) {
