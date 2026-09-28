@@ -140,6 +140,7 @@ $ErrorActionPreference = "Stop"
 
 $ScriptSchemaVersion = 'DocumentUrlLookup-v1'
 $InventoryCacheSchemaVersion = 'v2'
+$PdfPigAssemblyFolder = 'C:\Users\!bposey\Desktop\PdfPig'
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
 $FixerRequiredExtensions = @('.docx', '.doc', '.pdf', '.pptx', '.xls', '.xlsx', '.ppt', '.vsdx', '.vsd', '.png', '.aspx', '.one')
 $FileLookupListBaseTemplates = @(101, 119, 850)
@@ -750,6 +751,50 @@ function Get-NormalizedExtension {
     return $ext.Trim().ToLowerInvariant()
 }
 
+function Initialize-PdfPig {
+    $requiredAssemblies = @(
+        'UglyToad.PdfPig.Core.dll',
+        'UglyToad.PdfPig.Tokens.dll',
+        'UglyToad.PdfPig.Fonts.dll',
+        'UglyToad.PdfPig.Tokenization.dll',
+        'UglyToad.PdfPig.Package.dll',
+        'UglyToad.PdfPig.dll',
+        'UglyToad.PdfPig.DocumentLayoutAnalysis.dll'
+    )
+
+    $missingAssemblies = @($requiredAssemblies | Where-Object {
+            -not (Test-Path -LiteralPath (Join-Path -Path $PdfPigAssemblyFolder -ChildPath $_))
+        })
+    if ($missingAssemblies.Count -gt 0) {
+        throw "PdfPig is not configured. Copy all seven PdfPig .NET Standard 2.0 DLLs to '$PdfPigAssemblyFolder'. Missing: $($missingAssemblies -join ', ')"
+    }
+
+    $script:PdfPigAssemblyFolder = $PdfPigAssemblyFolder
+    if (-not $script:PdfPigAssemblyResolveHandler) {
+        $script:PdfPigAssemblyResolveHandler = [System.ResolveEventHandler]{
+            param($sender, $eventArgs)
+
+            $dependencyName = ([System.Reflection.AssemblyName]::new($eventArgs.Name)).Name + '.dll'
+            $dependencyPath = Join-Path -Path $script:PdfPigAssemblyFolder -ChildPath $dependencyName
+            if (Test-Path -LiteralPath $dependencyPath) {
+                return [System.Reflection.Assembly]::LoadFrom($dependencyPath)
+            }
+            return $null
+        }
+        [AppDomain]::CurrentDomain.add_AssemblyResolve($script:PdfPigAssemblyResolveHandler)
+    }
+
+    foreach ($assemblyName in $requiredAssemblies) {
+        $assemblyPath = Join-Path -Path $PdfPigAssemblyFolder -ChildPath $assemblyName
+        $alreadyLoaded = [AppDomain]::CurrentDomain.GetAssemblies() | Where-Object {
+            try { [string]$_.Location -eq $assemblyPath } catch { $false }
+        } | Select-Object -First 1
+        if (-not $alreadyLoaded) {
+            [System.Reflection.Assembly]::LoadFrom($assemblyPath) | Out-Null
+        }
+    }
+}
+
 # Only the human-visible content parts of the OOXML package (the document/sheet/slide
 # bodies) are read - not core.xml/app.xml metadata, not comments - since we only care
 # about links a reader would actually see and could click.
@@ -878,32 +923,23 @@ function Get-PdfHyperlinks {
     param([Parameter(Mandatory = $true)][byte[]]$Bytes)
 
     $found = New-Object System.Collections.Generic.List[Object]
-    $text = [System.Text.Encoding]::Latin1.GetString($Bytes)
-    $uriActions = @{}
-    foreach ($action in [regex]::Matches($text, '(?is)(?<id>\d+)\s+\d+\s+obj\s*<<(?<dict>.*?)>>\s*endobj')) {
-        $dictionary = $action.Groups['dict'].Value
-        if ($dictionary -notmatch '/S\s*/URI') { continue }
-        $uriMatch = [regex]::Match($dictionary, '(?is)/URI\s*\((https?://[^)\s<>\"]+)\)')
-        if ($uriMatch.Success) { $uriActions[$action.Groups['id'].Value] = [string]$uriMatch.Groups[1].Value }
-    }
-
-    foreach ($annotation in [regex]::Matches($text, '(?is)/Subtype\s*/Link(?<body>.*?)(?:endobj|$)')) {
-        $annotationBody = $annotation.Groups['body'].Value
-        $urlMatch = [regex]::Match($annotationBody, '(?is)/URI\s*\((https?://[^)\s<>"]+)\)')
-        $url = if ($urlMatch.Success) { [string]$urlMatch.Groups[1].Value } else { '' }
-        if ([string]::IsNullOrWhiteSpace($url)) {
-            $actionRef = [regex]::Match($annotationBody, '(?is)/A\s+(\d+)\s+\d+\s+R')
-            if ($actionRef.Success -and $uriActions.ContainsKey($actionRef.Groups[1].Value)) {
-                $url = $uriActions[$actionRef.Groups[1].Value]
+    $document = [UglyToad.PdfPig.PdfDocument]::Open($Bytes)
+    try {
+        foreach ($page in $document.GetPages()) {
+            foreach ($hyperlink in $page.GetHyperlinks()) {
+                $displayText = [string]$hyperlink.Text
+                if ([string]::IsNullOrWhiteSpace($displayText) -and $hyperlink.Letters.Count -gt 0) {
+                    $displayText = (@($hyperlink.Letters | ForEach-Object { [string]$_.Value }) -join '')
+                }
+                $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = [string]$hyperlink.Uri })
             }
         }
-        if ([string]::IsNullOrWhiteSpace($url)) { continue }
-        $textMatch = [regex]::Match($annotationBody, '(?is)/(?:Contents|TU)\s*\((.*?)\)')
-        $displayText = if ($textMatch.Success) { [string]$textMatch.Groups[1].Value } else { '' }
-        $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
+    }
+    finally {
+        $document.Dispose()
     }
 
-    return @($found)
+    return $found.ToArray()
 }
 
 function Get-HtmlHyperlinks {
@@ -1725,6 +1761,9 @@ if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
 }
 else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Also scan document, PDF, page, and list text/URL fields for embedded whallc.sharepoint.com links (downloads supported file content and writes per-site EmbeddedLinks reports)?" -DefaultYes $false
+}
+if ($scanDocumentContent) {
+    Initialize-PdfPig
 }
 
 # --- Enumeration ----------------------------------------------------------
