@@ -1054,6 +1054,33 @@ function Test-IsInternalTenantUrl {
     }
 }
 
+function Test-IsUrlWithinOldSiteBase {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][array]$SiteUrlMap
+    )
+
+    try {
+        $uri = [Uri]$Url
+        foreach ($entry in $SiteUrlMap) {
+            $oldBaseUri = [Uri]$entry.OldBase
+            if (-not $uri.Host.Equals($oldBaseUri.Host, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
+
+            $oldPath = $oldBaseUri.AbsolutePath.TrimEnd('/')
+            $urlPath = $uri.AbsolutePath.TrimEnd('/')
+            if ($urlPath.Equals($oldPath, [System.StringComparison]::OrdinalIgnoreCase) -or
+                $urlPath.StartsWith(($oldPath + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+                return $true
+            }
+        }
+    }
+    catch {
+        return $false
+    }
+
+    return $false
+}
+
 function Get-NavigationNodeTreeItems {
     param([Parameter(Mandatory = $false)][array]$Nodes = @())
 
@@ -1756,6 +1783,14 @@ while (-not $siteUrlMap) {
     Write-Host ("Loaded {0} site row(s) from {1}" -f $siteUrlMap.Count, $csvPath)
 }
 
+$automaticEmbeddedScanSites = @{}
+foreach ($selectedSubsite in $selectedSubsites) {
+    $selectedSubsiteUrl = ([string]$selectedSubsite.Url).TrimEnd('/')
+    if (-not (Get-NewSiteBaseForUrl -Url $selectedSubsiteUrl -SiteUrlMap $siteUrlMap)) {
+        $automaticEmbeddedScanSites[$selectedSubsiteUrl.ToLowerInvariant()] = $true
+    }
+}
+
 $scanDocumentContent = $false
 if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
     $scanDocumentContent = [bool]$EnableDocumentContentScan
@@ -1763,7 +1798,10 @@ if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
 else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Also scan document, PDF, page, and list text/URL fields for embedded whallc.sharepoint.com links (downloads supported file content and writes per-site EmbeddedLinks reports)?" -DefaultYes $false
 }
-if ($scanDocumentContent) {
+if ($automaticEmbeddedScanSites.Count -gt 0) {
+    Write-Host ("Automatically enabling embedded-link scanning for {0} selected site(s) missing from the Old/New Site URL CSV; only links under CSV Old Site URL bases will be reported." -f $automaticEmbeddedScanSites.Count)
+}
+if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
     Initialize-PdfPig
 }
 
@@ -1836,6 +1874,8 @@ foreach ($subsite in $selectedSubsites) {
     Write-Host "`nScanning $subsiteUrl ..."
 
     $siteMatch = Get-NewSiteBaseForUrl -Url $subsiteUrl -SiteUrlMap $siteUrlMap
+    $scanThisSiteContent = $scanDocumentContent -or $automaticEmbeddedScanSites.ContainsKey($subsiteUrl.ToLowerInvariant())
+    $scanOldBaseOnly = (-not $siteMatch) -and (-not $scanDocumentContent)
     if (-not $siteMatch) {
         Write-Warning "  No matching row in the Old/New Site URL CSV for $subsiteUrl - old URLs will still be recorded, but new URLs cannot be looked up."
     }
@@ -1853,7 +1893,7 @@ foreach ($subsite in $selectedSubsites) {
         Write-Host ("  Writing temp scan {0} (no master file found yet for this site; one will be created at {1})" -f $outputPath, $masterPath)
     }
 
-    if ($scanDocumentContent) {
+    if ($scanThisSiteContent) {
         if (-not $embeddedLinksBySite.ContainsKey($siteIdentifier)) { $embeddedLinksBySite[$siteIdentifier] = [ordered]@{} }
         if (-not $scannedEmbeddedSourcesBySite.ContainsKey($siteIdentifier)) { $scannedEmbeddedSourcesBySite[$siteIdentifier] = @{} }
     }
@@ -1896,7 +1936,7 @@ foreach ($subsite in $selectedSubsites) {
 
         $contentFieldNames = @()
         $contentFieldScanSucceeded = $false
-        if ($scanDocumentContent) {
+        if ($scanThisSiteContent) {
             try {
                 $fieldResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get content fields: ' + $library.Title) -MaxAttempts 2 -Operation {
                     param($activeConnection)
@@ -2045,7 +2085,7 @@ foreach ($subsite in $selectedSubsites) {
             if (-not $extensionCounts.ContainsKey($extKey)) { $extensionCounts[$extKey] = 0 }
             $extensionCounts[$extKey]++
 
-            if ($scanDocumentContent) {
+            if ($scanThisSiteContent) {
                 $sourceHyperlinks = New-Object System.Collections.Generic.List[Object]
                 $sourceContentScanned = $false
                 $fileContentScanSucceeded = $false
@@ -2150,6 +2190,7 @@ foreach ($subsite in $selectedSubsites) {
                         continue
                     }
                     if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
+                    if ($scanOldBaseOnly -and -not (Test-IsUrlWithinOldSiteBase -Url $embeddedUrl -SiteUrlMap $siteUrlMap)) { continue }
 
                     $embeddedRow = [PSCustomObject][ordered]@{
                         Site                 = $selectedScopeUrl
@@ -2195,7 +2236,7 @@ foreach ($subsite in $selectedSubsites) {
         Save-CounterCheckpoint -Path $counterCheckpointPath -OutputPath $outputPath -FilesScanned $filesScanned -NewFoundCount $newFoundCount -NewNotFoundCount $newNotFoundCount -LastLibraryCompleted ($subsiteUrl + ' | ' + $library.Title)
     }
 
-    if ($scanDocumentContent) {
+    if ($scanThisSiteContent) {
         foreach ($navigationLocation in @('TopNavigationBar', 'QuickLaunch', 'Footer')) {
             $navigationContainerName = "Navigation - $navigationLocation"
             try {
@@ -2256,6 +2297,7 @@ foreach ($subsite in $selectedSubsites) {
                     continue
                 }
                 if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
+                if ($scanOldBaseOnly -and -not (Test-IsUrlWithinOldSiteBase -Url $embeddedUrl -SiteUrlMap $siteUrlMap)) { continue }
 
                 $nodeTitle = [string]$navigationNode.Title
                 $destinationNode = if ($destinationNodesByTitle.ContainsKey($nodeTitle)) { $destinationNodesByTitle[$nodeTitle] } else { $null }
@@ -2317,7 +2359,7 @@ else {
     Write-Host ("`nNew document found: {0} ({1} via cached prior confirmation, no live lookup)   Not found: {2}" -f $newFoundCountTotal, $newFoundFromCacheCountTotal, $newNotFoundCountTotal)
 }
 
-if ($scanDocumentContent) {
+if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
     foreach ($siteIdentifier in @($embeddedLinksBySite.Keys | Sort-Object)) {
         $embeddedOutputPath = Join-Path -Path $EmbeddedLinksFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
         $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $EmbeddedLinksFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteIdentifier] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteIdentifier]
