@@ -1,8 +1,15 @@
 .sharePointUrlFixer {
   overflow: hidden;
-  padding: 0;
+  padding: 8px 0 16px;
   color: #1a1a1a;
   max-width: 720px;
+}
+
+.title {
+  margin: 0 0 6px;
+  color: #1a1a1a;
+  font-size: 24px;
+  font-weight: 650;
 }
 
 .subtitle {
@@ -76,6 +83,26 @@
   word-break: break-all;
   color: #222;
   margin-top: 8px;
+}
+
+.resultNote {
+  color: #555b66;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.errorMessage {
+  color: #b3261e;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.originalLink {
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 6px;
 }
 
 .status {

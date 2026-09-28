@@ -65,6 +65,10 @@
     Folder where filtered [sitename]-fixer.csv files are written. If omitted,
     defaults to the server's DocumentUrlLookup-OutputFiles\FixerFiles folder.
 
+.PARAMETER EmbeddedLinksFolder
+    Folder containing per-site embedded-link reports and temporary scan files.
+    If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\EmbeddedLinks folder.
+
 .PARAMETER StateRootFolder
     Folder used to cache the subsite scannability inventory between runs.
 
@@ -111,6 +115,9 @@ param(
     [string]$FixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\FixerFiles",
 
     [Parameter(Mandatory = $false)]
+    [string]$EmbeddedLinksFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\EmbeddedLinks",
+
+    [Parameter(Mandatory = $false)]
     [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Checkpoints-and-Caches",
 
     [Parameter(Mandatory = $false)]
@@ -123,10 +130,8 @@ param(
     [Parameter(Mandatory = $false)]
     [bool]$SkipAlreadyConfirmedDocuments = $true,
 
-    # Also scan each document's own content for embedded hyperlinks (e.g. a Word doc
-    # linking to another SharePoint file) and add those, deduplicated, to a second
-    # lookup CSV. This reads/downloads file content, so it's off by default and
-    # prompted for (same caution as Get-FixItListURLsv5.ps1's content scan).
+    # Scan Office/PDF/page content and human-authored list fields for embedded links.
+    # File content is downloaded, so this is off by default and prompted for.
     [Parameter(Mandatory = $false)]
     [switch]$EnableDocumentContentScan
 )
@@ -751,57 +756,112 @@ function Get-NormalizedExtension {
 function Get-OfficeDocumentHyperlinks {
     param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
 
-    $found = New-Object System.Collections.Generic.List[string]
+    $found = New-Object System.Collections.Generic.List[Object]
     $relationsByXml = @{}
     $archive = [System.IO.Compression.ZipArchive]::new($Stream, [System.IO.Compression.ZipArchiveMode]::Read)
     try {
         foreach ($entry in $archive.Entries) {
-            if ($entry.FullName -like "*_rels/*.rels") {
-                $s = $entry.Open()
-                $r = New-Object System.IO.StreamReader($s)
-                $xmlText = $r.ReadToEnd()
-                $r.Close(); $s.Close()
+            if ($entry.FullName -notlike "*_rels/*.rels") { continue }
 
-                try {
-                    [xml]$xml = $xmlText
-                    $xmlPath = $entry.FullName -replace '/_rels/([^/]+)\.rels$', '/$1'
-                    $relationMap = @{}
-                    foreach ($rel in $xml.Relationships.Relationship) {
-                        if ($rel.TargetMode -eq "External" -and $rel.Target) {
-                            $relationMap[$rel.Id] = $rel.Target
-                        }
+            $relationshipStream = $entry.Open()
+            $relationshipReader = New-Object System.IO.StreamReader($relationshipStream)
+            try {
+                [xml]$relationshipXml = $relationshipReader.ReadToEnd()
+            }
+            finally {
+                $relationshipReader.Close()
+                $relationshipStream.Close()
+            }
+
+            try {
+                $xmlPath = $entry.FullName -replace '/_rels/([^/]+)\.rels$', '/$1'
+                $relationMap = @{}
+                foreach ($rel in $relationshipXml.Relationships.Relationship) {
+                    if ($rel.TargetMode -eq 'External' -and $rel.Target) {
+                        $relationMap[$rel.Id] = [string]$rel.Target
                     }
-                    if ($relationMap.Count -gt 0) { $relationsByXml[$xmlPath] = $relationMap }
                 }
-                catch {
-                    Write-Verbose "Could not parse relationship XML in $($entry.FullName)."
+                if ($relationMap.Count -gt 0) { $relationsByXml[$xmlPath] = $relationMap }
+            }
+            catch {
+                Write-Verbose "Could not parse relationship XML in $($entry.FullName)."
+            }
+        }
+
+        $sharedStrings = @()
+        $sharedStringsEntry = $archive.GetEntry('xl/sharedStrings.xml')
+        if ($sharedStringsEntry) {
+            $sharedStringsStream = $sharedStringsEntry.Open()
+            $sharedStringsReader = New-Object System.IO.StreamReader($sharedStringsStream)
+            try {
+                [xml]$sharedStringsXml = $sharedStringsReader.ReadToEnd()
+                $sharedStringsNs = New-Object System.Xml.XmlNamespaceManager($sharedStringsXml.NameTable)
+                $sharedStringsNs.AddNamespace('x', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main')
+                foreach ($stringItem in $sharedStringsXml.SelectNodes('//x:si', $sharedStringsNs)) {
+                    $sharedStrings += [string]$stringItem.InnerText
                 }
             }
-            elseif ($entry.FullName -match '(?:^|/)word/document\.xml$|(?:^|/)xl/worksheets/sheet\d*\.xml$|(?:^|/)ppt/slides/slide\d*\.xml$') {
-                if (-not $relationsByXml.ContainsKey($entry.FullName)) { continue }
+            finally {
+                $sharedStringsReader.Close()
+                $sharedStringsStream.Close()
+            }
+        }
 
-                $s = $entry.Open()
-                $r = New-Object System.IO.StreamReader($s)
-                $text = $r.ReadToEnd()
-                $r.Close(); $s.Close()
+        foreach ($entry in $archive.Entries) {
+            if ($entry.FullName -notmatch '(?:^|/)word/document\.xml$|(?:^|/)xl/worksheets/sheet\d*\.xml$|(?:^|/)ppt/slides/slide\d*\.xml$') { continue }
+            if (-not $relationsByXml.ContainsKey($entry.FullName)) { continue }
 
-                try {
-                    [xml]$xml = $text
-                    $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
-                    $ns.AddNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
-                    # A generic "any element carrying an r:id" match covers Word's w:hyperlink,
-                    # Excel's hyperlink, and PowerPoint's a:hlinkClick without needing a separate
-                    # XPath per format.
-                    foreach ($node in $xml.SelectNodes('//*[@r:id]', $ns)) {
-                        $relId = $node.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
-                        if ($relationsByXml[$entry.FullName].ContainsKey($relId)) {
-                            $found.Add($relationsByXml[$entry.FullName][$relId])
+            $contentStream = $entry.Open()
+            $contentReader = New-Object System.IO.StreamReader($contentStream)
+            try {
+                [xml]$contentXml = $contentReader.ReadToEnd()
+            }
+            finally {
+                $contentReader.Close()
+                $contentStream.Close()
+            }
+
+            try {
+                $ns = New-Object System.Xml.XmlNamespaceManager($contentXml.NameTable)
+                $ns.AddNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+                $ns.AddNamespace('p', 'http://schemas.openxmlformats.org/presentationml/2006/main')
+                $ns.AddNamespace('x', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main')
+                foreach ($node in $contentXml.SelectNodes('//*[@r:id]', $ns)) {
+                    $relId = $node.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+                    if (-not $relationsByXml[$entry.FullName].ContainsKey($relId)) { continue }
+
+                    $displayText = [string]$node.InnerText
+                    if ([string]::IsNullOrWhiteSpace($displayText) -and $node.Attributes['display']) {
+                        $displayText = [string]$node.Attributes['display'].Value
+                    }
+                    if ([string]::IsNullOrWhiteSpace($displayText) -and $entry.FullName -match 'xl/worksheets/' -and $node.LocalName -eq 'hyperlink' -and $node.Attributes['ref']) {
+                        $cellRef = $node.Attributes['ref'].Value
+                        $cell = $contentXml.SelectSingleNode("//x:c[@r='$cellRef']", $ns)
+                        if ($cell) {
+                            $valueNode = $cell.SelectSingleNode('x:v', $ns)
+                            if ($valueNode -and $cell.Attributes['t'] -and $cell.Attributes['t'].Value -eq 's') {
+                                $stringIndex = 0
+                                if ([int]::TryParse($valueNode.InnerText, [ref]$stringIndex) -and $stringIndex -lt $sharedStrings.Count) {
+                                    $displayText = $sharedStrings[$stringIndex]
+                                }
+                            }
+                            elseif ($cell.SelectSingleNode('x:is', $ns)) {
+                                $displayText = [string]$cell.SelectSingleNode('x:is', $ns).InnerText
+                            }
+                            elseif ($valueNode) {
+                                $displayText = [string]$valueNode.InnerText
+                            }
                         }
                     }
+                    if ([string]::IsNullOrWhiteSpace($displayText) -and $entry.FullName -match 'ppt/slides/' -and $node.LocalName -eq 'hlinkClick') {
+                        $shape = $node.SelectSingleNode('ancestor::p:sp[1]', $ns)
+                        if ($shape) { $displayText = [string]$shape.InnerText }
+                    }
+                    $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = [string]$relationsByXml[$entry.FullName][$relId] })
                 }
-                catch {
-                    Write-Verbose "Could not parse hyperlinks in $($entry.FullName)."
-                }
+            }
+            catch {
+                Write-Verbose "Could not parse hyperlinks in $($entry.FullName)."
             }
         }
     }
@@ -809,7 +869,7 @@ function Get-OfficeDocumentHyperlinks {
         $archive.Dispose()
     }
 
-    return @($found | Select-Object -Unique)
+    return @($found)
 }
 
 # PDF URI link annotations are the actual clickable links a reader sees/clicks - not a
@@ -817,13 +877,131 @@ function Get-OfficeDocumentHyperlinks {
 function Get-PdfHyperlinks {
     param([Parameter(Mandatory = $true)][byte[]]$Bytes)
 
-    $found = New-Object System.Collections.Generic.List[string]
+    $found = New-Object System.Collections.Generic.List[Object]
     $text = [System.Text.Encoding]::Latin1.GetString($Bytes)
-    foreach ($m in [regex]::Matches($text, '(?is)/URI\s*\((https?://[^)\s<>"]+)\)')) {
-        $found.Add([string]$m.Groups[1].Value)
+    $uriActions = @{}
+    foreach ($action in [regex]::Matches($text, '(?is)(?<id>\d+)\s+\d+\s+obj\s*<<(?<dict>.*?)>>\s*endobj')) {
+        $dictionary = $action.Groups['dict'].Value
+        if ($dictionary -notmatch '/S\s*/URI') { continue }
+        $uriMatch = [regex]::Match($dictionary, '(?is)/URI\s*\((https?://[^)\s<>\"]+)\)')
+        if ($uriMatch.Success) { $uriActions[$action.Groups['id'].Value] = [string]$uriMatch.Groups[1].Value }
     }
 
-    return @($found | Select-Object -Unique)
+    foreach ($annotation in [regex]::Matches($text, '(?is)/Subtype\s*/Link(?<body>.*?)(?:endobj|$)')) {
+        $annotationBody = $annotation.Groups['body'].Value
+        $urlMatch = [regex]::Match($annotationBody, '(?is)/URI\s*\((https?://[^)\s<>"]+)\)')
+        $url = if ($urlMatch.Success) { [string]$urlMatch.Groups[1].Value } else { '' }
+        if ([string]::IsNullOrWhiteSpace($url)) {
+            $actionRef = [regex]::Match($annotationBody, '(?is)/A\s+(\d+)\s+\d+\s+R')
+            if ($actionRef.Success -and $uriActions.ContainsKey($actionRef.Groups[1].Value)) {
+                $url = $uriActions[$actionRef.Groups[1].Value]
+            }
+        }
+        if ([string]::IsNullOrWhiteSpace($url)) { continue }
+        $textMatch = [regex]::Match($annotationBody, '(?is)/(?:Contents|TU)\s*\((.*?)\)')
+        $displayText = if ($textMatch.Success) { [string]$textMatch.Groups[1].Value } else { '' }
+        $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
+    }
+
+    return @($found)
+}
+
+function Get-HtmlHyperlinks {
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html)
+
+    $found = New-Object System.Collections.Generic.List[Object]
+    foreach ($anchor in [regex]::Matches($Html, '(?is)<a\b(?<attrs>[^>]*)>(?<body>.*?)</a\s*>')) {
+        $href = [regex]::Match($anchor.Groups['attrs'].Value, '(?is)\bhref\s*=\s*(?:"(?<double>[^"]*)"|''(?<single>[^'']*)''|(?<bare>[^\s>]+))')
+        if (-not $href.Success) { continue }
+        $url = if ($href.Groups['double'].Success) { $href.Groups['double'].Value } elseif ($href.Groups['single'].Success) { $href.Groups['single'].Value } else { $href.Groups['bare'].Value }
+        $displayText = [regex]::Replace($anchor.Groups['body'].Value, '(?is)<[^>]+>', ' ')
+        $displayText = [System.Net.WebUtility]::HtmlDecode(($displayText -replace '\s+', ' ').Trim())
+        $url = [System.Net.WebUtility]::HtmlDecode($url.Trim())
+        $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
+    }
+    return @($found)
+}
+
+function Get-CanvasContentHyperlinks {
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$CanvasContent)
+
+    $found = New-Object System.Collections.Generic.List[Object]
+    if ([string]::IsNullOrWhiteSpace($CanvasContent)) { return @() }
+
+    try {
+        $canvas = ConvertFrom-Json -InputObject $CanvasContent -ErrorAction Stop
+    }
+    catch {
+        return @(Get-HtmlHyperlinks -Html $CanvasContent)
+    }
+
+    $pending = New-Object System.Collections.Stack
+    $pending.Push($canvas)
+    while ($pending.Count -gt 0) {
+        $current = $pending.Pop()
+        if ($null -eq $current -or $current -is [string]) { continue }
+        if ($current -is [System.Array]) {
+            foreach ($entry in $current) { $pending.Push($entry) }
+            continue
+        }
+
+        $innerHtml = $current.PSObject.Properties['innerHTML']
+        if ($innerHtml -and $innerHtml.Value -is [string]) {
+            foreach ($link in @(Get-HtmlHyperlinks -Html ([string]$innerHtml.Value))) { $found.Add($link) }
+        }
+
+        foreach ($urlPropertyName in @('linkUrl', 'href')) {
+            $urlProperty = $current.PSObject.Properties[$urlPropertyName]
+            if (-not $urlProperty -or $urlProperty.Value -isnot [string] -or [string]::IsNullOrWhiteSpace($urlProperty.Value)) { continue }
+            $displayText = if ($current.PSObject.Properties['title']) { [string]$current.title } elseif ($current.PSObject.Properties['displayText']) { [string]$current.displayText } else { '' }
+            $found.Add([PSCustomObject]@{ Text = $displayText; Url = [string]$urlProperty.Value })
+        }
+
+        $sourceItemProperty = $current.PSObject.Properties['sourceItem']
+        if ($sourceItemProperty -and $sourceItemProperty.Value) {
+            $sourceItem = $sourceItemProperty.Value
+            $targetUrl = if ($sourceItem.PSObject.Properties['url']) { [string]$sourceItem.url } else { '' }
+            $displayText = if ($current.PSObject.Properties['title']) { [string]$current.title } elseif ($sourceItem.PSObject.Properties['title']) { [string]$sourceItem.title } else { '' }
+            if (-not [string]::IsNullOrWhiteSpace($targetUrl)) {
+                $found.Add([PSCustomObject]@{ Text = $displayText; Url = $targetUrl })
+            }
+        }
+
+        foreach ($property in $current.PSObject.Properties) {
+            if ($property.Name -eq 'innerHTML' -or $property.Name -eq 'sourceItem') { continue }
+            if ($null -ne $property.Value -and $property.Value -isnot [string]) { $pending.Push($property.Value) }
+        }
+    }
+
+    return @($found)
+}
+
+function Get-FieldValueHyperlinks {
+    param(
+        [Parameter(Mandatory = $false)]$Value,
+        [Parameter(Mandatory = $false)][switch]$CanvasContent
+    )
+
+    $found = New-Object System.Collections.Generic.List[Object]
+    if ($null -eq $Value) { return @() }
+
+    if ($Value.PSObject.Properties['Url']) {
+        $url = [string]$Value.Url
+        if (-not [string]::IsNullOrWhiteSpace($url)) {
+            $displayText = if ($Value.PSObject.Properties['Description']) { [string]$Value.Description } else { '' }
+            $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
+        }
+        return @($found)
+    }
+
+    foreach ($textValue in @($Value)) {
+        if ($textValue -isnot [string]) { continue }
+        $hyperlinks = if ($CanvasContent) { Get-CanvasContentHyperlinks -CanvasContent $textValue } else { Get-HtmlHyperlinks -Html $textValue }
+        foreach ($link in @($hyperlinks)) {
+            $found.Add($link)
+        }
+    }
+    return @($found)
 }
 
 function Test-IsInternalTenantUrl {
@@ -840,49 +1018,21 @@ function Test-IsInternalTenantUrl {
     }
 }
 
-# Recovers the document GUID from a "resolved" Doc.aspx link (sourcedoc=) or a "Copy
-# Link" shortcut (?d=<letter><guid>), normalized to bare lowercase hex for dictionary
-# lookups against this run's already-discovered documents.
-function Get-GuidFromEmbeddedUrl {
-    param([Parameter(Mandatory = $true)][string]$Url)
+function Get-NavigationNodeTreeItems {
+    param([Parameter(Mandatory = $false)][array]$Nodes = @())
 
-    $sourcedocMatch = [regex]::Match($Url, '(?i)sourcedoc=%7b([0-9a-f-]{36})%7d')
-    if ($sourcedocMatch.Success) {
-        return ($sourcedocMatch.Groups[1].Value -replace '-', '').ToLowerInvariant()
+    $items = New-Object System.Collections.Generic.List[Object]
+    $pending = New-Object System.Collections.Stack
+    foreach ($node in $Nodes) { if ($node) { $pending.Push($node) } }
+    while ($pending.Count -gt 0) {
+        $node = $pending.Pop()
+        $items.Add($node)
+        $childrenProperty = $node.PSObject.Properties['Children']
+        if ($childrenProperty) {
+            foreach ($child in @($childrenProperty.Value)) { if ($child) { $pending.Push($child) } }
+        }
     }
-
-    $dMatch = [regex]::Match($Url, '(?i)[?&]d=[a-z]([0-9a-f]{32})(?:&|$)')
-    if ($dMatch.Success) {
-        return $dMatch.Groups[1].Value.ToLowerInvariant()
-    }
-
-    return $null
-}
-
-# Best-effort server-relative path recovery from an embedded link, for matching against
-# this run's documents when no GUID is present. Not exhaustive of every link shape.
-function Get-PathFromEmbeddedUrl {
-    param([Parameter(Mandatory = $true)][string]$Url)
-
-    $idMatch = [regex]::Match($Url, '(?i)[?&]id=([^&]+)')
-    if ($idMatch.Success) {
-        return ([Uri]::UnescapeDataString($idMatch.Groups[1].Value)).TrimEnd('/').ToLowerInvariant()
-    }
-
-    try {
-        $path = [Uri]::UnescapeDataString(([Uri]$Url).AbsolutePath)
-    }
-    catch {
-        return $null
-    }
-
-    if ($path -match '(?i)_layouts/15/doc\.aspx$') {
-        return $null
-    }
-
-    $path = $path -replace '(?i)^/:[a-z]:(?:/[a-z]+)?/', '/'
-    $path = $path -replace '(?i)/Forms/AllItems\.aspx$', ''
-    return $path.TrimEnd('/').ToLowerInvariant()
+    return $items.ToArray()
 }
 
 function Get-NewDocumentLocationOverride {
@@ -1229,6 +1379,70 @@ function Export-FixerLookupTableFromMaster {
     return $filteredRows.Count
 }
 
+function Publish-EmbeddedLinksLookupTable {
+    param(
+        [Parameter(Mandatory = $true)][string]$Folder,
+        [Parameter(Mandatory = $true)][string]$Identifier,
+        [Parameter(Mandatory = $true)][string]$RunStamp,
+        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$RowsByKey,
+        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ScannedSourceUrls
+    )
+
+    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL')
+    $reportPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks.csv")
+    $scanTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-scan-temp.csv")
+    $mergedTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-merged-temp.csv")
+
+    $currentRows = @($RowsByKey.Values)
+    if ($currentRows.Count -gt 0) {
+        Export-CsvTableWithRetry -Path $scanTempPath -Rows $currentRows
+    }
+    else {
+        $headerLine = (@($columns | ForEach-Object { '"' + $_ + '"' }) -join ',')
+        Set-Content -Path $scanTempPath -Value $headerLine -Encoding UTF8 -Force
+    }
+
+    $mergedRowsByKey = [ordered]@{}
+    if (Test-Path -Path $reportPath) {
+        foreach ($row in @(Import-Csv -Path $reportPath)) {
+            $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
+            $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
+            if ($ScannedSourceUrls.ContainsKey($sourceKey)) { continue }
+            $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
+            $mergedRowsByKey[$rowKey] = $row
+        }
+    }
+
+    foreach ($row in @(Import-Csv -Path $scanTempPath)) {
+        $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
+        $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
+        $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
+        $mergedRowsByKey[$rowKey] = $row
+    }
+
+    $mergedRows = New-Object System.Collections.Generic.List[Object]
+    foreach ($row in $mergedRowsByKey.Values) { $mergedRows.Add($row) }
+    if ($mergedRows.Count -gt 0) {
+        Export-CsvTableWithRetry -Path $mergedTempPath -Rows $mergedRows.ToArray()
+    }
+    else {
+        $headerLine = (@($columns | ForEach-Object { '"' + $_ + '"' }) -join ',')
+        Set-Content -Path $mergedTempPath -Value $headerLine -Encoding UTF8 -Force
+    }
+
+    Copy-CsvFileWithRetry -SourcePath $mergedTempPath -DestinationPath $reportPath
+    Remove-FileWithRetry -Path $scanTempPath
+    Remove-FileWithRetry -Path $mergedTempPath
+
+    $staleTimestampedReports = Get-ChildItem -Path $Folder -Filter ("*-{0}-EmbeddedLinks.csv" -f $Identifier) -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -ne $reportPath }
+    foreach ($staleReport in $staleTimestampedReports) {
+        Remove-FileWithRetry -Path $staleReport.FullName
+    }
+
+    return $mergedRows.Count
+}
+
 function Get-CounterCheckpointPath {
     param(
         [Parameter(Mandatory = $true)][string]$StateRoot,
@@ -1284,6 +1498,7 @@ New-DirectoryIfMissing -Path $OutputFolder
 New-DirectoryIfMissing -Path $MasterFolder
 New-DirectoryIfMissing -Path $TempMasterFolder
 New-DirectoryIfMissing -Path $FixerOutputFolder
+New-DirectoryIfMissing -Path $EmbeddedLinksFolder
 New-DirectoryIfMissing -Path $StateRootFolder
 
 $RootUrl = $RootUrl.TrimEnd('/')
@@ -1509,7 +1724,7 @@ if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
     $scanDocumentContent = [bool]$EnableDocumentContentScan
 }
 else {
-    $scanDocumentContent = Get-BooleanPrompt -Message "Also scan each document's own content for embedded whallc.sharepoint.com hyperlinks (downloads every Office/PDF file's bytes; adds a second, deduplicated lookup CSV)?" -DefaultYes $false
+    $scanDocumentContent = Get-BooleanPrompt -Message "Also scan document, PDF, page, and list text/URL fields for embedded whallc.sharepoint.com links (downloads supported file content and writes per-site EmbeddedLinks reports)?" -DefaultYes $false
 }
 
 # --- Enumeration ----------------------------------------------------------
@@ -1570,14 +1785,11 @@ $newFoundFromCacheCountTotal = 0
 $newNotFoundCountTotal = 0
 $extensionCountsTotal = @{}
 
-# Built across ALL subsites (not reset per-site) since an embedded link found in one
-# site's documents can point at a document living in a different site scanned this run.
-$oldGuidToNewInfo = @{}
-$oldPathToNewInfo = @{}
-# Keyed by [site identifier][raw embedded URL], so the same link seen in many documents
-# (e.g. a boilerplate footer link) only produces one row, grouped into its source site.
+# Embedded-link findings are keyed by source item and link details; scanned-source keys
+# allow the publisher to refresh scanned items while retaining cached unscanned items.
 $embeddedLinksBySite = @{}
-$ContentScanExtensions = @('.docx', '.xlsx', '.pptx', '.pdf')
+$scannedEmbeddedSourcesBySite = @{}
+$ContentScanExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.htm', '.html')
 
 foreach ($subsite in $selectedSubsites) {
     $subsiteUrl = ([string]$subsite.Url).TrimEnd('/')
@@ -1601,8 +1813,9 @@ foreach ($subsite in $selectedSubsites) {
         Write-Host ("  Writing temp scan {0} (no master file found yet for this site; one will be created at {1})" -f $outputPath, $masterPath)
     }
 
-    if ($scanDocumentContent -and -not $embeddedLinksBySite.ContainsKey($siteIdentifier)) {
-        $embeddedLinksBySite[$siteIdentifier] = @{}
+    if ($scanDocumentContent) {
+        if (-not $embeddedLinksBySite.ContainsKey($siteIdentifier)) { $embeddedLinksBySite[$siteIdentifier] = [ordered]@{} }
+        if (-not $scannedEmbeddedSourcesBySite.ContainsKey($siteIdentifier)) { $scannedEmbeddedSourcesBySite[$siteIdentifier] = @{} }
     }
 
     $filesScanned = 0
@@ -1641,7 +1854,27 @@ foreach ($subsite in $selectedSubsites) {
         $libraryKind = if ($librarySupportsFileLookup) { 'file/page library' } else { 'site contents list' }
         Write-Host ("  {0}: {1} ({2} items)" -f $libraryKind, $library.Title, $library.ItemCount)
 
-        $fields = @('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Modified')
+        $contentFieldNames = @()
+        $contentFieldScanSucceeded = $false
+        if ($scanDocumentContent) {
+            try {
+                $fieldResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get content fields: ' + $library.Title) -MaxAttempts 2 -Operation {
+                    param($activeConnection)
+                    Get-PnPField -List $library.Title -Connection $activeConnection
+                }
+                $subConn = $fieldResult.Connection
+                $contentFieldNames = @($fieldResult.Result | Where-Object {
+                    $pageContentField = ($library.Title -eq 'Site Pages' -and $_.InternalName -in @('CanvasContent1', 'WikiField', 'PublishingPageContent', 'LayoutWebpartsContent'))
+                    (($pageContentField) -or ($_.TypeAsString -in @('Text', 'Note', 'URL') -and -not $_.Hidden -and -not $_.ReadOnlyField))
+                    } | ForEach-Object { [string]$_.InternalName } | Where-Object { $_ })
+                $contentFieldScanSucceeded = $true
+            }
+            catch {
+                Write-Verbose "Could not read text/URL fields from $($library.Title): $($_.Exception.Message)"
+            }
+        }
+
+        $fields = @(@('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Modified', 'Title') + $contentFieldNames | Select-Object -Unique)
         $itemsResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get items: ' + $library.Title) -MaxAttempts 3 -Operation {
             param($activeConnection)
             Get-PnPListItem -List $library.Title -Connection $activeConnection -PageSize 500 -Fields $fields
@@ -1676,6 +1909,10 @@ foreach ($subsite in $selectedSubsites) {
             $rowKey = $fileRef.TrimEnd('/').ToLowerInvariant()
             $existingRow = $mergedRowsByKey[$rowKey]
             $locationOverride = Get-NewDocumentLocationOverride -FileRef $fileRef
+            $newSubsiteForItem = if ($siteMatch) { $newSiteLinkBaseAbsolute } else { '' }
+            if ($locationOverride) {
+                $newSubsiteForItem = $RootUrl + ([Uri]$locationOverride.ConnectionBase).AbsolutePath.TrimEnd('/')
+            }
             $canSkipLiveLookup = $librarySupportsFileLookup -and $SkipAlreadyConfirmedDocuments -and $existingRow -and
             (-not $locationOverride) -and
             ($existingRow.NewFound -eq 'Yes') -and
@@ -1768,41 +2005,127 @@ foreach ($subsite in $selectedSubsites) {
             if (-not $extensionCounts.ContainsKey($extKey)) { $extensionCounts[$extKey] = 0 }
             $extensionCounts[$extKey]++
 
-            if ($uniqueId) {
-                $oldGuidToNewInfo[([Guid]$uniqueId).ToString('N').ToLowerInvariant()] = [PSCustomObject]@{ NewFound = $newFound; NewCopyLinkUrl = $newCopyLinkUrl; NewResolvedUrl = $newResolvedUrl }
-            }
-            $oldPathToNewInfo[$fileRef.TrimEnd('/').ToLowerInvariant()] = [PSCustomObject]@{ NewFound = $newFound; NewCopyLinkUrl = $newCopyLinkUrl; NewResolvedUrl = $newResolvedUrl }
+            if ($scanDocumentContent) {
+                $sourceHyperlinks = New-Object System.Collections.Generic.List[Object]
+                $sourceContentScanned = $false
+                $fileContentScanSucceeded = $false
 
-            if ($scanDocumentContent -and $librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)) {
-                try {
-                    $contentResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Download content: ' + $fileRef) -MaxAttempts 2 -Operation {
-                        param($activeConnection)
-                        Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $activeConnection
-                    }
-                    $subConn = $contentResult.Connection
-                    $ms = $contentResult.Result
-
-                    $hyperlinks = if ($ext -eq '.pdf') {
-                        Get-PdfHyperlinks -Bytes $ms.ToArray()
-                    }
-                    else {
-                        Get-OfficeDocumentHyperlinks -Stream $ms
-                    }
-                    $ms.Dispose()
-
-                    foreach ($link in $hyperlinks) {
-                        if (-not (Test-IsInternalTenantUrl -Url $link -RootUrl $RootUrl)) { continue }
-                        $siteLinks = $embeddedLinksBySite[$siteIdentifier]
-                        if ($siteLinks.ContainsKey($link)) {
-                            $siteLinks[$link].Count++
+                $pageContentFields = @('CanvasContent1', 'WikiField', 'PublishingPageContent', 'LayoutWebpartsContent')
+                if ($librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)) {
+                    $contentStream = $null
+                    try {
+                        $contentResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Download content: ' + $fileRef) -MaxAttempts 2 -Operation {
+                            param($activeConnection)
+                            Get-PnPFile -Url $fileRef -AsMemoryStream -Connection $activeConnection
+                        }
+                        $subConn = $contentResult.Connection
+                        $contentStream = $contentResult.Result
+                        if ($ext -eq '.pdf') {
+                            foreach ($link in @(Get-PdfHyperlinks -Bytes $contentStream.ToArray())) { $sourceHyperlinks.Add($link) }
+                        }
+                        elseif ($ext -in @('.htm', '.html')) {
+                            $htmlContent = [System.Text.Encoding]::UTF8.GetString($contentStream.ToArray())
+                            foreach ($link in @(Get-HtmlHyperlinks -Html $htmlContent)) { $sourceHyperlinks.Add($link) }
                         }
                         else {
-                            $siteLinks[$link] = [PSCustomObject]@{ Count = 1; ExampleOldFileRef = $fileRef }
+                            foreach ($link in @(Get-OfficeDocumentHyperlinks -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
+                        }
+                        $fileContentScanSucceeded = $true
+                    }
+                    catch {
+                        Write-Verbose "Could not scan content of $fileRef : $($_.Exception.Message)"
+                    }
+                    finally {
+                        if ($contentStream) { $contentStream.Dispose() }
+                    }
+                }
+
+                foreach ($fieldName in $contentFieldNames) {
+                    $isPageCanvasField = ($library.Title -eq 'Site Pages' -and $pageContentFields -contains $fieldName)
+                    $fieldLinks = if ($isPageCanvasField) {
+                        Get-CanvasContentHyperlinks -CanvasContent ([string]$item.FieldValues[$fieldName])
+                    }
+                    else {
+                        Get-FieldValueHyperlinks -Value $item.FieldValues[$fieldName]
+                    }
+                    foreach ($link in @($fieldLinks)) {
+                        $sourceHyperlinks.Add($link)
+                    }
+                }
+                $requiresFileContentScan = $librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)
+                if ($contentFieldScanSucceeded -and (-not $requiresFileContentScan -or $fileContentScanSucceeded)) {
+                    $sourceContentScanned = $true
+                }
+
+                if ($sourceContentScanned) {
+                    $sourceDocumentKey = $oldCopyLinkUrl.Trim().ToLowerInvariant()
+                    $scannedEmbeddedSourcesBySite[$siteIdentifier][($sourceDocumentKey + "`n" + $library.Title)] = $true
+                }
+
+                $embeddedSourceNewFound = $newFound
+                $embeddedSourceNewDocumentUrl = if ($newFound -eq 'Yes') { $newCopyLinkUrl } else { '' }
+                if ($sourceContentScanned -and $sourceHyperlinks.Count -gt 0 -and -not $librarySupportsFileLookup -and $siteMatch) {
+                    if (-not $newConnectionsByBase.ContainsKey($newSiteScanBaseAbsolute)) {
+                        try {
+                            $newConnectionsByBase[$newSiteScanBaseAbsolute] = Connect-ValidatedPnP -Url $newSiteScanBaseAbsolute -ClientId $ClientId
+                        }
+                        catch {
+                            $newConnectionsByBase[$newSiteScanBaseAbsolute] = $null
+                        }
+                    }
+                    $listLookupConnection = $newConnectionsByBase[$newSiteScanBaseAbsolute]
+                    if ($listLookupConnection) {
+                        try {
+                            $newListItemResult = Invoke-PnPConnectionOperation -Url $newSiteScanBaseAbsolute -ClientId $ClientId -Connection $listLookupConnection -Label ('Lookup new list item: ' + $library.Title + ' #' + $item.Id) -MaxAttempts 2 -Operation {
+                                param($activeConnection)
+                                Get-PnPListItem -List $library.Title -Id $item.Id -Fields @('FileRef') -Connection $activeConnection
+                            }
+                            $newConnectionsByBase[$newSiteScanBaseAbsolute] = $newListItemResult.Connection
+                            $newListItemFileRef = [string]$newListItemResult.Result.FieldValues['FileRef']
+                            if ([string]::IsNullOrWhiteSpace($newListItemFileRef)) {
+                                $relativeWithinListSite = $fileRef.Substring($oldSiteServerRelative.Length)
+                                $newListItemFileRef = $newSiteLinkServerRelative + $relativeWithinListSite
+                            }
+                            $embeddedSourceNewFound = 'Yes'
+                            $embeddedSourceNewDocumentUrl = $RootUrl + (Get-EncodedServerRelativePath -Path $newListItemFileRef)
+                        }
+                        catch {
+                            $embeddedSourceNewFound = 'No'
+                            $embeddedSourceNewDocumentUrl = ''
                         }
                     }
                 }
-                catch {
-                    Write-Verbose "Could not scan content of $fileRef : $($_.Exception.Message)"
+
+                foreach ($link in $sourceHyperlinks) {
+                    $embeddedUrl = [string]$link.Url
+                    try {
+                        $embeddedUri = [Uri]$embeddedUrl
+                        if (-not $embeddedUri.IsAbsoluteUri) {
+                            $sourceFolderUrl = $RootUrl + $fileDirRef.TrimEnd('/') + '/'
+                            $embeddedUri = [Uri]::new([Uri]$sourceFolderUrl, $embeddedUri)
+                        }
+                        $embeddedUrl = $embeddedUri.AbsoluteUri
+                    }
+                    catch {
+                        continue
+                    }
+                    if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
+
+                    $embeddedRow = [PSCustomObject][ordered]@{
+                        Site                 = $selectedScopeUrl
+                        Subsite              = $subsiteUrl
+                        LibraryorListName    = $library.Title
+                        FileName             = if ($librarySupportsFileLookup) { $fileLeaf } elseif ($item.FieldValues['Title']) { [string]$item.FieldValues['Title'] } else { $fileLeaf }
+                        Extension            = if ($librarySupportsFileLookup) { $ext } else { '' }
+                        DocumentorItemURL    = $oldCopyLinkUrl
+                        EmbeddedURLText      = [string]$link.Text
+                        EmbeddedURL          = $embeddedUrl
+                        NewFound             = $embeddedSourceNewFound
+                        NewSubsite           = $newSubsiteForItem
+                        NewDocumentorItemURL = $embeddedSourceNewDocumentUrl
+                    }
+                    $embeddedKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`n" + $embeddedRow.EmbeddedURLText + "`n" + $embeddedUrl)
+                    $embeddedLinksBySite[$siteIdentifier][$embeddedKey] = $embeddedRow
                 }
             }
 
@@ -1830,6 +2153,89 @@ foreach ($subsite in $selectedSubsites) {
         }
 
         Save-CounterCheckpoint -Path $counterCheckpointPath -OutputPath $outputPath -FilesScanned $filesScanned -NewFoundCount $newFoundCount -NewNotFoundCount $newNotFoundCount -LastLibraryCompleted ($subsiteUrl + ' | ' + $library.Title)
+    }
+
+    if ($scanDocumentContent) {
+        foreach ($navigationLocation in @('TopNavigationBar', 'QuickLaunch', 'Footer')) {
+            $navigationContainerName = "Navigation - $navigationLocation"
+            try {
+                $navigationResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get navigation: ' + $navigationLocation) -MaxAttempts 2 -Operation {
+                    param($activeConnection)
+                    Get-PnPNavigationNode -Location $navigationLocation -Tree -Connection $activeConnection
+                }
+                $subConn = $navigationResult.Connection
+                $navigationSourceKey = $subsiteUrl.TrimEnd('/').ToLowerInvariant() + "`n" + $navigationContainerName
+                $scannedEmbeddedSourcesBySite[$siteIdentifier][$navigationSourceKey] = $true
+            }
+            catch {
+                Write-Verbose "Could not read $navigationLocation navigation for $subsiteUrl : $($_.Exception.Message)"
+                continue
+            }
+
+            $sourceNavigationNodes = @(Get-NavigationNodeTreeItems -Nodes @($navigationResult.Result))
+            $destinationNodesByTitle = @{}
+            if ($siteMatch) {
+                if (-not $newConnectionsByBase.ContainsKey($newSiteScanBaseAbsolute)) {
+                    try {
+                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = Connect-ValidatedPnP -Url $newSiteScanBaseAbsolute -ClientId $ClientId
+                    }
+                    catch {
+                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = $null
+                    }
+                }
+                $destinationConnection = $newConnectionsByBase[$newSiteScanBaseAbsolute]
+                if ($destinationConnection) {
+                    try {
+                        $destinationNavigationResult = Invoke-PnPConnectionOperation -Url $newSiteScanBaseAbsolute -ClientId $ClientId -Connection $destinationConnection -Label ('Get destination navigation: ' + $navigationLocation) -MaxAttempts 2 -Operation {
+                            param($activeConnection)
+                            Get-PnPNavigationNode -Location $navigationLocation -Tree -Connection $activeConnection
+                        }
+                        $newConnectionsByBase[$newSiteScanBaseAbsolute] = $destinationNavigationResult.Connection
+                        foreach ($destinationNode in @(Get-NavigationNodeTreeItems -Nodes @($destinationNavigationResult.Result))) {
+                            $destinationTitle = [string]$destinationNode.Title
+                            if (-not [string]::IsNullOrWhiteSpace($destinationTitle)) { $destinationNodesByTitle[$destinationTitle] = $destinationNode }
+                        }
+                    }
+                    catch {
+                        Write-Verbose "Could not read destination $navigationLocation navigation at $newSiteScanBaseAbsolute : $($_.Exception.Message)"
+                    }
+                }
+            }
+
+            foreach ($navigationNode in $sourceNavigationNodes) {
+                $embeddedUrl = [string]$navigationNode.Url
+                if ([string]::IsNullOrWhiteSpace($embeddedUrl)) { continue }
+                try {
+                    $navigationUri = [Uri]$embeddedUrl
+                    if (-not $navigationUri.IsAbsoluteUri) {
+                        $navigationUri = [Uri]::new([Uri]($subsiteUrl.TrimEnd('/') + '/'), $navigationUri)
+                    }
+                    $embeddedUrl = $navigationUri.AbsoluteUri
+                }
+                catch {
+                    continue
+                }
+                if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
+
+                $nodeTitle = [string]$navigationNode.Title
+                $destinationNode = if ($destinationNodesByTitle.ContainsKey($nodeTitle)) { $destinationNodesByTitle[$nodeTitle] } else { $null }
+                $embeddedRow = [PSCustomObject][ordered]@{
+                    Site                 = $selectedScopeUrl
+                    Subsite              = $subsiteUrl
+                    LibraryorListName    = $navigationContainerName
+                    FileName             = $nodeTitle
+                    Extension            = ''
+                    DocumentorItemURL    = $subsiteUrl
+                    EmbeddedURLText      = $nodeTitle
+                    EmbeddedURL          = $embeddedUrl
+                    NewFound             = if ($destinationNode) { 'Yes' } else { 'No' }
+                    NewSubsite           = if ($siteMatch) { $newSiteLinkBaseAbsolute } else { '' }
+                    NewDocumentorItemURL = if ($destinationNode) { $newSiteLinkBaseAbsolute } else { '' }
+                }
+                $rowKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`n" + $nodeTitle.ToLowerInvariant() + "`n" + $embeddedUrl.ToLowerInvariant())
+                $embeddedLinksBySite[$siteIdentifier][$rowKey] = $embeddedRow
+            }
+        }
     }
 
     if ($filesScanned -eq 0) {
@@ -1872,61 +2278,9 @@ else {
 }
 
 if ($scanDocumentContent) {
-    if ($embeddedLinksBySite.Count -eq 0) {
-        Write-Host "`nNo internal (whallc.sharepoint.com) embedded links were found in the scanned documents' content."
-    }
-
     foreach ($siteIdentifier in @($embeddedLinksBySite.Keys | Sort-Object)) {
-        $embeddedLinksSeen = $embeddedLinksBySite[$siteIdentifier]
-        if ($embeddedLinksSeen.Count -eq 0) { continue }
-
-        $embeddedOutputPath = Join-Path -Path $OutputFolder -ChildPath ("$runStamp-$siteIdentifier-EmbeddedLinks.csv")
-        $resolvedByGuid = 0
-        $resolvedByPath = 0
-        $unresolved = 0
-        $embeddedRows = New-Object System.Collections.Generic.List[Object]
-
-        foreach ($url in @($embeddedLinksSeen.Keys | Sort-Object)) {
-            $seen = $embeddedLinksSeen[$url]
-            $newUrl = ''
-            $found = 'No'
-            $resolvedVia = 'Not found'
-
-            $guidKey = Get-GuidFromEmbeddedUrl -Url $url
-            if ($guidKey -and $oldGuidToNewInfo.ContainsKey($guidKey)) {
-                $match = $oldGuidToNewInfo[$guidKey]
-                $newUrl = if ($match.NewResolvedUrl) { $match.NewResolvedUrl } else { $match.NewCopyLinkUrl }
-                $found = $match.NewFound
-                $resolvedVia = 'Document GUID'
-                $resolvedByGuid++
-            }
-            else {
-                $pathKey = Get-PathFromEmbeddedUrl -Url $url
-                if ($pathKey -and $oldPathToNewInfo.ContainsKey($pathKey)) {
-                    $match = $oldPathToNewInfo[$pathKey]
-                    $newUrl = if ($match.NewResolvedUrl) { $match.NewResolvedUrl } else { $match.NewCopyLinkUrl }
-                    $found = $match.NewFound
-                    $resolvedVia = 'Document path'
-                    $resolvedByPath++
-                }
-                else {
-                    $unresolved++
-                }
-            }
-
-            $embeddedRows.Add([PSCustomObject][ordered]@{
-                    OldEmbeddedUrl        = $url
-                    NewUrl                = $newUrl
-                    NewFound              = $found
-                    ResolvedVia           = $resolvedVia
-                    OccurrenceCount       = $seen.Count
-                    ExampleSourceDocument = $seen.ExampleOldFileRef
-                })
-        }
-
-        Export-CsvTableWithRetry -Path $embeddedOutputPath -Rows $embeddedRows.ToArray()
-        Remove-StaleLookupTables -Folder $OutputFolder -Identifier $siteIdentifier -KeepPath $embeddedOutputPath -Suffix '-EmbeddedLinks'
-        Write-Host "`nWrote $($embeddedRows.Count) unique embedded link row(s): $embeddedOutputPath"
-        Write-Host ("  Resolved by GUID: {0}   By path: {1}   Not resolved (document outside this run's scope): {2}" -f $resolvedByGuid, $resolvedByPath, $unresolved)
+        $embeddedOutputPath = Join-Path -Path $EmbeddedLinksFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
+        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $EmbeddedLinksFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteIdentifier] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteIdentifier]
+        Write-Host "`nWrote $embeddedRowsWritten embedded-link row(s): $embeddedOutputPath"
     }
 }

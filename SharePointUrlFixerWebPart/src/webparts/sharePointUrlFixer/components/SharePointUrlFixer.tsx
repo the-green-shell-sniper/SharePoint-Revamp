@@ -29,17 +29,17 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   private readonly onConvert = async (): Promise<void> => {
-    const lines = this.state.input.split('\n').map((line) => line.trim()).filter((line) => line.length > 0);
+    const input = this.state.input.trim().replace(/[\r\n]+/g, '');
 
-    if (lines.length === 0) {
-      this.setState({ results: [], status: { level: 'err', message: 'Please paste at least one URL.' } });
+    if (!input) {
+      this.setState({ results: [], status: { level: 'err', message: 'Paste a saved SharePoint link first.' } });
       return;
     }
 
-    this.setState({ isChecking: true, status: { level: 'warn', message: 'Checking SharePoint lookup tables...' } });
+    this.setState({ isChecking: true, status: { level: 'warn', message: 'Finding the updated link...' } });
 
     try {
-      const rawResults = await Promise.all(lines.map((line) => lookupOrFixUrl(line, this.lookupClient)));
+      const rawResults = [await lookupOrFixUrl(input, this.lookupClient)];
       let okCount = 0, warnCount = 0, errCount = 0;
       const results: IResultRow[] = rawResults.map((result) => {
         const sepIndex = result.note.indexOf(':');
@@ -52,9 +52,9 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       });
 
       const summary: string[] = [];
-      if (okCount) summary.push(okCount + ' fixed');
-      if (warnCount) summary.push(warnCount + ' already correct');
-      if (errCount) summary.push(errCount + ' not recognized');
+      if (okCount) summary.push('Updated link ready');
+      if (warnCount) summary.push('This link is already current');
+      if (errCount) summary.push('This link needs help');
 
       this.setState({
         results,
@@ -87,25 +87,33 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     return styles.statusErr;
   };
 
+  private readonly friendlyNote = (result: IResultRow): string => {
+    if (result.level === 'err') return result.note;
+    if (result.note.toLowerCase().includes('lookup table')) return 'Updated link ready.';
+    if (result.level === 'warn') return 'This link already looks current.';
+    return 'Updated link ready.';
+  };
+
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
     const { input, results, status, isChecking } = this.state;
 
     return (
       <div className={styles.sharePointUrlFixer}>
-        <p className={styles.subtitle}>Paste one or more whallc.sharepoint.com links below.</p>
+        <h2 className={styles.title}>SharePoint URL Fixer</h2>
+        <p className={styles.subtitle}>Paste a saved SharePoint link below and we’ll find the current link for you.</p>
 
-        <label className={styles.label} htmlFor="urlFixerInput">URL(s) — one per line</label>
+        <label className={styles.label} htmlFor="urlFixerInput">Saved SharePoint link</label>
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
-          placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
+          placeholder="Paste your saved SharePoint link here"
           value={input}
           onChange={this.onInputChange}
         />
 
         <div>
           <button className={styles.button} disabled={isChecking} onClick={this.onConvert}>
-            {isChecking ? 'Checking...' : 'Fix URL(s)'}
+            {isChecking ? 'Finding link...' : 'Find updated link'}
           </button>
           <button className={styles.secondaryButton} onClick={this.onClear}>Clear</button>
         </div>
@@ -116,27 +124,28 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         {results.length > 0 && (
           <div className={styles.resultBlock}>
-            <label className={styles.label}>Result</label>
+            <label className={styles.label}>Updated link</label>
             {results.map((result, index) => (
               <div className={styles.resultBox} key={index}>
                 {result.level === 'err' ? (
                   <>
-                    <div style={{ color: '#b3261e', fontWeight: 600, fontSize: 11 }}>{result.note}</div>
-                    <div style={{ color: '#888', marginTop: 4 }}>Original (unchanged): {result.original}</div>
+                    <div className={styles.errorMessage}>{result.note}</div>
+                    <div className={styles.originalLink}>We couldn’t create an updated link for:</div>
+                    <div className={styles.originalLink}>{result.original}</div>
                   </>
                 ) : (
                   <>
-                    <div style={{ color: '#888', fontSize: 11, marginBottom: 4 }}>{result.note}</div>
+                    <div className={styles.resultNote}>{this.friendlyNote(result)}</div>
                     <a className={styles.resultLink} href={result.fixed} target="_blank" rel="noreferrer">{result.fixed}</a>
                     <div className={styles.resultActions}>
-                      <button className={styles.openButton} onClick={() => window.open(result.fixed, '_blank')}>Open in new tab</button>
-                      <span className={styles.ctrlDHint}>Once it opens, press <kbd>Ctrl+D</kbd> to save it as an Edge favorite.</span>
+                      <button className={styles.openButton} onClick={() => window.open(result.fixed, '_blank')}>Open updated link</button>
+                      <span className={styles.ctrlDHint}>Save it to your favorites after it opens.</span>
                     </div>
                   </>
                 )}
               </div>
             ))}
-            <button className={styles.secondaryButton} style={{ marginLeft: 0, marginTop: 10 }} onClick={this.onCopyResults}>Copy all</button>
+            <button className={styles.secondaryButton} style={{ marginLeft: 0, marginTop: 10 }} onClick={this.onCopyResults}>Copy updated link</button>
           </div>
         )}
       </div>

@@ -188,6 +188,7 @@ export function fixUrl(raw: string): IFixResult {
 
 const LOOKUP_FOLDER = '/sites/SharePointURLFixer/URLLookupTables';
 const INDEX_FILE_NAME = 'URLFixerIndex.csv';
+const HELP_DESK_MESSAGE = 'No migrated URL found. Please contact the Help Desk for assistance by calling 503-601-3646 or emailing servicedesk@whallc.com.';
 
 function parseCsvLine(line: string): string[] {
   const values: string[] = [];
@@ -338,13 +339,6 @@ export class LookupTableClient {
     const indexRow = findIndexRow(url, indexRows);
     if (!indexRow) return undefined;
 
-    if (!indexRow.NewBaseURL) {
-      return {
-        NewFound: 'No',
-        Notes: 'This old site has no matching new site. Contact the help desk for assistance.'
-      };
-    }
-
     const files = await this.getLookupFiles();
     const fixerFile = files.find((file) => file.Name.toLowerCase() === indexRow.FixerCsvFileName.toLowerCase());
     if (!fixerFile) return undefined;
@@ -362,12 +356,18 @@ export class LookupTableClient {
       this.lookupRowsByFile.set(fixerFile.Name, rows);
     }
 
-    return rows.find((candidate) => {
+    const row = rows.find((candidate) => {
       const exactSignatureMatch = [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl]
         .some((value) => value && getUrlSignature(value) === inputSignature);
       const fileRefMatch = candidate.OldFileRef && getOldFileRefSignature(candidate.OldCopyLinkUrl) === inputFileRef;
       return exactSignatureMatch || fileRefMatch;
     });
+
+    if (row && row.NewFound && row.NewFound.trim().toLowerCase() === 'no') {
+      return { ...row, Notes: HELP_DESK_MESSAGE };
+    }
+
+    return row;
   }
 }
 
