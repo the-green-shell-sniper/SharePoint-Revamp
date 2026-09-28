@@ -93,11 +93,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
     return (
       <div className={styles.sharePointUrlFixer}>
-        <label className={styles.label} htmlFor="urlFixerInput">Paste one or more whallc.sharepoint.com links below:</label>
+        <label className={styles.label} htmlFor="urlFixerInput">SharePoint link</label>
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
-          placeholder="Paste your saved SharePoint link here"
+          placeholder="Paste link here"
           value={input}
           onChange={this.onInputChange}
         />
