@@ -53,8 +53,8 @@
 
 .button {
   margin-top: 16px;
-  background: var(--fixer-primary);
-  color: var(--fixer-white);
+  background: var(--fixer-sky);
+  color: var(--fixer-black);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -68,7 +68,7 @@
   }
 
   &:hover {
-    background: var(--fixer-primary-hover);
+    background: #83cbd8;
   }
 }
 

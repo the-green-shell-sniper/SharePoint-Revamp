@@ -1102,6 +1102,117 @@ function Test-IsUrlWithinOldSiteBase {
     return $false
 }
 
+function Get-EmbeddedFileServerRelativePath {
+    param([Parameter(Mandatory = $true)][string]$Url)
+
+    try {
+        $uri = [Uri]$Url
+        $path = [Uri]::UnescapeDataString($uri.AbsolutePath)
+        $viewerPathMatch = [regex]::Match($path, '(?i)^/:[a-z]:/r(/.*)$')
+        if ($viewerPathMatch.Success) {
+            $path = $viewerPathMatch.Groups[1].Value
+        }
+
+        if ($path -match '(?i)/_layouts/15/Doc\.aspx$' -or
+            $path -match '(?i)/Forms/(?:AllItems|DispForm|EditForm)\.aspx$') {
+            return $null
+        }
+
+        return $path.TrimEnd('/')
+    }
+    catch {
+        return $null
+    }
+}
+
+function Resolve-EmbeddedTargetUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][string]$RootUrl,
+        [Parameter(Mandatory = $true)][array]$SiteUrlMap,
+        [Parameter(Mandatory = $true)][string]$ClientId,
+        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ConnectionCache
+    )
+
+    $mappedUrl = ''
+    $mappedSubsite = ''
+    $mappedMatch = Get-NewSiteBaseForUrl -Url $Url -SiteUrlMap $SiteUrlMap
+    if ($mappedMatch) {
+        $mappedUrl = $mappedMatch.NewLinkBase + $mappedMatch.Suffix
+        $mappedSubsite = $mappedMatch.NewLinkBase
+    }
+
+    $oldFilePath = Get-EmbeddedFileServerRelativePath -Url $Url
+    $pathMatch = $null
+    if ($oldFilePath) {
+        try {
+            $embeddedUri = [Uri]$Url
+            $pathOnlyUrl = '{0}://{1}{2}' -f $embeddedUri.Scheme, $embeddedUri.Host, $embeddedUri.AbsolutePath
+            $pathMatch = Get-NewSiteBaseForUrl -Url $pathOnlyUrl -SiteUrlMap $SiteUrlMap
+        }
+        catch {
+            $pathMatch = $null
+        }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($oldFilePath) -or -not $pathMatch) {
+        return [PSCustomObject]@{
+            Found      = if ($mappedMatch) { 'Mapped' } else { 'No' }
+            NewSubsite = $mappedSubsite
+            NewUrl     = $mappedUrl
+            Resolution = if ($mappedMatch) { 'Mapped base URL only; embedded link does not expose a file path.' } else { 'No matching Old Site URL row.' }
+        }
+    }
+
+    $newFilePath = ([Uri]$pathMatch.NewBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
+    $connectionBase = $pathMatch.NewBase.TrimEnd('/')
+    if (-not $ConnectionCache.ContainsKey($connectionBase)) {
+        try {
+            $ConnectionCache[$connectionBase] = Connect-ValidatedPnP -Url $connectionBase -ClientId $ClientId
+        }
+        catch {
+            $ConnectionCache[$connectionBase] = $null
+        }
+    }
+
+    $connection = $ConnectionCache[$connectionBase]
+    if (-not $connection) {
+        return [PSCustomObject]@{
+            Found      = 'No'
+            NewSubsite = $mappedSubsite
+            NewUrl     = $mappedUrl
+            Resolution = 'Mapped target, but could not connect to its new site.'
+        }
+    }
+
+    try {
+        $itemResult = Invoke-PnPConnectionOperation -Url $connectionBase -ClientId $ClientId -Connection $connection -Label ('Lookup embedded target: ' + $newFilePath) -MaxAttempts 2 -Operation {
+            param($activeConnection)
+            Get-PnPFile -Url $newFilePath -AsListItem -Connection $activeConnection
+        }
+        $ConnectionCache[$connectionBase] = $itemResult.Connection
+        $newItem = $itemResult.Result
+        $newUniqueId = $newItem.FieldValues['UniqueId']
+        $newLinkFilePath = ([Uri]$pathMatch.NewLinkBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
+        $extension = Get-NormalizedExtension -FileName ([System.IO.Path]::GetFileName($oldFilePath))
+
+        return [PSCustomObject]@{
+            Found      = 'Yes'
+            NewSubsite = $mappedSubsite
+            NewUrl     = Get-DocumentBrowserUrl -TenantBase $RootUrl -FileRef $newLinkFilePath -Extension $extension -UniqueId $newUniqueId
+            Resolution = 'Live lookup by mapped embedded file path.'
+        }
+    }
+    catch {
+        return [PSCustomObject]@{
+            Found      = 'No'
+            NewSubsite = $mappedSubsite
+            NewUrl     = $mappedUrl
+            Resolution = 'Mapped target path was not found in the new site.'
+        }
+    }
+}
+
 function Get-NavigationNodeTreeItems {
     param([Parameter(Mandatory = $false)][array]$Nodes = @())
 
@@ -1472,7 +1583,7 @@ function Publish-EmbeddedLinksLookupTable {
         [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ScannedSourceUrls
     )
 
-    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL')
+    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL', 'EmbeddedNewFound', 'EmbeddedNewSubsite', 'EmbeddedNewURL', 'EmbeddedResolution')
     $reportPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks.csv")
     $scanTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-scan-temp.csv")
     $mergedTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-merged-temp.csv")
@@ -1878,6 +1989,7 @@ function Remove-StaleLookupTables {
 
 $runStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $newConnectionsByBase = @{}
+$embeddedTargetResolutionCache = @{}
 $filesScannedTotal = 0
 $newFoundCountTotal = 0
 $newFoundFromCacheCountTotal = 0
@@ -2213,6 +2325,12 @@ foreach ($subsite in $selectedSubsites) {
                     if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
                     if ($scanOldBaseOnly -and -not (Test-IsUrlWithinOldSiteBase -Url $embeddedUrl -SiteUrlMap $siteUrlMap)) { continue }
 
+                    $embeddedTargetKey = $embeddedUrl.Trim().ToLowerInvariant()
+                    if (-not $embeddedTargetResolutionCache.ContainsKey($embeddedTargetKey)) {
+                        $embeddedTargetResolutionCache[$embeddedTargetKey] = Resolve-EmbeddedTargetUrl -Url $embeddedUrl -RootUrl $RootUrl -SiteUrlMap $siteUrlMap -ClientId $ClientId -ConnectionCache $newConnectionsByBase
+                    }
+                    $embeddedTarget = $embeddedTargetResolutionCache[$embeddedTargetKey]
+
                     $embeddedRow = [PSCustomObject][ordered]@{
                         Site                 = $selectedScopeUrl
                         Subsite              = $subsiteUrl
@@ -2225,6 +2343,10 @@ foreach ($subsite in $selectedSubsites) {
                         NewFound             = $embeddedSourceNewFound
                         NewSubsite           = $newSubsiteForItem
                         NewDocumentorItemURL = $embeddedSourceNewDocumentUrl
+                        EmbeddedNewFound     = $embeddedTarget.Found
+                        EmbeddedNewSubsite   = $embeddedTarget.NewSubsite
+                        EmbeddedNewURL       = $embeddedTarget.NewUrl
+                        EmbeddedResolution   = $embeddedTarget.Resolution
                     }
                     $embeddedKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`n" + $embeddedRow.EmbeddedURLText + "`n" + $embeddedUrl)
                     $embeddedLinksBySite[$siteIdentifier][$embeddedKey] = $embeddedRow
@@ -2320,6 +2442,12 @@ foreach ($subsite in $selectedSubsites) {
                 if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
                 if ($scanOldBaseOnly -and -not (Test-IsUrlWithinOldSiteBase -Url $embeddedUrl -SiteUrlMap $siteUrlMap)) { continue }
 
+                $embeddedTargetKey = $embeddedUrl.Trim().ToLowerInvariant()
+                if (-not $embeddedTargetResolutionCache.ContainsKey($embeddedTargetKey)) {
+                    $embeddedTargetResolutionCache[$embeddedTargetKey] = Resolve-EmbeddedTargetUrl -Url $embeddedUrl -RootUrl $RootUrl -SiteUrlMap $siteUrlMap -ClientId $ClientId -ConnectionCache $newConnectionsByBase
+                }
+                $embeddedTarget = $embeddedTargetResolutionCache[$embeddedTargetKey]
+
                 $nodeTitle = [string]$navigationNode.Title
                 $destinationNode = if ($destinationNodesByTitle.ContainsKey($nodeTitle)) { $destinationNodesByTitle[$nodeTitle] } else { $null }
                 $embeddedRow = [PSCustomObject][ordered]@{
@@ -2334,6 +2462,10 @@ foreach ($subsite in $selectedSubsites) {
                     NewFound             = if ($destinationNode) { 'Yes' } else { 'No' }
                     NewSubsite           = if ($siteMatch) { $newSiteLinkBaseAbsolute } else { '' }
                     NewDocumentorItemURL = if ($destinationNode) { $newSiteLinkBaseAbsolute } else { '' }
+                    EmbeddedNewFound     = $embeddedTarget.Found
+                    EmbeddedNewSubsite   = $embeddedTarget.NewSubsite
+                    EmbeddedNewURL       = $embeddedTarget.NewUrl
+                    EmbeddedResolution   = $embeddedTarget.Resolution
                 }
                 $rowKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`n" + $nodeTitle.ToLowerInvariant() + "`n" + $embeddedUrl.ToLowerInvariant())
                 $embeddedLinksBySite[$siteIdentifier][$rowKey] = $embeddedRow
