@@ -149,7 +149,7 @@
 }
 
 .resultLink {
-  color: var(--fixer-primary);
+  color: #6f2448;
   text-decoration: none;
 
   &:hover {
@@ -174,10 +174,11 @@
 }
 
 .openButton {
-  background: var(--fixer-primary);
-  color: var(--fixer-white);
+  background: var(--fixer-surface);
+  color: var(--fixer-primary);
   border: none;
   padding: 6px 14px;
+  border: 1px solid var(--fixer-sky);
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
@@ -185,7 +186,12 @@
   margin: 0;
 
   &:hover {
-    background: var(--fixer-primary-hover);
+    background: #d8e5e9;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--fixer-accent);
+    outline-offset: 2px;
   }
 }
 

@@ -120,7 +120,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
             </div>
             <div className={styles.resultActions}>
               <button
-                className={styles.button}
+                className={styles.openButton}
                 title="Link will open in a new tab."
                 onClick={() => window.open(usableResult.fixed, '_blank')}
               >
