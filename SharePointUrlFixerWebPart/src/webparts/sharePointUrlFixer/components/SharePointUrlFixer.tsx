@@ -52,9 +52,10 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       });
 
       const summary: string[] = [];
-        const firstResult = results[0];
-        if (errCount) summary.push(firstResult.note);
-        else if (okCount) summary.push(firstResult.level === 'warn' ? 'This link is already current.' : 'Updated link ready.');
+      const firstResult = results[0];
+      if (errCount) summary.push(firstResult.note);
+      else if (warnCount) summary.push('This link is already current.');
+      else if (okCount) summary.push('Updated link ready.');
 
       this.setState({
         results,
@@ -93,11 +94,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
     return (
       <div className={styles.sharePointUrlFixer}>
-        <label className={styles.label} htmlFor="urlFixerInput">SharePoint link</label>
+        <label className={styles.label} htmlFor="urlFixerInput">Paste a whallc.sharepoint.com link below:</label>
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
-          placeholder="Paste link here"
+          placeholder="e.g. https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
           value={input}
           onChange={this.onInputChange}
         />

@@ -9,7 +9,9 @@
   --fixer-black: #000000;
   --fixer-white: #FFFFFF;
   color: var(--fixer-black);
-  max-width: 720px;
+  width: 100%;
+  max-width: 960px;
+  font-size: 16px;
 }
 
 .title {
@@ -26,21 +28,21 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--fixer-black);
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .textarea {
   width: 100%;
   box-sizing: border-box;
-  min-height: 90px;
+  min-height: 120px;
   padding: 10px 12px;
   border: 1px solid #d8dade;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: inherit;
   resize: vertical;
 
@@ -58,7 +60,7 @@
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 
@@ -97,7 +99,7 @@
   border: 0;
   border-radius: 8px;
   padding: 12px;
-  font-size: 13px;
+  font-size: 15px;
   word-break: break-all;
   color: #222;
   margin-top: 8px;
@@ -124,7 +126,7 @@
 }
 
 .status {
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 10px;
   padding: 8px 12px;
   border-radius: 6px;
