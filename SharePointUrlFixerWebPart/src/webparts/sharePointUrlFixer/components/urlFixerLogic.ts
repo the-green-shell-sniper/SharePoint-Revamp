@@ -423,7 +423,12 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
   }
 
   const lookupRow = await lookupClient.findLookupRow(input);
-  if (!lookupRow) return patternResult;
+  if (!lookupRow) {
+    if (patternLevel === 'err' && !/^https?:\/\/whallc\.sharepoint\.com/i.test(input)) {
+      return patternResult;
+    }
+    return helpDeskResult(input);
+  }
 
   if (lookupRow.Notes && !lookupRow.NewCopyLinkUrl && !lookupRow.NewResolvedUrl) {
     return {

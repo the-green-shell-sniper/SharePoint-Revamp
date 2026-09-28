@@ -93,7 +93,7 @@
 }
 
 .resultBox {
-  background: rgba(160, 219, 229, 0.22);
+  background: rgba(160, 219, 229, 0.2);
   border: 0;
   border-radius: 8px;
   padding: 12px;
@@ -178,8 +178,8 @@
 }
 
 .openButton {
-  background: var(--fixer-accent);
-  color: var(--fixer-white);
+  background: var(--fixer-sky);
+  color: var(--fixer-black);
   border: 0;
   padding: 10px 20px;
   border-radius: 8px;
@@ -189,7 +189,7 @@
   margin: 0;
 
   &:hover {
-    background: #b81750;
+    background: #83cbd8;
   }
 
   &:focus-visible {

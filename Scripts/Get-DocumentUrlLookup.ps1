@@ -674,6 +674,27 @@ function Get-NewSiteBaseForUrl {
     return $null
 }
 
+function Get-ExactNewSiteBaseForUrl {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][array]$SiteUrlMap
+    )
+
+    $normalized = $Url.TrimEnd('/')
+    foreach ($entry in $SiteUrlMap) {
+        if ($normalized.Equals(([string]$entry.OldBase).TrimEnd('/'), [System.StringComparison]::OrdinalIgnoreCase)) {
+            return [PSCustomObject]@{
+                OldBase     = $entry.OldBase
+                NewBase     = $entry.NewBase
+                NewLinkBase = $entry.NewLinkBase
+                Suffix      = ''
+            }
+        }
+    }
+
+    return $null
+}
+
 function Get-EncodedServerRelativePath {
     param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -1763,7 +1784,7 @@ while (-not $siteUrlMap) {
     $missing = New-Object System.Collections.Generic.List[string]
     foreach ($sub in $selectedSubsites) {
         $subUrl = ([string]$sub.Url).TrimEnd('/')
-        if (-not (Get-NewSiteBaseForUrl -Url $subUrl -SiteUrlMap $candidateMap)) {
+        if (-not (Get-ExactNewSiteBaseForUrl -Url $subUrl -SiteUrlMap $candidateMap)) {
             $missing.Add($subUrl)
         }
     }
@@ -1786,7 +1807,7 @@ while (-not $siteUrlMap) {
 $automaticEmbeddedScanSites = @{}
 foreach ($selectedSubsite in $selectedSubsites) {
     $selectedSubsiteUrl = ([string]$selectedSubsite.Url).TrimEnd('/')
-    if (-not (Get-NewSiteBaseForUrl -Url $selectedSubsiteUrl -SiteUrlMap $siteUrlMap)) {
+    if (-not (Get-ExactNewSiteBaseForUrl -Url $selectedSubsiteUrl -SiteUrlMap $siteUrlMap)) {
         $automaticEmbeddedScanSites[$selectedSubsiteUrl.ToLowerInvariant()] = $true
     }
 }
@@ -1873,7 +1894,7 @@ foreach ($subsite in $selectedSubsites) {
     $subsiteUrl = ([string]$subsite.Url).TrimEnd('/')
     Write-Host "`nScanning $subsiteUrl ..."
 
-    $siteMatch = Get-NewSiteBaseForUrl -Url $subsiteUrl -SiteUrlMap $siteUrlMap
+    $siteMatch = Get-ExactNewSiteBaseForUrl -Url $subsiteUrl -SiteUrlMap $siteUrlMap
     $scanThisSiteContent = $scanDocumentContent -or $automaticEmbeddedScanSites.ContainsKey($subsiteUrl.ToLowerInvariant())
     $scanOldBaseOnly = (-not $siteMatch) -and (-not $scanDocumentContent)
     if (-not $siteMatch) {
