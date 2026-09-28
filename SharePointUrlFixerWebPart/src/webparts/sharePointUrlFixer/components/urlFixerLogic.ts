@@ -373,6 +373,27 @@ export class LookupTableClient {
 
 async function isReachableSharePointUrl(url: string): Promise<boolean> {
   try {
+    const parsed = new URL(url);
+    const path = parsed.pathname.replace(/\/$/, '');
+
+    // A SharePoint site route can return a generic shell page even when the site
+    // does not exist. Ask that site directly through REST before accepting it.
+    if (/^\/sites\/[^/]+$/i.test(path)) {
+      const siteResponse = await fetch(`${parsed.origin}${path}/_api/web?$select=Url`, {
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json;odata=nometadata' },
+        cache: 'no-store'
+      });
+      if (!siteResponse.ok) return false;
+      const siteText = await siteResponse.text();
+      try {
+        JSON.parse(siteText);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     const response = await fetch(url, {
       method: 'HEAD',
       credentials: 'same-origin',
@@ -383,6 +404,10 @@ async function isReachableSharePointUrl(url: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+function helpDeskResult(input: string): IFixResult {
+  return { original: input, fixed: input, note: `err:${HELP_DESK_MESSAGE}` };
 }
 
 // Tries the fast local pattern fix first, validates it's actually reachable, and
@@ -409,11 +434,17 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
   }
 
   const isResolved = /_layouts\/15\/doc\.aspx|[?&](?:id|parent)=/i.test(input);
+  const lookupUrl = isResolved
+    ? (lookupRow.NewResolvedUrl || lookupRow.NewCopyLinkUrl)
+    : (lookupRow.NewCopyLinkUrl || lookupRow.NewResolvedUrl);
+
+  if (!lookupUrl || !(await isReachableSharePointUrl(lookupUrl))) {
+    return helpDeskResult(input);
+  }
+
   return {
     original: input,
-    fixed: isResolved
-      ? (lookupRow.NewResolvedUrl || lookupRow.NewCopyLinkUrl)
-      : (lookupRow.NewCopyLinkUrl || lookupRow.NewResolvedUrl),
+    fixed: lookupUrl,
     note: 'ok:Pattern match was unavailable or did not resolve; found the migrated document in the SharePoint lookup table.'
   };
 }
