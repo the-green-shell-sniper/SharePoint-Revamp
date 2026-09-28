@@ -100,7 +100,7 @@ param(
 
     # Defaults to the relocated server CSV; set blank to select or enter a path at runtime.
     [Parameter(Mandatory = $false)]
-    [string]$UrlMappingCsvPath = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Support-Files\OldSiteURL-NewSiteURL-Lookup.csv",
+    [string]$UrlMappingCsvPath = "",
 
     [Parameter(Mandatory = $false)]
     [string]$OutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles",
@@ -772,9 +772,9 @@ function Initialize-PdfPig {
     $script:PdfPigAssemblyFolder = $PdfPigAssemblyFolder
     if (-not $script:PdfPigAssemblyResolveHandler) {
         $script:PdfPigAssemblyResolveHandler = [System.ResolveEventHandler]{
-            param($sender, $eventArgs)
+            param($resolveSender, $resolveEventArgs)
 
-            $dependencyName = ([System.Reflection.AssemblyName]::new($eventArgs.Name)).Name + '.dll'
+            $dependencyName = ([System.Reflection.AssemblyName]::new($resolveEventArgs.Name)).Name + '.dll'
             $dependencyPath = Join-Path -Path $script:PdfPigAssemblyFolder -ChildPath $dependencyName
             if (Test-Path -LiteralPath $dependencyPath) {
                 return [System.Reflection.Assembly]::LoadFrom($dependencyPath)
@@ -914,7 +914,7 @@ function Get-OfficeDocumentHyperlinks {
         $archive.Dispose()
     }
 
-    return @($found)
+    return $found.ToArray()
 }
 
 # PDF URI link annotations are the actual clickable links a reader sees/clicks - not a
@@ -955,7 +955,7 @@ function Get-HtmlHyperlinks {
         $url = [System.Net.WebUtility]::HtmlDecode($url.Trim())
         $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
     }
-    return @($found)
+    return $found.ToArray()
 }
 
 function Get-CanvasContentHyperlinks {
@@ -1009,7 +1009,7 @@ function Get-CanvasContentHyperlinks {
         }
     }
 
-    return @($found)
+    return $found.ToArray()
 }
 
 function Get-FieldValueHyperlinks {
@@ -1027,7 +1027,7 @@ function Get-FieldValueHyperlinks {
             $displayText = if ($Value.PSObject.Properties['Description']) { [string]$Value.Description } else { '' }
             $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
         }
-        return @($found)
+        return $found.ToArray()
     }
 
     foreach ($textValue in @($Value)) {
@@ -1037,7 +1037,7 @@ function Get-FieldValueHyperlinks {
             $found.Add($link)
         }
     }
-    return @($found)
+    return $found.ToArray()
 }
 
 function Test-IsInternalTenantUrl {
@@ -1694,6 +1694,7 @@ $selectedSubsites = @($selectedIndices | ForEach-Object { $scopeSubsites[$_] })
 $urlMappingCsvPreferencePath = Get-UrlMappingCsvPreferencePath -StateRootFolder $StateRootFolder
 $urlMappingCsvPreference = Get-UrlMappingCsvPreference -Path $urlMappingCsvPreferencePath
 $firstAttemptPath = $UrlMappingCsvPath
+$defaultUrlMappingCsvPath = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Support-Files\OldSiteURL-NewSiteURL-Lookup.csv"
 
 $siteUrlMap = $null
 while (-not $siteUrlMap) {
@@ -1712,7 +1713,7 @@ while (-not $siteUrlMap) {
     }
 
     if ([string]::IsNullOrWhiteSpace($csvPath)) {
-        $csvPath = Get-ExistingCsvSelectionPath -DefaultDirectory (Split-Path -Path $UrlMappingCsvPath -Parent)
+        $csvPath = Get-ExistingCsvSelectionPath -DefaultDirectory (Split-Path -Path $defaultUrlMappingCsvPath -Parent)
     }
 
     if ([string]::IsNullOrWhiteSpace($csvPath)) {
