@@ -2061,7 +2061,7 @@ function Repair-SiteOutputInventory {
     Repair-SiteCsvOutput -CanonicalPath (Join-Path $EmbeddedFolder "$Identifier-EmbeddedLinks.csv") -LegacyPaths $legacyEmbeddedPaths
 
     foreach ($tempFile in @(Get-ChildItem -Path $TempFolder -File -ErrorAction SilentlyContinue | Where-Object {
-                $_.Name -match ("(?i)^\d{8}-\d{6}-(?:sites-)?{0}-temp\.csv$" -f [regex]::Escape($Identifier))
+                $_.Name -match ("(?i)^\d{{8}}-\d{{6}}-(?:sites-)?{0}-temp\.csv$" -f [regex]::Escape($Identifier))
             })) {
         Remove-FileWithRetry -Path $tempFile.FullName
     }
