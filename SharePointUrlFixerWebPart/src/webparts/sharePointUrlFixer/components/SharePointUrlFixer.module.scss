@@ -10,7 +10,7 @@
   --fixer-white: #FFFFFF;
   color: var(--fixer-black);
   width: 100%;
-  max-width: 960px;
+  max-width: 1080px;
   font-size: 16px;
 }
 
@@ -72,6 +72,13 @@
   &:hover {
     background: #83cbd8;
   }
+}
+
+.primaryActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .secondaryButton {
@@ -203,4 +210,45 @@
 .ctrlDHint {
   font-size: 12px;
   color: #8b8f97;
+}
+
+@media (max-width: 768px) {
+  .sharePointUrlFixer {
+    padding: 4px 0 16px;
+  }
+
+  .textarea {
+    min-height: 140px;
+  }
+
+  .button,
+  .secondaryButton,
+  .openButton {
+    min-height: 44px;
+  }
+
+  .resultActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .resultActions .button,
+  .resultActions .secondaryButton,
+  .resultActions .openButton {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .primaryActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primaryActions .button,
+  .primaryActions .secondaryButton {
+    width: 100%;
+    margin-left: 0;
+  }
 }

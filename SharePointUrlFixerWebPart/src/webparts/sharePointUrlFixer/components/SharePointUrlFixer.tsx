@@ -103,7 +103,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
           onChange={this.onInputChange}
         />
 
-        <div>
+        <div className={styles.primaryActions}>
           <button className={styles.button} disabled={isChecking} onClick={this.onConvert}>
             {isChecking ? 'Finding link...' : 'Find Updated Link'}
           </button>
