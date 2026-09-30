@@ -69,15 +69,6 @@
     Folder containing per-site embedded-link reports and temporary scan files.
     If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\EmbeddedLinks folder.
 
-.PARAMETER SitesMasterFolder
-    Master output folder used for webs whose URL path starts with /sites.
-
-.PARAMETER SitesFixerOutputFolder
-    Fixer output folder used for webs whose URL path starts with /sites.
-
-.PARAMETER SitesEmbeddedLinksFolder
-    Embedded-links output folder used for webs whose URL path starts with /sites.
-
 .PARAMETER StateRootFolder
     Folder used to cache the subsite scannability inventory between runs.
 
@@ -125,18 +116,6 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$EmbeddedLinksFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\EmbeddedLinks",
-
-    [Parameter(Mandatory = $false)]
-    [string]$SitesMasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Sites-Masters",
-
-    [Parameter(Mandatory = $false)]
-    [string]$SitesTempMasterFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Sites-Masters\Temp",
-
-    [Parameter(Mandatory = $false)]
-    [string]$SitesFixerOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Sites-FixerFiles",
-
-    [Parameter(Mandatory = $false)]
-    [string]$SitesEmbeddedLinksFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Sites-EmbeddedLinks",
 
     [Parameter(Mandatory = $false)]
     [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Checkpoints-and-Caches",
@@ -816,6 +795,7 @@ function Initialize-PdfPig {
         $script:PdfPigAssemblyResolveHandler = [System.ResolveEventHandler]{
             param($resolveSender, $resolveEventArgs)
 
+            $null = $resolveSender
             $dependencyName = ([System.Reflection.AssemblyName]::new($resolveEventArgs.Name)).Name + '.dll'
             $dependencyPath = Join-Path -Path $script:PdfPigAssemblyFolder -ChildPath $dependencyName
             if (Test-Path -LiteralPath $dependencyPath) {
@@ -840,7 +820,7 @@ function Initialize-PdfPig {
 # Only the human-visible content parts of the OOXML package (the document/sheet/slide
 # bodies) are read - not core.xml/app.xml metadata, not comments - since we only care
 # about links a reader would actually see and could click.
-function Get-OfficeDocumentHyperlinks {
+function Get-OfficeDocumentHyperlink {
     param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
 
     $found = New-Object System.Collections.Generic.List[Object]
@@ -961,7 +941,7 @@ function Get-OfficeDocumentHyperlinks {
 
 # PDF URI link annotations are the actual clickable links a reader sees/clicks - not a
 # raw-text scan, which would also catch incidental URL-shaped text that isn't a link.
-function Get-PdfHyperlinks {
+function Get-PdfHyperlink {
     param([Parameter(Mandatory = $true)][AllowEmptyCollection()][byte[]]$Bytes)
 
     if ($Bytes.Length -eq 0) { return @() }
@@ -986,7 +966,7 @@ function Get-PdfHyperlinks {
     return $found.ToArray()
 }
 
-function Get-HtmlHyperlinks {
+function Get-HtmlHyperlink {
     param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$Html)
 
     $found = New-Object System.Collections.Generic.List[Object]
@@ -1002,7 +982,7 @@ function Get-HtmlHyperlinks {
     return $found.ToArray()
 }
 
-function Get-CanvasContentHyperlinks {
+function Get-CanvasContentHyperlink {
     param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$CanvasContent)
 
     $found = New-Object System.Collections.Generic.List[Object]
@@ -1012,7 +992,7 @@ function Get-CanvasContentHyperlinks {
         $canvas = ConvertFrom-Json -InputObject $CanvasContent -ErrorAction Stop
     }
     catch {
-        return @(Get-HtmlHyperlinks -Html $CanvasContent)
+        return @(Get-HtmlHyperlink -Html $CanvasContent)
     }
 
     $pending = New-Object System.Collections.Stack
@@ -1027,7 +1007,7 @@ function Get-CanvasContentHyperlinks {
 
         $innerHtml = $current.PSObject.Properties['innerHTML']
         if ($innerHtml -and $innerHtml.Value -is [string]) {
-            foreach ($link in @(Get-HtmlHyperlinks -Html ([string]$innerHtml.Value))) { $found.Add($link) }
+            foreach ($link in @(Get-HtmlHyperlink -Html ([string]$innerHtml.Value))) { $found.Add($link) }
         }
 
         foreach ($urlPropertyName in @('linkUrl', 'href')) {
@@ -1056,7 +1036,7 @@ function Get-CanvasContentHyperlinks {
     return $found.ToArray()
 }
 
-function Get-FieldValueHyperlinks {
+function Get-FieldValueHyperlink {
     param(
         [Parameter(Mandatory = $false)]$Value,
         [Parameter(Mandatory = $false)][switch]$CanvasContent
@@ -1076,7 +1056,7 @@ function Get-FieldValueHyperlinks {
 
     foreach ($textValue in @($Value)) {
         if ($textValue -isnot [string]) { continue }
-        $hyperlinks = if ($CanvasContent) { Get-CanvasContentHyperlinks -CanvasContent $textValue } else { Get-HtmlHyperlinks -Html $textValue }
+        $hyperlinks = if ($CanvasContent) { Get-CanvasContentHyperlink -CanvasContent $textValue } else { Get-HtmlHyperlink -Html $textValue }
         foreach ($link in @($hyperlinks)) {
             $found.Add($link)
         }
@@ -1106,14 +1086,12 @@ function Test-IsUrlWithinOldSiteBase {
 
     try {
         $uri = [Uri]$Url
-        $urlPath = [Uri]::UnescapeDataString($uri.AbsolutePath).TrimEnd('/')
-        $urlPath = $urlPath -replace '(?i)^/:[a-z]:/(?:r|s)(?=/)', ''
         foreach ($entry in $SiteUrlMap) {
             $oldBaseUri = [Uri]$entry.OldBase
             if (-not $uri.Host.Equals($oldBaseUri.Host, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
 
             $oldPath = $oldBaseUri.AbsolutePath.TrimEnd('/')
-            if ([string]::IsNullOrWhiteSpace($oldPath) -and $urlPath -match '(?i)^/sites(?:/|$)') { continue }
+            $urlPath = $uri.AbsolutePath.TrimEnd('/')
             if ($urlPath.Equals($oldPath, [System.StringComparison]::OrdinalIgnoreCase) -or
                 $urlPath.StartsWith(($oldPath + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
                 return $true
@@ -1138,16 +1116,8 @@ function Get-EmbeddedFileServerRelativePath {
             $path = $viewerPathMatch.Groups[1].Value
         }
 
-        if ($path -match '(?i)/Forms/(?:AllItems|DispForm|EditForm)\.aspx$') {
-            $idMatch = [regex]::Match($uri.Query, '(?i)(?:^|[?&])id=([^&]+)')
-            if ($idMatch.Success) {
-                $idPath = [Uri]::UnescapeDataString($idMatch.Groups[1].Value.Replace('+', ' '))
-                if ($idPath.StartsWith('/')) { return $idPath.TrimEnd('/') }
-            }
-            return $null
-        }
-
-        if ($path -match '(?i)/_layouts/15/Doc\.aspx$') {
+        if ($path -match '(?i)/_layouts/15/Doc\.aspx$' -or
+            $path -match '(?i)/Forms/(?:AllItems|DispForm|EditForm)\.aspx$') {
             return $null
         }
 
@@ -1180,7 +1150,7 @@ function Resolve-EmbeddedTargetUrl {
     if ($oldFilePath) {
         try {
             $embeddedUri = [Uri]$Url
-            $pathOnlyUrl = '{0}://{1}{2}' -f $embeddedUri.Scheme, $embeddedUri.Host, $oldFilePath
+            $pathOnlyUrl = '{0}://{1}{2}' -f $embeddedUri.Scheme, $embeddedUri.Host, $embeddedUri.AbsolutePath
             $pathMatch = Get-NewSiteBaseForUrl -Url $pathOnlyUrl -SiteUrlMap $SiteUrlMap
         }
         catch {
@@ -1197,21 +1167,8 @@ function Resolve-EmbeddedTargetUrl {
         }
     }
 
-    $locationOverride = Get-NewDocumentLocationOverride -FileRef $oldFilePath
-    if ($locationOverride) {
-        $relativeWithinOverrideLibrary = $oldFilePath.Substring($locationOverride.OldLibraryPath.Length)
-        $newFilePath = $locationOverride.NewLibraryPath + $relativeWithinOverrideLibrary
-        $newLinkFilePath = $newFilePath
-        $connectionBase = $locationOverride.ConnectionBase.TrimEnd('/')
-        $mappedSubsite = $connectionBase
-        $mappedUrl = $RootUrl + (Get-EncodedServerRelativePath -Path $newLinkFilePath)
-    }
-    else {
-        $newFilePath = ([Uri]$pathMatch.NewBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
-        $newLinkFilePath = ([Uri]$pathMatch.NewLinkBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
-        $connectionBase = $pathMatch.NewBase.TrimEnd('/')
-    }
-
+    $newFilePath = ([Uri]$pathMatch.NewBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
+    $connectionBase = $pathMatch.NewBase.TrimEnd('/')
     if (-not $ConnectionCache.ContainsKey($connectionBase)) {
         try {
             $ConnectionCache[$connectionBase] = Connect-ValidatedPnP -Url $connectionBase -ClientId $ClientId
@@ -1239,13 +1196,14 @@ function Resolve-EmbeddedTargetUrl {
         $ConnectionCache[$connectionBase] = $itemResult.Connection
         $newItem = $itemResult.Result
         $newUniqueId = $newItem.FieldValues['UniqueId']
+        $newLinkFilePath = ([Uri]$pathMatch.NewLinkBase).AbsolutePath.TrimEnd('/') + $pathMatch.Suffix
         $extension = Get-NormalizedExtension -FileName ([System.IO.Path]::GetFileName($oldFilePath))
 
         return [PSCustomObject]@{
             Found      = 'Yes'
             NewSubsite = $mappedSubsite
             NewUrl     = Get-DocumentBrowserUrl -TenantBase $RootUrl -FileRef $newLinkFilePath -Extension $extension -UniqueId $newUniqueId
-            Resolution = if ($locationOverride) { 'Live lookup by document-library location override.' } else { 'Live lookup by mapped embedded file path.' }
+            Resolution = 'Live lookup by mapped embedded file path.'
         }
     }
     catch {
@@ -1258,7 +1216,7 @@ function Resolve-EmbeddedTargetUrl {
     }
 }
 
-function Get-NavigationNodeTreeItems {
+function Get-NavigationNodeTreeItem {
     param([Parameter(Mandatory = $false)][array]$Nodes = @())
 
     $items = New-Object System.Collections.Generic.List[Object]
@@ -1539,6 +1497,7 @@ function Copy-CsvFileWithRetry {
 }
 
 function Remove-FileWithRetry {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)][string]$Path,
         [Parameter(Mandatory = $false)][int]$MaxAttempts = 5,
@@ -1551,7 +1510,10 @@ function Remove-FileWithRetry {
 
     for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
         try {
-            Remove-Item -Path $Path -Force
+            if ($PSCmdlet.ShouldProcess($Path, 'Remove file')) {
+                Remove-Item -Path $Path -Force
+                return
+            }
             return
         }
         catch {
@@ -1570,7 +1532,19 @@ function Publish-MasterLookupTable {
         [Parameter(Mandatory = $true)][string]$MasterPath
     )
 
-    Copy-CsvFileWithRetry -SourcePath $TempPath -DestinationPath $MasterPath
+    $mergedRowsByKey = Import-ExistingLookupTable -Path $MasterPath -KeyProperty 'OldFileRef'
+    foreach ($row in @(Import-Csv -Path $TempPath)) {
+        $key = ([string]$row.OldFileRef).Trim().ToLowerInvariant()
+        if ([string]::IsNullOrWhiteSpace($key)) { continue }
+        $mergedRowsByKey[$key] = $row
+    }
+
+    $mergedRows = New-Object System.Collections.Generic.List[Object]
+    foreach ($row in $mergedRowsByKey.Values) {
+        $mergedRows.Add($row)
+    }
+
+    Export-CsvTableWithRetry -Path $MasterPath -Rows $mergedRows.ToArray()
     Remove-FileWithRetry -Path $TempPath
 }
 
@@ -1721,28 +1695,12 @@ if ([string]::IsNullOrWhiteSpace($MasterFolder)) {
 if ([string]::IsNullOrWhiteSpace($FixerOutputFolder)) {
     $FixerOutputFolder = Join-Path -Path $OutputFolder -ChildPath 'FixerFiles'
 }
-if ([string]::IsNullOrWhiteSpace($SitesMasterFolder)) {
-    $SitesMasterFolder = Join-Path -Path $OutputFolder -ChildPath 'Sites-Masters'
-}
-if ([string]::IsNullOrWhiteSpace($SitesTempMasterFolder)) {
-    $SitesTempMasterFolder = Join-Path -Path $SitesMasterFolder -ChildPath 'Temp'
-}
-if ([string]::IsNullOrWhiteSpace($SitesFixerOutputFolder)) {
-    $SitesFixerOutputFolder = Join-Path -Path $OutputFolder -ChildPath 'Sites-FixerFiles'
-}
-if ([string]::IsNullOrWhiteSpace($SitesEmbeddedLinksFolder)) {
-    $SitesEmbeddedLinksFolder = Join-Path -Path $OutputFolder -ChildPath 'Sites-EmbeddedLinks'
-}
 
 New-DirectoryIfMissing -Path $OutputFolder
 New-DirectoryIfMissing -Path $MasterFolder
 New-DirectoryIfMissing -Path $TempMasterFolder
 New-DirectoryIfMissing -Path $FixerOutputFolder
 New-DirectoryIfMissing -Path $EmbeddedLinksFolder
-New-DirectoryIfMissing -Path $SitesMasterFolder
-New-DirectoryIfMissing -Path $SitesTempMasterFolder
-New-DirectoryIfMissing -Path $SitesFixerOutputFolder
-New-DirectoryIfMissing -Path $SitesEmbeddedLinksFolder
 New-DirectoryIfMissing -Path $StateRootFolder
 
 $RootUrl = $RootUrl.TrimEnd('/')
@@ -1944,8 +1902,7 @@ while (-not $siteUrlMap) {
     $missing = New-Object System.Collections.Generic.List[string]
     foreach ($sub in $selectedSubsites) {
         $subUrl = ([string]$sub.Url).TrimEnd('/')
-        $isSitesWeb = ([Uri]$subUrl).AbsolutePath -match '(?i)^/sites(?:/|$)'
-        if ((-not $isSitesWeb) -and -not (Get-ExactNewSiteBaseForUrl -Url $subUrl -SiteUrlMap $candidateMap)) {
+        if (-not (Get-ExactNewSiteBaseForUrl -Url $subUrl -SiteUrlMap $candidateMap)) {
             $missing.Add($subUrl)
         }
     }
@@ -1968,8 +1925,7 @@ while (-not $siteUrlMap) {
 $automaticEmbeddedScanSites = @{}
 foreach ($selectedSubsite in $selectedSubsites) {
     $selectedSubsiteUrl = ([string]$selectedSubsite.Url).TrimEnd('/')
-    $isSitesWeb = ([Uri]$selectedSubsiteUrl).AbsolutePath -match '(?i)^/sites(?:/|$)'
-    if ($isSitesWeb -or -not (Get-ExactNewSiteBaseForUrl -Url $selectedSubsiteUrl -SiteUrlMap $siteUrlMap)) {
+    if (-not (Get-ExactNewSiteBaseForUrl -Url $selectedSubsiteUrl -SiteUrlMap $siteUrlMap)) {
         $automaticEmbeddedScanSites[$selectedSubsiteUrl.ToLowerInvariant()] = $true
     }
 }
@@ -1982,7 +1938,7 @@ else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Also scan document, PDF, page, and list text/URL fields for embedded whallc.sharepoint.com links (downloads supported file content and writes per-site EmbeddedLinks reports)?" -DefaultYes $false
 }
 if ($automaticEmbeddedScanSites.Count -gt 0) {
-    Write-Host ("Automatically enabling legacy embedded-link scanning for {0} selected site(s); only links under CSV Old Site URL bases will be reported." -f $automaticEmbeddedScanSites.Count)
+    Write-Host ("Automatically enabling embedded-link scanning for {0} selected site(s) missing from the Old/New Site URL CSV; only links under CSV Old Site URL bases will be reported." -f $automaticEmbeddedScanSites.Count)
 }
 if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
     Initialize-PdfPig
@@ -1995,10 +1951,7 @@ if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
 # file, then publishes it over the matching [site]-master.csv after the scan.
 
 function Get-ShortSiteIdentifier {
-    param(
-        [Parameter(Mandatory = $true)]$Subsite,
-        [Parameter(Mandatory = $false)]$SiteMatch
-    )
+    param([Parameter(Mandatory = $true)]$Subsite)
 
     $scannedUrl = ([string]$Subsite.Url).TrimEnd('/')
     $scannedPath = ([Uri]$scannedUrl).AbsolutePath.TrimEnd('/')
@@ -2008,103 +1961,11 @@ function Get-ShortSiteIdentifier {
     }
 
     $identifier = Get-SafeFileSlug -Text $lastSegment -MaxLength 30 -Fallback 'Site'
+    if ($scannedPath -match '(?i)^/sites(?:/|$)') {
+        return 'sites-' + $identifier
+    }
+
     return $identifier
-}
-
-function Repair-SiteCsvOutput {
-    param(
-        [Parameter(Mandatory = $true)][string]$CanonicalPath,
-        [Parameter(Mandatory = $true)][AllowEmptyCollection()][string[]]$LegacyPaths
-    )
-
-    $existingFiles = @(@($CanonicalPath) + $LegacyPaths | Where-Object { Test-Path -LiteralPath $_ } | ForEach-Object { Get-Item -LiteralPath $_ })
-    if ($existingFiles.Count -eq 0) { return }
-
-    $newestFile = @($existingFiles | Sort-Object LastWriteTimeUtc -Descending)[0]
-    if ($newestFile.FullName -ne $CanonicalPath) {
-        Write-Host ("  Replacing canonical output with newer legacy file: {0} -> {1}" -f $newestFile.FullName, $CanonicalPath)
-        Copy-CsvFileWithRetry -SourcePath $newestFile.FullName -DestinationPath $CanonicalPath
-    }
-
-    foreach ($legacyPath in $LegacyPaths) {
-        Remove-FileWithRetry -Path $legacyPath
-    }
-}
-
-function Repair-SiteOutputInventory {
-    param(
-        [Parameter(Mandatory = $true)][string]$Identifier,
-        [Parameter(Mandatory = $true)][string]$MasterFolder,
-        [Parameter(Mandatory = $true)][string]$FixerFolder,
-        [Parameter(Mandatory = $true)][string]$EmbeddedFolder,
-        [Parameter(Mandatory = $true)][string]$TempFolder,
-        [Parameter(Mandatory = $false)][bool]$IncludeSitesPrefixLegacy = $false,
-        [Parameter(Mandatory = $false)][string]$LegacyMasterFolder = '',
-        [Parameter(Mandatory = $false)][string]$LegacyFixerFolder = '',
-        [Parameter(Mandatory = $false)][string]$LegacyEmbeddedFolder = ''
-    )
-
-    $legacyMasterPaths = @()
-    $legacyFixerPaths = @()
-    $legacyEmbeddedPaths = @()
-    if ($IncludeSitesPrefixLegacy) {
-        $legacyMasterPaths += Join-Path $MasterFolder "sites-$Identifier-master.csv"
-        $legacyFixerPaths += Join-Path $FixerFolder "sites-$Identifier-fixer.csv"
-        $legacyEmbeddedPaths += Join-Path $EmbeddedFolder "sites-$Identifier-EmbeddedLinks.csv"
-        if (-not [string]::IsNullOrWhiteSpace($LegacyMasterFolder)) { $legacyMasterPaths += Join-Path $LegacyMasterFolder "sites-$Identifier-master.csv" }
-        if (-not [string]::IsNullOrWhiteSpace($LegacyFixerFolder)) { $legacyFixerPaths += Join-Path $LegacyFixerFolder "sites-$Identifier-fixer.csv" }
-        if (-not [string]::IsNullOrWhiteSpace($LegacyEmbeddedFolder)) { $legacyEmbeddedPaths += Join-Path $LegacyEmbeddedFolder "sites-$Identifier-EmbeddedLinks.csv" }
-    }
-
-    Repair-SiteCsvOutput -CanonicalPath (Join-Path $MasterFolder "$Identifier-master.csv") -LegacyPaths $legacyMasterPaths
-    Repair-SiteCsvOutput -CanonicalPath (Join-Path $FixerFolder "$Identifier-fixer.csv") -LegacyPaths $legacyFixerPaths
-    Repair-SiteCsvOutput -CanonicalPath (Join-Path $EmbeddedFolder "$Identifier-EmbeddedLinks.csv") -LegacyPaths $legacyEmbeddedPaths
-
-    foreach ($tempFile in @(Get-ChildItem -Path $TempFolder -File -ErrorAction SilentlyContinue | Where-Object {
-                $_.Name -match ("(?i)^\d{{8}}-\d{{6}}-(?:sites-)?{0}-temp\.csv$" -f [regex]::Escape($Identifier))
-            })) {
-        Remove-FileWithRetry -Path $tempFile.FullName
-    }
-    foreach ($tempFile in @(Get-ChildItem -Path $EmbeddedFolder -File -ErrorAction SilentlyContinue | Where-Object {
-                $_.Name -match ("(?i)^(?:sites-)?{0}-EmbeddedLinks-\d{{8}}-\d{{6}}-(?:scan|merged)-temp\.csv$" -f [regex]::Escape($Identifier))
-            })) {
-        Remove-FileWithRetry -Path $tempFile.FullName
-    }
-}
-
-function Assert-SiteOutputInventory {
-    param(
-        [Parameter(Mandatory = $true)][string]$Identifier,
-        [Parameter(Mandatory = $true)][string]$MasterFolder,
-        [Parameter(Mandatory = $true)][string]$FixerFolder,
-        [Parameter(Mandatory = $true)][string]$EmbeddedFolder,
-        [Parameter(Mandatory = $false)][bool]$CheckSitesPrefixLegacy = $false,
-        [Parameter(Mandatory = $false)][string]$LegacyMasterFolder = '',
-        [Parameter(Mandatory = $false)][string]$LegacyFixerFolder = '',
-        [Parameter(Mandatory = $false)][string]$LegacyEmbeddedFolder = ''
-    )
-
-    $expectedPaths = @(
-        (Join-Path $MasterFolder "$Identifier-master.csv"),
-        (Join-Path $FixerFolder "$Identifier-fixer.csv"),
-        (Join-Path $EmbeddedFolder "$Identifier-EmbeddedLinks.csv")
-    )
-    $legacyPaths = @()
-    if ($CheckSitesPrefixLegacy) {
-        $legacyPaths += Join-Path $MasterFolder "sites-$Identifier-master.csv"
-        $legacyPaths += Join-Path $FixerFolder "sites-$Identifier-fixer.csv"
-        $legacyPaths += Join-Path $EmbeddedFolder "sites-$Identifier-EmbeddedLinks.csv"
-        if (-not [string]::IsNullOrWhiteSpace($LegacyMasterFolder)) { $legacyPaths += Join-Path $LegacyMasterFolder "sites-$Identifier-master.csv" }
-        if (-not [string]::IsNullOrWhiteSpace($LegacyFixerFolder)) { $legacyPaths += Join-Path $LegacyFixerFolder "sites-$Identifier-fixer.csv" }
-        if (-not [string]::IsNullOrWhiteSpace($LegacyEmbeddedFolder)) { $legacyPaths += Join-Path $LegacyEmbeddedFolder "sites-$Identifier-EmbeddedLinks.csv" }
-    }
-    $missingPaths = @($expectedPaths | Where-Object { -not (Test-Path -LiteralPath $_) })
-    $remainingLegacyPaths = @($legacyPaths | Where-Object { Test-Path -LiteralPath $_ })
-    if ($missingPaths.Count -gt 0 -or $remainingLegacyPaths.Count -gt 0) {
-        throw ("Output inventory check failed for {0}. Missing: [{1}]. Legacy duplicates: [{2}]." -f $Identifier, ($missingPaths -join '; '), ($remainingLegacyPaths -join '; '))
-    }
-
-    Write-Host ("  Output inventory verified: {0}-master.csv, {0}-fixer.csv, {0}-EmbeddedLinks.csv" -f $Identifier)
 }
 
 $runStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
@@ -2115,7 +1976,6 @@ $newFoundCountTotal = 0
 $newFoundFromCacheCountTotal = 0
 $newNotFoundCountTotal = 0
 $extensionCountsTotal = @{}
-$publishedSiteIdentifiers = [ordered]@{}
 
 # Embedded-link findings are keyed by source item and link details; scanned-source keys
 # allow the publisher to refresh scanned items while retaining cached unscanned items.
@@ -2128,32 +1988,16 @@ foreach ($subsite in $selectedSubsites) {
     Write-Host "`nScanning $subsiteUrl ..."
 
     $siteMatch = Get-ExactNewSiteBaseForUrl -Url $subsiteUrl -SiteUrlMap $siteUrlMap
-    $isSitesWeb = ([Uri]$subsiteUrl).AbsolutePath -match '(?i)^/sites(?:/|$)'
     $scanThisSiteContent = $scanDocumentContent -or $automaticEmbeddedScanSites.ContainsKey($subsiteUrl.ToLowerInvariant())
-    $scanOldBaseOnly = $isSitesWeb -or ((-not $siteMatch) -and (-not $scanDocumentContent))
-    if ((-not $siteMatch) -and (-not $isSitesWeb)) {
+    $scanOldBaseOnly = (-not $siteMatch) -and (-not $scanDocumentContent)
+    if (-not $siteMatch) {
         Write-Warning "  No matching row in the Old/New Site URL CSV for $subsiteUrl - old URLs will still be recorded, but new URLs cannot be looked up."
     }
-    elseif ($isSitesWeb) {
-        Write-Host "  Modern /sites web: scanning content, items, and navigation for links under mapped Old Site URL bases."
-    }
 
-    $siteIdentifier = Get-ShortSiteIdentifier -Subsite $subsite -SiteMatch $siteMatch
-    $currentMasterFolder = if ($isSitesWeb) { $SitesMasterFolder } else { $MasterFolder }
-    $currentTempMasterFolder = if ($isSitesWeb) { $SitesTempMasterFolder } else { $TempMasterFolder }
-    $currentFixerFolder = if ($isSitesWeb) { $SitesFixerOutputFolder } else { $FixerOutputFolder }
-    $currentEmbeddedFolder = if ($isSitesWeb) { $SitesEmbeddedLinksFolder } else { $EmbeddedLinksFolder }
-    $outputNamespace = if ($isSitesWeb) { 'sites' } else { 'classic' }
-    $siteOutputKey = "$outputNamespace|$siteIdentifier"
-    if ($isSitesWeb) {
-        Repair-SiteOutputInventory -Identifier $siteIdentifier -MasterFolder $currentMasterFolder -FixerFolder $currentFixerFolder -EmbeddedFolder $currentEmbeddedFolder -TempFolder $currentTempMasterFolder -IncludeSitesPrefixLegacy $true -LegacyMasterFolder $MasterFolder -LegacyFixerFolder $FixerOutputFolder -LegacyEmbeddedFolder $EmbeddedLinksFolder
-    }
-    else {
-        Repair-SiteOutputInventory -Identifier $siteIdentifier -MasterFolder $currentMasterFolder -FixerFolder $currentFixerFolder -EmbeddedFolder $currentEmbeddedFolder -TempFolder $currentTempMasterFolder
-    }
-    $masterPath = Get-MasterLookupTablePath -Folder $currentMasterFolder -Identifier $siteIdentifier
-    $outputPath = Get-TemporaryLookupTablePath -Folder $currentTempMasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
-    $fixerPath = Get-FixerLookupTablePath -Folder $currentFixerFolder -Identifier $siteIdentifier
+    $siteIdentifier = Get-ShortSiteIdentifier -Subsite $subsite
+    $masterPath = Get-MasterLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier
+    $outputPath = Get-TemporaryLookupTablePath -Folder $TempMasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
+    $fixerPath = Get-FixerLookupTablePath -Folder $FixerOutputFolder -Identifier $siteIdentifier
     $mergedRowsByKey = if (Test-Path -Path $masterPath) { Import-ExistingLookupTable -Path $masterPath -KeyProperty 'OldFileRef' } else { [ordered]@{} }
     $counterCheckpointPath = Get-CounterCheckpointPath -StateRoot $StateRootFolder -ScopeUrl $subsiteUrl -SchemaVersion $ScriptSchemaVersion
     if (Test-Path -Path $masterPath) {
@@ -2163,8 +2007,10 @@ foreach ($subsite in $selectedSubsites) {
         Write-Host ("  Writing temp scan {0} (no master file found yet for this site; one will be created at {1})" -f $outputPath, $masterPath)
     }
 
-    if (-not $embeddedLinksBySite.ContainsKey($siteOutputKey)) { $embeddedLinksBySite[$siteOutputKey] = [ordered]@{} }
-    if (-not $scannedEmbeddedSourcesBySite.ContainsKey($siteOutputKey)) { $scannedEmbeddedSourcesBySite[$siteOutputKey] = @{} }
+    if ($scanThisSiteContent) {
+        if (-not $embeddedLinksBySite.ContainsKey($siteIdentifier)) { $embeddedLinksBySite[$siteIdentifier] = [ordered]@{} }
+        if (-not $scannedEmbeddedSourcesBySite.ContainsKey($siteIdentifier)) { $scannedEmbeddedSourcesBySite[$siteIdentifier] = @{} }
+    }
 
     $filesScanned = 0
     $newFoundCount = 0
@@ -2196,10 +2042,6 @@ foreach ($subsite in $selectedSubsites) {
     $libraries = @($listResult.Result | Where-Object {
             Test-IsSiteContentsInventoryList -List $_
         })
-
-    $masterColumns = @('Site', 'Subsite', 'Library', 'FileName', 'Extension', 'OldFileRef', 'OldCopyLinkUrl', 'OldResolvedUrl', 'NewFileRef', 'NewFound', 'NewCopyLinkUrl', 'NewResolvedUrl', 'Modified', 'Notes')
-    $masterHeaderLine = (@($masterColumns | ForEach-Object { '"' + $_ + '"' }) -join ',')
-    Set-Content -Path $outputPath -Value $masterHeaderLine -Encoding UTF8 -Force
 
     foreach ($library in $libraries) {
         $librarySupportsFileLookup = Test-IsFileLookupList -List $library
@@ -2382,14 +2224,14 @@ foreach ($subsite in $selectedSubsites) {
                         $subConn = $contentResult.Connection
                         $contentStream = $contentResult.Result
                         if ($ext -eq '.pdf') {
-                            foreach ($link in @(Get-PdfHyperlinks -Bytes $contentStream.ToArray())) { $sourceHyperlinks.Add($link) }
+                            foreach ($link in @(Get-PdfHyperlink -Bytes $contentStream.ToArray())) { $sourceHyperlinks.Add($link) }
                         }
                         elseif ($ext -in @('.htm', '.html')) {
                             $htmlContent = [System.Text.Encoding]::UTF8.GetString($contentStream.ToArray())
-                            foreach ($link in @(Get-HtmlHyperlinks -Html $htmlContent)) { $sourceHyperlinks.Add($link) }
+                            foreach ($link in @(Get-HtmlHyperlink -Html $htmlContent)) { $sourceHyperlinks.Add($link) }
                         }
                         else {
-                            foreach ($link in @(Get-OfficeDocumentHyperlinks -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
+                            foreach ($link in @(Get-OfficeDocumentHyperlink -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
                         }
                         $fileContentScanSucceeded = $true
                     }
@@ -2404,10 +2246,10 @@ foreach ($subsite in $selectedSubsites) {
                 foreach ($fieldName in $contentFieldNames) {
                     $isPageCanvasField = ($library.Title -eq 'Site Pages' -and $pageContentFields -contains $fieldName)
                     $fieldLinks = if ($isPageCanvasField) {
-                        Get-CanvasContentHyperlinks -CanvasContent ([string]$item.FieldValues[$fieldName])
+                        Get-CanvasContentHyperlink -CanvasContent ([string]$item.FieldValues[$fieldName])
                     }
                     else {
-                        Get-FieldValueHyperlinks -Value $item.FieldValues[$fieldName]
+                        Get-FieldValueHyperlink -Value $item.FieldValues[$fieldName]
                     }
                     foreach ($link in @($fieldLinks)) {
                         $sourceHyperlinks.Add($link)
@@ -2420,7 +2262,7 @@ foreach ($subsite in $selectedSubsites) {
 
                 if ($sourceContentScanned) {
                     $sourceDocumentKey = $oldCopyLinkUrl.Trim().ToLowerInvariant()
-                    $scannedEmbeddedSourcesBySite[$siteOutputKey][($sourceDocumentKey + "`n" + $library.Title)] = $true
+                    $scannedEmbeddedSourcesBySite[$siteIdentifier][($sourceDocumentKey + "`n" + $library.Title)] = $true
                 }
 
                 $embeddedSourceNewFound = $newFound
@@ -2497,7 +2339,7 @@ foreach ($subsite in $selectedSubsites) {
                         EmbeddedResolution   = $embeddedTarget.Resolution
                     }
                     $embeddedKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`n" + $embeddedRow.EmbeddedURLText + "`n" + $embeddedUrl)
-                    $embeddedLinksBySite[$siteOutputKey][$embeddedKey] = $embeddedRow
+                    $embeddedLinksBySite[$siteIdentifier][$embeddedKey] = $embeddedRow
                 }
             }
 
@@ -2537,14 +2379,14 @@ foreach ($subsite in $selectedSubsites) {
                 }
                 $subConn = $navigationResult.Connection
                 $navigationSourceKey = $subsiteUrl.TrimEnd('/').ToLowerInvariant() + "`n" + $navigationContainerName
-                $scannedEmbeddedSourcesBySite[$siteOutputKey][$navigationSourceKey] = $true
+                $scannedEmbeddedSourcesBySite[$siteIdentifier][$navigationSourceKey] = $true
             }
             catch {
                 Write-Verbose "Could not read $navigationLocation navigation for $subsiteUrl : $($_.Exception.Message)"
                 continue
             }
 
-            $sourceNavigationNodes = @(Get-NavigationNodeTreeItems -Nodes @($navigationResult.Result))
+            $sourceNavigationNodes = @(Get-NavigationNodeTreeItem -Nodes @($navigationResult.Result))
             $destinationNodesByTitle = @{}
             if ($siteMatch) {
                 if (-not $newConnectionsByBase.ContainsKey($newSiteScanBaseAbsolute)) {
@@ -2563,7 +2405,7 @@ foreach ($subsite in $selectedSubsites) {
                             Get-PnPNavigationNode -Location $navigationLocation -Tree -Connection $activeConnection
                         }
                         $newConnectionsByBase[$newSiteScanBaseAbsolute] = $destinationNavigationResult.Connection
-                        foreach ($destinationNode in @(Get-NavigationNodeTreeItems -Nodes @($destinationNavigationResult.Result))) {
+                        foreach ($destinationNode in @(Get-NavigationNodeTreeItem -Nodes @($destinationNavigationResult.Result))) {
                             $destinationTitle = [string]$destinationNode.Title
                             if (-not [string]::IsNullOrWhiteSpace($destinationTitle)) { $destinationNodesByTitle[$destinationTitle] = $destinationNode }
                         }
@@ -2616,7 +2458,7 @@ foreach ($subsite in $selectedSubsites) {
                     EmbeddedResolution   = $embeddedTarget.Resolution
                 }
                 $rowKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`n" + $nodeTitle.ToLowerInvariant() + "`n" + $embeddedUrl.ToLowerInvariant())
-                $embeddedLinksBySite[$siteOutputKey][$rowKey] = $embeddedRow
+                $embeddedLinksBySite[$siteIdentifier][$rowKey] = $embeddedRow
             }
         }
     }
@@ -2624,22 +2466,16 @@ foreach ($subsite in $selectedSubsites) {
     if ($filesScanned -eq 0) {
         Write-Warning "  No documents were found in $subsiteUrl."
     }
+    else {
+        Publish-MasterLookupTable -TempPath $outputPath -MasterPath $masterPath
+        $fixerRowsWritten = Export-FixerLookupTableFromMaster -MasterPath $masterPath -FixerPath $fixerPath -RequiredExtensions $FixerRequiredExtensions
 
-    Publish-MasterLookupTable -TempPath $outputPath -MasterPath $masterPath
-    $fixerRowsWritten = Export-FixerLookupTableFromMaster -MasterPath $masterPath -FixerPath $fixerPath -RequiredExtensions $FixerRequiredExtensions
-    $publishedSiteIdentifiers[$siteOutputKey] = [PSCustomObject]@{
-        Identifier       = $siteIdentifier
-        IsSitesWeb       = $isSitesWeb
-        MasterFolder    = $currentMasterFolder
-        FixerFolder     = $currentFixerFolder
-        EmbeddedFolder  = $currentEmbeddedFolder
-    }
-
-    Write-Host ("  Wrote $filesScanned row(s) to master $masterPath")
-    Write-Host ("  Wrote {0} filtered Fixer row(s) to {1}" -f $fixerRowsWritten, $fixerPath)
-    Write-Host ("  New document found: {0} ({1} via cached prior confirmation)   Not found: {2}" -f $newFoundCount, $newFoundFromCacheCount, $newNotFoundCount)
-    if ($notFoundCountThisSite -gt 0) {
-        Write-Host ("  {0} document(s) could not be located at their expected new path - see Notes column." -f $notFoundCountThisSite)
+        Write-Host ("  Wrote $filesScanned row(s) to master $masterPath")
+        Write-Host ("  Wrote {0} filtered Fixer row(s) to {1}" -f $fixerRowsWritten, $fixerPath)
+        Write-Host ("  New document found: {0} ({1} via cached prior confirmation)   Not found: {2}" -f $newFoundCount, $newFoundFromCacheCount, $newNotFoundCount)
+        if ($notFoundCountThisSite -gt 0) {
+            Write-Host ("  {0} document(s) could not be located at their expected new path - see Notes column." -f $notFoundCountThisSite)
+        }
     }
 
     $filesScannedTotal += $filesScanned
@@ -2653,7 +2489,7 @@ foreach ($subsite in $selectedSubsites) {
 }
 
 if ($filesScannedTotal -eq 0) {
-    Write-Warning "`nNo documents were found in the selected subsites. Canonical header-only CSVs were written for each successfully scanned site."
+    Write-Warning "`nNo documents were found in the selected subsites. No CSVs were written."
 }
 else {
     Write-Host ("`nAll sites combined: refreshed {0} master row(s) across {1} site CSV(s)." -f $filesScannedTotal, $selectedSubsites.Count)
@@ -2666,16 +2502,10 @@ else {
     Write-Host ("`nNew document found: {0} ({1} via cached prior confirmation, no live lookup)   Not found: {2}" -f $newFoundCountTotal, $newFoundFromCacheCountTotal, $newNotFoundCountTotal)
 }
 
-foreach ($siteOutputKey in @($publishedSiteIdentifiers.Keys | Sort-Object)) {
-    $outputPlan = $publishedSiteIdentifiers[$siteOutputKey]
-    $siteIdentifier = $outputPlan.Identifier
-    $embeddedOutputPath = Join-Path -Path $outputPlan.EmbeddedFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
-    $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $outputPlan.EmbeddedFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteOutputKey] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteOutputKey]
-    Write-Host "`nWrote $embeddedRowsWritten embedded-link row(s): $embeddedOutputPath"
-    if ($outputPlan.IsSitesWeb) {
-        Assert-SiteOutputInventory -Identifier $siteIdentifier -MasterFolder $outputPlan.MasterFolder -FixerFolder $outputPlan.FixerFolder -EmbeddedFolder $outputPlan.EmbeddedFolder -CheckSitesPrefixLegacy $true -LegacyMasterFolder $MasterFolder -LegacyFixerFolder $FixerOutputFolder -LegacyEmbeddedFolder $EmbeddedLinksFolder
-    }
-    else {
-        Assert-SiteOutputInventory -Identifier $siteIdentifier -MasterFolder $outputPlan.MasterFolder -FixerFolder $outputPlan.FixerFolder -EmbeddedFolder $outputPlan.EmbeddedFolder
+if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
+    foreach ($siteIdentifier in @($embeddedLinksBySite.Keys | Sort-Object)) {
+        $embeddedOutputPath = Join-Path -Path $EmbeddedLinksFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
+        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $EmbeddedLinksFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteIdentifier] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteIdentifier]
+        Write-Host "`nWrote $embeddedRowsWritten embedded-link row(s): $embeddedOutputPath"
     }
 }
