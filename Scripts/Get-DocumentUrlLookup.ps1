@@ -69,6 +69,16 @@
     Folder containing per-site embedded-link reports and temporary scan files.
     If omitted, defaults to the server's DocumentUrlLookup-OutputFiles\EmbeddedLinks folder.
 
+.PARAMETER SitesEmbeddedLinksFolder
+    Folder for per-site embedded-link reports scanned from /sites webs.
+
+.PARAMETER GhostscriptPath
+    Optional path to gswin64c.exe for Deep PDF OCR. If blank, the script
+    searches the standard C:\Program Files\gs installation folders.
+
+.PARAMETER TesseractPath
+    Path to tesseract.exe for Deep PDF OCR. English language data must be installed.
+
 .PARAMETER StateRootFolder
     Folder used to cache the subsite scannability inventory between runs.
 
@@ -81,6 +91,10 @@
     found there in a prior run (same old-side Modified date). Set to $false to
     force re-verifying every document, e.g. if you suspect files moved again.
     Default true.
+
+.PARAMETER EnableDeepPdfOcr
+    OCR rendered PDF pages for URLs visible only in scanned/image content.
+    If omitted during an embedded-link scan, the script prompts with No as the default.
 
 .EXAMPLE
     .\Get-DocumentUrlLookup.ps1 -ClientId "..."
@@ -118,6 +132,21 @@ param(
     [string]$EmbeddedLinksFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\EmbeddedLinks",
 
     [Parameter(Mandatory = $false)]
+    [string]$SitesEmbeddedLinksFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\DocumentUrlLookup-OutputFiles\Sites-EmbeddedLinks",
+
+    [Parameter(Mandatory = $false)]
+    [string]$GhostscriptPath = '',
+
+    [Parameter(Mandatory = $false)]
+    [string]$TesseractPath = 'C:\Program Files\Tesseract-OCR\tesseract.exe',
+
+    [Parameter(Mandatory = $false)]
+    [string]$JavaPath = 'java.exe',
+
+    [Parameter(Mandatory = $false)]
+    [string]$TikaAppPath = 'C:\Tools\DocumentUrlLookup\Tika\tika-app-4.1.0.jar',
+
+    [Parameter(Mandatory = $false)]
     [string]$StateRootFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\Checkpoints-and-Caches",
 
     [Parameter(Mandatory = $false)]
@@ -133,7 +162,12 @@ param(
     # Scan Office/PDF/page content and human-authored list fields for embedded links.
     # File content is downloaded, so this is off by default and prompted for.
     [Parameter(Mandatory = $false)]
-    [switch]$EnableDocumentContentScan
+    [switch]$EnableDocumentContentScan,
+
+    # OCR rendered PDF pages to find URLs visible only in scanned/image content.
+    # If omitted, the operator is prompted with a No default.
+    [Parameter(Mandatory = $false)]
+    [switch]$EnableDeepPdfOcr
 )
 
 $ErrorActionPreference = "Stop"
@@ -844,7 +878,7 @@ function Get-OfficeDocumentHyperlink {
                 $xmlPath = $entry.FullName -replace '/_rels/([^/]+)\.rels$', '/$1'
                 $relationMap = @{}
                 foreach ($rel in $relationshipXml.Relationships.Relationship) {
-                    if ($rel.TargetMode -eq 'External' -and $rel.Target) {
+                    if ($rel.TargetMode -eq 'External' -and $rel.Target -and [string]$rel.Type -match '(?i)(?:^|/)hyperlink$') {
                         $relationMap[$rel.Id] = [string]$rel.Target
                     }
                 }
@@ -875,7 +909,7 @@ function Get-OfficeDocumentHyperlink {
         }
 
         foreach ($entry in $archive.Entries) {
-            if ($entry.FullName -notmatch '(?:^|/)word/document\.xml$|(?:^|/)xl/worksheets/sheet\d*\.xml$|(?:^|/)ppt/slides/slide\d*\.xml$') { continue }
+            if ($entry.FullName -notmatch '(?i)(?:^|/)word/(?:document|header\d+|footer\d+|comments\d*|footnotes|endnotes)\.xml$|(?:^|/)xl/worksheets/sheet\d*\.xml$|(?:^|/)ppt/(?:slides/slide\d*|notesSlides/notesSlide\d*)\.xml$') { continue }
             if (-not $relationsByXml.ContainsKey($entry.FullName)) { continue }
 
             $contentStream = $entry.Open()
@@ -939,31 +973,180 @@ function Get-OfficeDocumentHyperlink {
     return $found.ToArray()
 }
 
-# PDF URI link annotations are the actual clickable links a reader sees/clicks - not a
-# raw-text scan, which would also catch incidental URL-shaped text that isn't a link.
+function Get-InternalUrlOccurrencesFromText {
+    param([Parameter(Mandatory = $true)][AllowEmptyString()][string]$Text)
+
+    $found = New-Object System.Collections.Generic.List[Object]
+    foreach ($match in [regex]::Matches($Text, '(?i)(?:https?:)?//whallc\.sharepoint\.com[^\s<>"''\]\)]+')) {
+        $url = $match.Value.TrimEnd('.', ',', ';', ':', '!', '?', ')', ']', '}')
+        if (-not [string]::IsNullOrWhiteSpace($url)) {
+            $found.Add([PSCustomObject]@{ Text = $url; Url = $url })
+        }
+    }
+    return $found.ToArray()
+}
+
+function Invoke-PdfExtractionProcess {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [Parameter(Mandatory = $false)][int]$TimeoutSeconds = 600
+    )
+
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $FilePath
+    $startInfo.UseShellExecute = $false
+    $startInfo.CreateNoWindow = $true
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    foreach ($argument in $ArgumentList) { $startInfo.ArgumentList.Add($argument) }
+
+    $process = [System.Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
+    try {
+        if (-not $process.Start()) { throw "Could not start PDF extraction tool: $FilePath" }
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
+        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
+            try { $process.Kill($true) } catch { Write-Verbose "Could not terminate timed-out PDF process: $($_.Exception.Message)" }
+            throw "PDF extraction tool timed out after $TimeoutSeconds second(s): $FilePath"
+        }
+        $process.WaitForExit()
+        $stdout = $stdoutTask.GetAwaiter().GetResult()
+        $stderr = $stderrTask.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0) {
+            throw "PDF extraction tool failed with exit code $($process.ExitCode): $stderr"
+        }
+        return [PSCustomObject]@{ StandardOutput = $stdout; StandardError = $stderr; ExitCode = $process.ExitCode }
+    }
+    finally {
+        $process.Dispose()
+    }
+}
+
+function Get-PdfOcrUrlOccurrence {
+    param([Parameter(Mandatory = $true)][AllowEmptyCollection()][byte[]]$Bytes)
+
+    if (-not (Test-Path -LiteralPath $TesseractPath -PathType Leaf)) {
+        throw "Tesseract was not found: $TesseractPath"
+    }
+    if (-not $script:ResolvedGhostscriptPath) {
+        $ghostscript = if (-not [string]::IsNullOrWhiteSpace($GhostscriptPath)) {
+            Get-Item -LiteralPath $GhostscriptPath -ErrorAction SilentlyContinue
+        }
+        else {
+            Get-ChildItem -Path 'C:\Program Files\gs\gs*\bin\gswin64c.exe' -File -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
+        }
+        if (-not $ghostscript) { throw 'Ghostscript gswin64c.exe was not found. Install it or pass -GhostscriptPath.' }
+        $script:ResolvedGhostscriptPath = $ghostscript.FullName
+    }
+
+    $found = New-Object System.Collections.Generic.List[Object]
+    $workFolder = Join-Path ([System.IO.Path]::GetTempPath()) ('Get-DocumentUrlLookup-PdfOcr-' + [Guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $workFolder -Force | Out-Null
+    try {
+        $pdfPath = Join-Path $workFolder 'source.pdf'
+        $pagePattern = Join-Path $workFolder 'page-%06d.png'
+        [System.IO.File]::WriteAllBytes($pdfPath, $Bytes)
+        $null = Invoke-PdfExtractionProcess -FilePath $script:ResolvedGhostscriptPath -ArgumentList @(
+            '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox', '-sDEVICE=pnggray', '-r300',
+            '-dTextAlphaBits=4', '-dGraphicsAlphaBits=4', "-sOutputFile=$pagePattern", $pdfPath
+        ) -TimeoutSeconds 1800
+
+        $pageImages = @(Get-ChildItem -Path $workFolder -Filter 'page-*.png' -File | Sort-Object Name)
+        if ($pageImages.Count -eq 0) { throw 'Ghostscript did not render any PDF pages.' }
+        foreach ($pageImage in $pageImages) {
+            $ocrResult = Invoke-PdfExtractionProcess -FilePath $TesseractPath -ArgumentList @(
+                $pageImage.FullName, 'stdout', '-l', 'eng', '--psm', '11'
+            ) -TimeoutSeconds 300
+            foreach ($link in @(Get-InternalUrlOccurrencesFromText -Text $ocrResult.StandardOutput)) {
+                $found.Add($link)
+            }
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $workFolder -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    return $found.ToArray()
+}
+
+# PdfPig reads clickable URI annotations and extractable page text, not document metadata.
 function Get-PdfHyperlink {
     param([Parameter(Mandatory = $true)][AllowEmptyCollection()][byte[]]$Bytes)
 
     if ($Bytes.Length -eq 0) { return @() }
 
     $found = New-Object System.Collections.Generic.List[Object]
-    $document = [UglyToad.PdfPig.PdfDocument]::Open($Bytes)
+    $errors = New-Object System.Collections.Generic.List[string]
+    $document = $null
     try {
+        $document = [UglyToad.PdfPig.PdfDocument]::Open($Bytes)
         foreach ($page in $document.GetPages()) {
+            $annotationTextUrlCounts = @{}
             foreach ($hyperlink in $page.GetHyperlinks()) {
                 $displayText = [string]$hyperlink.Text
                 if ([string]::IsNullOrWhiteSpace($displayText) -and $hyperlink.Letters.Count -gt 0) {
                     $displayText = (@($hyperlink.Letters | ForEach-Object { [string]$_.Value }) -join '')
                 }
-                $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = [string]$hyperlink.Uri })
+                $annotationUrl = [string]$hyperlink.Uri
+                $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = $annotationUrl })
+                if (-not [string]::IsNullOrWhiteSpace($displayText) -and
+                    $displayText.Trim().TrimEnd('.', ',', ';', ':') -ieq $annotationUrl.Trim().TrimEnd('.', ',', ';', ':')) {
+                    $annotationKey = $annotationUrl.Trim().ToLowerInvariant()
+                    if (-not $annotationTextUrlCounts.ContainsKey($annotationKey)) { $annotationTextUrlCounts[$annotationKey] = 0 }
+                    $annotationTextUrlCounts[$annotationKey]++
+                }
+            }
+
+            foreach ($textLink in @(Get-InternalUrlOccurrencesFromText -Text ([string]$page.Text))) {
+                $textKey = ([string]$textLink.Url).Trim().ToLowerInvariant()
+                if ($annotationTextUrlCounts.ContainsKey($textKey) -and $annotationTextUrlCounts[$textKey] -gt 0) {
+                    $annotationTextUrlCounts[$textKey]--
+                    continue
+                }
+                $found.Add($textLink)
             }
         }
     }
+    catch {
+        $errors.Add("PdfPig could not extract PDF annotations/text: $($_.Exception.Message)")
+    }
     finally {
-        $document.Dispose()
+        if ($document) { $document.Dispose() }
     }
 
-    return $found.ToArray()
+    if ($script:DeepPdfOcr) {
+        try {
+            $visibleUrlOccurrences = @{}
+            foreach ($existingLink in $found) {
+                if ([string]::IsNullOrWhiteSpace([string]$existingLink.Url) -or
+                    -not ([string]$existingLink.Text).Trim().Equals(([string]$existingLink.Url).Trim(), [System.StringComparison]::OrdinalIgnoreCase)) {
+                    continue
+                }
+                $existingUrlKey = ([string]$existingLink.Url).Trim().ToLowerInvariant()
+                if (-not $visibleUrlOccurrences.ContainsKey($existingUrlKey)) { $visibleUrlOccurrences[$existingUrlKey] = 0 }
+                $visibleUrlOccurrences[$existingUrlKey]++
+            }
+
+            foreach ($ocrLink in @(Get-PdfOcrUrlOccurrence -Bytes $Bytes)) {
+                $ocrUrlKey = ([string]$ocrLink.Url).Trim().ToLowerInvariant()
+                if ($visibleUrlOccurrences.ContainsKey($ocrUrlKey) -and $visibleUrlOccurrences[$ocrUrlKey] -gt 0) {
+                    $visibleUrlOccurrences[$ocrUrlKey]--
+                    continue
+                }
+                $found.Add($ocrLink)
+            }
+        }
+        catch {
+            $errors.Add("PDF image OCR failed: $($_.Exception.Message)")
+        }
+    }
+    else {
+        $errors.Add('Deep PDF OCR was not enabled; URLs visible only in scanned/image content were not inspected.')
+    }
+
+    return [PSCustomObject]@{ Links = $found.ToArray(); Errors = $errors.ToArray() }
 }
 
 function Get-HtmlHyperlink {
@@ -980,6 +1163,71 @@ function Get-HtmlHyperlink {
         $found.Add([PSCustomObject]@{ Text = $displayText; Url = $url })
     }
     return $found.ToArray()
+}
+
+function Get-TikaDocumentHyperlink {
+    param(
+        [Parameter(Mandatory = $true)][AllowEmptyCollection()][byte[]]$Bytes,
+        [Parameter(Mandatory = $true)][string]$Extension
+    )
+
+    if (-not $script:ResolvedJavaPath) {
+        $javaCommand = Get-Command $JavaPath -ErrorAction SilentlyContinue
+        if (-not $javaCommand) { throw "Java was not found: $JavaPath" }
+        $script:ResolvedJavaPath = if ($javaCommand.Source) { [string]$javaCommand.Source } else { [string]$javaCommand.Path }
+    }
+    if (-not (Test-Path -LiteralPath $TikaAppPath -PathType Leaf)) {
+        throw "Apache Tika was not found: $TikaAppPath"
+    }
+
+    $tikaFolder = Split-Path -Path $TikaAppPath -Parent
+    if (-not (Test-Path -LiteralPath (Join-Path $tikaFolder 'lib') -PathType Container)) {
+        throw "Apache Tika 4.x requires its adjacent lib directory: $(Join-Path $tikaFolder 'lib')"
+    }
+
+    $workFolder = Join-Path ([System.IO.Path]::GetTempPath()) ('Get-DocumentUrlLookup-' + [Guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $workFolder -Force | Out-Null
+    try {
+        $sourcePath = Join-Path $workFolder ("source{0}" -f $Extension)
+        [System.IO.File]::WriteAllBytes($sourcePath, $Bytes)
+
+        $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+        $startInfo.FileName = $script:ResolvedJavaPath
+        $startInfo.WorkingDirectory = $tikaFolder
+        $startInfo.UseShellExecute = $false
+        $startInfo.CreateNoWindow = $true
+        $startInfo.RedirectStandardOutput = $true
+        $startInfo.RedirectStandardError = $true
+        foreach ($argument in @('-jar', $TikaAppPath, '-x', $sourcePath)) {
+            $startInfo.ArgumentList.Add($argument)
+        }
+
+        $process = [System.Diagnostics.Process]::new()
+        $process.StartInfo = $startInfo
+        try {
+            if (-not $process.Start()) { throw 'Could not start Apache Tika.' }
+            $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+            $stderrTask = $process.StandardError.ReadToEndAsync()
+            if (-not $process.WaitForExit(900000)) {
+                try { $process.Kill($true) }
+                catch { Write-Verbose "Could not terminate timed-out Tika process: $($_.Exception.Message)" }
+                throw "Apache Tika timed out while parsing $Extension content."
+            }
+            $process.WaitForExit()
+            $xhtml = $stdoutTask.GetAwaiter().GetResult()
+            $stderr = $stderrTask.GetAwaiter().GetResult()
+            if ($process.ExitCode -ne 0) {
+                throw "Apache Tika failed with exit code $($process.ExitCode): $stderr"
+            }
+            return @(Get-HtmlHyperlink -Html $xhtml)
+        }
+        finally {
+            $process.Dispose()
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $workFolder -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Get-CanvasContentHyperlink {
@@ -1024,6 +1272,42 @@ function Get-CanvasContentHyperlink {
             $displayText = if ($current.PSObject.Properties['title']) { [string]$current.title } elseif ($sourceItem.PSObject.Properties['title']) { [string]$sourceItem.title } else { '' }
             if (-not [string]::IsNullOrWhiteSpace($targetUrl)) {
                 $found.Add([PSCustomObject]@{ Text = $displayText; Url = $targetUrl })
+            }
+        }
+
+        $serverProcessedContent = $current.PSObject.Properties['serverProcessedContent']
+        $linkCollection = if ($serverProcessedContent -and $serverProcessedContent.Value) {
+            $serverProcessedContent.Value.PSObject.Properties['links']
+        }
+        else { $null }
+        if ($linkCollection -and $linkCollection.Value) {
+            $pendingLinks = New-Object System.Collections.Stack
+            $pendingLinks.Push($linkCollection.Value)
+            while ($pendingLinks.Count -gt 0) {
+                $linkValue = $pendingLinks.Pop()
+                if ($linkValue -is [string]) {
+                    $candidateUrl = $linkValue.Trim()
+                    if ($candidateUrl -match '(?i)^(?:https?:)?//|^/|^~site(?:collection)?/') {
+                        $found.Add([PSCustomObject]@{ Text = ''; Url = $candidateUrl })
+                    }
+                    continue
+                }
+                if ($linkValue -is [System.Array]) {
+                    foreach ($entry in $linkValue) { if ($null -ne $entry) { $pendingLinks.Push($entry) } }
+                    continue
+                }
+
+                foreach ($linkProperty in $linkValue.PSObject.Properties) {
+                    if ($linkProperty.Value -is [string] -and $linkProperty.Name -match '(?i)^(url|href|linkurl|targeturl)$') {
+                        $found.Add([PSCustomObject]@{ Text = ''; Url = [string]$linkProperty.Value })
+                    }
+                    elseif ($linkProperty.Value -is [string] -and ([string]$linkProperty.Value).Trim() -match '(?i)^(?:https?:)?//|^/|^~site(?:collection)?/') {
+                        $found.Add([PSCustomObject]@{ Text = ''; Url = ([string]$linkProperty.Value).Trim() })
+                    }
+                    elseif ($null -ne $linkProperty.Value -and $linkProperty.Value -isnot [string]) {
+                        $pendingLinks.Push($linkProperty.Value)
+                    }
+                }
             }
         }
 
@@ -1086,12 +1370,14 @@ function Test-IsUrlWithinOldSiteBase {
 
     try {
         $uri = [Uri]$Url
+        $urlPath = [Uri]::UnescapeDataString($uri.AbsolutePath).TrimEnd('/')
+        $urlPath = $urlPath -replace '(?i)^/:[a-z]:/(?:r|s)(?=/)', ''
         foreach ($entry in $SiteUrlMap) {
             $oldBaseUri = [Uri]$entry.OldBase
             if (-not $uri.Host.Equals($oldBaseUri.Host, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
 
             $oldPath = $oldBaseUri.AbsolutePath.TrimEnd('/')
-            $urlPath = $uri.AbsolutePath.TrimEnd('/')
+            if ([string]::IsNullOrWhiteSpace($oldPath) -and $urlPath -match '(?i)^/sites(?:/|$)') { continue }
             if ($urlPath.Equals($oldPath, [System.StringComparison]::OrdinalIgnoreCase) -or
                 $urlPath.StartsWith(($oldPath + '/'), [System.StringComparison]::OrdinalIgnoreCase)) {
                 return $true
@@ -1590,7 +1876,7 @@ function Publish-EmbeddedLinksLookupTable {
         [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ScannedSourceUrls
     )
 
-    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL', 'EmbeddedNewFound', 'EmbeddedNewSubsite', 'EmbeddedNewURL', 'EmbeddedResolution')
+    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedOccurrence', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL', 'EmbeddedNewFound', 'EmbeddedNewSubsite', 'EmbeddedNewURL', 'EmbeddedResolution')
     $reportPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks.csv")
     $scanTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-scan-temp.csv")
     $mergedTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-merged-temp.csv")
@@ -1606,11 +1892,16 @@ function Publish-EmbeddedLinksLookupTable {
 
     $mergedRowsByKey = [ordered]@{}
     if (Test-Path -Path $reportPath) {
+        $legacyRowIndex = 0
         foreach ($row in @(Import-Csv -Path $reportPath)) {
+            $legacyRowIndex++
             $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
             $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
             if ($ScannedSourceUrls.ContainsKey($sourceKey)) { continue }
-            $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
+            $occurrence = [string]$row.EmbeddedOccurrence
+            if ([string]::IsNullOrWhiteSpace($occurrence)) { $occurrence = "legacy-$legacyRowIndex" }
+            $row | Add-Member -MemberType NoteProperty -Name EmbeddedOccurrence -Value $occurrence -Force
+            $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + $occurrence + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
             $mergedRowsByKey[$rowKey] = $row
         }
     }
@@ -1618,7 +1909,7 @@ function Publish-EmbeddedLinksLookupTable {
     foreach ($row in @(Import-Csv -Path $scanTempPath)) {
         $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
         $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
-        $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
+        $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedOccurrence + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
         $mergedRowsByKey[$rowKey] = $row
     }
 
@@ -1695,12 +1986,16 @@ if ([string]::IsNullOrWhiteSpace($MasterFolder)) {
 if ([string]::IsNullOrWhiteSpace($FixerOutputFolder)) {
     $FixerOutputFolder = Join-Path -Path $OutputFolder -ChildPath 'FixerFiles'
 }
+if ([string]::IsNullOrWhiteSpace($SitesEmbeddedLinksFolder)) {
+    $SitesEmbeddedLinksFolder = Join-Path -Path $OutputFolder -ChildPath 'Sites-EmbeddedLinks'
+}
 
 New-DirectoryIfMissing -Path $OutputFolder
 New-DirectoryIfMissing -Path $MasterFolder
 New-DirectoryIfMissing -Path $TempMasterFolder
 New-DirectoryIfMissing -Path $FixerOutputFolder
 New-DirectoryIfMissing -Path $EmbeddedLinksFolder
+New-DirectoryIfMissing -Path $SitesEmbeddedLinksFolder
 New-DirectoryIfMissing -Path $StateRootFolder
 
 $RootUrl = $RootUrl.TrimEnd('/')
@@ -1741,7 +2036,7 @@ $scopeSubsites.Add([PSCustomObject]@{ Url = $scopeRootWeb.Url; Title = $scopeRoo
 
 $scopeChildResult = Invoke-PnPConnectionOperation -Url $selectedScopeUrl -ClientId $ClientId -Connection $scopeConn -Label 'Get selected scope child webs' -MaxAttempts 4 -Operation {
     param($activeConnection)
-    Get-PnPSubWeb -Connection $activeConnection -Includes Url, Title
+    Get-PnPSubWeb -Connection $activeConnection -Recurse -Includes Url, Title
 }
 $scopeConn = $scopeChildResult.Connection
 foreach ($child in @($scopeChildResult.Result | Sort-Object Url)) {
@@ -1937,6 +2232,15 @@ if ($PSBoundParameters.ContainsKey('EnableDocumentContentScan')) {
 else {
     $scanDocumentContent = Get-BooleanPrompt -Message "Also scan document, PDF, page, and list text/URL fields for embedded whallc.sharepoint.com links (downloads supported file content and writes per-site EmbeddedLinks reports)?" -DefaultYes $false
 }
+$script:DeepPdfOcr = $false
+if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
+    $script:DeepPdfOcr = if ($PSBoundParameters.ContainsKey('EnableDeepPdfOcr')) {
+        [bool]$EnableDeepPdfOcr
+    }
+    else {
+        Get-BooleanPrompt -Message 'Also use Ghostscript and Tesseract OCR on every PDF page to find links in scanned/image content? This can significantly increase run time.' -DefaultYes $false
+    }
+}
 if ($automaticEmbeddedScanSites.Count -gt 0) {
     Write-Host ("Automatically enabling embedded-link scanning for {0} selected site(s) missing from the Old/New Site URL CSV; only links under CSV Old Site URL bases will be reported." -f $automaticEmbeddedScanSites.Count)
 }
@@ -1955,17 +2259,26 @@ function Get-ShortSiteIdentifier {
 
     $scannedUrl = ([string]$Subsite.Url).TrimEnd('/')
     $scannedPath = ([Uri]$scannedUrl).AbsolutePath.TrimEnd('/')
-    $lastSegment = ($scannedPath -split '/')[-1]
-    if ([string]::IsNullOrWhiteSpace($lastSegment)) {
-        $lastSegment = [string]$Subsite.Title
+    $pathSegments = @($scannedPath -split '/' | Where-Object { $_ })
+    $isSitesCollection = $pathSegments.Count -gt 0 -and $pathSegments[0].Equals('sites', [System.StringComparison]::OrdinalIgnoreCase)
+    $identifierSegments = @(
+        if ($isSitesCollection) { $pathSegments | Select-Object -Skip 1 }
+        else { $pathSegments }
+    )
+
+    if ($identifierSegments.Count -eq 0) {
+        return Get-SafeFileSlug -Text ([string]$Subsite.Title) -MaxLength 30 -Fallback 'Site'
+    }
+    if ($identifierSegments.Count -eq 1) {
+        return Get-SafeFileSlug -Text $identifierSegments[0] -MaxLength 30 -Fallback 'Site'
     }
 
-    $identifier = Get-SafeFileSlug -Text $lastSegment -MaxLength 30 -Fallback 'Site'
-    if ($scannedPath -match '(?i)^/sites(?:/|$)') {
-        return 'sites-' + $identifier
-    }
-
-    return $identifier
+    $hierarchy = @($identifierSegments | ForEach-Object {
+            Get-SafeFileSlug -Text ([string]$_) -MaxLength 14 -Fallback 'Web'
+        }) -join '-'
+    $hierarchy = Get-SafeFileSlug -Text $hierarchy -MaxLength 38 -Fallback 'Site'
+    $fingerprint = (Get-Sha256Hex -Text $scannedUrl.ToLowerInvariant()).Substring(0, 8)
+    return "$hierarchy-$fingerprint"
 }
 
 $runStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
@@ -1980,21 +2293,37 @@ $extensionCountsTotal = @{}
 # Embedded-link findings are keyed by source item and link details; scanned-source keys
 # allow the publisher to refresh scanned items while retaining cached unscanned items.
 $embeddedLinksBySite = @{}
+$embeddedLinksOutputFolderBySite = @{}
 $scannedEmbeddedSourcesBySite = @{}
-$ContentScanExtensions = @('.docx', '.xlsx', '.pptx', '.pdf', '.htm', '.html')
+$OpenXmlContentExtensions = @(
+    '.docx', '.docm', '.dotx', '.dotm',
+    '.xlsx', '.xlsm', '.xltx', '.xltm',
+    '.pptx', '.pptm', '.potx', '.potm', '.ppsx', '.ppsm'
+)
+$ContentScanExtensions = @(
+    $OpenXmlContentExtensions + @(
+        '.doc', '.xls', '.ppt', '.rtf', '.odt', '.ods', '.odp', '.vsd', '.vsdx', '.one',
+        '.pdf', '.htm', '.html', '.aspx'
+    )
+)
 
 foreach ($subsite in $selectedSubsites) {
     $subsiteUrl = ([string]$subsite.Url).TrimEnd('/')
     Write-Host "`nScanning $subsiteUrl ..."
 
     $siteMatch = Get-ExactNewSiteBaseForUrl -Url $subsiteUrl -SiteUrlMap $siteUrlMap
+    $isNewStructureWeb = ([Uri]$subsiteUrl).AbsolutePath -match '(?i)^/sites(?:/|$)'
     $scanThisSiteContent = $scanDocumentContent -or $automaticEmbeddedScanSites.ContainsKey($subsiteUrl.ToLowerInvariant())
-    $scanOldBaseOnly = (-not $siteMatch) -and (-not $scanDocumentContent)
-    if (-not $siteMatch) {
+    $scanOldBaseOnly = $isNewStructureWeb -or ((-not $siteMatch) -and (-not $scanDocumentContent))
+    if ((-not $siteMatch) -and (-not $isNewStructureWeb)) {
         Write-Warning "  No matching row in the Old/New Site URL CSV for $subsiteUrl - old URLs will still be recorded, but new URLs cannot be looked up."
+    }
+    elseif ($isNewStructureWeb) {
+        Write-Host '  New-structure web: reporting only links matched to the Old Site URL bases in the selected CSV.'
     }
 
     $siteIdentifier = Get-ShortSiteIdentifier -Subsite $subsite
+    $embeddedOutputFolder = if ($isNewStructureWeb) { $SitesEmbeddedLinksFolder } else { $EmbeddedLinksFolder }
     $masterPath = Get-MasterLookupTablePath -Folder $MasterFolder -Identifier $siteIdentifier
     $outputPath = Get-TemporaryLookupTablePath -Folder $TempMasterFolder -Identifier $siteIdentifier -RunStamp $runStamp
     $fixerPath = Get-FixerLookupTablePath -Folder $FixerOutputFolder -Identifier $siteIdentifier
@@ -2010,6 +2339,19 @@ foreach ($subsite in $selectedSubsites) {
     if ($scanThisSiteContent) {
         if (-not $embeddedLinksBySite.ContainsKey($siteIdentifier)) { $embeddedLinksBySite[$siteIdentifier] = [ordered]@{} }
         if (-not $scannedEmbeddedSourcesBySite.ContainsKey($siteIdentifier)) { $scannedEmbeddedSourcesBySite[$siteIdentifier] = @{} }
+        $embeddedLinksOutputFolderBySite[$siteIdentifier] = $embeddedOutputFolder
+
+        if ($isNewStructureWeb) {
+            $legacyReportPath = Join-Path $EmbeddedLinksFolder ("sites-{0}-EmbeddedLinks.csv" -f $siteIdentifier)
+            $canonicalReportPath = Join-Path $embeddedOutputFolder ("{0}-EmbeddedLinks.csv" -f $siteIdentifier)
+            if (Test-Path -LiteralPath $legacyReportPath) {
+                if (-not (Test-Path -LiteralPath $canonicalReportPath) -or
+                    (Get-Item -LiteralPath $legacyReportPath).LastWriteTimeUtc -gt (Get-Item -LiteralPath $canonicalReportPath).LastWriteTimeUtc) {
+                    Copy-CsvFileWithRetry -SourcePath $legacyReportPath -DestinationPath $canonicalReportPath
+                }
+                Remove-FileWithRetry -Path $legacyReportPath
+            }
+        }
     }
 
     $filesScanned = 0
@@ -2050,6 +2392,7 @@ foreach ($subsite in $selectedSubsites) {
 
         $contentFieldNames = @()
         $contentFieldScanSucceeded = $false
+        $contentFieldScanError = ''
         if ($scanThisSiteContent) {
             try {
                 $fieldResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get content fields: ' + $library.Title) -MaxAttempts 2 -Operation {
@@ -2064,14 +2407,19 @@ foreach ($subsite in $selectedSubsites) {
                 $contentFieldScanSucceeded = $true
             }
             catch {
-                Write-Verbose "Could not read text/URL fields from $($library.Title): $($_.Exception.Message)"
+                $contentFieldScanError = "Could not read text/URL fields from $($library.Title): $($_.Exception.Message)"
+                Write-Warning "  $contentFieldScanError"
             }
         }
 
-        $fields = @(@('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Modified', 'Title') + $contentFieldNames | Select-Object -Unique)
+        $fields = @(@('FileRef', 'FileLeafRef', 'FileDirRef', 'UniqueId', 'FSObjType', 'Modified', 'Title', 'Attachments') + $contentFieldNames | Select-Object -Unique)
+        $viewFieldsXml = @($fields | ForEach-Object {
+                "<FieldRef Name='{0}'/>" -f [System.Security.SecurityElement]::Escape([string]$_)
+            }) -join ''
+        $recursiveItemsQuery = "<View Scope='RecursiveAll'><ViewFields>$viewFieldsXml</ViewFields><RowLimit Paged='TRUE'>500</RowLimit></View>"
         $itemsResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get items: ' + $library.Title) -MaxAttempts 3 -Operation {
             param($activeConnection)
-            Get-PnPListItem -List $library.Title -Connection $activeConnection -PageSize 500 -Fields $fields
+            Get-PnPListItem -List $library.Title -Connection $activeConnection -Query $recursiveItemsQuery -PageSize 500
         }
         $subConn = $itemsResult.Connection
         $items = @($itemsResult.Result)
@@ -2210,8 +2558,14 @@ foreach ($subsite in $selectedSubsites) {
 
             if ($scanThisSiteContent) {
                 $sourceHyperlinks = New-Object System.Collections.Generic.List[Object]
+                $sourceScanErrors = New-Object System.Collections.Generic.List[string]
                 $sourceContentScanned = $false
                 $fileContentScanSucceeded = $false
+                $attachmentContentScanSucceeded = $true
+
+                if (-not $contentFieldScanSucceeded) {
+                    $sourceScanErrors.Add($contentFieldScanError)
+                }
 
                 $pageContentFields = @('CanvasContent1', 'WikiField', 'PublishingPageContent', 'LayoutWebpartsContent')
                 if ($librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)) {
@@ -2224,22 +2578,115 @@ foreach ($subsite in $selectedSubsites) {
                         $subConn = $contentResult.Connection
                         $contentStream = $contentResult.Result
                         if ($ext -eq '.pdf') {
-                            foreach ($link in @(Get-PdfHyperlink -Bytes $contentStream.ToArray())) { $sourceHyperlinks.Add($link) }
+                            $pdfExtraction = Get-PdfHyperlink -Bytes $contentStream.ToArray()
+                            foreach ($link in @($pdfExtraction.Links)) { $sourceHyperlinks.Add($link) }
+                            foreach ($pdfError in @($pdfExtraction.Errors)) { $sourceScanErrors.Add([string]$pdfError) }
+                            $fileContentScanSucceeded = ($pdfExtraction.Errors.Count -eq 0)
                         }
-                        elseif ($ext -in @('.htm', '.html')) {
+                        elseif ($ext -in @('.htm', '.html', '.aspx')) {
                             $htmlContent = [System.Text.Encoding]::UTF8.GetString($contentStream.ToArray())
                             foreach ($link in @(Get-HtmlHyperlink -Html $htmlContent)) { $sourceHyperlinks.Add($link) }
                         }
-                        else {
+                        elseif ($OpenXmlContentExtensions -contains $ext) {
                             foreach ($link in @(Get-OfficeDocumentHyperlink -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
                         }
-                        $fileContentScanSucceeded = $true
+                        else {
+                            foreach ($link in @(Get-TikaDocumentHyperlink -Bytes $contentStream.ToArray() -Extension $ext)) { $sourceHyperlinks.Add($link) }
+                        }
+                        if ($ext -ne '.pdf') { $fileContentScanSucceeded = $true }
                     }
                     catch {
-                        Write-Verbose "Could not scan content of $fileRef : $($_.Exception.Message)"
+                        $sourceScanErrors.Add("Could not scan file content: $($_.Exception.Message)")
+                        Write-Warning "  Could not scan content of $fileRef : $($_.Exception.Message)"
                     }
                     finally {
                         if ($contentStream) { $contentStream.Dispose() }
+                    }
+                }
+                elseif ($librarySupportsFileLookup) {
+                    $sourceScanErrors.Add("No content parser is configured for library file extension '$ext'.")
+                }
+
+                $hasListAttachments = (-not $librarySupportsFileLookup) -and [bool]$item.FieldValues['Attachments']
+                if ($hasListAttachments) {
+                    try {
+                        $attachmentListTitle = $library.Title
+                        $attachmentItemId = $item.Id
+                        $attachmentResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Get attachments: ' + $library.Title + ' #' + $item.Id) -MaxAttempts 2 -Operation {
+                            param($activeConnection)
+                            $activeItem = Get-PnPListItem -List $attachmentListTitle -Id $attachmentItemId -Fields @('Attachments') -Connection $activeConnection
+                            Get-PnPProperty -ClientObject $activeItem -Property AttachmentFiles -Connection $activeConnection
+                        }
+                        $subConn = $attachmentResult.Connection
+                        foreach ($attachment in @($attachmentResult.Result)) {
+                            $attachmentUrl = [string]$attachment.ServerRelativeUrl
+                            $attachmentName = if ($attachment.FileName) { [string]$attachment.FileName } else { ($attachmentUrl -split '/')[-1] }
+                            $attachmentExtension = Get-NormalizedExtension -FileName $attachmentName
+                            if ($ContentScanExtensions -notcontains $attachmentExtension) {
+                                $attachmentContentScanSucceeded = $false
+                                $sourceScanErrors.Add("No content parser is configured for list attachment '$attachmentName'.")
+                                continue
+                            }
+
+                            $attachmentStream = $null
+                            try {
+                                $attachmentContentResult = Invoke-PnPConnectionOperation -Url $subsiteUrl -ClientId $ClientId -Connection $subConn -Label ('Download attachment: ' + $attachmentUrl) -MaxAttempts 2 -Operation {
+                                    param($activeConnection)
+                                    Get-PnPFile -Url $attachmentUrl -AsMemoryStream -Connection $activeConnection
+                                }
+                                $subConn = $attachmentContentResult.Connection
+                                $attachmentStream = $attachmentContentResult.Result
+                                $attachmentFolder = $attachmentUrl.Substring(0, $attachmentUrl.LastIndexOf('/'))
+                                if ($attachmentExtension -eq '.pdf') {
+                                    $pdfAttachmentExtraction = Get-PdfHyperlink -Bytes $attachmentStream.ToArray()
+                                    $attachmentLinks = @($pdfAttachmentExtraction.Links)
+                                    foreach ($pdfError in @($pdfAttachmentExtraction.Errors)) {
+                                        $attachmentContentScanSucceeded = $false
+                                        $sourceScanErrors.Add("Attachment '$attachmentName': $pdfError")
+                                    }
+                                }
+                                elseif ($attachmentExtension -in @('.htm', '.html', '.aspx')) {
+                                    $attachmentHtml = [System.Text.Encoding]::UTF8.GetString($attachmentStream.ToArray())
+                                    $attachmentLinks = @(Get-HtmlHyperlink -Html $attachmentHtml)
+                                }
+                                elseif ($OpenXmlContentExtensions -contains $attachmentExtension) {
+                                    $attachmentLinks = @(Get-OfficeDocumentHyperlink -Stream $attachmentStream)
+                                }
+                                else {
+                                    $attachmentLinks = @(Get-TikaDocumentHyperlink -Bytes $attachmentStream.ToArray() -Extension $attachmentExtension)
+                                }
+
+                                foreach ($attachmentLink in $attachmentLinks) {
+                                    $attachmentLinkUrl = [string]$attachmentLink.Url
+                                    try {
+                                        $attachmentLinkUri = [Uri]$attachmentLinkUrl
+                                        if (-not $attachmentLinkUri.IsAbsoluteUri) {
+                                            $attachmentLinkUri = [Uri]::new([Uri]($RootUrl + $attachmentFolder.TrimEnd('/') + '/'), $attachmentLinkUri)
+                                        }
+                                        $attachmentLinkUrl = $attachmentLinkUri.AbsoluteUri
+                                    }
+                                    catch {
+                                        $attachmentContentScanSucceeded = $false
+                                        $sourceScanErrors.Add("Attachment '$attachmentName' contains an invalid link target '$attachmentLinkUrl'.")
+                                        continue
+                                    }
+                                    $sourceHyperlinks.Add([PSCustomObject]@{ Text = [string]$attachmentLink.Text; Url = $attachmentLinkUrl })
+                                }
+                            }
+                            catch {
+                                $attachmentContentScanSucceeded = $false
+                                $sourceScanErrors.Add("Could not scan list attachment '$attachmentName': $($_.Exception.Message)")
+                                Write-Warning "  Could not scan attachment $attachmentName : $($_.Exception.Message)"
+                            }
+                            finally {
+                                if ($attachmentStream) { $attachmentStream.Dispose() }
+                            }
+                        }
+                    }
+                    catch {
+                        $attachmentContentScanSucceeded = $false
+                        $sourceScanErrors.Add("Could not enumerate list attachments: $($_.Exception.Message)")
+                        Write-Warning "  Could not enumerate attachments for $($library.Title) item $($item.Id): $($_.Exception.Message)"
                     }
                 }
 
@@ -2255,13 +2702,13 @@ foreach ($subsite in $selectedSubsites) {
                         $sourceHyperlinks.Add($link)
                     }
                 }
-                $requiresFileContentScan = $librarySupportsFileLookup -and ($ContentScanExtensions -contains $ext)
-                if ($contentFieldScanSucceeded -and (-not $requiresFileContentScan -or $fileContentScanSucceeded)) {
+                $requiresFileContentScan = $librarySupportsFileLookup
+                if ($contentFieldScanSucceeded -and (-not $requiresFileContentScan -or $fileContentScanSucceeded) -and $attachmentContentScanSucceeded) {
                     $sourceContentScanned = $true
                 }
 
+                $sourceDocumentKey = $oldCopyLinkUrl.Trim().ToLowerInvariant()
                 if ($sourceContentScanned) {
-                    $sourceDocumentKey = $oldCopyLinkUrl.Trim().ToLowerInvariant()
                     $scannedEmbeddedSourcesBySite[$siteIdentifier][($sourceDocumentKey + "`n" + $library.Title)] = $true
                 }
 
@@ -2299,7 +2746,9 @@ foreach ($subsite in $selectedSubsites) {
                     }
                 }
 
+                $sourceOccurrence = 0
                 foreach ($link in $sourceHyperlinks) {
+                    $sourceOccurrence++
                     $embeddedUrl = [string]$link.Url
                     try {
                         $embeddedUri = [Uri]$embeddedUrl
@@ -2310,6 +2759,7 @@ foreach ($subsite in $selectedSubsites) {
                         $embeddedUrl = $embeddedUri.AbsoluteUri
                     }
                     catch {
+                        $sourceScanErrors.Add("Embedded link target could not be normalized: $($_.Exception.Message)")
                         continue
                     }
                     if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
@@ -2328,6 +2778,7 @@ foreach ($subsite in $selectedSubsites) {
                         FileName             = if ($librarySupportsFileLookup) { $fileLeaf } elseif ($item.FieldValues['Title']) { [string]$item.FieldValues['Title'] } else { $fileLeaf }
                         Extension            = if ($librarySupportsFileLookup) { $ext } else { '' }
                         DocumentorItemURL    = $oldCopyLinkUrl
+                        EmbeddedOccurrence  = $sourceOccurrence
                         EmbeddedURLText      = [string]$link.Text
                         EmbeddedURL          = $embeddedUrl
                         NewFound             = $embeddedSourceNewFound
@@ -2338,8 +2789,31 @@ foreach ($subsite in $selectedSubsites) {
                         EmbeddedNewURL       = $embeddedTarget.NewUrl
                         EmbeddedResolution   = $embeddedTarget.Resolution
                     }
-                    $embeddedKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`n" + $embeddedRow.EmbeddedURLText + "`n" + $embeddedUrl)
+                    $embeddedKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`n" + $sourceOccurrence + "`n" + $embeddedRow.EmbeddedURLText + "`n" + $embeddedUrl)
                     $embeddedLinksBySite[$siteIdentifier][$embeddedKey] = $embeddedRow
+                }
+
+                if ($sourceScanErrors.Count -gt 0) {
+                    $scanErrorRow = [PSCustomObject][ordered]@{
+                        Site                 = $selectedScopeUrl
+                        Subsite              = $subsiteUrl
+                        LibraryorListName    = $library.Title
+                        FileName             = if ($librarySupportsFileLookup) { $fileLeaf } elseif ($item.FieldValues['Title']) { [string]$item.FieldValues['Title'] } else { $fileLeaf }
+                        Extension            = if ($librarySupportsFileLookup) { $ext } else { '' }
+                        DocumentorItemURL    = $oldCopyLinkUrl
+                        EmbeddedOccurrence   = ''
+                        EmbeddedURLText      = ''
+                        EmbeddedURL          = ''
+                        NewFound             = $newFound
+                        NewSubsite           = $newSubsiteForItem
+                        NewDocumentorItemURL = if ($newFound -eq 'Yes') { $newCopyLinkUrl } else { '' }
+                        EmbeddedNewFound     = 'Unknown'
+                        EmbeddedNewSubsite   = ''
+                        EmbeddedNewURL       = ''
+                        EmbeddedResolution   = "SCAN INCOMPLETE: $(@($sourceScanErrors | Select-Object -Unique) -join ' ')"
+                    }
+                    $scanErrorKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`nSCAN INCOMPLETE")
+                    $embeddedLinksBySite[$siteIdentifier][$scanErrorKey] = $scanErrorRow
                 }
             }
 
@@ -2382,7 +2856,28 @@ foreach ($subsite in $selectedSubsites) {
                 $scannedEmbeddedSourcesBySite[$siteIdentifier][$navigationSourceKey] = $true
             }
             catch {
-                Write-Verbose "Could not read $navigationLocation navigation for $subsiteUrl : $($_.Exception.Message)"
+                $navigationError = "Could not read $navigationLocation navigation for $subsiteUrl`: $($_.Exception.Message)"
+                Write-Warning "  $navigationError"
+                $navigationErrorRow = [PSCustomObject][ordered]@{
+                    Site                 = $selectedScopeUrl
+                    Subsite              = $subsiteUrl
+                    LibraryorListName    = $navigationContainerName
+                    FileName             = ''
+                    Extension            = ''
+                    DocumentorItemURL    = $subsiteUrl
+                    EmbeddedOccurrence   = ''
+                    EmbeddedURLText      = ''
+                    EmbeddedURL          = ''
+                    NewFound             = 'Unknown'
+                    NewSubsite           = ''
+                    NewDocumentorItemURL = ''
+                    EmbeddedNewFound     = 'Unknown'
+                    EmbeddedNewSubsite   = ''
+                    EmbeddedNewURL       = ''
+                    EmbeddedResolution   = "SCAN INCOMPLETE: $navigationError"
+                }
+                $navigationErrorKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`nSCAN INCOMPLETE")
+                $embeddedLinksBySite[$siteIdentifier][$navigationErrorKey] = $navigationErrorRow
                 continue
             }
 
@@ -2416,9 +2911,11 @@ foreach ($subsite in $selectedSubsites) {
                 }
             }
 
+            $navigationOccurrence = 0
             foreach ($navigationNode in $sourceNavigationNodes) {
                 $embeddedUrl = [string]$navigationNode.Url
                 if ([string]::IsNullOrWhiteSpace($embeddedUrl)) { continue }
+                $navigationOccurrence++
                 try {
                     $navigationUri = [Uri]$embeddedUrl
                     if (-not $navigationUri.IsAbsoluteUri) {
@@ -2447,6 +2944,7 @@ foreach ($subsite in $selectedSubsites) {
                     FileName             = $nodeTitle
                     Extension            = ''
                     DocumentorItemURL    = $subsiteUrl
+                    EmbeddedOccurrence   = $navigationOccurrence
                     EmbeddedURLText      = $nodeTitle
                     EmbeddedURL          = $embeddedUrl
                     NewFound             = if ($destinationNode) { 'Yes' } else { 'No' }
@@ -2457,7 +2955,7 @@ foreach ($subsite in $selectedSubsites) {
                     EmbeddedNewURL       = $embeddedTarget.NewUrl
                     EmbeddedResolution   = $embeddedTarget.Resolution
                 }
-                $rowKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`n" + $nodeTitle.ToLowerInvariant() + "`n" + $embeddedUrl.ToLowerInvariant())
+                $rowKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`n" + $navigationOccurrence + "`n" + $nodeTitle.ToLowerInvariant() + "`n" + $embeddedUrl.ToLowerInvariant())
                 $embeddedLinksBySite[$siteIdentifier][$rowKey] = $embeddedRow
             }
         }
@@ -2504,8 +3002,9 @@ else {
 
 if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
     foreach ($siteIdentifier in @($embeddedLinksBySite.Keys | Sort-Object)) {
-        $embeddedOutputPath = Join-Path -Path $EmbeddedLinksFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
-        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $EmbeddedLinksFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteIdentifier] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteIdentifier]
+        $embeddedOutputFolder = $embeddedLinksOutputFolderBySite[$siteIdentifier]
+        $embeddedOutputPath = Join-Path -Path $embeddedOutputFolder -ChildPath ("$siteIdentifier-EmbeddedLinks.csv")
+        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $embeddedOutputFolder -Identifier $siteIdentifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$siteIdentifier] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$siteIdentifier]
         Write-Host "`nWrote $embeddedRowsWritten embedded-link row(s): $embeddedOutputPath"
     }
 }
