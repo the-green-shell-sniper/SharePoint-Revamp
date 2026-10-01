@@ -36,8 +36,19 @@ export interface ILookupRow {
   [column: string]: string;
 }
 
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function findLegacySiteRule(segment: string): [string, string] | undefined {
+  const decoded = decodeUrlPart(segment);
+  return renameRules.find(([from]) => decodeUrlPart(from) === decoded);
+}
+
+// Renames only the site segment right after the first /sites/, never folders deeper in the path.
+function renameSiteSegment(value: string): { value: string; from?: string; to?: string } {
+  const match = value.match(/\/sites\/([^/?#]*)/i);
+  if (!match || match.index === undefined) return { value };
+  const rule = findLegacySiteRule(match[1]);
+  if (!rule) return { value };
+  const start = match.index + '/sites/'.length;
+  return { value: value.slice(0, start) + rule[1] + value.slice(start + match[1].length), from: rule[0], to: rule[1] };
 }
 
 function detectOfficeCode(pathAndQuery: string): string | undefined {
@@ -65,15 +76,9 @@ function fixPathQueryValue(rawValue: string): { value: string; changed: boolean 
     addedSites = true;
   }
 
-  let renamed = false;
-  renameRules.forEach(([from, to]) => {
-    // eslint-disable-next-line @rushstack/security/no-unsafe-regexp -- built from our own hardcoded, pre-escaped renameRules constant, never from user input
-    const segmentPattern = new RegExp('\\/' + escapeRegex(from) + '(?=\\/|$)', 'g');
-    if (segmentPattern.test(result)) {
-      result = result.replace(segmentPattern, '/' + to);
-      renamed = true;
-    }
-  });
+  const siteRename = renameSiteSegment(result);
+  result = siteRename.value;
+  const renamed = siteRename.from !== undefined;
 
   let value = hadLeadingSlash ? result : result.slice(1);
   if (usesEncodedSlash) value = value.replace(/\//g, '%2F');
@@ -135,6 +140,14 @@ export function fixUrl(raw: string): IFixResult {
 
   const alreadyHasSites = prefix ? /^sites\//i.test(afterPrefix) : /^\/sites\//i.test(afterPrefix);
 
+  // Every old site lived at the tenant root, so /sites/<non-legacy name> is already a new-structure link.
+  if (alreadyHasSites) {
+    const siteSegment = afterPrefix.replace(/^\/?sites\//i, '').split(/[/?#]/)[0];
+    if (!findLegacySiteRule(siteSegment)) {
+      return { original: url, fixed: url, note: 'warn:This link already points to the new SharePoint site — no changes needed.' };
+    }
+  }
+
   let fixed: string;
   let addedSites: boolean;
   if (alreadyHasSites) {
@@ -146,16 +159,10 @@ export function fixUrl(raw: string): IFixResult {
     addedSites = true;
   }
 
-  const renamedSegments: string[] = [];
-  renameRules.forEach(([from, to]) => {
-    // eslint-disable-next-line @rushstack/security/no-unsafe-regexp -- built from our own hardcoded, pre-escaped renameRules constant, never from user input
-    const segmentPattern = new RegExp('\\/' + escapeRegex(from) + '(?=\\/|$)', 'g');
-    if (segmentPattern.test(fixed)) {
-      fixed = fixed.replace(segmentPattern, '/' + to);
-      renamedSegments.push('/' + from + ' → /' + to);
-    }
-  });
-  const csRenamed = renamedSegments.length > 0;
+  const siteRename = renameSiteSegment(fixed);
+  fixed = siteRename.value;
+  const csRenamed = siteRename.from !== undefined;
+  const renamedSegments = csRenamed ? ['/' + siteRename.from + ' → /' + siteRename.to] : [];
 
   const idFix = fixDocumentIdParams(fixed);
   fixed = idFix.url;
