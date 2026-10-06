@@ -53,6 +53,45 @@ Created By | Last Modified By | Last Modified Date | Permissions
 
 Per-site old-URL -> new-URL lookup for documents, for cases the URL Fixer HTML tool can't pattern-match (links keyed only by the old document's GUID, with no folder path to fall back on). Reuses the site/subsite selection and scannability-inventory caching from Get-FixItListURLsv5.ps1, reads the Old Site URL / New Site URL CSV, then queries the new site live to confirm each document's new path and read its real new GUID.
 
+### Embedded-link reports
+
+Embedded scans inspect human-authored document content, SharePoint page/list content fields,
+supported list attachments, and navigation. Only links to the SharePoint tenant are reported;
+scans of `/sites` webs retain the existing additional restriction to mapped old-site URLs.
+The master document inventory still includes all file types.
+
+The embedded-content allowlist is independent of the Fixer export list:
+
+- Office documents/templates: `.docx`, `.docm`, `.dotx`, `.dotm`, `.xlsx`, `.xlsm`,
+  `.xltx`, `.xltm`, `.pptx`, `.pptm`, `.potx`, `.potm`, `.ppsx`, `.ppsm`.
+- Other authored documents: `.doc`, `.xls`, `.ppt`, `.rtf`, `.odt`, `.ods`, `.odp`,
+  `.vsd`, `.vsdx`, `.one`, `.msg`, `.pdf`.
+- Text and web content: `.txt`, `.csv`, `.htm`, `.html`, `.aspx`.
+
+Unsupported files/attachments (including images, video/audio, `.DS_Store`, `.url`,
+`.clipchamp`, and `.onetoc2`) are intentionally skipped, not treated as scan failures.
+Plain-text/CSV scans report each tenant URL occurrence; PDF scans also inspect visible
+URLs, with optional OCR. Legacy Office/OpenDocument/Visio/OneNote/email parsing requires
+the configured Java and Apache Tika installation.
+
+`[site]-EmbeddedLinks.csv` contains **one row per reported link instance**, including
+repeated URLs with identical display text. `EmbeddedOccurrence` is a sequential instance
+number within the source document/item or navigation collection, **not a URL occurrence
+count**. `EmbeddedURLText` preserves each instance's extracted display text;
+`EmbeddedLocation` identifies the document part/cell, PDF page, list field, attachment,
+or navigation node when available. Split formatting runs representing one visible
+PowerPoint link remain one instance.
+
+`[site]-EmbeddedLinks-ScanErrors.csv` records actual scan failures from the latest run,
+separately from link findings; it has headers only when there are no failures. Warnings
+identify incomplete scans. Successfully scanned sources replace prior findings (including
+when no matching links remain); failed/unscanned sources retain prior valid findings.
+Partial findings do not get mixed into an existing source snapshot, which would make
+instance counts misleading; a first-ever partial scan can still publish its known links.
+Publishing removes old blank-link diagnostic rows and unsupported-file rows from cached
+reports too. Rerun a scan to regenerate instance numbers and location details; prior
+unscanned findings cannot acquire details that were never extracted.
+
 ### Output File Naming
 `SiteSlug-DocumentUrlLookup-yyyyMMdd-HHmmss.csv`
 

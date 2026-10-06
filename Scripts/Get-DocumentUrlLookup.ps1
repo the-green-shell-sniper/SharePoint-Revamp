@@ -190,6 +190,17 @@ $PdfPigAssemblyFolder = 'C:\Users\!bposey\Desktop\PdfPig'
 $SkipListTitles = @('Form Templates', 'Preservation Hold Library')
 $FixerRequiredExtensions = @('.docx', '.doc', '.pdf', '.pptx', '.xls', '.xlsx', '.ppt', '.vsdx', '.vsd', '.png', '.aspx', '.one')
 $FileLookupListBaseTemplates = @(101, 119, 850)
+$OpenXmlContentExtensions = @(
+    '.docx', '.docm', '.dotx', '.dotm',
+    '.xlsx', '.xlsm', '.xltx', '.xltm',
+    '.pptx', '.pptm', '.potx', '.potm', '.ppsx', '.ppsm'
+)
+$ContentScanExtensions = @(
+    $OpenXmlContentExtensions + @(
+        '.doc', '.xls', '.ppt', '.rtf', '.odt', '.ods', '.odp', '.vsd', '.vsdx', '.one', '.msg',
+        '.pdf', '.txt', '.csv', '.htm', '.html', '.aspx'
+    )
+)
 
 # Office web-viewer prefix per extension: /:w:/r/... Word, :x: Excel, :p:
 # PowerPoint, :b: PDF. Same letter is reused in the ?d=<letter><guid> form.
@@ -907,7 +918,7 @@ function Get-OfficeDocumentHyperlink {
                 if ($relationMap.Count -gt 0) { $relationsByXml[$xmlPath] = $relationMap }
             }
             catch {
-                Write-Verbose "Could not parse relationship XML in $($entry.FullName)."
+                throw "Could not parse relationship XML in $($entry.FullName): $($_.Exception.Message)"
             }
         }
 
@@ -993,14 +1004,16 @@ function Get-OfficeDocumentHyperlink {
                         $shape = $node.SelectSingleNode('ancestor::p:sp[1]', $ns)
                         if ($shape) { $displayText = [string]$shape.InnerText }
                     }
-                    $lastLink = [PSCustomObject]@{ Text = $displayText; Url = [string]$relationsByXml[$entry.FullName][$relId] }
+                    $location = $entry.FullName
+                    if ($node.Attributes['ref']) { $location += ' | cell ' + $node.Attributes['ref'].Value }
+                    $lastLink = [PSCustomObject]@{ Text = $displayText; Url = [string]$relationsByXml[$entry.FullName][$relId]; Location = $location }
                     $lastRun = $textRun
                     $lastRelId = $relId
                     $found.Add($lastLink)
                 }
             }
             catch {
-                Write-Verbose "Could not parse hyperlinks in $($entry.FullName)."
+                throw "Could not parse hyperlinks in $($entry.FullName): $($_.Exception.Message)"
             }
         }
     }
@@ -1023,6 +1036,16 @@ function Get-InternalUrlOccurrencesFromText {
         }
     }
     return $found.ToArray()
+}
+
+function Get-PlainTextHyperlink {
+    param([Parameter(Mandatory = $true)][System.IO.Stream]$Stream)
+
+    $reader = [System.IO.StreamReader]::new($Stream, [System.Text.Encoding]::UTF8, $true, 1024, $true)
+    try {
+        return @(Get-InternalUrlOccurrencesFromText -Text $reader.ReadToEnd())
+    }
+    finally { $reader.Dispose() }
 }
 
 function Invoke-PdfExtractionProcess {
@@ -1100,6 +1123,8 @@ function Get-PdfOcrUrlOccurrence {
                 $pageImage.FullName, 'stdout', '-l', 'eng', '--psm', '11'
             ) -TimeoutSeconds 300
             foreach ($link in @(Get-InternalUrlOccurrencesFromText -Text $ocrResult.StandardOutput)) {
+                $pageNumber = [int]([System.IO.Path]::GetFileNameWithoutExtension($pageImage.Name) -replace '^page-', '')
+                $link | Add-Member -NotePropertyName Location -NotePropertyValue "PDF page $pageNumber | OCR visible URL"
                 $found.Add($link)
             }
         }
@@ -1114,7 +1139,7 @@ function Get-PdfOcrUrlOccurrence {
 function Get-PdfHyperlink {
     param([Parameter(Mandatory = $true)][AllowEmptyCollection()][byte[]]$Bytes)
 
-    if ($Bytes.Length -eq 0) { return @() }
+    if ($Bytes.Length -eq 0) { return [PSCustomObject]@{ Links = @(); Errors = @('PDF file is empty.') } }
 
     $found = New-Object System.Collections.Generic.List[Object]
     $errors = New-Object System.Collections.Generic.List[string]
@@ -1129,7 +1154,7 @@ function Get-PdfHyperlink {
                     $displayText = (@($hyperlink.Letters | ForEach-Object { [string]$_.Value }) -join '')
                 }
                 $annotationUrl = [string]$hyperlink.Uri
-                $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = $annotationUrl })
+                $found.Add([PSCustomObject]@{ Text = $displayText.Trim(); Url = $annotationUrl; Location = "PDF page $($page.Number) | hyperlink annotation" })
                 if (-not [string]::IsNullOrWhiteSpace($displayText) -and
                     $displayText.Trim().TrimEnd('.', ',', ';', ':') -ieq $annotationUrl.Trim().TrimEnd('.', ',', ';', ':')) {
                     $annotationKey = $annotationUrl.Trim().ToLowerInvariant()
@@ -1144,6 +1169,7 @@ function Get-PdfHyperlink {
                     $annotationTextUrlCounts[$textKey]--
                     continue
                 }
+                $textLink | Add-Member -NotePropertyName Location -NotePropertyValue "PDF page $($page.Number) | visible URL"
                 $found.Add($textLink)
             }
         }
@@ -2066,15 +2092,16 @@ function Publish-EmbeddedLinksLookupTable {
         [Parameter(Mandatory = $true)][string]$Identifier,
         [Parameter(Mandatory = $true)][string]$RunStamp,
         [Parameter(Mandatory = $true)][System.Collections.IDictionary]$RowsByKey,
-        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ScannedSourceUrls
+        [Parameter(Mandatory = $true)][System.Collections.IDictionary]$ScannedSourceUrls,
+        [Parameter(Mandatory = $false)][AllowEmptyCollection()][array]$ScanErrors = @()
     )
 
-    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FolderPath', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedOccurrence', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL', 'EmbeddedNewFound', 'EmbeddedNewSubsite', 'EmbeddedNewURL', 'EmbeddedResolution')
+    $columns = @('Site', 'Subsite', 'LibraryorListName', 'FolderPath', 'FileName', 'Extension', 'DocumentorItemURL', 'EmbeddedOccurrence', 'EmbeddedLocation', 'EmbeddedURLText', 'EmbeddedURL', 'NewFound', 'NewSubsite', 'NewDocumentorItemURL', 'EmbeddedNewFound', 'EmbeddedNewSubsite', 'EmbeddedNewURL', 'EmbeddedResolution')
     $reportPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks.csv")
     $scanTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-scan-temp.csv")
     $mergedTempPath = Join-Path -Path $Folder -ChildPath ("$Identifier-EmbeddedLinks-$RunStamp-merged-temp.csv")
 
-    $currentRows = @($RowsByKey.Values)
+    $currentRows = @($RowsByKey.Values | Where-Object { Test-IsEmbeddedLinkReportRow -Row $_ })
     if ($currentRows.Count -gt 0) {
         Export-CsvTableWithRetry -Path $scanTempPath -Rows $currentRows
     }
@@ -2084,13 +2111,16 @@ function Publish-EmbeddedLinksLookupTable {
     }
 
     $mergedRowsByKey = [ordered]@{}
+    $retainedSourceKeys = @{}
     if (Test-Path -Path $reportPath) {
         $legacyRowIndex = 0
         foreach ($row in @(Import-Csv -Path $reportPath)) {
             $legacyRowIndex++
+            if (-not (Test-IsEmbeddedLinkReportRow -Row $row)) { continue }
             $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
             $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
             if ($ScannedSourceUrls.ContainsKey($sourceKey)) { continue }
+            $retainedSourceKeys[$sourceKey] = $true
             $occurrence = [string]$row.EmbeddedOccurrence
             if ([string]::IsNullOrWhiteSpace($occurrence)) { $occurrence = "legacy-$legacyRowIndex" }
             $row | Add-Member -MemberType NoteProperty -Name EmbeddedOccurrence -Value $occurrence -Force
@@ -2102,6 +2132,8 @@ function Publish-EmbeddedLinksLookupTable {
     foreach ($row in @(Import-Csv -Path $scanTempPath)) {
         $sourceUrlKey = ([string]$row.DocumentorItemURL).Trim().ToLowerInvariant()
         $sourceKey = $sourceUrlKey + "`n" + [string]$row.LibraryorListName
+        # A partial scan must not mix new instance numbers with a prior source snapshot.
+        if ($retainedSourceKeys.ContainsKey($sourceKey)) { continue }
         $rowKey = Get-Sha256Hex -Text ($sourceKey + "`n" + [string]$row.EmbeddedOccurrence + "`n" + [string]$row.EmbeddedURLText + "`n" + [string]$row.EmbeddedURL)
         $mergedRowsByKey[$rowKey] = $row
     }
@@ -2120,6 +2152,17 @@ function Publish-EmbeddedLinksLookupTable {
     Remove-FileWithRetry -Path $scanTempPath
     Remove-FileWithRetry -Path $mergedTempPath
 
+    $errorPath = Join-Path $Folder ("$Identifier-EmbeddedLinks-ScanErrors.csv")
+    $errorColumns = @('Site', 'Subsite', 'LibraryorListName', 'FolderPath', 'FileName', 'Extension', 'DocumentorItemURL', 'ScanError')
+    if ($ScanErrors.Count -gt 0) {
+        Export-CsvTableWithRetry -Path $errorPath -Rows @($ScanErrors | Select-Object -Property $errorColumns)
+        Write-Warning "$($ScanErrors.Count) embedded-content scan failure(s); see $errorPath. Findings may be incomplete, and prior findings for failed sources are retained."
+    }
+    else {
+        $errorHeader = ($errorColumns | ForEach-Object { '"' + $_ + '"' }) -join ','
+        Set-Content -Path $errorPath -Value $errorHeader -Encoding UTF8 -Force
+    }
+
     $staleTimestampedReports = Get-ChildItem -Path $Folder -Filter ("*-{0}-EmbeddedLinks.csv" -f $Identifier) -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -ne $reportPath }
     foreach ($staleReport in $staleTimestampedReports) {
@@ -2127,6 +2170,14 @@ function Publish-EmbeddedLinksLookupTable {
     }
 
     return $mergedRows.Count
+}
+
+function Test-IsEmbeddedLinkReportRow {
+    param([Parameter(Mandatory = $true)]$Row)
+
+    if ([string]::IsNullOrWhiteSpace([string]$Row.EmbeddedURL)) { return $false }
+    $extension = ([string]$Row.Extension).Trim().ToLowerInvariant()
+    return [string]::IsNullOrWhiteSpace($extension) -or ($ContentScanExtensions -contains $extension)
 }
 
 function Get-CounterCheckpointPath {
@@ -2536,17 +2587,7 @@ $extensionCountsTotal = @{}
 $embeddedLinksBySite = @{}
 $embeddedLinksOutputFolderBySite = @{}
 $scannedEmbeddedSourcesBySite = @{}
-$OpenXmlContentExtensions = @(
-    '.docx', '.docm', '.dotx', '.dotm',
-    '.xlsx', '.xlsm', '.xltx', '.xltm',
-    '.pptx', '.pptm', '.potx', '.potm', '.ppsx', '.ppsm'
-)
-$ContentScanExtensions = @(
-    $OpenXmlContentExtensions + @(
-        '.doc', '.xls', '.ppt', '.rtf', '.odt', '.ods', '.odp', '.vsd', '.vsdx', '.one',
-        '.pdf', '.htm', '.html', '.aspx'
-    )
-)
+$embeddedScanErrorsBySite = @{}
 
 foreach ($subsite in $selectedSubsites) {
     $subsiteUrl = ([string]$subsite.Url).TrimEnd('/')
@@ -2590,6 +2631,7 @@ foreach ($subsite in $selectedSubsites) {
     if ($scanThisSiteContent) {
         if (-not $embeddedLinksBySite.ContainsKey($embeddedReportKey)) { $embeddedLinksBySite[$embeddedReportKey] = [ordered]@{} }
         if (-not $scannedEmbeddedSourcesBySite.ContainsKey($embeddedReportKey)) { $scannedEmbeddedSourcesBySite[$embeddedReportKey] = @{} }
+        if (-not $embeddedScanErrorsBySite.ContainsKey($embeddedReportKey)) { $embeddedScanErrorsBySite[$embeddedReportKey] = New-Object System.Collections.Generic.List[Object] }
         $embeddedLinksOutputFolderBySite[$embeddedReportKey] = [PSCustomObject]@{ Folder = $embeddedOutputFolder; Identifier = $siteIdentifier }
 
         if ($isNewStructureWeb) {
@@ -2807,7 +2849,7 @@ foreach ($subsite in $selectedSubsites) {
             if (-not $extensionCounts.ContainsKey($extKey)) { $extensionCounts[$extKey] = 0 }
             $extensionCounts[$extKey]++
 
-            if ($scanThisSiteContent) {
+            if ($scanThisSiteContent -and (-not $librarySupportsFileLookup -or $ContentScanExtensions -contains $ext)) {
                 $sourceHyperlinks = New-Object System.Collections.Generic.List[Object]
                 $sourceScanErrors = New-Object System.Collections.Generic.List[string]
                 $sourceContentScanned = $false
@@ -2842,6 +2884,9 @@ foreach ($subsite in $selectedSubsites) {
                         elseif ($OpenXmlContentExtensions -contains $ext) {
                             foreach ($link in @(Get-OfficeDocumentHyperlink -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
                         }
+                        elseif ($ext -in @('.txt', '.csv')) {
+                            foreach ($link in @(Get-PlainTextHyperlink -Stream $contentStream)) { $sourceHyperlinks.Add($link) }
+                        }
                         else {
                             foreach ($link in @(Get-TikaDocumentHyperlink -Bytes $contentStream.ToArray() -Extension $ext)) { $sourceHyperlinks.Add($link) }
                         }
@@ -2855,9 +2900,6 @@ foreach ($subsite in $selectedSubsites) {
                     finally {
                         if ($contentStream) { $contentStream.Dispose() }
                     }
-                }
-                elseif ($librarySupportsFileLookup) {
-                    $sourceScanErrors.Add("No content parser is configured for library file extension '$ext'.")
                 }
 
                 $hasListAttachments = (-not $librarySupportsFileLookup) -and [bool]$item.FieldValues['Attachments']
@@ -2876,8 +2918,6 @@ foreach ($subsite in $selectedSubsites) {
                             $attachmentName = if ($attachment.FileName) { [string]$attachment.FileName } else { ($attachmentUrl -split '/')[-1] }
                             $attachmentExtension = Get-NormalizedExtension -FileName $attachmentName
                             if ($ContentScanExtensions -notcontains $attachmentExtension) {
-                                $attachmentContentScanSucceeded = $false
-                                $sourceScanErrors.Add("No content parser is configured for list attachment '$attachmentName'.")
                                 continue
                             }
 
@@ -2905,6 +2945,9 @@ foreach ($subsite in $selectedSubsites) {
                                 elseif ($OpenXmlContentExtensions -contains $attachmentExtension) {
                                     $attachmentLinks = @(Get-OfficeDocumentHyperlink -Stream $attachmentStream)
                                 }
+                                elseif ($attachmentExtension -in @('.txt', '.csv')) {
+                                    $attachmentLinks = @(Get-PlainTextHyperlink -Stream $attachmentStream)
+                                }
                                 else {
                                     $attachmentLinks = @(Get-TikaDocumentHyperlink -Bytes $attachmentStream.ToArray() -Extension $attachmentExtension)
                                 }
@@ -2923,7 +2966,9 @@ foreach ($subsite in $selectedSubsites) {
                                         $sourceScanErrors.Add("Attachment '$attachmentName' contains an invalid link target '$attachmentLinkUrl'.")
                                         continue
                                     }
-                                    $sourceHyperlinks.Add([PSCustomObject]@{ Text = [string]$attachmentLink.Text; Url = $attachmentLinkUrl })
+                                    $attachmentLocation = "Attachment: $attachmentName"
+                                    if ($attachmentLink.PSObject.Properties['Location']) { $attachmentLocation += ' | ' + [string]$attachmentLink.Location }
+                                    $sourceHyperlinks.Add([PSCustomObject]@{ Text = [string]$attachmentLink.Text; Url = $attachmentLinkUrl; Location = $attachmentLocation })
                                 }
                             }
                             catch {
@@ -2952,6 +2997,7 @@ foreach ($subsite in $selectedSubsites) {
                         Get-FieldValueHyperlink -Value $item.FieldValues[$fieldName]
                     }
                     foreach ($link in @($fieldLinks)) {
+                        $link | Add-Member -NotePropertyName Location -NotePropertyValue ("Field: $fieldName") -Force
                         $sourceHyperlinks.Add($link)
                     }
                 }
@@ -2961,9 +3007,6 @@ foreach ($subsite in $selectedSubsites) {
                 }
 
                 $sourceDocumentKey = $oldCopyLinkUrl.Trim().ToLowerInvariant()
-                if ($sourceContentScanned) {
-                    $scannedEmbeddedSourcesBySite[$embeddedReportKey][($sourceDocumentKey + "`n" + $library.Title)] = $true
-                }
 
                 $embeddedSourceNewFound = $newFound
                 $embeddedSourceNewDocumentUrl = if ($newFound -eq 'Yes') { $newCopyLinkUrl } else { '' }
@@ -3006,10 +3049,12 @@ foreach ($subsite in $selectedSubsites) {
                 }
 
                 $sourceOccurrence = 0
+                $sourceLinkIndex = 0
                 foreach ($link in $sourceHyperlinks) {
-                    $sourceOccurrence++
+                    $sourceLinkIndex++
                     $embeddedUrl = [string]$link.Url
-                    $isRootRelativeDocumentLink = ($sourceOccurrence -le $documentContentLinkCount) -and $embeddedUrl.StartsWith('/') -and -not $embeddedUrl.StartsWith('//')
+                    if ([string]::IsNullOrWhiteSpace($embeddedUrl)) { continue }
+                    $isRootRelativeDocumentLink = ($sourceLinkIndex -le $documentContentLinkCount) -and $embeddedUrl.StartsWith('/') -and -not $embeddedUrl.StartsWith('//')
                     try {
                         $embeddedUri = [Uri]$embeddedUrl
                         if (-not $embeddedUri.IsAbsoluteUri) {
@@ -3035,6 +3080,7 @@ foreach ($subsite in $selectedSubsites) {
                         $embeddedTargetResolutionCache[$embeddedTargetKey] = Resolve-EmbeddedTargetUrl -Url $embeddedUrl -RootUrl $RootUrl -SiteUrlMap $siteUrlMap -ClientId $ClientId -ConnectionCache $newConnectionsByBase -MasterIndex $masterLinkIndex
                     }
                     $embeddedTarget = $embeddedTargetResolutionCache[$embeddedTargetKey]
+                    $sourceOccurrence++
 
                     $embeddedRow = [PSCustomObject][ordered]@{
                         Site                 = $selectedScopeUrl
@@ -3045,6 +3091,7 @@ foreach ($subsite in $selectedSubsites) {
                         Extension            = if ($librarySupportsFileLookup) { $ext } else { '' }
                         DocumentorItemURL    = $oldCopyLinkUrl
                         EmbeddedOccurrence   = $sourceOccurrence
+                        EmbeddedLocation     = if ($link.PSObject.Properties['Location']) { [string]$link.Location } else { 'File content' }
                         EmbeddedURLText      = [string]$link.Text
                         EmbeddedURL          = $embeddedUrl
                         NewFound             = $embeddedSourceNewFound
@@ -3068,19 +3115,12 @@ foreach ($subsite in $selectedSubsites) {
                         FileName             = if ($librarySupportsFileLookup) { $fileLeaf } elseif ($item.FieldValues['Title']) { [string]$item.FieldValues['Title'] } else { $fileLeaf }
                         Extension            = if ($librarySupportsFileLookup) { $ext } else { '' }
                         DocumentorItemURL    = $oldCopyLinkUrl
-                        EmbeddedOccurrence   = ''
-                        EmbeddedURLText      = ''
-                        EmbeddedURL          = ''
-                        NewFound             = $embeddedSourceNewFound
-                        NewSubsite           = $embeddedSourceNewSubsite
-                        NewDocumentorItemURL = $embeddedSourceNewDocumentUrl
-                        EmbeddedNewFound     = 'Unknown'
-                        EmbeddedNewSubsite   = ''
-                        EmbeddedNewURL       = ''
-                        EmbeddedResolution   = "SCAN INCOMPLETE: $(@($sourceScanErrors | Select-Object -Unique) -join ' ')"
+                        ScanError            = @($sourceScanErrors | Select-Object -Unique) -join ' '
                     }
-                    $scanErrorKey = Get-Sha256Hex -Text ($sourceDocumentKey + "`n" + $library.Title + "`nSCAN INCOMPLETE")
-                    $embeddedLinksBySite[$embeddedReportKey][$scanErrorKey] = $scanErrorRow
+                    $embeddedScanErrorsBySite[$embeddedReportKey].Add($scanErrorRow)
+                }
+                elseif ($sourceContentScanned) {
+                    $scannedEmbeddedSourcesBySite[$embeddedReportKey][($sourceDocumentKey + "`n" + $library.Title)] = $true
                 }
             }
 
@@ -3133,19 +3173,9 @@ foreach ($subsite in $selectedSubsites) {
                     FileName             = ''
                     Extension            = ''
                     DocumentorItemURL    = $subsiteUrl
-                    EmbeddedOccurrence   = ''
-                    EmbeddedURLText      = ''
-                    EmbeddedURL          = ''
-                    NewFound             = 'Unknown'
-                    NewSubsite           = ''
-                    NewDocumentorItemURL = ''
-                    EmbeddedNewFound     = 'Unknown'
-                    EmbeddedNewSubsite   = ''
-                    EmbeddedNewURL       = ''
-                    EmbeddedResolution   = "SCAN INCOMPLETE: $navigationError"
+                    ScanError            = $navigationError
                 }
-                $navigationErrorKey = Get-Sha256Hex -Text ($subsiteUrl.ToLowerInvariant() + "`n" + $navigationContainerName + "`nSCAN INCOMPLETE")
-                $embeddedLinksBySite[$embeddedReportKey][$navigationErrorKey] = $navigationErrorRow
+                $embeddedScanErrorsBySite[$embeddedReportKey].Add($navigationErrorRow)
                 continue
             }
 
@@ -3183,7 +3213,6 @@ foreach ($subsite in $selectedSubsites) {
             foreach ($navigationNode in $sourceNavigationNodes) {
                 $embeddedUrl = [string]$navigationNode.Url
                 if ([string]::IsNullOrWhiteSpace($embeddedUrl)) { continue }
-                $navigationOccurrence++
                 try {
                     $navigationUri = [Uri]$embeddedUrl
                     if (-not $navigationUri.IsAbsoluteUri) {
@@ -3192,6 +3221,11 @@ foreach ($subsite in $selectedSubsites) {
                     $embeddedUrl = $navigationUri.AbsoluteUri
                 }
                 catch {
+                    $scannedEmbeddedSourcesBySite[$embeddedReportKey].Remove($navigationSourceKey)
+                    $embeddedScanErrorsBySite[$embeddedReportKey].Add([PSCustomObject]@{
+                        Site = $selectedScopeUrl; Subsite = $subsiteUrl; LibraryorListName = $navigationContainerName
+                        DocumentorItemURL = $subsiteUrl; ScanError = "Invalid navigation target '$embeddedUrl': $($_.Exception.Message)"
+                    })
                     continue
                 }
                 if (-not (Test-IsInternalTenantUrl -Url $embeddedUrl -RootUrl $RootUrl)) { continue }
@@ -3202,6 +3236,7 @@ foreach ($subsite in $selectedSubsites) {
                     $embeddedTargetResolutionCache[$embeddedTargetKey] = Resolve-EmbeddedTargetUrl -Url $embeddedUrl -RootUrl $RootUrl -SiteUrlMap $siteUrlMap -ClientId $ClientId -ConnectionCache $newConnectionsByBase -MasterIndex $masterLinkIndex
                 }
                 $embeddedTarget = $embeddedTargetResolutionCache[$embeddedTargetKey]
+                $navigationOccurrence++
 
                 $nodeTitle = [string]$navigationNode.Title
                 $destinationNode = if ($destinationNodesByTitle.ContainsKey($nodeTitle)) { $destinationNodesByTitle[$nodeTitle] } else { $null }
@@ -3214,6 +3249,7 @@ foreach ($subsite in $selectedSubsites) {
                     Extension            = ''
                     DocumentorItemURL    = $subsiteUrl
                     EmbeddedOccurrence   = $navigationOccurrence
+                    EmbeddedLocation     = "$navigationLocation | node $($navigationNode.Id)"
                     EmbeddedURLText      = $nodeTitle
                     EmbeddedURL          = $embeddedUrl
                     NewFound             = if ($destinationNode) { 'Yes' } else { 'No' }
@@ -3277,7 +3313,7 @@ if ($scanDocumentContent -or $automaticEmbeddedScanSites.Count -gt 0) {
     foreach ($embeddedReportKey in @($embeddedLinksBySite.Keys | Sort-Object)) {
         $embeddedReport = $embeddedLinksOutputFolderBySite[$embeddedReportKey]
         $embeddedOutputPath = Join-Path -Path $embeddedReport.Folder -ChildPath ("$($embeddedReport.Identifier)-EmbeddedLinks.csv")
-        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $embeddedReport.Folder -Identifier $embeddedReport.Identifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$embeddedReportKey] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$embeddedReportKey]
+        $embeddedRowsWritten = Publish-EmbeddedLinksLookupTable -Folder $embeddedReport.Folder -Identifier $embeddedReport.Identifier -RunStamp $runStamp -RowsByKey $embeddedLinksBySite[$embeddedReportKey] -ScannedSourceUrls $scannedEmbeddedSourcesBySite[$embeddedReportKey] -ScanErrors $embeddedScanErrorsBySite[$embeddedReportKey].ToArray()
         Write-Host "`nWrote $embeddedRowsWritten embedded-link row(s): $embeddedOutputPath"
     }
 }
