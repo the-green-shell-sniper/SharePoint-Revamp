@@ -28,7 +28,15 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     this.setState({ input: event.target.value });
   };
 
+  private readonly onInputKeyDown = async (event: React.KeyboardEvent<HTMLTextAreaElement>): Promise<void> => {
+    if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
+      event.preventDefault();
+      await this.onConvert();
+    }
+  };
+
   private readonly onConvert = async (): Promise<void> => {
+    if (this.state.isChecking) return;
     const input = this.state.input.trim().replace(/[\r\n]+/g, '');
 
     if (!input) {
@@ -36,7 +44,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       return;
     }
 
-    this.setState({ isChecking: true, status: { level: 'warn', message: 'Finding the updated link...' } });
+    this.setState({ results: [], isChecking: true, status: { level: 'warn', message: 'Finding the updated link...' } });
 
     try {
       const rawResults = [await lookupOrFixUrl(input, this.lookupClient)];
@@ -98,9 +106,10 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
-          placeholder="e.g. https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
+          placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
           value={input}
           onChange={this.onInputChange}
+          onKeyDown={this.onInputKeyDown}
         />
 
         <div className={styles.primaryActions}>
@@ -111,25 +120,46 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         </div>
 
         {status && (
-          <div className={this.statusClassName(status.level)}>{status.message}</div>
+          <div className={this.statusClassName(status.level)} role={status.level === 'err' ? 'alert' : 'status'}>{status.message}</div>
         )}
 
         {usableResult && (
           <div className={styles.resultBlock}>
             <div className={styles.resultBox}>
-              <a className={styles.resultLink} href={usableResult.fixed} target="_blank" rel="noreferrer">{usableResult.fixed}</a>
+              <a className={styles.resultLink} href={usableResult.fixed} draggable={true} target="_blank" rel="noreferrer">{usableResult.fixed}</a>
             </div>
             <div className={styles.resultActions}>
               <button
                 className={styles.openButton}
-                title="Link will open in a new tab."
-                onClick={() => window.open(usableResult.fixed, '_blank')}
+                title="Opens in a new tab; after opening, press ctrl+d on your keyboard to create a favorite of this link."
+                onClick={() => window.open(usableResult.fixed, '_blank', 'noopener,noreferrer')}
               >
                 Open Updated Link
               </button>
               <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy Updated Link</button>
             </div>
-            <div className={styles.saveReminder}>Make sure to remove the old link and save the updated link in your favorites/bookmarks.</div>
+            <div className={styles.favoritesHelp}>
+              <div className={styles.favoritesHeading}>Save the updated link to Edge favorites</div>
+              <p id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
+                Drag the link below onto Edge&apos;s favorites bar to save it without opening it.
+                If the bar is hidden, press <kbd>Ctrl+Shift+B</kbd> to show it.
+              </p>
+              <a
+                className={styles.dragLink}
+                href={usableResult.fixed}
+                draggable={true}
+                target="_blank"
+                rel="noreferrer"
+                title="Updated SharePoint Link"
+                aria-describedby="urlFixerDragInstructions"
+              >
+                Drag Updated Link to Favorites Bar
+              </a>
+              <p className={styles.favoritesInstructions}>
+                Prefer the keyboard? Select <strong>Open Updated Link</strong>, then press <kbd>Ctrl+D</kbd> in the new tab and confirm in Edge.
+              </p>
+            </div>
+            <div className={styles.saveReminder}>You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.</div>
           </div>
         )}
       </div>

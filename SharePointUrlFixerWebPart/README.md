@@ -2,9 +2,25 @@
 
 ## Summary
 
-Short summary on functionality and used technologies.
+SharePoint Framework web part that finds migrated WHA SharePoint URLs using
+pattern matching and SharePoint lookup tables.
 
-[picture of the solution in action, if possible]
+## Using the URL fixer
+
+- Paste a `whallc.sharepoint.com` URL and press **Enter**, or select **Find Updated Link**.
+- External links are rejected with a red error message before any network lookup.
+- Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
+- To save without opening the destination, drag **Drag Updated Link to Favorites Bar**
+  onto Edge's favorites bar. If the bar is hidden, press **Ctrl+Shift+B** to show it.
+  The displayed result URL is also draggable.
+- Keyboard alternative: open the updated link, press **Ctrl+D** in the new tab,
+  and confirm the favorite in Edge.
+- Manually delete any favorites, bookmarks, or shortcuts that have the old link.
+  Dragging creates a favorite;
+  it does not find or replace an existing favorite.
+
+The web part cannot access browser favorites or trigger Edge's native favorite
+dialog. No extension is required for the drag-to-favorites workflow.
 
 ## Used SharePoint Framework Version
 

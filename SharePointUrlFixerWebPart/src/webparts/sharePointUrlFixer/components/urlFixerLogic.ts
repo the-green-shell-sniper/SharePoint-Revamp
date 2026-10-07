@@ -26,6 +26,8 @@ const OFFICE_EXTENSION_CODES: { [ext: string]: string } = {
   pdf: 'b'
 };
 
+const WHA_SHAREPOINT_HOST_PATTERN = /^(https?:\/\/)?(whallc\.sharepoint\.com)(?=\/|[?#]|$)/i;
+
 export interface IFixResult {
   original: string;
   fixed: string;
@@ -114,9 +116,13 @@ function isUnresolvableDocAspxLink(url: string): boolean {
 export function fixUrl(raw: string): IFixResult {
   const url = raw.trim();
 
-  const hostMatch = url.match(/^(https?:\/\/)?(whallc\.sharepoint\.com)/i);
+  const hostMatch = url.match(WHA_SHAREPOINT_HOST_PATTERN);
   if (!hostMatch) {
-    return { original: url, fixed: url, note: "err:Doesn't look like a whallc.sharepoint.com link — left unchanged." };
+    return {
+      original: url,
+      fixed: url,
+      note: "err:You've provided an external link. This tool is only for WHA SharePoint links. Please provide a link that starts with 'https://whallc.sharepoint.com' to continue."
+    };
   }
   const protocol = hostMatch[1] || 'https://';
   const host = hostMatch[2];
@@ -425,15 +431,15 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
 
   const patternResult = fixUrl(input);
   const patternLevel = patternResult.note.slice(0, patternResult.note.indexOf(':'));
+  if (!WHA_SHAREPOINT_HOST_PATTERN.test(input)) {
+    return patternResult;
+  }
   if (patternLevel !== 'err' && (await isReachableSharePointUrl(patternResult.fixed))) {
     return patternResult;
   }
 
   const lookupRow = await lookupClient.findLookupRow(input);
   if (!lookupRow) {
-    if (patternLevel === 'err' && !/^https?:\/\/whallc\.sharepoint\.com/i.test(input)) {
-      return patternResult;
-    }
     return helpDeskResult(input);
   }
 
