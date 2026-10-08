@@ -2,10 +2,12 @@ import * as React from 'react';
 import styles from './SharePointUrlFixer.module.scss';
 import { ISharePointUrlFixerProps } from './ISharePointUrlFixerProps';
 import { IFixResult, LookupTableClient, lookupOrFixUrl } from './urlFixerLogic';
+import { getFavoriteTitle, IFavoriteTitle } from './favoriteTitle';
 
 interface IResultRow extends IFixResult {
   level: 'ok' | 'warn' | 'err';
   note: string;
+  favorite?: IFavoriteTitle;
 }
 
 interface ISharePointUrlFixerState {
@@ -17,6 +19,7 @@ interface ISharePointUrlFixerState {
 
 export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, ISharePointUrlFixerState> {
   private readonly lookupClient: LookupTableClient;
+  private requestId = 0;
 
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
@@ -37,6 +40,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
   private readonly onConvert = async (): Promise<void> => {
     if (this.state.isChecking) return;
+    const requestId = ++this.requestId;
     const input = this.state.input.trim().replace(/[\r\n]+/g, '');
 
     if (!input) {
@@ -61,6 +65,10 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
       const summary: string[] = [];
       const firstResult = results[0];
+      if (firstResult.level !== 'err') {
+        firstResult.favorite = await getFavoriteTitle(firstResult.fixed);
+      }
+      if (requestId !== this.requestId) return;
       if (errCount) summary.push(firstResult.note);
       else if (warnCount) summary.push('This link is already current.');
       else if (okCount) summary.push('Updated link ready.');
@@ -71,6 +79,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         status: { level: errCount ? 'err' : (warnCount ? 'warn' : 'ok'), message: summary.join('') }
       });
     } catch (error) {
+      if (requestId !== this.requestId) return;
       this.setState({
         isChecking: false,
         status: { level: 'err', message: (error as Error).message || 'Could not load the SharePoint lookup tables.' }
@@ -79,8 +88,13 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   private readonly onClear = (): void => {
-    this.setState({ input: '', results: [], status: undefined });
+    this.requestId++;
+    this.setState({ input: '', results: [], status: undefined, isChecking: false });
   };
+
+  public componentWillUnmount(): void {
+    this.requestId++;
+  }
 
   private readonly onCopyResults = (): void => {
     const links = this.state.results.filter((r) => r.level !== 'err').map((r) => r.fixed);
@@ -155,11 +169,14 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
                 draggable={true}
                 target="_blank"
                 rel="noreferrer"
-                title="Updated SharePoint Link"
+                title={usableResult.favorite?.title}
                 aria-describedby="urlFixerDragInstructions"
               >
-                Drag Updated Link to Favorites Bar
+                {usableResult.favorite?.title}
               </a>
+              {usableResult.favorite?.notice && (
+                <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
+              )}
             </div>
             <div className={styles.saveReminder}>You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.</div>
           </div>

@@ -12,8 +12,11 @@ pattern matching and SharePoint lookup tables.
 - Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
 - External links are rejected with a red error message before any network lookup.
 - Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
-- To save without opening the destination, drag **Drag Updated Link to Favorites Bar**
-  onto Edge's favorites bar. If the bar is hidden, press **Ctrl+Shift+B** to show it.
+- To save without opening the destination, drag the titled link in **Save to Edge favorites**
+  onto Edge's favorites bar. It uses the SharePoint page/site title or document title/filename.
+  If the title request fails or times out, a notice explains that the name is derived from the URL;
+  you can rename the favorite in Edge.
+  If the bar is hidden, press **Ctrl+Shift+B** to show it.
   The displayed result URL is also draggable.
 - Keyboard alternative: open the updated link, press **Ctrl+D** in the new tab,
   and confirm the favorite in Edge.

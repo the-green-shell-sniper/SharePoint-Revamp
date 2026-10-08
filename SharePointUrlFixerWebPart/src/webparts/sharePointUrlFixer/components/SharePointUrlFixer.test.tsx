@@ -4,6 +4,7 @@ jest.mock('./urlFixerLogic', () => ({
   LookupTableClient: jest.fn(),
   lookupOrFixUrl: jest.fn()
 }));
+jest.mock('./favoriteTitle', () => ({ getFavoriteTitle: jest.fn() }));
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -12,10 +13,12 @@ import { ServiceScope } from '@microsoft/sp-core-library';
 import { SPHttpClient } from '@microsoft/sp-http';
 import SharePointUrlFixer from './SharePointUrlFixer';
 import { IFixResult, lookupOrFixUrl } from './urlFixerLogic';
+import { getFavoriteTitle } from './favoriteTitle';
 
 describe('URL fixer interactions', () => {
   let container: HTMLDivElement;
   const lookup = jest.mocked(lookupOrFixUrl);
+  const titleLookup = jest.mocked(getFavoriteTitle);
   const original = 'https://whallc.sharepoint.com/CS/Ultrasound%20Department/Guide.docx';
   const fixed = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Ultrasound%20Department/Guide.docx';
 
@@ -44,6 +47,7 @@ describe('URL fixer interactions', () => {
 
   beforeEach(() => {
     lookup.mockResolvedValue({ original, fixed, note: 'ok:Updated link ready.' });
+    titleLookup.mockResolvedValue({ title: 'Ultrasound Guide' });
     container = document.createElement('div');
     document.body.appendChild(container);
     act(() => {
@@ -112,7 +116,9 @@ describe('URL fixer interactions', () => {
     const links = Array.from(container.querySelectorAll('a[draggable="true"]'));
     expect(links).toHaveLength(2);
     links.forEach((link) => { expect(link.getAttribute('href')).toBe(fixed); });
-    expect(links[1].textContent).toBe('Drag Updated Link to Favorites Bar');
+    expect(links[1].textContent).toBe('Ultrasound Guide');
+    expect(links[1].getAttribute('title')).toBe('Ultrasound Guide');
+    expect(titleLookup).toHaveBeenCalledWith(fixed);
     expect(container.textContent).toContain('Ctrl+Shift+B');
     expect(container.textContent).toContain('Ctrl+D');
     expect(container.textContent).toContain('You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.');
@@ -141,6 +147,31 @@ describe('URL fixer interactions', () => {
     await submit();
     expect(container.querySelector('[role="alert"]')?.textContent).toBe(message);
     expect(container.querySelector('a[draggable="true"]')).toBeNull();
+    expect(titleLookup).not.toHaveBeenCalled();
+  });
+
+  it('shows a URL-based name and notice when the SharePoint title is unavailable', async () => {
+    titleLookup.mockResolvedValueOnce({ title: 'Guide.docx', notice: 'Title unavailable; using the URL name.' });
+    enterUrl(original);
+    await submit();
+    expect(container.querySelector('a[aria-describedby="urlFixerDragInstructions"]')?.textContent).toBe('Guide.docx');
+    expect(container.textContent).toContain('Title unavailable; using the URL name.');
+    expect(button('Open Updated Link')).toBeDefined();
+  });
+
+  it('does not restore cleared results when a title request finishes', async () => {
+    let resolveTitle: ((value: { title: string }) => void) | undefined;
+    titleLookup.mockReturnValueOnce(new Promise((resolve) => { resolveTitle = resolve; }));
+    enterUrl(original);
+    await submit();
+    act(() => { Simulate.click(button('Clear')); });
+    await act(async () => {
+      if (!resolveTitle) throw new Error('Missing pending title request');
+      resolveTitle({ title: 'Ultrasound Guide' });
+    });
+    expect(textarea().value).toBe('');
+    expect(container.querySelector('a')).toBeNull();
+    expect(button('Find Updated Link').disabled).toBe(false);
   });
 
   it('clears the input and result', async () => {

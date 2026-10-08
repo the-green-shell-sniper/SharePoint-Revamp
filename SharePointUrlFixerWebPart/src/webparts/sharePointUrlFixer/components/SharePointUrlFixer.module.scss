@@ -257,6 +257,9 @@
 
 .dragLink {
   display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
   padding: 6px 10px;
   border: 2px dashed var(--fixer-primary);
   border-radius: 8px;
