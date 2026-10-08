@@ -7,7 +7,9 @@ pattern matching and SharePoint lookup tables.
 
 ## Using the URL fixer
 
-- Paste a `whallc.sharepoint.com` URL and press **Enter**, or select **Find Updated Link**.
+- Copy the full URL of a WHA SharePoint page or file from the browser's address bar.
+- Paste the URL into the tool and press **Enter**, or select **Find Updated Link**.
+- Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
 - External links are rejected with a red error message before any network lookup.
 - Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
 - To save without opening the destination, drag **Drag Updated Link to Favorites Bar**

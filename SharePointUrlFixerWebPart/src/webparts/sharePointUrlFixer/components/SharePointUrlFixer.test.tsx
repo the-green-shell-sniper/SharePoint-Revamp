@@ -64,6 +64,14 @@ describe('URL fixer interactions', () => {
     expect(textarea().placeholder).toBe('https://whallc.sharepoint.com/CS/Ultrasound%20Department/...');
   });
 
+  it('explains how to provide a link and find its migrated destination', () => {
+    expect(container.querySelector('label[for="urlFixerInput"]')?.textContent).toBe('SharePoint page or file URL');
+    expect(textarea().getAttribute('aria-describedby')).toBe('urlFixerInstructions');
+    expect(container.textContent).toContain('Copy the full URL from the browser\'s address bar, paste it here');
+    expect(container.textContent).toContain('Use the updated result to open or copy the migrated page.');
+    expect(container.textContent).toContain('then select Find Updated Link or press Enter.');
+  });
+
   it('submits with Enter instead of inserting a line break', async () => {
     enterUrl(original);
     const preventDefault = jest.fn();

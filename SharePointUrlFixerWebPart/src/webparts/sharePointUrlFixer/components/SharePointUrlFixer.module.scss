@@ -1,6 +1,6 @@
 .sharePointUrlFixer {
   overflow: hidden;
-  padding: 8px 0 16px;
+  padding: 4px 0 10px;
   --fixer-primary: #96305B;
   --fixer-primary-hover: #762447;
   --fixer-accent: #DF2060;
@@ -8,12 +8,12 @@
   --fixer-surface: #EFF2F4;
   --fixer-black: #000000;
   --fixer-white: #FFFFFF;
-  --fixer-font-size: 18px;
+  --fixer-font-size: 16px;
   color: var(--fixer-black);
   width: 100%;
-  max-width: 1080px;
+  max-width: 960px;
   font-size: var(--fixer-font-size);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .title {
@@ -34,14 +34,27 @@
   font-weight: 600;
   color: var(--fixer-black);
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
+}
+
+.inputInstructions {
+  color: #4f5963;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 8px;
+
+  kbd {
+    font-family: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+  }
 }
 
 .textarea {
   width: 100%;
   box-sizing: border-box;
-  min-height: 120px;
-  padding: 10px 12px;
+  min-height: 64px;
+  padding: 8px 10px;
   border: 1px solid #d8dade;
   border-radius: 8px;
   font-size: var(--fixer-font-size);
@@ -66,10 +79,10 @@
   background: var(--fixer-sky);
   color: var(--fixer-black);
   border: none;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 8px;
   box-sizing: border-box;
-  height: 44px;
+  height: 40px;
   font-family: inherit;
   font-size: var(--fixer-font-size);
   line-height: 24px;
@@ -93,7 +106,7 @@
 }
 
 .primaryActions {
-  margin-top: 16px;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -116,15 +129,15 @@
 }
 
 .resultBlock {
-  margin-top: 24px;
+  margin-top: 10px;
 }
 
 .resultBox {
   background: rgba(160, 219, 229, 0.2);
   border: 0;
   border-radius: 8px;
-  padding: 12px;
-  font-size: var(--fixer-font-size);
+  padding: 10px;
+  font-size: 15px;
   word-break: break-all;
   color: #222;
   margin-top: 8px;
@@ -151,9 +164,9 @@
 }
 
 .status {
-  font-size: var(--fixer-font-size);
-  margin-top: 10px;
-  padding: 8px 12px;
+  font-size: 15px;
+  margin-top: 8px;
+  padding: 6px 10px;
   border-radius: 6px;
 }
 
@@ -191,7 +204,7 @@
 }
 
 .resultActions {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -204,10 +217,10 @@
 
 .saveReminder {
   color: var(--fixer-primary);
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.45;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .openButton {
@@ -215,21 +228,21 @@
 }
 
 .favoritesHelp {
-  margin-top: 20px;
-  padding: 16px;
+  margin-top: 12px;
+  padding: 12px;
   background: var(--fixer-surface);
   border-radius: 8px;
 }
 
 .favoritesHeading {
-  font-size: var(--fixer-font-size);
+  font-size: 15px;
   font-weight: 600;
 }
 
 .favoritesInstructions {
-  font-size: var(--fixer-font-size);
-  line-height: 1.5;
-  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 6px 0 8px;
 
   &:last-child {
     margin-bottom: 0;
@@ -244,12 +257,12 @@
 
 .dragLink {
   display: inline-block;
-  padding: 10px 14px;
+  padding: 6px 10px;
   border: 2px dashed var(--fixer-primary);
   border-radius: 8px;
   color: var(--fixer-primary);
   background: var(--fixer-white);
-  font-size: var(--fixer-font-size);
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
   text-decoration: underline;
@@ -276,11 +289,11 @@
 
 @media (max-width: 768px) {
   .sharePointUrlFixer {
-    padding: 4px 0 16px;
+    padding: 4px 0 10px;
   }
 
   .textarea {
-    min-height: 140px;
+    min-height: 88px;
   }
 
   .button,

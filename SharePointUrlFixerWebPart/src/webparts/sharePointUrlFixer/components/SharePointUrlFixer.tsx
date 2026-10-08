@@ -102,10 +102,15 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
     return (
       <div className={styles.sharePointUrlFixer}>
-        <label className={styles.label} htmlFor="urlFixerInput">Paste a whallc.sharepoint.com link below:</label>
+        <label className={styles.label} htmlFor="urlFixerInput">SharePoint page or file URL</label>
+        <p id="urlFixerInstructions" className={styles.inputInstructions}>
+          Copy the full URL from the browser&apos;s address bar, paste it here, then select <strong>Find Updated Link</strong> or press <kbd>Enter</kbd>.
+          Use the updated result to open or copy the migrated page.
+        </p>
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
+          aria-describedby="urlFixerInstructions"
           placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
           value={input}
           onChange={this.onInputChange}
@@ -139,10 +144,10 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
               <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy Updated Link</button>
             </div>
             <div className={styles.favoritesHelp}>
-              <div className={styles.favoritesHeading}>Save the updated link to Edge favorites</div>
+              <div className={styles.favoritesHeading}>Save to Edge favorites</div>
               <p id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
-                Drag the link below onto Edge&apos;s favorites bar to save it without opening it.
-                If the bar is hidden, press <kbd>Ctrl+Shift+B</kbd> to show it.
+                Drag the link below to Edge&apos;s favorites bar (<kbd>Ctrl+Shift+B</kbd> to show it).
+                Or open the updated link and press <kbd>Ctrl+D</kbd> to save it.
               </p>
               <a
                 className={styles.dragLink}
@@ -155,9 +160,6 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
               >
                 Drag Updated Link to Favorites Bar
               </a>
-              <p className={styles.favoritesInstructions}>
-                Prefer the keyboard? Select <strong>Open Updated Link</strong>, then press <kbd>Ctrl+D</kbd> in the new tab and confirm in Edge.
-              </p>
             </div>
             <div className={styles.saveReminder}>You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.</div>
           </div>
