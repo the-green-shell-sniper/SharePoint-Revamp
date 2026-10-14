@@ -1,5 +1,8 @@
 jest.mock('@microsoft/sp-http', () => ({ SPHttpClient: jest.fn() }));
-jest.mock('@microsoft/sp-core-library', () => ({ ServiceScope: { startNewRoot: jest.fn() } }));
+jest.mock('@microsoft/sp-core-library', () => ({
+  ServiceScope: { startNewRoot: jest.fn() },
+  Log: { error: jest.fn() }
+}));
 jest.mock('./urlFixerLogic', () => ({
   LookupTableClient: jest.fn(),
   lookupOrFixUrl: jest.fn()
@@ -10,7 +13,7 @@ jest.mock('./submissionLog', () => ({ logSubmission: jest.fn() }));
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { act, Simulate } from 'react-dom/test-utils';
-import { ServiceScope } from '@microsoft/sp-core-library';
+import { Log, ServiceScope } from '@microsoft/sp-core-library';
 import { SPHttpClient } from '@microsoft/sp-http';
 import SharePointUrlFixer from './SharePointUrlFixer';
 import { IFixResult, lookupOrFixUrl } from './urlFixerLogic';
@@ -22,7 +25,7 @@ describe('URL fixer interactions', () => {
   const lookup = jest.mocked(lookupOrFixUrl);
   const titleLookup = jest.mocked(getFavoriteTitle);
   const log = jest.mocked(logSubmission);
-  const currentUser = { loginName: 'i:0#.f|membership|user@wha.example', displayName: 'Test User', email: 'user@wha.example' };
+  const currentUser = { loginName: 'i:0#.f|membership|user@wha.example', displayName: 'Test User' };
   const original = 'https://whallc.sharepoint.com/CS/Ultrasound%20Department/Guide.docx';
   const fixed = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Ultrasound%20Department/Guide.docx';
 
@@ -51,6 +54,7 @@ describe('URL fixer interactions', () => {
 
   beforeEach(() => {
     log.mockReset();
+    jest.mocked(Log.error).mockClear();
     log.mockResolvedValue(undefined);
     lookup.mockResolvedValue({ original, fixed, note: 'ok:Updated link ready.' });
     titleLookup.mockResolvedValue({ title: 'Ultrasound Guide' });
@@ -235,6 +239,18 @@ describe('URL fixer interactions', () => {
     });
   });
 
+  it.each(['ok', 'warn', 'err'])('includes the matched table only in the logged message for %s results', async (level) => {
+    const message = 'Lookup outcome.';
+    lookup.mockResolvedValueOnce({ original, fixed, note: `${level}:${message}`, lookupTableFileName: 'CS-fixer.csv' });
+    enterUrl(original);
+    await submit();
+    expect(log.mock.calls[0][2]).toMatchObject({
+      message: 'Lookup outcome. Lookup table: CS-fixer.csv.',
+      returnedUrl: level === 'err' ? '' : fixed
+    });
+    expect(container.textContent).not.toContain('CS-fixer.csv');
+  });
+
   it('logs rejected inputs without claiming the input is a returned URL', async () => {
     lookup.mockResolvedValueOnce({ original: 'invalid', fixed: 'invalid', note: 'err:Invalid URL.' });
     enterUrl('invalid');
@@ -264,11 +280,15 @@ describe('URL fixer interactions', () => {
     expect(container.querySelector('[role="alert"]')?.textContent).toBe('Lookup request failed.');
   });
 
-  it('warns about log failures without hiding the result or preventing another attempt', async () => {
+  it('reports log failures only to diagnostics without changing the result or instructions', async () => {
     log.mockRejectedValueOnce(new Error('SharePoint denied access (403).'));
     enterUrl(original);
     await submit();
-    expect(container.querySelector('[role="alert"]')?.textContent).toContain('SharePoint denied access (403).');
+    expect(Log.error).toHaveBeenCalledWith('URLFixerSubmissionLog', expect.any(Error));
+    expect(jest.mocked(Log.error).mock.calls[0][1].message).toContain('SharePoint denied access (403).');
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(container.textContent).not.toMatch(/log|records|signed-in|403/i);
+    expect(container.querySelector('#urlFixerInstructions')?.textContent).toContain('Copy the full URL');
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
     expect(button('Copy Updated Link')).toBeDefined();
     await submit();
@@ -292,7 +312,7 @@ describe('URL fixer interactions', () => {
     expect(container.querySelector('a')).toBeNull();
   });
 
-  it('does not delay a usable result while logging is pending and reports a late failure', async () => {
+  it('does not delay a usable result and reports late logging failures only to diagnostics', async () => {
     let rejectLog: ((error: Error) => void) | undefined;
     log.mockReturnValueOnce(new Promise((resolve, reject) => { rejectLog = reject; }));
     enterUrl(original);
@@ -303,7 +323,10 @@ describe('URL fixer interactions', () => {
       if (!rejectLog) throw new Error('Missing pending log write');
       rejectLog(new Error('Network unavailable.'));
     });
-    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Network unavailable.');
+    expect(Log.error).toHaveBeenCalledWith('URLFixerSubmissionLog', expect.any(Error));
+    expect(jest.mocked(Log.error).mock.calls[0][1].message).toContain('Network unavailable.');
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(container.textContent).not.toMatch(/log|records|signed-in|Network unavailable/i);
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
   });
 
@@ -318,5 +341,14 @@ describe('URL fixer interactions', () => {
     await act(async () => { Simulate.click(button('Copy Updated Link')); });
     act(() => { Simulate.click(button('Clear')); });
     expect(log).toHaveBeenCalledTimes(1);
+  });
+
+  it('has no logging disclosure before or after a successful submission', async () => {
+    expect(container.textContent).not.toMatch(/log|records|signed-in/i);
+    enterUrl(original);
+    await submit();
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(container.textContent).not.toMatch(/log|records|signed-in/i);
+    expect(Log.error).not.toHaveBeenCalled();
   });
 });

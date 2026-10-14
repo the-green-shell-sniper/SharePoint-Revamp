@@ -79,7 +79,8 @@ describe('WHA URL validation', () => {
       expect(await client.findLookupRow(original)).toMatchObject({
         OldResolvedUrl: original,
         NewResolvedUrl: resolved,
-        NewCopyLinkUrl: copyLink
+        NewCopyLinkUrl: copyLink,
+        lookupTableFileName: 'CS-fixer.csv'
       });
       expect(get).toHaveBeenNthCalledWith(1,
         `${siteUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${folder}')/Files?$select=Name,ServerRelativeUrl&$top=5000`,
@@ -118,6 +119,7 @@ describe('WHA URL validation', () => {
       expect(await lookupOrFixUrl(original, client)).toMatchObject({
         original,
         fixed: resolved,
+        lookupTableFileName: 'CS-fixer.csv',
         note: expect.stringMatching(/^ok:/)
       });
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -140,6 +142,7 @@ describe('WHA URL validation', () => {
       expect(await lookupOrFixUrl(legacyEmResolved, client)).toMatchObject({
         original: legacyEmResolved,
         fixed: migratedEmResolved,
+        lookupTableFileName: 'WHASharepointCentralPark-fixer.csv',
         note: expect.stringMatching(/^ok:/)
       });
       expect(get).toHaveBeenNthCalledWith(3,
@@ -201,7 +204,10 @@ describe('WHA URL validation', () => {
         `"${original}","No","","","Not migrated"`
       ].join('\r\n'));
       expect(await client.findLookupRow(original)).toMatchObject({ OldResolvedUrl: original, NewFound: 'No' });
-      expect((await lookupOrFixUrl(original, client)).note).toMatch(/^err:/);
+      expect(await lookupOrFixUrl(original, client)).toMatchObject({
+        note: expect.stringMatching(/^err:/),
+        lookupTableFileName: 'CS-fixer.csv'
+      });
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
@@ -284,6 +290,7 @@ describe('WHA URL validation', () => {
       fetchMock.mockResolvedValue({ ok: false, status });
       const result = await lookupOrFixUrl(original, client);
       expect(result.fixed).toBe(resolved);
+      expect(result.lookupTableFileName).toBe('CS-fixer.csv');
       expect(result.note).toMatch(/^warn:A migrated URL was found/);
       expect(result.note).toContain(`${status}`);
       expect(result.note).not.toContain('No migrated URL found');
@@ -312,14 +319,25 @@ describe('WHA URL validation', () => {
       queueFixer(fixerCsv.replace(original, 'https://whallc.sharepoint.com/CS/Guide.docx'));
       fetchMock.mockResolvedValueOnce({ ok: true, status: 200, url: 'https://whallc.sharepoint.com/_layouts/15/error.aspx' })
         .mockResolvedValueOnce({ ok: true, status: 200 });
-      expect(await lookupOrFixUrl('https://whallc.sharepoint.com/CS/Guide.docx', client)).toMatchObject({ fixed: copyLink });
+      expect(await lookupOrFixUrl('https://whallc.sharepoint.com/CS/Guide.docx', client)).toMatchObject({
+        fixed: copyLink, lookupTableFileName: 'CS-fixer.csv'
+      });
       expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 
     it('keeps the no-mapping outcome separate from a mapped-link verification warning', async () => {
       queueFixer(fixerCsv.split('\r\n')[0]);
-      expect((await lookupOrFixUrl(original, client)).note).toMatch(/^err:No migrated URL found/);
+      const result = await lookupOrFixUrl(original, client);
+      expect(result.note).toMatch(/^err:No migrated URL found/);
+      expect(result.lookupTableFileName).toBeUndefined();
       expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('does not attach a table filename to a reachable pattern-only result', async () => {
+      fetchMock.mockResolvedValue({ ok: true, status: 200 });
+      const result = await lookupOrFixUrl('https://whallc.sharepoint.com/CS/Guide.docx', client);
+      expect(result.lookupTableFileName).toBeUndefined();
+      expect(get).not.toHaveBeenCalled();
     });
 
     it('routes encoded site names to their index entry', async () => {

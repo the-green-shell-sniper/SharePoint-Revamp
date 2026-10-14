@@ -35,6 +35,12 @@ warning results. Merely viewing the page, copying/opening a result, or clearing
 the input does not create another row. Repeated submissions create separate rows.
 Clearing an in-progress lookup does not cancel its log write.
 
+When a matching CSV row is used, `ResultMessage` appends its source filename,
+for example `Lookup table: CS-fixer.csv.` This applies to successful mappings,
+mapped-link verification warnings, and matched rows marked not migrated.
+Pattern-only results and searches with no matching row do not claim a source
+table. The filename is included in the log only, not added to app messages.
+
 The destination is the **URLFixerSubmissionLog** list on
 <https://whallc.sharepoint.com/sites/SharePointLinkFixer>, even when the web part
 is hosted on another site. Independent item creates avoid the concurrent-write
@@ -56,9 +62,8 @@ After creating **Display Name**, you may rename its display label to **DisplayNa
 
 | Initial column name | Internal name | SharePoint type | Settings |
 | --- | --- | --- | --- |
-| Username | Username | Single line of text | Signed-in login/claims name |
 | Display Name | Display_x0020_Name | Single line of text | Signed-in display name |
-| Email | Email | Single line of text | Signed-in email; can be blank |
+| Username | Username | Single line of text | Signed-in login/claims name |
 | ProvidedURL | ProvidedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
 | ReturnedURL | ReturnedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
 | Outcome | Outcome | Choice | `Success`, `Warning`, `Error`; single selection |
@@ -70,8 +75,10 @@ rich text. For **ProvidedURL**, **ReturnedURL**, and **ResultMessage**, open
 **Settings > List settings > Columns**, select each column, and set
 **Specify the type of text to allow** to **Plain text** (not Rich text or Enhanced
 rich text). Set **Append Changes to Existing Text** to **No**, then save.
-These three columns were still rich text at the initial live inspection;
-the list owner will change those settings.
+Plain text and append changes off were confirmed on the live list.
+The Email column has been removed and is no longer sent by the web part.
+The view displays DisplayName before Username; column display order does not
+affect REST writes, which use internal names.
 
 Do not use Hyperlink or single-line fields for URLs: URLs may exceed their
 255-character limit. Input text is preserved as submitted; URL processing still
@@ -82,7 +89,7 @@ Warning results retain their usable destination.
 `SubmittedAt` is captured at submission time in UTC using the browser clock.
 The built-in **Created** field is SharePoint's authoritative server save time,
 and **Created By** is the authenticated writer. The web part supplies the
-username, display name, and email from SPFx's signed-in page context.
+username and display name from SPFx's signed-in page context.
 
 ### Permissions and privacy
 
@@ -96,15 +103,16 @@ Permissions > Read items that were created by the user**. Administrators with
 Manage Lists permission can review all entries. Verify with a non-owner account;
 do not leave broad inherited Member/Edit access if the log should be restricted.
 
-The form discloses logging to users. Full URLs (including query strings), names,
-and email addresses can contain sensitive information. Restrict list/export
+The app keeps its pre-logging instructions and does not display logging notices
+or logging-failure warnings. Full URLs (including query strings), names,
+and login identifiers can contain sensitive information. Restrict list/export
 access and apply your organization's retention policy; this is a usage log, not
 a tamper-proof compliance audit.
 
 ### Excel export and deployment verification
 
 Open the list and use **Export > Export to Excel** to analyze entries. Include
-Username, DisplayName, Email, ProvidedURL, ReturnedURL, Outcome, ResultMessage,
+DisplayName, Username, ProvidedURL, ReturnedURL, Outcome, ResultMessage,
 SubmittedAt, Created, and Created By in the export view.
 
 Build/package the web part and deploy the updated `.sppkg` through the existing
@@ -114,7 +122,8 @@ returned link (blank for the error). Also verify two simultaneous users produce
 separate rows, and that ordinary users cannot see other users' entries.
 
 If a write fails (missing list/columns, denied permission, network failure, or
-throttling), a separate warning states that the log save was not confirmed.
+throttling), the failure is recorded using SPFx `Log.error` under
+`URLFixerSubmissionLog` for developer diagnostics, not displayed in the app.
 Logging runs independently and does not delay the URL result.
 Failed/unconfirmed writes are not automatically
 retried, since an interrupted response may already have created a row.

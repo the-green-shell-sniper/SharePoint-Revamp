@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Log } from '@microsoft/sp-core-library';
 import styles from './SharePointUrlFixer.module.scss';
 import { ISharePointUrlFixerProps } from './ISharePointUrlFixerProps';
 import { IFixResult, LookupTableClient, lookupOrFixUrl } from './urlFixerLogic';
@@ -16,18 +17,16 @@ interface ISharePointUrlFixerState {
   results: IResultRow[];
   status: { level: 'ok' | 'warn' | 'err'; message: string } | undefined;
   isChecking: boolean;
-  loggingError: string | undefined;
 }
 
 export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, ISharePointUrlFixerState> {
   private readonly lookupClient: LookupTableClient;
   private requestId = 0;
-  private componentActive = true;
 
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
     this.lookupClient = new LookupTableClient(props.spHttpClient, props.siteAbsoluteUrl);
-    this.state = { input: '', results: [], status: undefined, isChecking: false, loggingError: undefined };
+    this.state = { input: '', results: [], status: undefined, isChecking: false };
   }
 
   private readonly onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -49,7 +48,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     const input = providedUrl.trim().replace(/[\r\n]+/g, '');
 
     this.setState({
-      results: [], isChecking: true, loggingError: undefined,
+      results: [], isChecking: true,
       status: { level: 'warn', message: 'Finding the updated link...' }
     });
 
@@ -72,13 +71,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       providedUrl,
       returnedUrl: level === 'err' ? '' : result.fixed,
       outcome: level === 'ok' ? 'Success' : (level === 'warn' ? 'Warning' : 'Error'),
-      message: note,
+      message: result.lookupTableFileName ? `${note} Lookup table: ${result.lookupTableFileName}.` : note,
       submittedAt
     }).catch((error: unknown) => {
-      if (this.componentActive) {
-        const detail = error instanceof Error ? error.message : 'Unknown logging error.';
-        this.setState({ loggingError: `A submission could not be confirmed in the usage log. ${detail}` });
-      }
+      const detail = error instanceof Error ? error.message : 'Unknown logging error.';
+      Log.error('URLFixerSubmissionLog', new Error(`Submission log save was not confirmed. ${detail}`));
     });
     if (requestId !== this.requestId) return;
 
@@ -109,7 +106,6 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   public componentWillUnmount(): void {
-    this.componentActive = false;
     this.requestId++;
   }
 
@@ -128,7 +124,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
-    const { input, results, status, isChecking, loggingError } = this.state;
+    const { input, results, status, isChecking } = this.state;
     const usableResult = results.find((result) => result.level !== 'err');
 
     return (
@@ -137,9 +133,6 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         <p id="urlFixerInstructions" className={styles.inputInstructions}>
           Copy the full URL from the browser&apos;s address bar, paste it here, then select <strong>Find Updated Link</strong> or press <kbd>Enter</kbd>.
           Use the updated result to open or copy the migrated page.
-        </p>
-        <p className={styles.inputInstructions}>
-          Each submission records your signed-in username, provided URL, returned URL, and outcome in the SharePoint usage log.
         </p>
         <textarea
           id="urlFixerInput"
@@ -160,9 +153,6 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         {status && (
           <div className={this.statusClassName(status.level)} role={status.level === 'err' ? 'alert' : 'status'}>{status.message}</div>
-        )}
-        {loggingError && (
-          <div className={styles.statusWarn} role="alert">{loggingError}</div>
         )}
 
         {usableResult && (

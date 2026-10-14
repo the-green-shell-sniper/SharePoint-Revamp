@@ -8,7 +8,7 @@ import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { ISubmission, logSubmission } from './submissionLog';
 
 describe('SharePoint submission log', () => {
-  const user = { loginName: 'i:0#.f|membership|user@wha.example', displayName: 'Test User', email: 'user@wha.example' };
+  const user = { loginName: 'i:0#.f|membership|user@wha.example', displayName: 'Test User' };
   const submission: ISubmission = {
     providedUrl: 'https://whallc.sharepoint.com/CS/Guide.docx?x="a,b"\n',
     returnedUrl: 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Guide.docx',
@@ -42,7 +42,6 @@ describe('SharePoint submission log', () => {
       Title: 'URL submission',
       Username: user.loginName,
       Display_x0020_Name: user.displayName,
-      Email: user.email,
       ProvidedURL: submission.providedUrl,
       ReturnedURL: submission.returnedUrl,
       Outcome: 'Success',

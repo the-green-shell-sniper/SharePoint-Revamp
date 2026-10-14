@@ -3,7 +3,7 @@
   "solution": {
     "name": "SharePoint URL Fixer",
     "id": "9ba348e3-9d0d-4d23-8e2e-0c060b45230d",
-    "version": "1.0.0.2",
+    "version": "1.0.0.4",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

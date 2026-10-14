@@ -34,10 +34,15 @@ export interface IFixResult {
   original: string;
   fixed: string;
   note: string; // "<level>:<message>", level is ok/warn/err
+  lookupTableFileName?: string;
 }
 
 export interface ILookupRow {
   [column: string]: string;
+}
+
+export interface ILookupMatch extends ILookupRow {
+  lookupTableFileName: string;
 }
 
 function findLegacySiteRule(segment: string): [string, string] | undefined {
@@ -423,7 +428,7 @@ export class LookupTableClient {
     return this.lookupIndexPromise;
   }
 
-  public async findLookupRow(url: string): Promise<ILookupRow | undefined> {
+  public async findLookupRow(url: string): Promise<ILookupMatch | undefined> {
     const indexRows = await this.getLookupIndex();
     const indexRow = findIndexRow(url, indexRows);
     if (!indexRow) return undefined;
@@ -465,10 +470,10 @@ export class LookupTableClient {
     const row = matches[0];
 
     if (row && row.NewFound && row.NewFound.trim().toLowerCase() === 'no') {
-      return { ...row, Notes: HELP_DESK_MESSAGE };
+      return { ...row, Notes: HELP_DESK_MESSAGE, lookupTableFileName: fixerFile.Name };
     }
 
-    return row;
+    return row ? { ...row, lookupTableFileName: fixerFile.Name } : undefined;
   }
 }
 
@@ -561,6 +566,7 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
     return {
       original: input,
       fixed: input,
+      lookupTableFileName: lookupRow.lookupTableFileName,
       note: `err:${lookupRow.Notes || HELP_DESK_MESSAGE}`
     };
   }
@@ -578,6 +584,7 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
     return {
       original: input,
       fixed: lookupUrl,
+      lookupTableFileName: lookupRow.lookupTableFileName,
       note: `warn:A migrated URL was found in the lookup table, but its availability could not be verified. ${lookupCheck.reason} You can try opening the mapped link; contact the Help Desk if you cannot access it.`
     };
   }
@@ -585,6 +592,7 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
   return {
     original: input,
     fixed: lookupUrl,
+    lookupTableFileName: lookupRow.lookupTableFileName,
     note: 'ok:Pattern match was unavailable or did not resolve; found the migrated document in the SharePoint lookup table.'
   };
 }

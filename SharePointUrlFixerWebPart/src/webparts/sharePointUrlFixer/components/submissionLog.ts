@@ -3,7 +3,6 @@ import { SPHttpClient } from '@microsoft/sp-http';
 export interface ISubmissionUser {
   loginName: string;
   displayName: string;
-  email: string;
 }
 
 export interface ISubmission {
@@ -36,7 +35,6 @@ export async function logSubmission(
         Title: 'URL submission',
         Username: user.loginName,
         Display_x0020_Name: user.displayName,
-        Email: user.email,
         ProvidedURL: submission.providedUrl,
         ReturnedURL: submission.returnedUrl,
         Outcome: submission.outcome,
