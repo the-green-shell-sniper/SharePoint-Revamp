@@ -119,6 +119,9 @@ describe('URL fixer interactions', () => {
     expect(links[1].textContent).toBe('Ultrasound Guide');
     expect(links[1].getAttribute('title')).toBe('Ultrasound Guide');
     expect(titleLookup).toHaveBeenCalledWith(fixed);
+    expect(container.textContent).toContain('Save as a bookmark or shortcut');
+    expect(container.textContent).toContain('onto Edge\'s bookmarks bar');
+    expect(container.textContent).toContain('onto your desktop to create a shortcut');
     expect(container.textContent).toContain('Ctrl+Shift+B');
     expect(container.textContent).toContain('Ctrl+D');
     expect(container.textContent).toContain('You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.');
@@ -148,6 +151,18 @@ describe('URL fixer interactions', () => {
     expect(container.querySelector('[role="alert"]')?.textContent).toBe(message);
     expect(container.querySelector('a[draggable="true"]')).toBeNull();
     expect(titleLookup).not.toHaveBeenCalled();
+  });
+
+  it('shows mapped-link verification warnings without calling the link already current', async () => {
+    const message = 'A migrated URL was found in the lookup table, but its availability could not be verified. SharePoint denied access (403).';
+    lookup.mockResolvedValueOnce({ original, fixed, note: `warn:${message}` });
+    enterUrl(original);
+    await submit();
+    expect(container.querySelector('[role="status"]')?.textContent).toBe(message);
+    expect(container.textContent).not.toContain('This link is already current.');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
+    expect(button('Open Updated Link')).toBeDefined();
+    expect(button('Copy Updated Link')).toBeDefined();
   });
 
   it('shows a URL-based name and notice when the SharePoint title is unavailable', async () => {

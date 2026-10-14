@@ -41,6 +41,33 @@ describe('SharePoint favorite names', () => {
       .toEqual({ title: 'Employee Benefits at WHA' });
   });
 
+  it('uses the SharePoint list title instead of a generic Standard.aspx page name', async () => {
+    respond({ Title: 'Status Notification Form' });
+    const url = 'https://whallc.sharepoint.com/sites/HR/MSresource/Lists/Status%20Notification%20Form/Standard.aspx?view=compact';
+    expect(await getFavoriteTitle(url)).toEqual({ title: 'Status Notification Form' });
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://whallc.sharepoint.com/sites/HR/MSresource/_api/web/GetList('/sites/HR/MSresource/Lists/Status%20Notification%20Form')?$select=Title"
+    );
+  });
+
+  it('uses the SharePoint library title instead of a generic AllItems.aspx page name', async () => {
+    respond({ Title: 'Forms' });
+    const url = 'https://whallc.sharepoint.com/sites/Epic/FormsandConsents/Forms/AllItems.aspx?viewid=123';
+    expect(await getFavoriteTitle(url)).toEqual({ title: 'Forms' });
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://whallc.sharepoint.com/sites/Epic/_api/web/GetList('/sites/Epic/FormsandConsents')?$select=Title"
+    );
+  });
+
+  it('uses the list name instead of a generic page name if the list title lookup fails', async () => {
+    fetchMock.mockResolvedValue({ ok: false, status: 404 });
+    const result = await getFavoriteTitle(
+      'https://whallc.sharepoint.com/sites/HR/MSresource/Lists/Status%20Notification%20Form/Standard.aspx'
+    );
+    expect(result.title).toBe('Status Notification Form');
+    expect(result.notice).toContain('Could not retrieve');
+  });
+
   it.each(['https://whallc.sharepoint.com/sites/HR/', 'whallc.sharepoint.com/sites/HR', 'https://whallc.sharepoint.com/'])(
     'retrieves a site title for %s', async (url) => {
       respond({ Title: 'Human Resources' });

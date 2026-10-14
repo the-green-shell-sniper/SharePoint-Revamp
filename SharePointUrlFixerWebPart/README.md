@@ -12,11 +12,11 @@ pattern matching and SharePoint lookup tables.
 - Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
 - External links are rejected with a red error message before any network lookup.
 - Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
-- To save without opening the destination, drag the titled link in **Save to Edge favorites**
-  onto Edge's favorites bar. It uses the SharePoint page/site title or document title/filename.
+- To save without opening the destination, drag the titled button in **Save as a bookmark or shortcut**
+  onto Edge's bookmarks bar to create a bookmark or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
+  document title/filename rather than generic list-view page names.
   If the title request fails or times out, a notice explains that the name is derived from the URL;
-  you can rename the favorite in Edge.
-  If the bar is hidden, press **Ctrl+Shift+B** to show it.
+  you can rename the bookmark in Edge. If the bar is hidden, press **Ctrl+Shift+B** to show it.
   The displayed result URL is also draggable.
 - Keyboard alternative: open the updated link, press **Ctrl+D** in the new tab,
   and confirm the favorite in Edge.
@@ -26,6 +26,44 @@ pattern matching and SharePoint lookup tables.
 
 The web part cannot access browser favorites or trigger Edge's native favorite
 dialog. No extension is required for the drag-to-favorites workflow.
+
+## Lookup-table troubleshooting
+
+The `/CS` to `/sites/ClinicalandPatientServices` rename rule remains enabled.
+Old `Doc.aspx?sourcedoc=...` links need the CSV fallback because the migrated
+document has a different GUID; renaming the site alone cannot fix them.
+The root-site `/2021 EM Coding Changes` and `/2021 E&M Coding Changes` library
+paths are pattern-mapped to `/sites/PatientFinancialServices/2021 EM Coding Changes`;
+GUID-only links for those files still use the root-site CSV lookup table.
+
+The fallback discovers CSV files in
+`/sites/SharePointURLFixer/URLLookupTables`, reads `URLFixerIndex.csv`, and selects
+the matching site's fixer CSV. `Lookup table discovery failed (...)` means the
+file-list request failed before any CSV rows were searched, not that the URL
+was absent from the table.
+
+Discovery uses the OData 4 `application/json;odata.metadata=none` Accept header
+to match `SPHttpClient`'s default protocol. SharePoint error details are displayed
+when available, and failed table loads can be retried without reloading the page.
+Missing or inaccessible CSV files are reported as table errors rather than
+as missing migrated documents. After deploying an updated package, verify a
+known GUID-based link and confirm the current user can read the lookup library.
+
+Lookup matching prioritizes the exact saved URL, then the document path (including
+PDF `id` paths), then the old document GUID. Equally ranked matches with different
+destinations or migration statuses produce a conflict error rather than selecting
+the first CSV row. Identical duplicate mappings remain usable.
+
+CSV downloads are validated before caching: required columns, field counts,
+WHA document URLs, and Yes/No migration statuses must be valid. Quoted multiline
+fields are supported. HTML sign-in responses and malformed tables produce explicit
+errors and can be retried after correction.
+
+When a table mapping exists but the destination check fails, the mapped link
+remains available with a warning explaining the failure, rather than claiming
+no mapping exists. Access-denied/sign-in redirects are not treated as success.
+Availability checks cannot guarantee that a generic HTTP 200 page represents
+the intended document.
 
 ## Used SharePoint Framework Version
 

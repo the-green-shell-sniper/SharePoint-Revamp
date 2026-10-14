@@ -15,6 +15,8 @@ export const renameRules: Array<[string, string]> = [
   ['SP', 'StrategicPlan'],
   ['TPE', 'ThePatientExperience'],
   ['train', 'Training'],
+  ['2021%20EM%20Coding%20Changes', 'PatientFinancialServices/2021%20EM%20Coding%20Changes'],
+  ['2021%20E%26M%20Coding%20Changes', 'PatientFinancialServices/2021%20EM%20Coding%20Changes'],
   ['COVID19%20Resources', 'ClinicalandPatientServices/COVID19%20Resources'],
   ['COVID19%20Workflows', 'ClinicalandPatientServices/COVID19%20Workflows']
 ];
@@ -203,33 +205,72 @@ const LOOKUP_FOLDER = '/sites/SharePointURLFixer/URLLookupTables';
 const INDEX_FILE_NAME = 'URLFixerIndex.csv';
 const HELP_DESK_MESSAGE = 'No migrated URL found. Please contact the Help Desk for assistance by calling 503-601-3646 or emailing servicedesk@whallc.com.';
 
-function parseCsvLine(line: string): string[] {
-  const values: string[] = [];
+function parseLookupCsv(text: string, fileName: string): ILookupRow[] {
+  const records: string[][] = [];
+  let values: string[] = [];
   let value = '';
   let quoted = false;
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
+  let closedQuote = false;
+  const csv = text.replace(/^\uFEFF/, '');
+  const invalid = (detail: string): Error => new Error(`Invalid lookup CSV ${fileName}: ${detail}`);
+  for (let i = 0; i < csv.length; i++) {
+    const char = csv[i];
     if (char === '"') {
-      if (quoted && line[i + 1] === '"') { value += '"'; i++; }
-      else { quoted = !quoted; }
+      if (quoted && csv[i + 1] === '"') { value += '"'; i++; }
+      else if (quoted) { quoted = false; closedQuote = true; }
+      else if (!value && !closedQuote) { quoted = true; }
+      else { throw invalid('unexpected quote.'); }
     } else if (char === ',' && !quoted) {
-      values.push(value); value = '';
+      values.push(value); value = ''; closedQuote = false;
+    } else if ((char === '\r' || char === '\n') && !quoted) {
+      values.push(value);
+      if (values.some((cell) => cell.trim())) records.push(values);
+      values = []; value = ''; closedQuote = false;
+      if (char === '\r' && csv[i + 1] === '\n') i++;
     } else {
+      if (closedQuote) throw invalid('unexpected text after a quoted field.');
       value += char;
     }
   }
+  if (quoted) throw invalid('unterminated quoted field.');
   values.push(value);
-  return values;
-}
-
-function parseLookupCsv(text: string): ILookupRow[] {
-  const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter((line) => line.trim());
-  if (lines.length < 2) return [];
-  const headers = parseCsvLine(lines[0]);
-  return lines.slice(1).map((line) => {
-    const values = parseCsvLine(line);
+  if (values.some((cell) => cell.trim())) records.push(values);
+  const headers = records.shift()?.map((header) => header.trim()) || [];
+  const isIndex = fileName.toLowerCase() === INDEX_FILE_NAME.toLowerCase();
+  const required = isIndex
+    ? ['OldBaseURL', 'FixerCsvFileName']
+    : ['NewFound', 'NewCopyLinkUrl', 'NewResolvedUrl'];
+  if (headers.some((header) => !header) || new Set(headers).size !== headers.length) {
+    throw invalid('empty or duplicate column names.');
+  }
+  if (required.some((header) => headers.indexOf(header) === -1) ||
+      (!isIndex && headers.indexOf('OldCopyLinkUrl') === -1 && headers.indexOf('OldResolvedUrl') === -1)) {
+    throw invalid('missing required columns. Confirm the download is a CSV, not an HTML sign-in page.');
+  }
+  return records.map((cells, rowIndex) => {
+    if (cells.length !== headers.length) throw invalid(`record ${rowIndex + 2} has the wrong number of fields.`);
     const row: ILookupRow = {};
-    headers.forEach((header, index) => { row[header] = values[index] || ''; });
+    headers.forEach((header, index) => { row[header] = cells[index].trim(); });
+    const validUrl = (url: string): boolean => {
+      try {
+        const parsed = new URL(url);
+        return /^https?:$/.test(parsed.protocol) && parsed.hostname.toLowerCase() === 'whallc.sharepoint.com';
+      } catch { return false; }
+    };
+    if (isIndex) {
+      if (!validUrl(row.OldBaseURL) || !/^[^/\\]+\.csv$/i.test(row.FixerCsvFileName)) {
+        throw invalid(`record ${rowIndex + 2} has an invalid site URL or CSV filename.`);
+      }
+    } else {
+      const oldUrls = [row.OldCopyLinkUrl, row.OldResolvedUrl].filter(Boolean);
+      const newUrls = [row.NewCopyLinkUrl, row.NewResolvedUrl].filter(Boolean);
+      const found = row.NewFound.toLowerCase();
+      if (!oldUrls.length || oldUrls.some((url) => !validUrl(url)) ||
+          newUrls.some((url) => !validUrl(url)) || (found !== 'yes' && found !== 'no') ||
+          (found === 'yes' && !newUrls.length)) {
+        throw invalid(`record ${rowIndex + 2} has invalid URLs or migration status.`);
+      }
+    }
     return row;
   });
 }
@@ -237,7 +278,7 @@ function parseLookupCsv(text: string): ILookupRow[] {
 function normalizeUrlBase(value: string): string {
   try {
     const parsed = new URL(value);
-    const normalizedPath = parsed.pathname
+    const normalizedPath = decodeUrlPart(parsed.pathname)
       .replace(/^\/:[a-z]:(?:\/[a-z]+)?\//i, '/')
       .replace(/\/$/, '');
     return `${parsed.origin}${normalizedPath}`.toLowerCase();
@@ -249,7 +290,11 @@ function normalizeUrlBase(value: string): string {
 function findIndexRow(url: string, indexRows: ILookupRow[]): ILookupRow | undefined {
   const normalizedInput = normalizeUrlBase(url);
   return indexRows
-    .filter((row) => row.OldBaseURL && normalizedInput.startsWith(normalizeUrlBase(row.OldBaseURL)))
+    .filter((row) => {
+      if (!row.OldBaseURL) return false;
+      const base = normalizeUrlBase(row.OldBaseURL);
+      return normalizedInput === base || normalizedInput.startsWith(`${base}/`);
+    })
     .sort((a, b) => normalizeUrlBase(b.OldBaseURL).length - normalizeUrlBase(a.OldBaseURL).length)[0];
 }
 
@@ -267,14 +312,16 @@ function getUrlSignature(url: string): string {
     const parsed = new URL(url);
     const path = decodeUrlPart(parsed.pathname).replace(/\/$/, '');
     const params = parsed.searchParams;
-    if (/_layouts\/15\/doc\.aspx$/i.test(path)) {
-      return `guid|${normalizeDocumentGuid(params.get('sourcedoc') || '')}`;
+    if (/_layouts\/15\/doc\.aspx$/i.test(path) && params.get('sourcedoc')) {
+      const guid = normalizeDocumentGuid(params.get('sourcedoc') || '');
+      if (/^[0-9a-f]{32}$/.test(guid)) return `guid|${guid}`;
     }
     if (params.has('id') || params.has('parent')) {
       return `pdf|${path}|${decodeUrlPart(params.get('id') || '')}|${decodeUrlPart(params.get('parent') || '')}`;
     }
     if (params.has('d')) {
-      return `guid|${normalizeDocumentGuid(params.get('d') || '')}`;
+      const guid = normalizeDocumentGuid(params.get('d') || '');
+      if (/^[0-9a-f]{32}$/.test(guid)) return `guid|${guid}`;
     }
     return `path|${path.replace(/^\/:\w:\/r/i, '')}`;
   } catch {
@@ -285,8 +332,9 @@ function getUrlSignature(url: string): string {
 function getOldFileRefSignature(url: string): string {
   try {
     const parsed = new URL(url);
-    let path = decodeUrlPart(parsed.pathname).replace(/\/$/, '');
+    let path = decodeUrlPart(parsed.searchParams.get('id') || parsed.pathname).replace(/\/$/, '');
     path = path.replace(/^\/:\w:\/r/i, '');
+    if (/_layouts\/15\/doc\.aspx$/i.test(path) || /\/forms\/allitems\.aspx$/i.test(path)) return '';
     return path;
   } catch {
     return '';
@@ -304,7 +352,18 @@ function getAbsoluteServerRelativeUrl(siteAbsoluteUrl: string, serverRelativeUrl
 
 async function readJsonResponse<T>(response: SPHttpClientResponse, context: string): Promise<T> {
   const text = await response.text();
-  if (!response.ok) throw new Error(`${context} failed (${response.status}).`);
+  if (!response.ok) {
+    const failure = `${context} failed (${response.status}).`;
+    let errorBody: { error?: { message?: string | { value?: string } } } | null;
+    try {
+      errorBody = JSON.parse(text);
+    } catch {
+      throw new Error(`${failure} ${text.slice(0, 500)}`.trim());
+    }
+    const message = errorBody?.error?.message;
+    const detail = typeof message === 'string' ? message : message?.value;
+    throw new Error(detail ? `${failure} ${detail}` : failure);
+  }
   try {
     return JSON.parse(text) as T;
   } catch {
@@ -323,9 +382,20 @@ export class LookupTableClient {
     if (!this.lookupFilesPromise) {
       const endpoint = `${this.siteAbsoluteUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
       this.lookupFilesPromise = this.spHttpClient
-        .get(endpoint, SPHttpClient.configurations.v1, { headers: { Accept: 'application/json;odata=nometadata' } })
+        .get(endpoint, SPHttpClient.configurations.v1, { headers: { Accept: 'application/json;odata.metadata=none' } })
         .then((response: SPHttpClientResponse) => readJsonResponse<{ value?: ILookupFile[] }>(response, 'Lookup table discovery'))
-        .then((data: { value?: ILookupFile[] }) => (data.value || []).filter((file) => /\.csv$/i.test(file.Name)));
+        .then((data: { value?: ILookupFile[] }) => {
+          if (!Array.isArray(data?.value)) throw new Error('Lookup table discovery returned an invalid file list.');
+          if (data.value.some((file) => !file || typeof file.Name !== 'string' ||
+              typeof file.ServerRelativeUrl !== 'string' || !file.ServerRelativeUrl.startsWith(`${LOOKUP_FOLDER}/`))) {
+            throw new Error('Lookup table discovery returned an invalid file entry.');
+          }
+          return data.value.filter((file) => /\.csv$/i.test(file.Name));
+        })
+        .catch((error: Error) => {
+          this.lookupFilesPromise = undefined;
+          throw error;
+        });
     }
     return this.lookupFilesPromise;
   }
@@ -342,7 +412,11 @@ export class LookupTableClient {
           if (!response.ok) throw new Error(`Could not load ${INDEX_FILE_NAME} (${response.status}).`);
           return response.text();
         })
-        .then(parseLookupCsv);
+        .then((text: string) => parseLookupCsv(text, INDEX_FILE_NAME))
+        .catch((error: Error) => {
+          this.lookupIndexPromise = undefined;
+          throw error;
+        });
     }
     return this.lookupIndexPromise;
   }
@@ -354,7 +428,7 @@ export class LookupTableClient {
 
     const files = await this.getLookupFiles();
     const fixerFile = files.find((file) => file.Name.toLowerCase() === indexRow.FixerCsvFileName.toLowerCase());
-    if (!fixerFile) return undefined;
+    if (!fixerFile) throw new Error(`Could not find ${indexRow.FixerCsvFileName} in the URL Lookup Tables library.`);
     const inputSignature = getUrlSignature(url);
     const inputFileRef = getOldFileRefSignature(url);
 
@@ -364,17 +438,29 @@ export class LookupTableClient {
         getAbsoluteServerRelativeUrl(this.siteAbsoluteUrl, fixerFile.ServerRelativeUrl),
         SPHttpClient.configurations.v1
       );
-      if (!response.ok) return undefined;
-      rows = parseLookupCsv(await response.text());
+      if (!response.ok) throw new Error(`Could not load ${fixerFile.Name} (${response.status}).`);
+      rows = parseLookupCsv(await response.text(), fixerFile.Name);
       this.lookupRowsByFile.set(fixerFile.Name, rows);
     }
 
-    const row = rows.find((candidate) => {
-      const exactSignatureMatch = [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl]
-        .some((value) => value && getUrlSignature(value) === inputSignature);
-      const fileRefMatch = candidate.OldFileRef && getOldFileRefSignature(candidate.OldCopyLinkUrl) === inputFileRef;
-      return exactSignatureMatch || fileRefMatch;
-    });
+    const oldUrls = (candidate: ILookupRow): string[] => [candidate.OldCopyLinkUrl, candidate.OldResolvedUrl].filter(Boolean);
+    let matches = rows.filter((candidate) => oldUrls(candidate).some((value) => value === url.trim()));
+    if (!matches.length && inputFileRef) {
+      matches = rows.filter((candidate) => {
+        const fileRef = candidate.OldFileRef ? decodeUrlPart(candidate.OldFileRef).replace(/\/$/, '') : '';
+        return fileRef === inputFileRef || oldUrls(candidate).some((value) => getOldFileRefSignature(value) === inputFileRef);
+      });
+    }
+    if (!matches.length) {
+      matches = rows.filter((candidate) => oldUrls(candidate).some((value) => getUrlSignature(value) === inputSignature));
+    }
+    const outcomes = new Set(matches.map((candidate) => JSON.stringify([
+      candidate.NewFound.toLowerCase(), candidate.NewCopyLinkUrl || '', candidate.NewResolvedUrl || ''
+    ])));
+    if (outcomes.size > 1) {
+      throw new Error(`Conflicting mappings in ${fixerFile.Name}. Multiple rows match this link but disagree on the migrated destination or status. Please contact the Help Desk to review the lookup table.`);
+    }
+    const row = matches[0];
 
     if (row && row.NewFound && row.NewFound.trim().toLowerCase() === 'no') {
       return { ...row, Notes: HELP_DESK_MESSAGE };
@@ -384,10 +470,30 @@ export class LookupTableClient {
   }
 }
 
-async function isReachableSharePointUrl(url: string): Promise<boolean> {
+interface IDestinationCheck {
+  reachable: boolean;
+  reason?: string;
+}
+
+async function checkSharePointUrl(url: string): Promise<IDestinationCheck> {
   try {
     const parsed = new URL(url);
     const path = parsed.pathname.replace(/\/$/, '');
+    const failure = (response: Response): IDestinationCheck | undefined => {
+      if (response.url) {
+        const finalUrl = new URL(response.url);
+        if (finalUrl.hostname.toLowerCase() !== parsed.hostname.toLowerCase() ||
+            /\/(?:accessdenied|error|login|signin)\.aspx$/i.test(finalUrl.pathname)) {
+          return { reachable: false, reason: 'SharePoint redirected to a sign-in, access-denied, or error page.' };
+        }
+      }
+      if (!response.ok) {
+        return { reachable: false, reason: response.status === 401 || response.status === 403
+          ? `SharePoint denied access (${response.status}).`
+          : `SharePoint could not verify the destination (HTTP ${response.status}).` };
+      }
+      return undefined;
+    };
 
     // A SharePoint site route can return a generic shell page even when the site
     // does not exist. Ask that site directly through REST before accepting it.
@@ -397,13 +503,17 @@ async function isReachableSharePointUrl(url: string): Promise<boolean> {
         headers: { Accept: 'application/json;odata=nometadata' },
         cache: 'no-store'
       });
-      if (!siteResponse.ok) return false;
+      const siteFailure = failure(siteResponse);
+      if (siteFailure) return siteFailure;
       const siteText = await siteResponse.text();
       try {
-        JSON.parse(siteText);
-        return true;
+        const siteData: { Url?: string } | null = JSON.parse(siteText);
+        if (typeof siteData?.Url !== 'string' || normalizeUrlBase(siteData.Url) !== normalizeUrlBase(url)) {
+          return { reachable: false, reason: 'SharePoint did not return the expected site URL.' };
+        }
+        return { reachable: true };
       } catch {
-        return false;
+        return { reachable: false, reason: 'SharePoint returned an invalid site response instead of site data.' };
       }
     }
 
@@ -413,9 +523,9 @@ async function isReachableSharePointUrl(url: string): Promise<boolean> {
       redirect: 'follow',
       cache: 'no-store'
     });
-    return response.ok || (response.status >= 300 && response.status < 400);
-  } catch {
-    return false;
+    return failure(response) || { reachable: true };
+  } catch (error) {
+    return { reachable: false, reason: `The destination check failed: ${error instanceof Error ? error.message : 'Unknown network error.'}` };
   }
 }
 
@@ -434,8 +544,9 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
   if (!WHA_SHAREPOINT_HOST_PATTERN.test(input)) {
     return patternResult;
   }
-  if (patternLevel !== 'err' && (await isReachableSharePointUrl(patternResult.fixed))) {
-    return patternResult;
+  if (patternLevel !== 'err') {
+    const patternCheck = await checkSharePointUrl(patternResult.fixed);
+    if (patternCheck.reachable) return patternResult;
   }
 
   const lookupRow = await lookupClient.findLookupRow(input);
@@ -443,11 +554,12 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
     return helpDeskResult(input);
   }
 
-  if (lookupRow.Notes && !lookupRow.NewCopyLinkUrl && !lookupRow.NewResolvedUrl) {
+  if (lookupRow.NewFound?.toLowerCase() === 'no' ||
+      (lookupRow.Notes && !lookupRow.NewCopyLinkUrl && !lookupRow.NewResolvedUrl)) {
     return {
       original: input,
       fixed: input,
-      note: `err:${lookupRow.Notes}`
+      note: `err:${lookupRow.Notes || HELP_DESK_MESSAGE}`
     };
   }
 
@@ -456,8 +568,16 @@ export async function lookupOrFixUrl(raw: string, lookupClient: LookupTableClien
     ? (lookupRow.NewResolvedUrl || lookupRow.NewCopyLinkUrl)
     : (lookupRow.NewCopyLinkUrl || lookupRow.NewResolvedUrl);
 
-  if (!lookupUrl || !(await isReachableSharePointUrl(lookupUrl))) {
-    return helpDeskResult(input);
+  if (!lookupUrl) {
+    throw new Error('The matching lookup row has no migrated destination URL.');
+  }
+  const lookupCheck = await checkSharePointUrl(lookupUrl);
+  if (!lookupCheck.reachable) {
+    return {
+      original: input,
+      fixed: lookupUrl,
+      note: `warn:A migrated URL was found in the lookup table, but its availability could not be verified. ${lookupCheck.reason} You can try opening the mapped link; contact the Help Desk if you cannot access it.`
+    };
   }
 
   return {

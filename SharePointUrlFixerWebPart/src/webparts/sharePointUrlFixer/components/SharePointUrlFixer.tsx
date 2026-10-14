@@ -70,7 +70,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       }
       if (requestId !== this.requestId) return;
       if (errCount) summary.push(firstResult.note);
-      else if (warnCount) summary.push('This link is already current.');
+      else if (warnCount) summary.push(firstResult.note);
       else if (okCount) summary.push('Updated link ready.');
 
       this.setState({
@@ -158,10 +158,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
               <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy Updated Link</button>
             </div>
             <div className={styles.favoritesHelp}>
-              <div className={styles.favoritesHeading}>Save to Edge favorites</div>
+              <div className={styles.favoritesHeading}>Save as a bookmark or shortcut</div>
               <p id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
-                Drag the link below to Edge&apos;s favorites bar (<kbd>Ctrl+Shift+B</kbd> to show it).
-                Or open the updated link and press <kbd>Ctrl+D</kbd> to save it.
+                Drag and drop the button below onto Edge&apos;s bookmarks bar (<kbd>Ctrl+Shift+B</kbd> to show it)
+                to create a bookmark, or onto your desktop to create a shortcut.
+                Or open the updated link and press <kbd>Ctrl+D</kbd> to save it as a bookmark.
               </p>
               <a
                 className={styles.dragLink}
