@@ -50,22 +50,25 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     this.setState({ isDragOver: false });
   };
 
-  private readonly getDroppedUrl = (dataTransfer: Pick<DataTransfer, 'getData'>): string | undefined => {
-    const values = [
-      dataTransfer.getData('text/uri-list'),
-      dataTransfer.getData('text/x-moz-url'),
-      dataTransfer.getData('text/plain')
-    ];
-    for (const value of values) {
-      for (const line of value.split(/\r?\n/)) {
-        const candidate = line.replace(/^URL=/i, '').trim();
-        try {
-          const url = new URL(candidate);
-          if (url.protocol === 'http:' || url.protocol === 'https:') return candidate;
-        } catch {
-          // Ignore non-URL drag data and try the next item.
-        }
+  private readonly findWebUrl = (value: string): string | undefined => {
+    for (const line of value.split(/\r?\n/)) {
+      const candidate = line.replace(/^URL=/i, '').trim();
+      try {
+        const url = new URL(candidate);
+        if (url.protocol === 'http:' || url.protocol === 'https:') return candidate;
+      } catch {
+        // Ignore non-URL drag data and try the next line.
       }
+    }
+    // Custom formats (for example browser favorites) may embed the URL in JSON or other text.
+    const match = value.match(/https?:\/\/[^\s"'<>\\]+/i);
+    return match ? match[0] : undefined;
+  };
+
+  private readonly getDroppedUrl = (dataTransfer: Pick<DataTransfer, 'getData'> & Partial<Pick<DataTransfer, 'types'>>): string | undefined => {
+    for (const type of ['text/uri-list', 'text/x-moz-url', 'text/plain']) {
+      const url = this.findWebUrl(dataTransfer.getData(type));
+      if (url) return url;
     }
 
     const html = dataTransfer.getData('text/html');
@@ -80,7 +83,25 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         }
       }
     }
+
+    for (const type of Array.from(dataTransfer.types ?? [])) {
+      if (type === 'Files' || type === 'text/html') continue;
+      const url = this.findWebUrl(dataTransfer.getData(type));
+      if (url) return url;
+    }
     return undefined;
+  };
+
+  private readonly getDroppedFiles = (dataTransfer: DataTransfer): File[] => {
+    const files = Array.from(dataTransfer.files ?? []);
+    for (const item of Array.from(dataTransfer.items ?? [])) {
+      if (item.kind !== 'file') continue;
+      const file = item.getAsFile();
+      if (file && files.indexOf(file) === -1 && !files.some((existing) => existing.name === file.name && existing.size === file.size)) {
+        files.push(file);
+      }
+    }
+    return files;
   };
 
   private readonly onInputDrop = (event: React.DragEvent<HTMLTextAreaElement>): void => {
@@ -93,13 +114,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       return;
     }
 
-    const shortcutFile = Array.from(event.dataTransfer.files).find((file) => /\.url$/i.test(file.name));
+    const files = this.getDroppedFiles(event.dataTransfer);
+    const shortcutFile = files.find((file) => /\.url$/i.test(file.name)) ?? files.find((file) => file.size > 0 && file.size < 65536);
     if (shortcutFile) {
       shortcutFile.text().then((content) => {
-        const fileTransfer = {
-          getData: (type: string): string => type === 'text/plain' ? content : ''
-        };
-        const shortcutUrl = this.getDroppedUrl(fileTransfer);
+        const shortcutUrl = this.findWebUrl(content);
         if (shortcutUrl) {
           this.setState({ input: shortcutUrl });
         } else {
@@ -109,7 +128,16 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         const detail = error instanceof Error ? error.message : 'Unknown file read error.';
         this.setState({ status: { level: 'err', message: `Could not read the dropped shortcut. ${detail}` } });
       });
+      return;
     }
+
+    const types = Array.from(event.dataTransfer.types ?? []).join(', ') || 'none';
+    this.setState({
+      status: {
+        level: 'err',
+        message: `Could not read a link from the dropped item. Try copying and pasting the link instead. (Drop formats: ${types})`
+      }
+    });
   };
 
   private readonly onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {

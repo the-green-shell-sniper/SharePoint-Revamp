@@ -48,6 +48,7 @@ describe('URL fixer interactions', () => {
   ): DataTransfer {
     return {
       getData: (type: string): string => data[type] || '',
+      types: [...Object.keys(data), ...(files.length ? ['Files'] : [])],
       files: files as unknown as FileList,
       effectAllowed,
       dropEffect: 'none'
@@ -147,6 +148,39 @@ describe('URL fixer interactions', () => {
     });
     expect(readShortcut).toHaveBeenCalledTimes(1);
     expect(textarea().value).toBe(original);
+  });
+
+  it('accepts a URL embedded in a custom browser favorites drag format', () => {
+    act(() => {
+      dispatchDragEvent('drop', dataTransfer({ 'text/x-browser-favorite': JSON.stringify({ title: 'TEMPLATE', url: original }) }));
+    });
+    expect(textarea().value).toBe(original);
+  });
+
+  it('reads a dropped link file exposed only through dataTransfer items', async () => {
+    const favorite = new File([original], 'TEMPLATE');
+    const readFavorite = jest.fn().mockResolvedValue(`URL=${original}`);
+    Object.defineProperty(favorite, 'text', { configurable: true, value: readFavorite });
+    const transfer = {
+      ...dataTransfer({}),
+      types: ['Files'],
+      items: [{ kind: 'file', getAsFile: () => favorite }]
+    } as unknown as DataTransfer;
+    await act(async () => {
+      dispatchDragEvent('drop', transfer);
+      await Promise.resolve();
+    });
+    expect(readFavorite).toHaveBeenCalledTimes(1);
+    expect(textarea().value).toBe(original);
+  });
+
+  it('explains when a dropped item does not contain a readable link', () => {
+    act(() => {
+      dispatchDragEvent('drop', dataTransfer({ 'text/x-unknown': 'no link here' }));
+    });
+    expect(textarea().value).toBe('');
+    expect(container.textContent).toContain('Could not read a link from the dropped item');
+    expect(container.textContent).toContain('text/x-unknown');
   });
 
   it('submits with Enter instead of inserting a line break', async () => {
