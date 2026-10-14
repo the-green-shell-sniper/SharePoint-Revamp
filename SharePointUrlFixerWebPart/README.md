@@ -14,12 +14,24 @@ pattern matching and SharePoint lookup tables.
 - Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
 - To save without opening the destination, drag the titled button in **Save as a bookmark or shortcut**
   onto Edge's bookmarks bar to create a bookmark or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
-  document title/filename rather than generic list-view page names.
+  actual document filename (including its extension) rather than generic list-view page names
+  or document Title metadata, which can retain a template's name.
+  For document links, the current SharePoint filename takes precedence over the URL's `file` parameter.
+  Sites/subsites use their own web title; direct library/list URLs and their views
+  use that library/list's title. Folder links (including `id`/`RootFolder` view
+  links) use the folder name, not the containing library. List item display/edit
+  forms with an item ID use the item's Title, not the list title. Untitled items
+  fall back to the list name plus item ID with a lookup notice.
+  Subsite documents/pages are queried through their owning web. Metadata for
+  direct site/library/folder paths must identify that exact path before its name
+  is used; an ancestor container is not accepted as the destination.
   If the title request fails or times out, a notice explains that the name is derived from the URL;
   you can rename the bookmark in Edge. If the bar is hidden, press **Ctrl+Shift+B** to show it.
   The displayed result URL is also draggable.
 - Keyboard alternative: open the updated link, press **Ctrl+D** in the new tab,
   and confirm the favorite in Edge.
+  The save-help box lists the two bookmark methods first (dragging, then
+  keyboard), followed by the desktop shortcut method, as three bullets.
 - Manually delete any favorites, bookmarks, or shortcuts that have the old link.
   Dragging creates a favorite;
   it does not find or replace an existing favorite.

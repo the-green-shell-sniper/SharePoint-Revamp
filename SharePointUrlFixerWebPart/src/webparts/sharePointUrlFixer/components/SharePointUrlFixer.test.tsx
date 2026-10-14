@@ -136,6 +136,15 @@ describe('URL fixer interactions', () => {
     expect(container.textContent).toContain('onto your desktop to create a shortcut');
     expect(container.textContent).toContain('Ctrl+Shift+B');
     expect(container.textContent).toContain('Ctrl+D');
+    const instructions = container.querySelector('ul#urlFixerDragInstructions');
+    expect(instructions).not.toBeNull();
+    const methods = Array.from(instructions?.querySelectorAll('li') || []).map((item) => item.textContent);
+    expect(methods).toEqual([
+      "Bookmark by dragging: Drag the button below onto Edge's bookmarks bar. Press Ctrl+Shift+B to show the bar.",
+      'Bookmark with the keyboard: Open the updated link, then press Ctrl+D in the new tab to save it as a bookmark.',
+      'Desktop shortcut: Drag the button below onto your desktop to create a shortcut.'
+    ]);
+    expect(instructions?.previousElementSibling?.textContent).toBe('Save as a bookmark or shortcut');
     expect(container.textContent).toContain('You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.');
     expect(button('Open Updated Link').title).toBe(
       'Opens in a new tab; after opening, press ctrl+d on your keyboard to create a favorite of this link.'

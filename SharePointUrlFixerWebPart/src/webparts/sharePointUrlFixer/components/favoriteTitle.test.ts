@@ -21,11 +21,107 @@ describe('SharePoint favorite names', () => {
     fetchMock.mockResolvedValue({ ok: true, json: async () => data });
   }
 
-  it('retrieves a document title using its decoded server-relative path', async () => {
+  function respondAt(endpointPart: string, data: object): void {
+    fetchMock.mockImplementation(async (endpoint: string) => endpoint.includes(endpointPart)
+      ? { ok: true, json: async () => data }
+      : { ok: false, status: 404 });
+  }
+
+  it('retrieves the exact subsite title, not the parent site title', async () => {
+    respondAt('/sites/HR/MSresource/_api/web?$select=Title,ServerRelativeUrl', {
+      Title: 'Medical Staff Resources', ServerRelativeUrl: '/sites/HR/MSresource'
+    });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/'))
+      .toEqual({ title: 'Medical Staff Resources' });
+  });
+
+  it.each([
+    ['/sites/HR/Shared Documents', 'Staff Documents'],
+    ['/sites/HR/MSresource/Lists/Announcements', 'Staff Announcements']
+  ])('names a direct library or list URL %s from that object', async (path, title) => {
+    respondAt(`/GetList('${path.replace(/ /g, '%20')}')`, {
+      Title: title, RootFolder: { ServerRelativeUrl: path }
+    });
+    expect(await getFavoriteTitle(`https://whallc.sharepoint.com${path.replace(/ /g, '%20')}`))
+      .toEqual({ title });
+  });
+
+  it.each(['', '?RootFolder=%2Fsites%2FHR%2FDocuments%2F2026.Notes', '?id=%2Fsites%2FHR%2FDocuments%2F2026.Notes'])(
+    'uses the folder name rather than its containing library for %s', async (query) => {
+      const path = '/sites/HR/Documents/2026.Notes';
+      fetchMock.mockImplementation(async (endpoint: string) => {
+        if (endpoint.includes('/GetList(')) return {
+          ok: true, json: async () => ({ Title: 'Staff Documents', RootFolder: { ServerRelativeUrl: '/sites/HR/Documents' } })
+        };
+        if (endpoint.includes('/GetFolderByServerRelativePath(')) return {
+          ok: true, json: async () => ({ Name: '2026.Notes', ServerRelativeUrl: path })
+        };
+        return { ok: false, status: 404 };
+      });
+      const url = query ? `https://whallc.sharepoint.com/sites/HR/Documents/Forms/AllItems.aspx${query}` : `https://whallc.sharepoint.com${path}`;
+      expect(await getFavoriteTitle(url)).toEqual({ title: '2026.Notes' });
+    }
+  );
+
+  it('names a custom library view from its library, not its .aspx view filename', async () => {
+    respond({ Title: 'Staff Documents' });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/Documents/Forms/ByDepartment.aspx'))
+      .toEqual({ title: 'Staff Documents' });
+  });
+
+  it.each(['DispForm', 'EditForm'])('names a list item opened with %s from its own Title', async (form) => {
+    respond({ Title: 'Annual staff meeting' });
+    expect(await getFavoriteTitle(`https://whallc.sharepoint.com/sites/HR/Lists/Announcements/${form}.aspx?ID=42`))
+      .toEqual({ title: 'Annual staff meeting' });
+    expect(fetchMock.mock.calls[0][0]).toContain("/GetList('/sites/HR/Lists/Announcements')/items(42)?$select=Title");
+  });
+
+  it('identifies an untitled list item in its fallback rather than naming only the list', async () => {
+    respond({});
+    const result = await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/Lists/Announcements/DispForm.aspx?ID=42');
+    expect(result).toEqual({ title: 'Announcements - item 42', notice: expect.any(String) });
+  });
+
+  it('uses the filename for a library document opened through its item form', async () => {
+    respond({ Title: 'WHA Document Template', File: { Name: 'Release of Information.docx' } });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/Documents/Forms/DispForm.aspx?ID=42'))
+      .toEqual({ title: 'Release of Information.docx' });
+  });
+
+  it('resolves documents in subsites through their owning web', async () => {
+    respondAt("/sites/HR/MSresource/_api/web/GetFileByServerRelativePath(", { Name: 'Staff Guide.docx' });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/Documents/Staff%20Guide.docx'))
+      .toEqual({ title: 'Staff Guide.docx' });
+  });
+
+  it('resolves GUID links using the subsite identified by the URL', async () => {
+    respond({ Name: 'Staff Guide.docx' });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D'))
+      .toEqual({ title: 'Staff Guide.docx' });
+    expect(fetchMock.mock.calls[0][0]).toContain('/sites/HR/MSresource/_api/web/GetFileById(');
+  });
+
+  it('resolves page titles in subsites without naming the parent site', async () => {
+    respondAt('/sites/HR/MSresource/_api/web/GetFileByServerRelativePath(', {
+      Name: 'Staff.aspx', ListItemAllFields: { Title: 'Medical Staff Contacts' }
+    });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/SitePages/Staff.aspx'))
+      .toEqual({ title: 'Medical Staff Contacts' });
+  });
+
+  it('does not treat an ancestor web response as the linked object', async () => {
+    fetchMock.mockImplementation(async (endpoint: string) => endpoint.includes('?$select=Title,ServerRelativeUrl')
+      ? { ok: true, json: async () => ({ Title: 'Human Resources', ServerRelativeUrl: '/sites/HR' }) }
+      : { ok: false, status: 404 });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MissingFolder'))
+      .toEqual({ title: 'MissingFolder', notice: expect.any(String) });
+  });
+
+  it('uses the actual document filename rather than its Title metadata', async () => {
     respond({ Name: 'Guide.docx', ListItemAllFields: { Title: 'Staff Guide' } });
-    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Staff Guide' });
+    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide.docx' });
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://whallc.sharepoint.com/sites/HR/_api/web/GetFileByServerRelativePath(decodedurl='%2Fsites%2FHR%2FShared%20Documents%2FGuide.docx')?$select=Name,ListItemAllFields/Title&$expand=ListItemAllFields",
+      "https://whallc.sharepoint.com/sites/HR/_api/web/GetFileByServerRelativePath(decodedurl='%2Fsites%2FHR%2FShared%20Documents%2FGuide.docx')?$select=Name",
       expect.objectContaining({ credentials: 'same-origin', signal: expect.anything() })
     );
   });
@@ -87,6 +183,36 @@ describe('SharePoint favorite names', () => {
     const id = '12345678-1234-1234-1234-123456789abc';
     await getFavoriteTitle(`https://whallc.sharepoint.com/sites/HR/_layouts/15/Doc.aspx?sourcedoc=%7B${id}%7D`);
     expect(fetchMock.mock.calls[0][0]).toContain(`GetFileById('${id}')`);
+  });
+
+  it('names the reported Release of Information GUID link from its filename, not template metadata', async () => {
+    respond({ Name: 'Release of Information.docx', ListItemAllFields: { Title: 'WHA Document Template' } });
+    const url = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/_layouts/15/Doc.aspx?sourcedoc=%7B342C713C-06A6-4844-8132-99503089E0A6%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
+    expect(await getFavoriteTitle(url)).toEqual({ title: 'Release of Information.docx' });
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      "https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/GetFileById('342C713C-06A6-4844-8132-99503089E0A6')?$select=Name"
+    );
+  });
+
+  it('prefers the current filename over a stale file query parameter', async () => {
+    respond({ Name: 'Renamed Release of Information.docx' });
+    expect(await getFavoriteTitle(
+      'https://whallc.sharepoint.com/sites/HR/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D&file=OldName.docx'
+    )).toEqual({ title: 'Renamed Release of Information.docx' });
+  });
+
+  it('ignores template metadata for embedded document paths', async () => {
+    respond({ Name: 'Release of Information.pdf', ListItemAllFields: { Title: 'WHA Document Template' } });
+    expect(await getFavoriteTitle(
+      'https://whallc.sharepoint.com/sites/HR/Documents/Forms/AllItems.aspx?id=%2Fsites%2FHR%2FDocuments%2FRelease%20of%20Information.pdf'
+    )).toEqual({ title: 'Release of Information.pdf' });
+  });
+
+  it('falls back to the file parameter instead of Doc.aspx when a GUID lookup fails', async () => {
+    fetchMock.mockRejectedValue(new Error('Network unavailable'));
+    expect(await getFavoriteTitle(
+      'https://whallc.sharepoint.com/sites/HR/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D&file=Release%20of%20Information.docx'
+    )).toEqual({ title: 'Release of Information.docx', notice: expect.any(String) });
   });
 
   it('escapes apostrophes, percent signs and hashes in file paths', async () => {

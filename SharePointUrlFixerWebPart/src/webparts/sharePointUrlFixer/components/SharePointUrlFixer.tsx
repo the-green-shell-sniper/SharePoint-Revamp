@@ -172,11 +172,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
             </div>
             <div className={styles.favoritesHelp}>
               <div className={styles.favoritesHeading}>Save as a bookmark or shortcut</div>
-              <p id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
-                Drag and drop the button below onto Edge&apos;s bookmarks bar (<kbd>Ctrl+Shift+B</kbd> to show it)
-                to create a bookmark, or onto your desktop to create a shortcut.
-                Or open the updated link and press <kbd>Ctrl+D</kbd> to save it as a bookmark.
-              </p>
+              <ul id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
+                <li><strong>Bookmark by dragging:</strong> Drag the button below onto Edge&apos;s bookmarks bar. Press <kbd>Ctrl+Shift+B</kbd> to show the bar.</li>
+                <li><strong>Bookmark with the keyboard:</strong> Open the updated link, then press <kbd>Ctrl+D</kbd> in the new tab to save it as a bookmark.</li>
+                <li><strong>Desktop shortcut:</strong> Drag the button below onto your desktop to create a shortcut.</li>
+              </ul>
               <a
                 className={styles.dragLink}
                 href={usableResult.fixed}
