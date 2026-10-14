@@ -201,7 +201,8 @@ export function fixUrl(raw: string): IFixResult {
 // --- CSV lookup-table discovery, kept as a fallback when pattern matching can't
 // resolve a link (e.g. a GUID-only Doc.aspx link) or the pattern-fixed URL 404s. ---
 
-const LOOKUP_FOLDER = '/sites/SharePointURLFixer/URLLookupTables';
+const LOOKUP_WEB_PATH = '/sites/SharePointLinkFixer';
+const LOOKUP_FOLDER = `${LOOKUP_WEB_PATH}/URLLookupTables`;
 const INDEX_FILE_NAME = 'URLFixerIndex.csv';
 const HELP_DESK_MESSAGE = 'No migrated URL found. Please contact the Help Desk for assistance by calling 503-601-3646 or emailing servicedesk@whallc.com.';
 
@@ -380,7 +381,8 @@ export class LookupTableClient {
 
   private async getLookupFiles(): Promise<ILookupFile[]> {
     if (!this.lookupFilesPromise) {
-      const endpoint = `${this.siteAbsoluteUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
+      const lookupWebUrl = getAbsoluteServerRelativeUrl(this.siteAbsoluteUrl, LOOKUP_WEB_PATH);
+      const endpoint = `${lookupWebUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
       this.lookupFilesPromise = this.spHttpClient
         .get(endpoint, SPHttpClient.configurations.v1, { headers: { Accept: 'application/json;odata.metadata=none' } })
         .then((response: SPHttpClientResponse) => readJsonResponse<{ value?: ILookupFile[] }>(response, 'Lookup table discovery'))

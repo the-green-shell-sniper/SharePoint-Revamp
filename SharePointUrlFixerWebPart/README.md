@@ -37,10 +37,15 @@ paths are pattern-mapped to `/sites/PatientFinancialServices/2021 EM Coding Chan
 GUID-only links for those files still use the root-site CSV lookup table.
 
 The fallback discovers CSV files in
-`/sites/SharePointURLFixer/URLLookupTables`, reads `URLFixerIndex.csv`, and selects
+`/sites/SharePointLinkFixer/URLLookupTables`, reads `URLFixerIndex.csv`, and selects
 the matching site's fixer CSV. `Lookup table discovery failed (...)` means the
 file-list request failed before any CSV rows were searched, not that the URL
 was absent from the table.
+
+Discovery targets `/_api/web` on `/sites/SharePointLinkFixer`, the web that owns
+the library, rather than the web hosting the web part. The REST web and folder
+must agree; otherwise SharePoint reports
+`Server relative urls must start with SPWeb.ServerRelativeUrl`.
 
 Discovery uses the OData 4 `application/json;odata.metadata=none` Accept header
 to match `SPHttpClient`'s default protocol. SharePoint error details are displayed

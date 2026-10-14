@@ -24,8 +24,8 @@ describe('WHA URL validation', () => {
   });
 
   describe('SharePoint lookup tables', () => {
-    const siteUrl = 'https://whallc.sharepoint.com/sites/SharePointURLFixer';
-    const folder = '/sites/SharePointURLFixer/URLLookupTables';
+    const siteUrl = 'https://whallc.sharepoint.com/sites/SharePointLinkFixer';
+    const folder = '/sites/SharePointLinkFixer/URLLookupTables';
     const original = 'https://whallc.sharepoint.com/:w:/r/CS/_layouts/15/Doc.aspx?sourcedoc=%7BB5AA7687-49DC-4681-A326-B80253394172%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
     const resolved = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/_layouts/15/Doc.aspx?sourcedoc=%7B342C713C-06A6-4844-8132-99503089E0A6%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
     const copyLink = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/Patient%20Services%20formslettersconsents/Release%20of%20Information.docx?d=w342c713c06a64844813299503089e0a6&csf=1&web=1';
@@ -87,6 +87,27 @@ describe('WHA URL validation', () => {
         { headers: { Accept: 'application/json;odata.metadata=none' } }
       );
       expect(get).toHaveBeenNthCalledWith(3, `https://whallc.sharepoint.com${folder}/CS-fixer.csv`, SPHttpClient.configurations.v1);
+    });
+
+    it.each([
+      'https://whallc.sharepoint.com',
+      'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
+      'https://whallc.sharepoint.com/sites/SharePointLinkFixer/Subweb/'
+    ])('discovers tables through their owning web when hosted at %s', async (hostingWeb) => {
+      const hostedClient = new LookupTableClient(httpClient, hostingWeb);
+      queueTables();
+      expect(await hostedClient.findLookupRow(original)).toMatchObject({ NewResolvedUrl: resolved });
+      expect(get).toHaveBeenNthCalledWith(1,
+        `${siteUrl}/_api/web/GetFolderByServerRelativePath(decodedurl='${folder}')/Files?$select=Name,ServerRelativeUrl&$top=5000`,
+        SPHttpClient.configurations.v1,
+        { headers: { Accept: 'application/json;odata.metadata=none' } }
+      );
+      expect(get).toHaveBeenNthCalledWith(2,
+        `https://whallc.sharepoint.com${folder}/URLFixerIndex.csv`, SPHttpClient.configurations.v1
+      );
+      expect(get).toHaveBeenNthCalledWith(3,
+        `https://whallc.sharepoint.com${folder}/CS-fixer.csv`, SPHttpClient.configurations.v1
+      );
     });
 
     it('falls back to the table for an old GUID and returns the new resolved GUID', async () => {
