@@ -174,6 +174,15 @@ describe('URL fixer interactions', () => {
     expect(textarea().value).toBe(original);
   });
 
+  it('explains how to use a favorite dragged from the Edge Favorites menu', () => {
+    act(() => {
+      dispatchDragEvent('drop', dataTransfer({ 'chromium/x-drag-id': '42' }));
+    });
+    expect(textarea().value).toBe('');
+    expect(container.textContent).toContain('Edge doesn\'t share links dragged from the Favorites menu');
+    expect(container.textContent).not.toContain('Drop formats');
+  });
+
   it('explains when a dropped item does not contain a readable link', () => {
     act(() => {
       dispatchDragEvent('drop', dataTransfer({ 'text/x-unknown': 'no link here' }));

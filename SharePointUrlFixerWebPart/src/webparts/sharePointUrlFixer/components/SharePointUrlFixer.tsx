@@ -131,7 +131,19 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       return;
     }
 
-    const types = Array.from(event.dataTransfer.types ?? []).join(', ') || 'none';
+    const typeList = Array.from(event.dataTransfer.types ?? []);
+    // Edge's Favorites menu only shares an internal drag ID, never the link itself.
+    if (typeList.length > 0 && typeList.every((type) => /^chromium\/x-/i.test(type))) {
+      this.setState({
+        status: {
+          level: 'err',
+          message: 'Edge doesn\'t share links dragged from the Favorites menu. Drag the favorite from your Favorites bar instead, or open the favorite and copy and paste the link from the address bar.'
+        }
+      });
+      return;
+    }
+
+    const types = typeList.join(', ') || 'none';
     this.setState({
       status: {
         level: 'err',

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "link-finder-quick-find-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sharePointUrlFixer/SharePointUrlFixerWebPart.js",
+          "manifest": "./src/webparts/sharePointUrlFixer/SharePointUrlFixerWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "LinkFinderQuickFindWebPartStrings": "lib/webparts/sharePointUrlFixer/loc/{locale}.js"
+  }
+}
