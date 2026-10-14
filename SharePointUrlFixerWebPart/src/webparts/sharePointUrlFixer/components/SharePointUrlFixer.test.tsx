@@ -41,6 +41,21 @@ describe('URL fixer interactions', () => {
     return element;
   }
 
+  function dataTransfer(data: Record<string, string>, files: File[] = []): DataTransfer {
+    return {
+      getData: (type: string): string => data[type] || '',
+      files: files as unknown as FileList,
+      dropEffect: 'none'
+    } as unknown as DataTransfer;
+  }
+
+  function dispatchDragEvent(type: 'dragover' | 'drop', transfer: DataTransfer): Event {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'dataTransfer', { value: transfer });
+    textarea().dispatchEvent(event);
+    return event;
+  }
+
   function enterUrl(url: string): void {
     act(() => {
       textarea().value = url;
@@ -78,10 +93,50 @@ describe('URL fixer interactions', () => {
     expect(textarea().placeholder).toBe('https://whallc.sharepoint.com/CS/Ultrasound%20Department/...');
   });
 
+  it('resizes the URL input to fit its wrapped content', () => {
+    Object.defineProperty(textarea(), 'scrollHeight', { configurable: true, value: 128 });
+    enterUrl(`${original}${'very-long-path-segment/'.repeat(8)}`);
+    expect(textarea().style.height).toBe('128px');
+    expect(textarea().style.overflowY).toBe('hidden');
+  });
+
   it('provides an accessible URL input without duplicating the separate instructions', () => {
     expect(textarea().getAttribute('aria-label')).toBe('SharePoint page or file URL');
     expect(textarea().getAttribute('aria-describedby')).toBeNull();
     expect(container.textContent).not.toContain('Copy the full URL from the browser\'s address bar');
+  });
+
+  it('accepts a dragged favorite URL and highlights the drop target', () => {
+    const transfer = dataTransfer({ 'text/uri-list': `# Edge favorite\r\n${original}\r\n` });
+    let dragOverEvent: Event | undefined;
+    act(() => { dragOverEvent = dispatchDragEvent('dragover', transfer); });
+    expect(dragOverEvent?.defaultPrevented).toBe(true);
+    expect(transfer.dropEffect).toBe('copy');
+    expect(textarea().className).toContain('dragOver');
+
+    let dropEvent: Event | undefined;
+    act(() => { dropEvent = dispatchDragEvent('drop', transfer); });
+    expect(dropEvent?.defaultPrevented).toBe(true);
+    expect(textarea().value).toBe(original);
+    expect(textarea().className).not.toContain('dragOver');
+  });
+
+  it('accepts links dragged as HTML and Windows internet shortcut files', async () => {
+    const htmlTransfer = dataTransfer({
+      'text/html': `<a href="${original}">Central Park</a>`
+    });
+    act(() => { dispatchDragEvent('drop', htmlTransfer); });
+    expect(textarea().value).toBe(original);
+
+    const shortcut = new File(['[InternetShortcut]\r\nURL=' + original], 'Central Park.url');
+    const readShortcut = jest.fn().mockResolvedValue('[InternetShortcut]\r\nURL=' + original);
+    Object.defineProperty(shortcut, 'text', { configurable: true, value: readShortcut });
+    await act(async () => {
+      dispatchDragEvent('drop', dataTransfer({}, [shortcut]));
+      await Promise.resolve();
+    });
+    expect(readShortcut).toHaveBeenCalledTimes(1);
+    expect(textarea().value).toBe(original);
   });
 
   it('submits with Enter instead of inserting a line break', async () => {
@@ -135,15 +190,19 @@ describe('URL fixer interactions', () => {
     expect(container.textContent).toContain('to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite');
     expect(container.textContent).toContain('Ctrl+Shift+B');
     expect(container.textContent).toContain('Ctrl+D');
-    const instructions = container.querySelector('ul#urlFixerDragInstructions');
+    const instructions = container.querySelector('#urlFixerDragInstructions');
     expect(instructions).not.toBeNull();
     const methods = Array.from(instructions?.querySelectorAll('li') || []).map((item) => item.textContent);
     expect(methods).toEqual([
       'Drag & Drop favorite or shortcut: Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press Ctrl+Shift+B on your keyboard if you do not see the bar).',
       'Create a favorite with the keyboard: While on the new link tab, press Ctrl+D on your keyboard to save it as a favorite in Edge.'
     ]);
+    expect(instructions?.querySelector('li strong')?.textContent).toBe('Drag & Drop favorite or shortcut:');
     expect(instructions?.previousElementSibling?.textContent).toBe('3. Save your new link as a favorite or shortcut');
     expect(container.textContent).toContain('This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.');
+    expect(container.querySelector('.saveReminder strong')?.textContent).toContain('This tool cannot remove or change');
+    expect(container.querySelector('.dragPrompt')?.textContent).toBe('Drag & Drop Me →');
+    expect(container.querySelector('.dragLinkRow a')?.textContent).toBe('Ultrasound Guide');
     expect(button('Open New Link').title).toBe('Opens in a new tab');
   });
 

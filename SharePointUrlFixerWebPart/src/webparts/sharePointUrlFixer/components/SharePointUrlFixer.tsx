@@ -14,6 +14,7 @@ interface IResultRow extends IFixResult {
 
 interface ISharePointUrlFixerState {
   input: string;
+  isDragOver: boolean;
   results: IResultRow[];
   status: { level: 'ok' | 'warn' | 'err'; message: string } | undefined;
   isChecking: boolean;
@@ -21,17 +22,105 @@ interface ISharePointUrlFixerState {
 
 export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, ISharePointUrlFixerState> {
   private readonly lookupClient: LookupTableClient;
+  private readonly inputRef = React.createRef<HTMLTextAreaElement>();
   private requestId = 0;
 
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
     this.lookupClient = new LookupTableClient(props.spHttpClient, props.siteAbsoluteUrl);
-    this.state = { input: '', results: [], status: undefined, isChecking: false };
+    this.state = { input: '', isDragOver: false, results: [], status: undefined, isChecking: false };
   }
+
+  private readonly onInputDragOver = (event: React.DragEvent<HTMLTextAreaElement>): void => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    if (!this.state.isDragOver) this.setState({ isDragOver: true });
+  };
+
+  private readonly onInputDragLeave = (): void => {
+    this.setState({ isDragOver: false });
+  };
+
+  private readonly getDroppedUrl = (dataTransfer: Pick<DataTransfer, 'getData'>): string | undefined => {
+    const values = [
+      dataTransfer.getData('text/uri-list'),
+      dataTransfer.getData('text/x-moz-url'),
+      dataTransfer.getData('text/plain')
+    ];
+    for (const value of values) {
+      for (const line of value.split(/\r?\n/)) {
+        const candidate = line.replace(/^URL=/i, '').trim();
+        try {
+          const url = new URL(candidate);
+          if (url.protocol === 'http:' || url.protocol === 'https:') return candidate;
+        } catch {
+          // Ignore non-URL drag data and try the next item.
+        }
+      }
+    }
+
+    const html = dataTransfer.getData('text/html');
+    if (html) {
+      const anchor = new DOMParser().parseFromString(html, 'text/html').querySelector<HTMLAnchorElement>('a[href]');
+      if (anchor) {
+        try {
+          const url = new URL(anchor.href);
+          if (url.protocol === 'http:' || url.protocol === 'https:') return anchor.href;
+        } catch {
+          // Ignore malformed link markup.
+        }
+      }
+    }
+    return undefined;
+  };
+
+  private readonly onInputDrop = (event: React.DragEvent<HTMLTextAreaElement>): void => {
+    event.preventDefault();
+    this.setState({ isDragOver: false });
+
+    const droppedUrl = this.getDroppedUrl(event.dataTransfer);
+    if (droppedUrl) {
+      this.setState({ input: droppedUrl });
+      return;
+    }
+
+    const shortcutFile = Array.from(event.dataTransfer.files).find((file) => /\.url$/i.test(file.name));
+    if (shortcutFile) {
+      shortcutFile.text().then((content) => {
+        const fileTransfer = {
+          getData: (type: string): string => type === 'text/plain' ? content : ''
+        };
+        const shortcutUrl = this.getDroppedUrl(fileTransfer);
+        if (shortcutUrl) {
+          this.setState({ input: shortcutUrl });
+        } else {
+          this.setState({ status: { level: 'err', message: 'The dropped shortcut does not contain a valid web link.' } });
+        }
+      }).catch((error: unknown) => {
+        const detail = error instanceof Error ? error.message : 'Unknown file read error.';
+        this.setState({ status: { level: 'err', message: `Could not read the dropped shortcut. ${detail}` } });
+      });
+    }
+  };
 
   private readonly onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     this.setState({ input: event.target.value });
   };
+
+  private readonly resizeInput = (): void => {
+    const input = this.inputRef.current;
+    if (!input) return;
+    input.style.height = 'auto';
+    input.style.height = `${input.scrollHeight}px`;
+  };
+
+  public componentDidMount(): void {
+    this.resizeInput();
+  }
+
+  public componentDidUpdate(): void {
+    this.resizeInput();
+  }
 
   private readonly onInputKeyDown = async (event: React.KeyboardEvent<HTMLTextAreaElement>): Promise<void> => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
@@ -102,7 +191,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
   private readonly onClear = (): void => {
     this.requestId++;
-    this.setState({ input: '', results: [], status: undefined, isChecking: false });
+    this.setState({ input: '', isDragOver: false, results: [], status: undefined, isChecking: false });
   };
 
   public componentWillUnmount(): void {
@@ -124,19 +213,24 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
-    const { input, results, status, isChecking } = this.state;
+    const { input, isDragOver, results, status, isChecking } = this.state;
     const usableResult = results.find((result) => result.level !== 'err');
 
     return (
       <div className={styles.sharePointUrlFixer}>
         <textarea
+          ref={this.inputRef}
           id="urlFixerInput"
-          className={styles.textarea}
+          className={isDragOver ? `${styles.textarea} ${styles.dragOver}` : styles.textarea}
           aria-label="SharePoint page or file URL"
+          title="Paste a URL or drag a favorite or shortcut here"
           placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
           value={input}
           onChange={this.onInputChange}
           onKeyDown={this.onInputKeyDown}
+          onDragOver={this.onInputDragOver}
+          onDragLeave={this.onInputDragLeave}
+          onDrop={this.onInputDrop}
         />
 
         <div className={styles.primaryActions}>
@@ -171,26 +265,31 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
             <br />
             <div className={styles.favoritesHelp}>
               <div className={styles.favoritesHeading}>3. Save your new link as a favorite or shortcut</div>
-              <ul id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
-                <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
-                <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
-              </ul>
-              <a
-                className={styles.dragLink}
-                href={usableResult.fixed}
-                draggable={true}
-                target="_blank"
-                rel="noreferrer"
-                title={usableResult.favorite?.title}
-                aria-describedby="urlFixerDragInstructions"
-              >
-                {usableResult.favorite?.title}
-              </a>
+              <div id="urlFixerDragInstructions">
+                <ul className={`${styles.favoritesInstructions} ${styles.favoritesList}`}>
+                  <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
+                  <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
+                </ul>
+              </div>
+              <div className={styles.dragLinkRow}>
+                <span className={styles.dragPrompt}>Drag &amp; Drop Me <span aria-hidden="true">→</span></span>
+                <a
+                  className={styles.dragLink}
+                  href={usableResult.fixed}
+                  draggable={true}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={usableResult.favorite?.title}
+                  aria-describedby="urlFixerDragInstructions"
+                >
+                  {usableResult.favorite?.title}
+                </a>
+              </div>
               {usableResult.favorite?.notice && (
                 <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
               )}
             </div>
-            <div className={styles.saveReminder}>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</div>
+            <div className={styles.saveReminder}><strong>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</strong></div>
           </div>
         )}
       </div>

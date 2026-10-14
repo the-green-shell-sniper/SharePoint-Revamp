@@ -7,7 +7,9 @@ pattern matching and SharePoint lookup tables.
 
 ## Using the URL fixer
 
-- Copy the full URL of a WHA SharePoint page or file from the browser's address bar.
+- Copy the full URL of a WHA SharePoint page or file from the browser's address bar,
+  or drag a favorite or Internet Shortcut (`.url`) onto the input box.
+- The input box expands to fit the pasted or typed URL.
 - Paste the URL into the tool and press **Enter**, or select **Find New Link**.
 - Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
 - External links are rejected with a red error message before any network lookup.
