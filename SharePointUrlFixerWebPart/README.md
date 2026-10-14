@@ -27,6 +27,101 @@ pattern matching and SharePoint lookup tables.
 The web part cannot access browser favorites or trigger Edge's native favorite
 dialog. No extension is required for the drag-to-favorites workflow.
 
+## Submission log
+
+The SPFx web part adds a separate list item for each **Find Updated Link** or
+Enter submission, including empty input, rejected URLs, lookup failures, and
+warning results. Merely viewing the page, copying/opening a result, or clearing
+the input does not create another row. Repeated submissions create separate rows.
+Clearing an in-progress lookup does not cancel its log write.
+
+The destination is the **URLFixerSubmissionLog** list on
+<https://whallc.sharepoint.com/sites/SharePointLinkFixer>, even when the web part
+is hosted on another site. Independent item creates avoid the concurrent-write
+and file-locking problems of appending to a shared CSV or workbook.
+The standalone HTML tool does not use this SPFx logging integration.
+
+### One-time list setup (site owner)
+
+The list has been created at
+<https://whallc.sharepoint.com/sites/SharePointLinkFixer/Lists/URLFixerSubmissionLog/AllItems.aspx>.
+The web part uses the internal names verified on that list, including
+`Display_x0020_Name`, `ProvidedURL`, and `ReturnedURL`.
+Renaming a column's display label does not change its internal name.
+
+For a replacement list, create a **Blank list** on that site named exactly
+`URLFixerSubmissionLog`. Keep the default **Title** column. Create the columns
+using the initial names below, so SharePoint generates the required internal names.
+After creating **Display Name**, you may rename its display label to **DisplayName**.
+
+| Initial column name | Internal name | SharePoint type | Settings |
+| --- | --- | --- | --- |
+| Username | Username | Single line of text | Signed-in login/claims name |
+| Display Name | Display_x0020_Name | Single line of text | Signed-in display name |
+| Email | Email | Single line of text | Signed-in email; can be blank |
+| ProvidedURL | ProvidedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
+| ReturnedURL | ReturnedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
+| Outcome | Outcome | Choice | `Success`, `Warning`, `Error`; single selection |
+| ResultMessage | ResultMessage | Multiple lines of text | **Plain text**; **Append changes: No** |
+| SubmittedAt | SubmittedAt | Date and time | Include time |
+
+**Multiple lines of text alone is not sufficient.** SharePoint may default to
+rich text. For **ProvidedURL**, **ReturnedURL**, and **ResultMessage**, open
+**Settings > List settings > Columns**, select each column, and set
+**Specify the type of text to allow** to **Plain text** (not Rich text or Enhanced
+rich text). Set **Append Changes to Existing Text** to **No**, then save.
+These three columns were still rich text at the initial live inspection;
+the list owner will change those settings.
+
+Do not use Hyperlink or single-line fields for URLs: URLs may exceed their
+255-character limit. Input text is preserved as submitted; URL processing still
+uses the existing whitespace/newline normalization. `ReturnedURL` is blank for
+errors, because the lookup's echoed input is not a usable returned link.
+Warning results retain their usable destination.
+
+`SubmittedAt` is captured at submission time in UTC using the browser clock.
+The built-in **Created** field is SharePoint's authoritative server save time,
+and **Created By** is the authenticated writer. The web part supplies the
+username, display name, and email from SPFx's signed-in page context.
+
+### Permissions and privacy
+
+Writes use the current user's SharePoint permissions, not an elevated account
+or an embedded credential. Users need permission to **add items** on this list;
+read-only lookup-table access is not sufficient. Site owners should configure
+list-specific permissions rather than granting Edit access to the entire site.
+For ordinary users, prefer a custom permission level allowing viewing/adding
+items without editing/deleting them, with **Advanced settings > Item-level
+Permissions > Read items that were created by the user**. Administrators with
+Manage Lists permission can review all entries. Verify with a non-owner account;
+do not leave broad inherited Member/Edit access if the log should be restricted.
+
+The form discloses logging to users. Full URLs (including query strings), names,
+and email addresses can contain sensitive information. Restrict list/export
+access and apply your organization's retention policy; this is a usage log, not
+a tamper-proof compliance audit.
+
+### Excel export and deployment verification
+
+Open the list and use **Export > Export to Excel** to analyze entries. Include
+Username, DisplayName, Email, ProvidedURL, ReturnedURL, Outcome, ResultMessage,
+SubmittedAt, Created, and Created By in the export view.
+
+Build/package the web part and deploy the updated `.sppkg` through the existing
+app catalog process. With a regular user account, submit a valid old URL and an
+invalid URL, then confirm two rows with the correct identity, full input, and
+returned link (blank for the error). Also verify two simultaneous users produce
+separate rows, and that ordinary users cannot see other users' entries.
+
+If a write fails (missing list/columns, denied permission, network failure, or
+throttling), a separate warning states that the log save was not confirmed.
+Logging runs independently and does not delay the URL result.
+Failed/unconfirmed writes are not automatically
+retried, since an interrupted response may already have created a row.
+Logging is best effort: closing/navigating away from the browser before a request
+finishes can prevent a save. The web part does not provision the list or change
+permissions automatically.
+
 ## Lookup-table troubleshooting
 
 The `/CS` to `/sites/ClinicalandPatientServices` rename rule remains enabled.

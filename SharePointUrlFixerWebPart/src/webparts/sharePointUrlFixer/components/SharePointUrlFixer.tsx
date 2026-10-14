@@ -3,6 +3,7 @@ import styles from './SharePointUrlFixer.module.scss';
 import { ISharePointUrlFixerProps } from './ISharePointUrlFixerProps';
 import { IFixResult, LookupTableClient, lookupOrFixUrl } from './urlFixerLogic';
 import { getFavoriteTitle, IFavoriteTitle } from './favoriteTitle';
+import { logSubmission } from './submissionLog';
 
 interface IResultRow extends IFixResult {
   level: 'ok' | 'warn' | 'err';
@@ -15,16 +16,18 @@ interface ISharePointUrlFixerState {
   results: IResultRow[];
   status: { level: 'ok' | 'warn' | 'err'; message: string } | undefined;
   isChecking: boolean;
+  loggingError: string | undefined;
 }
 
 export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, ISharePointUrlFixerState> {
   private readonly lookupClient: LookupTableClient;
   private requestId = 0;
+  private componentActive = true;
 
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
     this.lookupClient = new LookupTableClient(props.spHttpClient, props.siteAbsoluteUrl);
-    this.state = { input: '', results: [], status: undefined, isChecking: false };
+    this.state = { input: '', results: [], status: undefined, isChecking: false, loggingError: undefined };
   }
 
   private readonly onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -41,42 +44,55 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   private readonly onConvert = async (): Promise<void> => {
     if (this.state.isChecking) return;
     const requestId = ++this.requestId;
-    const input = this.state.input.trim().replace(/[\r\n]+/g, '');
+    const providedUrl = this.state.input;
+    const submittedAt = new Date().toISOString();
+    const input = providedUrl.trim().replace(/[\r\n]+/g, '');
 
-    if (!input) {
-      this.setState({ results: [], status: { level: 'err', message: 'Paste a saved SharePoint link first.' } });
-      return;
+    this.setState({
+      results: [], isChecking: true, loggingError: undefined,
+      status: { level: 'warn', message: 'Finding the updated link...' }
+    });
+
+    let result: IFixResult;
+    try {
+      result = input
+        ? await lookupOrFixUrl(input, this.lookupClient)
+        : { original: input, fixed: '', note: 'err:Paste a saved SharePoint link first.' };
+    } catch (error) {
+      result = {
+        original: input, fixed: '',
+        note: `err:${error instanceof Error ? error.message : 'Could not load the SharePoint lookup tables.'}`
+      };
     }
 
-    this.setState({ results: [], isChecking: true, status: { level: 'warn', message: 'Finding the updated link...' } });
+    const sepIndex = result.note.indexOf(':');
+    const level = result.note.slice(0, sepIndex) as 'ok' | 'warn' | 'err';
+    const note = result.note.slice(sepIndex + 1);
+    logSubmission(this.props.spHttpClient, this.props.currentUser, {
+      providedUrl,
+      returnedUrl: level === 'err' ? '' : result.fixed,
+      outcome: level === 'ok' ? 'Success' : (level === 'warn' ? 'Warning' : 'Error'),
+      message: note,
+      submittedAt
+    }).catch((error: unknown) => {
+      if (this.componentActive) {
+        const detail = error instanceof Error ? error.message : 'Unknown logging error.';
+        this.setState({ loggingError: `A submission could not be confirmed in the usage log. ${detail}` });
+      }
+    });
+    if (requestId !== this.requestId) return;
 
     try {
-      const rawResults = [await lookupOrFixUrl(input, this.lookupClient)];
-      let okCount = 0, warnCount = 0, errCount = 0;
-      const results: IResultRow[] = rawResults.map((result) => {
-        const sepIndex = result.note.indexOf(':');
-        const level = result.note.slice(0, sepIndex) as 'ok' | 'warn' | 'err';
-        const note = result.note.slice(sepIndex + 1);
-        if (level === 'ok') okCount++;
-        else if (level === 'warn') warnCount++;
-        else errCount++;
-        return { ...result, level, note };
-      });
-
-      const summary: string[] = [];
-      const firstResult = results[0];
-      if (firstResult.level !== 'err') {
-        firstResult.favorite = await getFavoriteTitle(firstResult.fixed);
+      const row: IResultRow = { ...result, level, note };
+      if (level !== 'err') {
+        row.favorite = await getFavoriteTitle(result.fixed);
       }
       if (requestId !== this.requestId) return;
-      if (errCount) summary.push(firstResult.note);
-      else if (warnCount) summary.push(firstResult.note);
-      else if (okCount) summary.push('Updated link ready.');
 
       this.setState({
-        results,
+        results: input ? [row] : [],
         isChecking: false,
-        status: { level: errCount ? 'err' : (warnCount ? 'warn' : 'ok'), message: summary.join('') }
+        status: { level, message: level === 'ok' ? 'Updated link ready.' : note }
       });
     } catch (error) {
       if (requestId !== this.requestId) return;
@@ -93,6 +109,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   public componentWillUnmount(): void {
+    this.componentActive = false;
     this.requestId++;
   }
 
@@ -111,7 +128,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   };
 
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
-    const { input, results, status, isChecking } = this.state;
+    const { input, results, status, isChecking, loggingError } = this.state;
     const usableResult = results.find((result) => result.level !== 'err');
 
     return (
@@ -120,6 +137,9 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
         <p id="urlFixerInstructions" className={styles.inputInstructions}>
           Copy the full URL from the browser&apos;s address bar, paste it here, then select <strong>Find Updated Link</strong> or press <kbd>Enter</kbd>.
           Use the updated result to open or copy the migrated page.
+        </p>
+        <p className={styles.inputInstructions}>
+          Each submission records your signed-in username, provided URL, returned URL, and outcome in the SharePoint usage log.
         </p>
         <textarea
           id="urlFixerInput"
@@ -140,6 +160,9 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         {status && (
           <div className={this.statusClassName(status.level)} role={status.level === 'err' ? 'alert' : 'status'}>{status.message}</div>
+        )}
+        {loggingError && (
+          <div className={styles.statusWarn} role="alert">{loggingError}</div>
         )}
 
         {usableResult && (

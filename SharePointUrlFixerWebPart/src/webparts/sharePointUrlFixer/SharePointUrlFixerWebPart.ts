@@ -18,7 +18,12 @@ export default class SharePointUrlFixerWebPart extends BaseClientSideWebPart<ISh
       SharePointUrlFixer,
       {
         spHttpClient: this.context.spHttpClient,
-        siteAbsoluteUrl: this.context.pageContext.web.absoluteUrl
+        siteAbsoluteUrl: this.context.pageContext.web.absoluteUrl,
+        currentUser: {
+          loginName: this.context.pageContext.user.loginName,
+          displayName: this.context.pageContext.user.displayName,
+          email: this.context.pageContext.user.email
+        }
       }
     );
 

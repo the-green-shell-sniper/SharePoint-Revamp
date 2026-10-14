@@ -5,6 +5,7 @@ jest.mock('./urlFixerLogic', () => ({
   lookupOrFixUrl: jest.fn()
 }));
 jest.mock('./favoriteTitle', () => ({ getFavoriteTitle: jest.fn() }));
+jest.mock('./submissionLog', () => ({ logSubmission: jest.fn() }));
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -14,11 +15,14 @@ import { SPHttpClient } from '@microsoft/sp-http';
 import SharePointUrlFixer from './SharePointUrlFixer';
 import { IFixResult, lookupOrFixUrl } from './urlFixerLogic';
 import { getFavoriteTitle } from './favoriteTitle';
+import { logSubmission } from './submissionLog';
 
 describe('URL fixer interactions', () => {
   let container: HTMLDivElement;
   const lookup = jest.mocked(lookupOrFixUrl);
   const titleLookup = jest.mocked(getFavoriteTitle);
+  const log = jest.mocked(logSubmission);
+  const currentUser = { loginName: 'i:0#.f|membership|user@wha.example', displayName: 'Test User', email: 'user@wha.example' };
   const original = 'https://whallc.sharepoint.com/CS/Ultrasound%20Department/Guide.docx';
   const fixed = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Ultrasound%20Department/Guide.docx';
 
@@ -46,13 +50,15 @@ describe('URL fixer interactions', () => {
   }
 
   beforeEach(() => {
+    log.mockReset();
+    log.mockResolvedValue(undefined);
     lookup.mockResolvedValue({ original, fixed, note: 'ok:Updated link ready.' });
     titleLookup.mockResolvedValue({ title: 'Ultrasound Guide' });
     container = document.createElement('div');
     document.body.appendChild(container);
     act(() => {
       ReactDOM.render(
-        <SharePointUrlFixer spHttpClient={new SPHttpClient(ServiceScope.startNewRoot())} siteAbsoluteUrl="https://whallc.sharepoint.com" />,
+        <SharePointUrlFixer spHttpClient={new SPHttpClient(ServiceScope.startNewRoot())} siteAbsoluteUrl="https://whallc.sharepoint.com" currentUser={currentUser} />,
         container
       );
     });
@@ -85,6 +91,7 @@ describe('URL fixer interactions', () => {
     expect(preventDefault).toHaveBeenCalled();
     expect(lookup).toHaveBeenCalledTimes(1);
     expect(lookup).toHaveBeenCalledWith(original, expect.anything());
+    expect(log).toHaveBeenCalledTimes(1);
     expect(textarea().value).toBe(original);
   });
 
@@ -94,6 +101,7 @@ describe('URL fixer interactions', () => {
       Simulate.keyDown(textarea(), { key: 'Enter', nativeEvent: new KeyboardEvent('keydown', { isComposing: true }) });
     });
     expect(lookup).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
   });
 
   it('does not start a second lookup while one is pending', async () => {
@@ -195,5 +203,120 @@ describe('URL fixer interactions', () => {
     act(() => { Simulate.click(button('Clear')); });
     expect(textarea().value).toBe('');
     expect(container.querySelector('a')).toBeNull();
+  });
+
+  it('logs the signed-in identity, exact input, usable result and UTC submission time', async () => {
+    const providedUrl = `  ${original}\r\n`;
+    enterUrl(providedUrl);
+    const capturedInput = textarea().value;
+    const before = Date.now();
+    await submit();
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log).toHaveBeenCalledWith(expect.anything(), currentUser, {
+      providedUrl: capturedInput,
+      returnedUrl: fixed,
+      outcome: 'Success',
+      message: 'Updated link ready.',
+      submittedAt: expect.any(String)
+    });
+    const loggedTime = log.mock.calls[0][2].submittedAt;
+    expect(loggedTime).toMatch(/Z$/);
+    expect(Date.parse(loggedTime)).toBeGreaterThanOrEqual(before);
+    expect(Date.parse(loggedTime)).toBeLessThanOrEqual(Date.now());
+    expect(lookup).toHaveBeenCalledWith(original, expect.anything());
+  });
+
+  it('logs warning results with their returned URL', async () => {
+    lookup.mockResolvedValueOnce({ original, fixed, note: 'warn:Unable to verify destination.' });
+    enterUrl(original);
+    await submit();
+    expect(log.mock.calls[0][2]).toMatchObject({
+      returnedUrl: fixed, outcome: 'Warning', message: 'Unable to verify destination.'
+    });
+  });
+
+  it('logs rejected inputs without claiming the input is a returned URL', async () => {
+    lookup.mockResolvedValueOnce({ original: 'invalid', fixed: 'invalid', note: 'err:Invalid URL.' });
+    enterUrl('invalid');
+    await submit();
+    expect(log.mock.calls[0][2]).toMatchObject({
+      providedUrl: 'invalid', returnedUrl: '', outcome: 'Error', message: 'Invalid URL.'
+    });
+  });
+
+  it('logs empty submissions without looking up a URL', async () => {
+    await submit();
+    expect(lookup).not.toHaveBeenCalled();
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0][2]).toMatchObject({
+      providedUrl: '', returnedUrl: '', outcome: 'Error', message: 'Paste a saved SharePoint link first.'
+    });
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe('Paste a saved SharePoint link first.');
+  });
+
+  it('logs thrown lookup errors and keeps the error visible', async () => {
+    lookup.mockRejectedValueOnce(new Error('Lookup request failed.'));
+    enterUrl(original);
+    await submit();
+    expect(log.mock.calls[0][2]).toMatchObject({
+      providedUrl: original, returnedUrl: '', outcome: 'Error', message: 'Lookup request failed.'
+    });
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe('Lookup request failed.');
+  });
+
+  it('warns about log failures without hiding the result or preventing another attempt', async () => {
+    log.mockRejectedValueOnce(new Error('SharePoint denied access (403).'));
+    enterUrl(original);
+    await submit();
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('SharePoint denied access (403).');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
+    expect(button('Copy Updated Link')).toBeDefined();
+    await submit();
+    expect(log).toHaveBeenCalledTimes(2);
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+  });
+
+  it('still logs a cleared lookup without restoring its result', async () => {
+    let resolveLookup: ((result: IFixResult) => void) | undefined;
+    lookup.mockReturnValueOnce(new Promise((resolve) => { resolveLookup = resolve; }));
+    enterUrl(original);
+    act(() => { Simulate.click(button('Find Updated Link')); });
+    act(() => { Simulate.click(button('Clear')); });
+    await act(async () => {
+      if (!resolveLookup) throw new Error('Missing pending lookup');
+      resolveLookup({ original, fixed, note: 'ok:Updated link ready.' });
+    });
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0][2]).toMatchObject({ providedUrl: original, returnedUrl: fixed });
+    expect(textarea().value).toBe('');
+    expect(container.querySelector('a')).toBeNull();
+  });
+
+  it('does not delay a usable result while logging is pending and reports a late failure', async () => {
+    let rejectLog: ((error: Error) => void) | undefined;
+    log.mockReturnValueOnce(new Promise((resolve, reject) => { rejectLog = reject; }));
+    enterUrl(original);
+    await submit();
+    expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
+    expect(button('Find Updated Link').disabled).toBe(false);
+    await act(async () => {
+      if (!rejectLog) throw new Error('Missing pending log write');
+      rejectLog(new Error('Network unavailable.'));
+    });
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Network unavailable.');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
+  });
+
+  it('does not log copying, opening or clearing as new submissions', async () => {
+    jest.spyOn(window, 'open').mockReturnValue(null);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true, value: { writeText: jest.fn().mockResolvedValue(undefined) }
+    });
+    enterUrl(original);
+    await submit();
+    act(() => { Simulate.click(button('Open Updated Link')); });
+    await act(async () => { Simulate.click(button('Copy Updated Link')); });
+    act(() => { Simulate.click(button('Clear')); });
+    expect(log).toHaveBeenCalledTimes(1);
   });
 });
