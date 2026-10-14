@@ -273,7 +273,8 @@ function detectOfficeCode(pathAndQuery) {
   return extMatch ? OFFICE_EXTENSION_CODES[extMatch[1].toLowerCase()] || null : null;
 }
 
-const LOOKUP_FOLDER = "/sites/SharePointURLFixer/URLLookupTables";
+const LOOKUP_WEB_PATH = "/sites/SharePointLinkFixer";
+const LOOKUP_FOLDER = `${LOOKUP_WEB_PATH}/URLLookupTables`;
 let lookupFilesPromise;
 const lookupRowsByFile = new Map();
 
@@ -308,7 +309,7 @@ function parseLookupCsv(text) {
 
 async function getLookupFiles() {
   if (!lookupFilesPromise) {
-    const endpoint = `${location.origin}/sites/SharePointURLFixer/_api/web/GetFolderByServerRelativeUrl('${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
+    const endpoint = `${location.origin}${LOOKUP_WEB_PATH}/_api/web/GetFolderByServerRelativeUrl('${LOOKUP_FOLDER}')/Files?$select=Name,ServerRelativeUrl&$top=5000`;
     lookupFilesPromise = fetch(endpoint, { headers: { Accept: "application/json;odata=nometadata" } })
       .then(response => {
         if (!response.ok) throw new Error(`Lookup table discovery failed (${response.status}).`);
