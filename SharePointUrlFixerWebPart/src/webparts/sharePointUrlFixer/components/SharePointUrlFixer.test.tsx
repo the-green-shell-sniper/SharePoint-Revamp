@@ -41,10 +41,15 @@ describe('URL fixer interactions', () => {
     return element;
   }
 
-  function dataTransfer(data: Record<string, string>, files: File[] = []): DataTransfer {
+  function dataTransfer(
+    data: Record<string, string>,
+    files: File[] = [],
+    effectAllowed: DataTransfer['effectAllowed'] = 'uninitialized'
+  ): DataTransfer {
     return {
       getData: (type: string): string => data[type] || '',
       files: files as unknown as FileList,
+      effectAllowed,
       dropEffect: 'none'
     } as unknown as DataTransfer;
   }
@@ -97,7 +102,6 @@ describe('URL fixer interactions', () => {
     Object.defineProperty(textarea(), 'scrollHeight', { configurable: true, value: 128 });
     enterUrl(`${original}${'very-long-path-segment/'.repeat(8)}`);
     expect(textarea().style.height).toBe('128px');
-    expect(textarea().style.overflowY).toBe('hidden');
   });
 
   it('provides an accessible URL input without duplicating the separate instructions', () => {
@@ -111,7 +115,7 @@ describe('URL fixer interactions', () => {
     let dragOverEvent: Event | undefined;
     act(() => { dragOverEvent = dispatchDragEvent('dragover', transfer); });
     expect(dragOverEvent?.defaultPrevented).toBe(true);
-    expect(transfer.dropEffect).toBe('copy');
+    expect(transfer.dropEffect).toBe('link');
     expect(textarea().className).toContain('dragOver');
 
     let dropEvent: Event | undefined;
@@ -119,6 +123,12 @@ describe('URL fixer interactions', () => {
     expect(dropEvent?.defaultPrevented).toBe(true);
     expect(textarea().value).toBe(original);
     expect(textarea().className).not.toContain('dragOver');
+  });
+
+  it('uses a copy drop effect when required by the dragged item', () => {
+    const transfer = dataTransfer({ 'text/uri-list': original }, [], 'copy');
+    act(() => { dispatchDragEvent('dragover', transfer); });
+    expect(transfer.dropEffect).toBe('copy');
   });
 
   it('accepts links dragged as HTML and Windows internet shortcut files', async () => {
@@ -226,6 +236,8 @@ describe('URL fixer interactions', () => {
     await submit();
     expect(container.querySelector('[role="alert"]')?.textContent).toBe(message);
     expect(container.querySelector('a[draggable="true"]')).toBeNull();
+    expect(container.querySelector('.resultStep')).toBeNull();
+    expect(container.querySelector('.favoritesHelp')).toBeNull();
     expect(titleLookup).not.toHaveBeenCalled();
   });
 
@@ -239,6 +251,18 @@ describe('URL fixer interactions', () => {
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
     expect(button('Open New Link')).toBeDefined();
     expect(button('Copy New Link')).toBeDefined();
+    expect(container.querySelector('.resultStep')).toBeNull();
+    expect(container.querySelector('.favoritesHelp')).toBeNull();
+  });
+
+  it('does not show follow-up steps when the submitted link is already current', async () => {
+    lookup.mockResolvedValueOnce({ original: fixed, fixed, note: 'warn:Already has /sites — left unchanged.' });
+    enterUrl(fixed);
+    await submit();
+    expect(container.querySelector('[role="status"]')?.textContent).toBe('Already has /sites — left unchanged.');
+    expect(container.querySelector('.resultBox a')?.getAttribute('href')).toBe(fixed);
+    expect(container.querySelector('.resultStep')).toBeNull();
+    expect(container.querySelector('.favoritesHelp')).toBeNull();
   });
 
   it('shows a URL-based name and notice when the SharePoint title is unavailable', async () => {

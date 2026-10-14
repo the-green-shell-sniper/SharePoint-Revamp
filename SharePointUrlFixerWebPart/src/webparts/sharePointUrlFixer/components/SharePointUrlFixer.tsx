@@ -33,7 +33,16 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
   private readonly onInputDragOver = (event: React.DragEvent<HTMLTextAreaElement>): void => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
+    const { effectAllowed } = event.dataTransfer;
+    if (effectAllowed === 'copy' || effectAllowed === 'copyMove') {
+      event.dataTransfer.dropEffect = 'copy';
+    } else if (effectAllowed === 'move') {
+      event.dataTransfer.dropEffect = 'move';
+    } else if (effectAllowed === 'none') {
+      event.dataTransfer.dropEffect = 'none';
+    } else {
+      event.dataTransfer.dropEffect = 'link';
+    }
     if (!this.state.isDragOver) this.setState({ isDragOver: true });
   };
 
@@ -215,6 +224,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
     const { input, isDragOver, results, status, isChecking } = this.state;
     const usableResult = results.find((result) => result.level !== 'err');
+    const showFollowUpSteps = usableResult?.level === 'ok';
 
     return (
       <div className={styles.sharePointUrlFixer}>
@@ -247,8 +257,12 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         {usableResult && (
           <div className={styles.resultBlock}>
-            <div className={styles.resultStep}>2. Open and confirm your new link</div>
-            <div className={styles.resultInstruction}>Select &quot;Open New Link&quot; and check that it takes you to the page or file you need.</div>
+            {showFollowUpSteps && (
+              <>
+                <div className={styles.resultStep}>2. Open and confirm your new link</div>
+                <div className={styles.resultInstruction}>Select &quot;Open New Link&quot; and check that it takes you to the page or file you need.</div>
+              </>
+            )}
             <div className={styles.resultBox}>
               <a className={styles.resultLink} href={usableResult.fixed} draggable={true} target="_blank" rel="noreferrer">{usableResult.fixed}</a>
             </div>
@@ -262,34 +276,38 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
               </button>
               <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy New Link</button>
             </div>
-            <br />
-            <div className={styles.favoritesHelp}>
-              <div className={styles.favoritesHeading}>3. Save your new link as a favorite or shortcut</div>
-              <div id="urlFixerDragInstructions">
-                <ul className={`${styles.favoritesInstructions} ${styles.favoritesList}`}>
-                  <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
-                  <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
-                </ul>
-              </div>
-              <div className={styles.dragLinkRow}>
-                <span className={styles.dragPrompt}>Drag &amp; Drop Me <span aria-hidden="true">→</span></span>
-                <a
-                  className={styles.dragLink}
-                  href={usableResult.fixed}
-                  draggable={true}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={usableResult.favorite?.title}
-                  aria-describedby="urlFixerDragInstructions"
-                >
-                  {usableResult.favorite?.title}
-                </a>
-              </div>
-              {usableResult.favorite?.notice && (
-                <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
-              )}
-            </div>
-            <div className={styles.saveReminder}><strong>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</strong></div>
+            {showFollowUpSteps && (
+              <>
+                <br />
+                <div className={styles.favoritesHelp}>
+                  <div className={styles.favoritesHeading}>3. Save your new link as a favorite or shortcut</div>
+                  <div id="urlFixerDragInstructions">
+                    <ul className={`${styles.favoritesInstructions} ${styles.favoritesList}`}>
+                      <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
+                      <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
+                    </ul>
+                  </div>
+                  <div className={styles.dragLinkRow}>
+                    <span className={styles.dragPrompt}>Drag &amp; Drop Me <span aria-hidden="true">→</span></span>
+                    <a
+                      className={styles.dragLink}
+                      href={usableResult.fixed}
+                      draggable={true}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={usableResult.favorite?.title}
+                      aria-describedby="urlFixerDragInstructions"
+                    >
+                      {usableResult.favorite?.title}
+                    </a>
+                  </div>
+                  {usableResult.favorite?.notice && (
+                    <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
+                  )}
+                </div>
+                <div className={styles.saveReminder}><strong>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</strong></div>
+              </>
+            )}
           </div>
         )}
       </div>
