@@ -85,19 +85,19 @@ describe('SharePoint favorite names', () => {
   it('uses the filename for a library document opened through its item form', async () => {
     respond({ Title: 'WHA Document Template', File: { Name: 'Release of Information.docx' } });
     expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/Documents/Forms/DispForm.aspx?ID=42'))
-      .toEqual({ title: 'Release of Information.docx' });
+      .toEqual({ title: 'Release of Information' });
   });
 
   it('resolves documents in subsites through their owning web', async () => {
     respondAt("/sites/HR/MSresource/_api/web/GetFileByServerRelativePath(", { Name: 'Staff Guide.docx' });
     expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/Documents/Staff%20Guide.docx'))
-      .toEqual({ title: 'Staff Guide.docx' });
+      .toEqual({ title: 'Staff Guide' });
   });
 
   it('resolves GUID links using the subsite identified by the URL', async () => {
     respond({ Name: 'Staff Guide.docx' });
     expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/MSresource/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D'))
-      .toEqual({ title: 'Staff Guide.docx' });
+      .toEqual({ title: 'Staff Guide' });
     expect(fetchMock.mock.calls[0][0]).toContain('/sites/HR/MSresource/_api/web/GetFileById(');
   });
 
@@ -119,7 +119,7 @@ describe('SharePoint favorite names', () => {
 
   it('uses the actual document filename rather than its Title metadata', async () => {
     respond({ Name: 'Guide.docx', ListItemAllFields: { Title: 'Staff Guide' } });
-    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide.docx' });
+    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide' });
     expect(fetchMock).toHaveBeenCalledWith(
       "https://whallc.sharepoint.com/sites/HR/_api/web/GetFileByServerRelativePath(decodedurl='%2Fsites%2FHR%2FShared%20Documents%2FGuide.docx')?$select=Name",
       expect.objectContaining({ credentials: 'same-origin', signal: expect.anything() })
@@ -128,7 +128,29 @@ describe('SharePoint favorite names', () => {
 
   it('uses the filename when a document has no Title field', async () => {
     respond({ Name: 'Guide.docx', ListItemAllFields: { Title: null } });
-    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide.docx' });
+    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide' });
+  });
+
+  it.each([
+    ['Release of Information.DOCX', 'Release of Information'],
+    ['Policy.v2.final.pdf', 'Policy.v2.final'],
+    ['README', 'README'],
+    ['.hidden', '.hidden']
+  ])('omits only the final file extension in %s', async (filename, title) => {
+    respond({ Name: filename });
+    expect(await getFavoriteTitle(fileUrl)).toEqual({ title });
+  });
+
+  it('preserves periods in a site title', async () => {
+    respond({ Title: 'WHA.Clinical' });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR'))
+      .toEqual({ title: 'WHA.Clinical' });
+  });
+
+  it('preserves a dotted folder name opened through a library item form', async () => {
+    respond({ Folder: { Name: '2026.Notes' } });
+    expect(await getFavoriteTitle('https://whallc.sharepoint.com/sites/HR/Documents/Forms/DispForm.aspx?ID=42'))
+      .toEqual({ title: '2026.Notes' });
   });
 
   it('retrieves a modern page title rather than its .aspx filename', async () => {
@@ -188,7 +210,7 @@ describe('SharePoint favorite names', () => {
   it('names the reported Release of Information GUID link from its filename, not template metadata', async () => {
     respond({ Name: 'Release of Information.docx', ListItemAllFields: { Title: 'WHA Document Template' } });
     const url = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/_layouts/15/Doc.aspx?sourcedoc=%7B342C713C-06A6-4844-8132-99503089E0A6%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
-    expect(await getFavoriteTitle(url)).toEqual({ title: 'Release of Information.docx' });
+    expect(await getFavoriteTitle(url)).toEqual({ title: 'Release of Information' });
     expect(fetchMock.mock.calls[0][0]).toBe(
       "https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/GetFileById('342C713C-06A6-4844-8132-99503089E0A6')?$select=Name"
     );
@@ -198,21 +220,21 @@ describe('SharePoint favorite names', () => {
     respond({ Name: 'Renamed Release of Information.docx' });
     expect(await getFavoriteTitle(
       'https://whallc.sharepoint.com/sites/HR/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D&file=OldName.docx'
-    )).toEqual({ title: 'Renamed Release of Information.docx' });
+    )).toEqual({ title: 'Renamed Release of Information' });
   });
 
   it('ignores template metadata for embedded document paths', async () => {
     respond({ Name: 'Release of Information.pdf', ListItemAllFields: { Title: 'WHA Document Template' } });
     expect(await getFavoriteTitle(
       'https://whallc.sharepoint.com/sites/HR/Documents/Forms/AllItems.aspx?id=%2Fsites%2FHR%2FDocuments%2FRelease%20of%20Information.pdf'
-    )).toEqual({ title: 'Release of Information.pdf' });
+    )).toEqual({ title: 'Release of Information' });
   });
 
   it('falls back to the file parameter instead of Doc.aspx when a GUID lookup fails', async () => {
     fetchMock.mockRejectedValue(new Error('Network unavailable'));
     expect(await getFavoriteTitle(
       'https://whallc.sharepoint.com/sites/HR/_layouts/15/Doc.aspx?sourcedoc=%7B12345678-1234-1234-1234-123456789abc%7D&file=Release%20of%20Information.docx'
-    )).toEqual({ title: 'Release of Information.docx', notice: expect.any(String) });
+    )).toEqual({ title: 'Release of Information', notice: expect.any(String) });
   });
 
   it('escapes apostrophes, percent signs and hashes in file paths', async () => {
@@ -231,7 +253,7 @@ describe('SharePoint favorite names', () => {
 
   it('reports network failures without losing the filename', async () => {
     fetchMock.mockRejectedValue(new Error('Network unavailable'));
-    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide.docx', notice: expect.any(String) });
+    expect(await getFavoriteTitle(fileUrl)).toEqual({ title: 'Guide', notice: expect.any(String) });
   });
 
   it.each([{}, { Title: 123 }, { ListItemAllFields: { Title: ' ' } }])('handles missing or invalid metadata: %s', async (data) => {
@@ -246,7 +268,7 @@ describe('SharePoint favorite names', () => {
     }));
     const pending = getFavoriteTitle(fileUrl);
     jest.advanceTimersByTime(8000);
-    expect(await pending).toEqual({ title: 'Guide.docx', notice: expect.any(String) });
+    expect(await pending).toEqual({ title: 'Guide', notice: expect.any(String) });
   });
 
   it('does not send requests outside WHA SharePoint', async () => {

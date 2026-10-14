@@ -67,20 +67,8 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     const sepIndex = result.note.indexOf(':');
     const level = result.note.slice(0, sepIndex) as 'ok' | 'warn' | 'err';
     const note = result.note.slice(sepIndex + 1);
-    logSubmission(this.props.spHttpClient, this.props.currentUser, {
-      providedUrl,
-      returnedUrl: level === 'err' ? '' : result.fixed,
-      outcome: level === 'ok' ? 'Success' : (level === 'warn' ? 'Warning' : 'Error'),
-      message: result.lookupTableFileName ? `${note} Lookup table: ${result.lookupTableFileName}.` : note,
-      submittedAt
-    }).catch((error: unknown) => {
-      const detail = error instanceof Error ? error.message : 'Unknown logging error.';
-      Log.error('URLFixerSubmissionLog', new Error(`Submission log save was not confirmed. ${detail}`));
-    });
-    if (requestId !== this.requestId) return;
-
+    const row: IResultRow = { ...result, level, note };
     try {
-      const row: IResultRow = { ...result, level, note };
       if (level !== 'err') {
         row.favorite = await getFavoriteTitle(result.fixed);
       }
@@ -96,6 +84,18 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       this.setState({
         isChecking: false,
         status: { level: 'err', message: (error as Error).message || 'Could not load the SharePoint lookup tables.' }
+      });
+    } finally {
+      logSubmission(this.props.spHttpClient, this.props.currentUser, {
+        providedUrl,
+        returnedUrl: level === 'err' ? '' : result.fixed,
+        bookmarkButtonName: row.favorite?.title || '',
+        outcome: level === 'ok' ? 'Success' : (level === 'warn' ? 'Warning' : 'Error'),
+        message: result.lookupTableFileName ? `${note} Lookup table: ${result.lookupTableFileName}.` : note,
+        submittedAt
+      }).catch((error: unknown) => {
+        const detail = error instanceof Error ? error.message : 'Unknown logging error.';
+        Log.error('URLFixerSubmissionLog', new Error(`Submission log save was not confirmed. ${detail}`));
       });
     }
   };

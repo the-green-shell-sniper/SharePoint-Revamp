@@ -14,7 +14,7 @@ pattern matching and SharePoint lookup tables.
 - Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
 - To save without opening the destination, drag the titled button in **Save as a bookmark or shortcut**
   onto Edge's bookmarks bar to create a bookmark or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
-  actual document filename (including its extension) rather than generic list-view page names
+  actual document filename (without its extension) rather than generic list-view page names
   or document Title metadata, which can retain a template's name.
   For document links, the current SharePoint filename takes precedence over the URL's `file` parameter.
   Sites/subsites use their own web title; direct library/list URLs and their views
@@ -53,6 +53,12 @@ mapped-link verification warnings, and matched rows marked not migrated.
 Pattern-only results and searches with no matching row do not claim a source
 table. The filename is included in the log only, not added to app messages.
 
+`BookmarkButtonName` stores the final drag/drop button label, including a
+URL-derived fallback name when metadata is unavailable. It is blank for failed
+URL submissions without a usable destination. Log creation starts after naming
+finishes so it records the same label as the button; clearing a pending submission
+does not prevent its log entry from being saved.
+
 The destination is the **URLFixerSubmissionLog** list on
 <https://whallc.sharepoint.com/sites/SharePointLinkFixer>, even when the web part
 is hosted on another site. Independent item creates avoid the concurrent-write
@@ -80,6 +86,7 @@ After creating **Display Name**, you may rename its display label to **DisplayNa
 | ReturnedURL | ReturnedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
 | Outcome | Outcome | Choice | `Success`, `Warning`, `Error`; single selection |
 | ResultMessage | ResultMessage | Multiple lines of text | **Plain text**; **Append changes: No** |
+| BookmarkButtonName | BookmarkButtonName | Single line of text | Optional; final button label |
 | SubmittedAt | SubmittedAt | Date and time | Include time |
 
 **Multiple lines of text alone is not sufficient.** SharePoint may default to
@@ -89,8 +96,12 @@ rich text. For **ProvidedURL**, **ReturnedURL**, and **ResultMessage**, open
 rich text). Set **Append Changes to Existing Text** to **No**, then save.
 Plain text and append changes off were confirmed on the live list.
 The Email column has been removed and is no longer sent by the web part.
-The view displays DisplayName before Username; column display order does not
-affect REST writes, which use internal names.
+The default All Items view displays DisplayName, Username, ProvidedURL,
+ReturnedURL, Outcome, ResultMessage, BookmarkButtonName, and SubmittedAt.
+Title is excluded from this view but retained as a column; the app still writes
+`URL submission` to it. To hide Title on a replacement list, edit the default
+view and deselect Title (including its linked variants), rather than deleting
+the column. Column display order does not affect REST writes, which use internal names.
 
 Do not use Hyperlink or single-line fields for URLs: URLs may exceed their
 255-character limit. Input text is preserved as submitted; URL processing still
@@ -125,7 +136,7 @@ a tamper-proof compliance audit.
 
 Open the list and use **Export > Export to Excel** to analyze entries. Include
 DisplayName, Username, ProvidedURL, ReturnedURL, Outcome, ResultMessage,
-SubmittedAt, Created, and Created By in the export view.
+BookmarkButtonName, SubmittedAt, Created, and Created By in the export view.
 
 Build/package the web part and deploy the updated `.sppkg` through the existing
 app catalog process. With a regular user account, submit a valid old URL and an
@@ -136,7 +147,8 @@ separate rows, and that ordinary users cannot see other users' entries.
 If a write fails (missing list/columns, denied permission, network failure, or
 throttling), the failure is recorded using SPFx `Log.error` under
 `URLFixerSubmissionLog` for developer diagnostics, not displayed in the app.
-Logging runs independently and does not delay the URL result.
+Once the bookmark name is resolved, the log write runs independently and does
+not delay displaying the URL result.
 Failed/unconfirmed writes are not automatically
 retried, since an interrupted response may already have created a row.
 Logging is best effort: closing/navigating away from the browser before a request

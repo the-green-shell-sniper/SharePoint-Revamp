@@ -228,6 +228,7 @@ describe('URL fixer interactions', () => {
     expect(log).toHaveBeenCalledWith(expect.anything(), currentUser, {
       providedUrl: capturedInput,
       returnedUrl: fixed,
+      bookmarkButtonName: 'Ultrasound Guide',
       outcome: 'Success',
       message: 'Updated link ready.',
       submittedAt: expect.any(String)
@@ -265,7 +266,7 @@ describe('URL fixer interactions', () => {
     enterUrl('invalid');
     await submit();
     expect(log.mock.calls[0][2]).toMatchObject({
-      providedUrl: 'invalid', returnedUrl: '', outcome: 'Error', message: 'Invalid URL.'
+      providedUrl: 'invalid', returnedUrl: '', bookmarkButtonName: '', outcome: 'Error', message: 'Invalid URL.'
     });
   });
 
@@ -359,5 +360,30 @@ describe('URL fixer interactions', () => {
     expect(log).toHaveBeenCalledTimes(1);
     expect(container.textContent).not.toMatch(/log|records|signed-in/i);
     expect(Log.error).not.toHaveBeenCalled();
+  });
+
+  it('logs the exact URL-derived button name when metadata is unavailable', async () => {
+    titleLookup.mockResolvedValueOnce({ title: 'Release of Information', notice: 'Using URL name.' });
+    enterUrl(original);
+    await submit();
+    const name = container.querySelector('a[aria-describedby="urlFixerDragInstructions"]')?.textContent;
+    expect(name).toBe('Release of Information');
+    expect(log.mock.calls[0][2].bookmarkButtonName).toBe(name);
+  });
+
+  it('waits for naming and still logs a cleared submission without restoring the button', async () => {
+    let resolveTitle: ((value: { title: string }) => void) | undefined;
+    titleLookup.mockReturnValueOnce(new Promise((resolve) => { resolveTitle = resolve; }));
+    enterUrl(original);
+    await submit();
+    expect(log).not.toHaveBeenCalled();
+    act(() => { Simulate.click(button('Clear')); });
+    await act(async () => {
+      if (!resolveTitle) throw new Error('Missing pending title lookup');
+      resolveTitle({ title: 'Release of Information' });
+    });
+    expect(log).toHaveBeenCalledTimes(1);
+    expect(log.mock.calls[0][2].bookmarkButtonName).toBe('Release of Information');
+    expect(container.querySelector('a')).toBeNull();
   });
 });

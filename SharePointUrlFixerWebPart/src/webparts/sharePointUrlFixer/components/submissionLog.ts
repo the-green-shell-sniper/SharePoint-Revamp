@@ -8,6 +8,7 @@ export interface ISubmissionUser {
 export interface ISubmission {
   providedUrl: string;
   returnedUrl: string;
+  bookmarkButtonName: string;
   outcome: 'Success' | 'Warning' | 'Error';
   message: string;
   submittedAt: string;
@@ -37,6 +38,7 @@ export async function logSubmission(
         Display_x0020_Name: user.displayName,
         ProvidedURL: submission.providedUrl,
         ReturnedURL: submission.returnedUrl,
+        BookmarkButtonName: submission.bookmarkButtonName,
         Outcome: submission.outcome,
         ResultMessage: submission.message,
         SubmittedAt: submission.submittedAt

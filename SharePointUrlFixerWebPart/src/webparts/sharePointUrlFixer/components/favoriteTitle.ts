@@ -74,6 +74,10 @@ function encodeODataPath(path: string): string {
   return encodeURIComponent(path.replace(/'/g, "''")).replace(/%2F/gi, '/');
 }
 
+function withoutFileExtension(name: string): string {
+  return name.replace(/^(.+)\.[^.]+$/, '$1');
+}
+
 export async function getFavoriteTitle(value: string): Promise<IFavoriteTitle> {
   const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
   const path = destinationPath(url);
@@ -134,7 +138,7 @@ export async function getFavoriteTitle(value: string): Promise<IFavoriteTitle> {
         const data: { Title?: unknown; File?: { Name?: unknown }; Folder?: { Name?: unknown } } = await response.json();
         const objectName = data.File?.Name || data.Folder?.Name;
         if (isListItem && typeof objectName === 'string' && objectName.trim()) {
-          return { title: objectName.trim() };
+          return { title: data.File?.Name ? withoutFileExtension(objectName.trim()) : objectName.trim() };
         }
         if (typeof data.Title === 'string' && data.Title.trim()) {
           title = data.Title.trim();
@@ -148,7 +152,7 @@ export async function getFavoriteTitle(value: string): Promise<IFavoriteTitle> {
     if (!isSite && !isGuidLink && !isPage) {
       const file = await readMetadata(endpoint);
       if (file) {
-        if (typeof file.Name === 'string' && file.Name.trim()) return { title: file.Name.trim() };
+        if (typeof file.Name === 'string' && file.Name.trim()) return { title: withoutFileExtension(file.Name.trim()) };
         throw new Error('SharePoint did not return a filename.');
       }
       const objectPath = path.replace(/\/$/, '');
@@ -159,7 +163,7 @@ export async function getFavoriteTitle(value: string): Promise<IFavoriteTitle> {
       for (const webPath of candidateWebPaths(objectPath)) {
         if (webPath !== sitePath && webPath !== '/') {
           const nestedFile = await readMetadata(`${apiUrl(encodeODataPath(webPath))}/GetFileByServerRelativePath(decodedurl='${escapedPath}')?$select=Name`);
-          if (typeof nestedFile?.Name === 'string' && nestedFile.Name.trim()) return { title: nestedFile.Name.trim() };
+          if (typeof nestedFile?.Name === 'string' && nestedFile.Name.trim()) return { title: withoutFileExtension(nestedFile.Name.trim()) };
         }
         const list = await readMetadata(`${apiUrl(encodeODataPath(webPath))}/GetList('${encodeODataPath(objectPath)}')?$select=Title,RootFolder/ServerRelativeUrl&$expand=RootFolder`);
         if (list?.RootFolder?.ServerRelativeUrl === objectPath && typeof list.Title === 'string' && list.Title.trim()) {
@@ -185,14 +189,16 @@ export async function getFavoriteTitle(value: string): Promise<IFavoriteTitle> {
     const title = isSite ? data.Title : (isPage ? data.ListItemAllFields?.Title : undefined);
     if (typeof title === 'string' && title.trim()) return { title: title.trim() };
     if (typeof data.Name === 'string' && data.Name.trim()) {
-      return { title: isPage ? readableName(data.Name.trim()) : data.Name.trim() };
+      return { title: isPage ? readableName(data.Name.trim()) : withoutFileExtension(data.Name.trim()) };
     }
     throw new Error('SharePoint did not return a title or filename.');
   } catch (error) {
     const reason = error instanceof Error ? error.message : 'Unknown title lookup error.';
     console.warn(`Could not retrieve the SharePoint favorite title: ${reason}`);
     return {
-      title: isListItem ? `${fallback} - item ${itemId}` : fallback,
+      title: isListItem ? `${fallback} - item ${itemId}`
+        : (isGuidLink || url.searchParams.has('file') || /\.(?:docx?|docm|xlsx?|xlsm|pptx?|pptm|pdf|txt|csv|rtf|odt|ods|odp|msg|vsdx?|one|html?)$/i.test(path)
+          ? withoutFileExtension(fallback) : fallback),
       notice: 'Could not retrieve the SharePoint title. The favorite name is based on the URL; you can rename it in Edge.'
     };
   } finally {

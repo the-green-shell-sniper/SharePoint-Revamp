@@ -13,6 +13,7 @@ describe('SharePoint submission log', () => {
     providedUrl: 'https://whallc.sharepoint.com/CS/Guide.docx?x="a,b"\n',
     returnedUrl: 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Guide.docx',
     outcome: 'Success',
+    bookmarkButtonName: 'Guide',
     message: 'Updated link ready.',
     submittedAt: '2026-10-14T02:30:00.000Z'
   };
@@ -44,6 +45,7 @@ describe('SharePoint submission log', () => {
       Display_x0020_Name: user.displayName,
       ProvidedURL: submission.providedUrl,
       ReturnedURL: submission.returnedUrl,
+      BookmarkButtonName: submission.bookmarkButtonName,
       Outcome: 'Success',
       ResultMessage: submission.message,
       SubmittedAt: submission.submittedAt
