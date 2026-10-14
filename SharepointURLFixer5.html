@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SharePoint URL Fixer</title>
+<title>Central Park Link Finder</title>
 <style>
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -128,7 +128,7 @@
 </head>
 <body>
   <div class="card">
-    <h1>SharePoint URL Fixer</h1>
+    <h1>Central Park Link Finder</h1>
     <p class="subtitle">Paste one or more whallc.sharepoint.com links below.</p>
 
     <label for="input">URL(s) — one per line</label>
@@ -273,7 +273,7 @@ function detectOfficeCode(pathAndQuery) {
   return extMatch ? OFFICE_EXTENSION_CODES[extMatch[1].toLowerCase()] || null : null;
 }
 
-const LOOKUP_WEB_PATH = "/sites/SharePointLinkFixer";
+const LOOKUP_WEB_PATH = "/sites/CentralParkLinkFinder";
 const LOOKUP_FOLDER = `${LOOKUP_WEB_PATH}/URLLookupTables`;
 let lookupFilesPromise;
 const lookupRowsByFile = new Map();

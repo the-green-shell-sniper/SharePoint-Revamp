@@ -14,7 +14,7 @@ describe('SharePoint submission log', () => {
     returnedUrl: 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/Guide.docx',
     outcome: 'Success',
     bookmarkButtonName: 'Guide',
-    message: 'Updated link ready.',
+    message: 'Your new link is ready',
     submittedAt: '2026-10-14T02:30:00.000Z'
   };
   let httpClient: SPHttpClient;
@@ -33,7 +33,7 @@ describe('SharePoint submission log', () => {
     await logSubmission(httpClient, user, submission);
     expect(post).toHaveBeenCalledTimes(1);
     const [url, configuration, options] = post.mock.calls[0];
-    expect(url).toBe("https://whallc.sharepoint.com/sites/SharePointLinkFixer/_api/web/lists/getbytitle('URLFixerSubmissionLog')/items");
+    expect(url).toBe("https://whallc.sharepoint.com/sites/CentralParkLinkFinder/_api/web/lists/getbytitle('URLFixerSubmissionLog')/items");
     expect(configuration).toBe(SPHttpClient.configurations.v1);
     expect(options.headers).toEqual({
       Accept: 'application/json;odata.metadata=none',

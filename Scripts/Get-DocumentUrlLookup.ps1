@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Builds a per-site old-URL -> new-URL lookup for documents, for use by the
-    SharePoint URL Fixer tool (and anyone else) when a bookmark can't be
+    Central Park Link Finder (and anyone else) when a bookmark can't be
     fixed by pattern-matching alone.
 
 .DESCRIPTION

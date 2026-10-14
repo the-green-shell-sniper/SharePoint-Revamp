@@ -1,4 +1,4 @@
-# share-point-url-fixer
+# Central Park Link Finder
 
 ## Summary
 
@@ -8,12 +8,12 @@ pattern matching and SharePoint lookup tables.
 ## Using the URL fixer
 
 - Copy the full URL of a WHA SharePoint page or file from the browser's address bar.
-- Paste the URL into the tool and press **Enter**, or select **Find Updated Link**.
+- Paste the URL into the tool and press **Enter**, or select **Find New Link**.
 - Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
 - External links are rejected with a red error message before any network lookup.
-- Use **Copy Updated Link** to copy the result, or **Open Updated Link** to open it in a new tab.
-- To save without opening the destination, drag the titled button in **Save as a bookmark or shortcut**
-  onto Edge's bookmarks bar to create a bookmark or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
+- Use **Copy New Link** to copy the result, or **Open New Link** to open it in a new tab.
+- To save without opening the destination, drag the titled button in **3. Save your new link as a favorite or shortcut**
+  to Edge's favorites bar to create a favorite or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
   actual document filename (without its extension) rather than generic list-view page names
   or document Title metadata, which can retain a template's name.
   For document links, the current SharePoint filename takes precedence over the URL's `file` parameter.
@@ -28,11 +28,10 @@ pattern matching and SharePoint lookup tables.
   If the title request fails or times out, a notice explains that the name is derived from the URL;
   you can rename the bookmark in Edge. If the bar is hidden, press **Ctrl+Shift+B** to show it.
   The displayed result URL is also draggable.
-- Keyboard alternative: open the updated link, press **Ctrl+D** in the new tab,
-  and confirm the favorite in Edge.
-  The save-help box lists the two bookmark methods first (dragging, then
-  keyboard), followed by the desktop shortcut method, as three bullets.
-- Manually delete any favorites, bookmarks, or shortcuts that have the old link.
+- Keyboard alternative: while on the new link tab, press **Ctrl+D** on your keyboard
+  to save it as a favorite in Edge.
+- This tool cannot remove or change any of your existing saved favorites or shortcuts.
+  You will need to manually remove any favorites or shortcuts to that no longer work.
   Dragging creates a favorite;
   it does not find or replace an existing favorite.
 
@@ -41,7 +40,7 @@ dialog. No extension is required for the drag-to-favorites workflow.
 
 ## Submission log
 
-The SPFx web part adds a separate list item for each **Find Updated Link** or
+The SPFx web part adds a separate list item for each **Find New Link** or
 Enter submission, including empty input, rejected URLs, lookup failures, and
 warning results. Merely viewing the page, copying/opening a result, or clearing
 the input does not create another row. Repeated submissions create separate rows.
@@ -60,7 +59,7 @@ finishes so it records the same label as the button; clearing a pending submissi
 does not prevent its log entry from being saved.
 
 The destination is the **URLFixerSubmissionLog** list on
-<https://whallc.sharepoint.com/sites/SharePointLinkFixer>, even when the web part
+<https://whallc.sharepoint.com/sites/CentralParkLinkFinder>, even when the web part
 is hosted on another site. Independent item creates avoid the concurrent-write
 and file-locking problems of appending to a shared CSV or workbook.
 The standalone HTML tool does not use this SPFx logging integration.
@@ -68,7 +67,7 @@ The standalone HTML tool does not use this SPFx logging integration.
 ### One-time list setup (site owner)
 
 The list has been created at
-<https://whallc.sharepoint.com/sites/SharePointLinkFixer/Lists/URLFixerSubmissionLog/AllItems.aspx>.
+<https://whallc.sharepoint.com/sites/CentralParkLinkFinder/Lists/URLFixerSubmissionLog/AllItems.aspx>.
 The web part uses the internal names verified on that list, including
 `Display_x0020_Name`, `ProvidedURL`, and `ReturnedURL`.
 Renaming a column's display label does not change its internal name.
@@ -165,12 +164,12 @@ paths are pattern-mapped to `/sites/PatientFinancialServices/2021 EM Coding Chan
 GUID-only links for those files still use the root-site CSV lookup table.
 
 The fallback discovers CSV files in
-`/sites/SharePointLinkFixer/URLLookupTables`, reads `URLFixerIndex.csv`, and selects
+`/sites/CentralParkLinkFinder/URLLookupTables`, reads `URLFixerIndex.csv`, and selects
 the matching site's fixer CSV. `Lookup table discovery failed (...)` means the
 file-list request failed before any CSV rows were searched, not that the URL
 was absent from the table.
 
-Discovery targets `/_api/web` on `/sites/SharePointLinkFixer`, the web that owns
+Discovery targets `/_api/web` on `/sites/CentralParkLinkFinder`, the web that owns
 the library, rather than the web hosting the web part. The REST web and folder
 must agree; otherwise SharePoint reports
 `Server relative urls must start with SPWeb.ServerRelativeUrl`.

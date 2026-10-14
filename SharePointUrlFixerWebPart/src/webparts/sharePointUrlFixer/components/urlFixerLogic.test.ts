@@ -24,8 +24,8 @@ describe('WHA URL validation', () => {
   });
 
   describe('SharePoint lookup tables', () => {
-    const siteUrl = 'https://whallc.sharepoint.com/sites/SharePointLinkFixer';
-    const folder = '/sites/SharePointLinkFixer/URLLookupTables';
+    const siteUrl = 'https://whallc.sharepoint.com/sites/CentralParkLinkFinder';
+    const folder = '/sites/CentralParkLinkFinder/URLLookupTables';
     const original = 'https://whallc.sharepoint.com/:w:/r/CS/_layouts/15/Doc.aspx?sourcedoc=%7BB5AA7687-49DC-4681-A326-B80253394172%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
     const resolved = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/_layouts/15/Doc.aspx?sourcedoc=%7B342C713C-06A6-4844-8132-99503089E0A6%7D&file=Release%20of%20Information.docx&action=default&mobileredirect=true';
     const copyLink = 'https://whallc.sharepoint.com/:w:/r/sites/ClinicalandPatientServices/Patient%20Services%20formslettersconsents/Release%20of%20Information.docx?d=w342c713c06a64844813299503089e0a6&csf=1&web=1';
@@ -93,7 +93,7 @@ describe('WHA URL validation', () => {
     it.each([
       'https://whallc.sharepoint.com',
       'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
-      'https://whallc.sharepoint.com/sites/SharePointLinkFixer/Subweb/'
+      'https://whallc.sharepoint.com/sites/CentralParkLinkFinder/Subweb/'
     ])('discovers tables through their owning web when hosted at %s', async (hostingWeb) => {
       const hostedClient = new LookupTableClient(httpClient, hostingWeb);
       queueTables();

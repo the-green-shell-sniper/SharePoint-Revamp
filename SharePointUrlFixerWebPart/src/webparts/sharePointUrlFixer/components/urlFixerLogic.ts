@@ -206,7 +206,7 @@ export function fixUrl(raw: string): IFixResult {
 // --- CSV lookup-table discovery, kept as a fallback when pattern matching can't
 // resolve a link (e.g. a GUID-only Doc.aspx link) or the pattern-fixed URL 404s. ---
 
-const LOOKUP_WEB_PATH = '/sites/SharePointLinkFixer';
+const LOOKUP_WEB_PATH = '/sites/CentralParkLinkFinder';
 const LOOKUP_FOLDER = `${LOOKUP_WEB_PATH}/URLLookupTables`;
 const INDEX_FILE_NAME = 'URLFixerIndex.csv';
 const HELP_DESK_MESSAGE = 'No migrated URL found. Please contact the Help Desk for assistance by calling 503-601-3646 or emailing servicedesk@whallc.com.';

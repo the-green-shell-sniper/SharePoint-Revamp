@@ -49,14 +49,14 @@ describe('URL fixer interactions', () => {
   }
 
   async function submit(): Promise<void> {
-    await act(async () => { Simulate.click(button('Find Updated Link')); });
+    await act(async () => { Simulate.click(button('Find New Link')); });
   }
 
   beforeEach(() => {
     log.mockReset();
     jest.mocked(Log.error).mockClear();
     log.mockResolvedValue(undefined);
-    lookup.mockResolvedValue({ original, fixed, note: 'ok:Updated link ready.' });
+    lookup.mockResolvedValue({ original, fixed, note: 'ok:Your new link is ready' });
     titleLookup.mockResolvedValue({ title: 'Ultrasound Guide' });
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -78,12 +78,10 @@ describe('URL fixer interactions', () => {
     expect(textarea().placeholder).toBe('https://whallc.sharepoint.com/CS/Ultrasound%20Department/...');
   });
 
-  it('explains how to provide a link and find its migrated destination', () => {
-    expect(container.querySelector('label[for="urlFixerInput"]')?.textContent).toBe('SharePoint page or file URL');
-    expect(textarea().getAttribute('aria-describedby')).toBe('urlFixerInstructions');
-    expect(container.textContent).toContain('Copy the full URL from the browser\'s address bar, paste it here');
-    expect(container.textContent).toContain('Use the updated result to open or copy the migrated page.');
-    expect(container.textContent).toContain('then select Find Updated Link or press Enter.');
+  it('provides an accessible URL input without duplicating the separate instructions', () => {
+    expect(textarea().getAttribute('aria-label')).toBe('SharePoint page or file URL');
+    expect(textarea().getAttribute('aria-describedby')).toBeNull();
+    expect(container.textContent).not.toContain('Copy the full URL from the browser\'s address bar');
   });
 
   it('submits with Enter instead of inserting a line break', async () => {
@@ -112,13 +110,13 @@ describe('URL fixer interactions', () => {
     let resolveLookup: ((result: IFixResult) => void) | undefined;
     lookup.mockReturnValueOnce(new Promise<IFixResult>((resolve) => { resolveLookup = resolve; }));
     enterUrl(original);
-    act(() => { Simulate.click(button('Find Updated Link')); });
+    act(() => { Simulate.click(button('Find New Link')); });
     expect(button('Finding link...').disabled).toBe(true);
     act(() => { Simulate.keyDown(textarea(), { key: 'Enter' }); });
     expect(lookup).toHaveBeenCalledTimes(1);
     await act(async () => {
       if (!resolveLookup) throw new Error('Missing pending lookup');
-      resolveLookup({ original, fixed, note: 'ok:Updated link ready.' });
+      resolveLookup({ original, fixed, note: 'ok:Your new link is ready' });
     });
   });
 
@@ -131,24 +129,22 @@ describe('URL fixer interactions', () => {
     expect(links[1].textContent).toBe('Ultrasound Guide');
     expect(links[1].getAttribute('title')).toBe('Ultrasound Guide');
     expect(titleLookup).toHaveBeenCalledWith(fixed);
-    expect(container.textContent).toContain('Save as a bookmark or shortcut');
-    expect(container.textContent).toContain('onto Edge\'s bookmarks bar');
-    expect(container.textContent).toContain('onto your desktop to create a shortcut');
+    expect(container.textContent).toContain('2. Open and confirm your new link');
+    expect(container.textContent).toContain('Select "Open New Link" and check that it takes you to the page or file you need.');
+    expect(container.textContent).toContain('3. Save your new link as a favorite or shortcut');
+    expect(container.textContent).toContain('to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite');
     expect(container.textContent).toContain('Ctrl+Shift+B');
     expect(container.textContent).toContain('Ctrl+D');
     const instructions = container.querySelector('ul#urlFixerDragInstructions');
     expect(instructions).not.toBeNull();
     const methods = Array.from(instructions?.querySelectorAll('li') || []).map((item) => item.textContent);
     expect(methods).toEqual([
-      "Bookmark by dragging: Drag the button below onto Edge's bookmarks bar. Press Ctrl+Shift+B to show the bar.",
-      'Bookmark with the keyboard: Open the updated link, then press Ctrl+D in the new tab to save it as a bookmark.',
-      'Desktop shortcut: Drag the button below onto your desktop to create a shortcut.'
+      'Drag & Drop favorite or shortcut: Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press Ctrl+Shift+B on your keyboard if you do not see the bar).',
+      'Create a favorite with the keyboard: While on the new link tab, press Ctrl+D on your keyboard to save it as a favorite in Edge.'
     ]);
-    expect(instructions?.previousElementSibling?.textContent).toBe('Save as a bookmark or shortcut');
-    expect(container.textContent).toContain('You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.');
-    expect(button('Open Updated Link').title).toBe(
-      'Opens in a new tab; after opening, press ctrl+d on your keyboard to create a favorite of this link.'
-    );
+    expect(instructions?.previousElementSibling?.textContent).toBe('3. Save your new link as a favorite or shortcut');
+    expect(container.textContent).toContain('This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.');
+    expect(button('Open New Link').title).toBe('Opens in a new tab');
   });
 
   it('keeps opening and copying the returned URL', async () => {
@@ -157,9 +153,9 @@ describe('URL fixer interactions', () => {
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
     enterUrl(original);
     await submit();
-    act(() => { Simulate.click(button('Open Updated Link')); });
+    act(() => { Simulate.click(button('Open New Link')); });
     expect(open).toHaveBeenCalledWith(fixed, '_blank', 'noopener,noreferrer');
-    await act(async () => { Simulate.click(button('Copy Updated Link')); });
+    await act(async () => { Simulate.click(button('Copy New Link')); });
     expect(writeText).toHaveBeenCalledWith(fixed);
     expect(container.textContent).toContain('Copied to clipboard!');
   });
@@ -182,8 +178,8 @@ describe('URL fixer interactions', () => {
     expect(container.querySelector('[role="status"]')?.textContent).toBe(message);
     expect(container.textContent).not.toContain('This link is already current.');
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
-    expect(button('Open Updated Link')).toBeDefined();
-    expect(button('Copy Updated Link')).toBeDefined();
+    expect(button('Open New Link')).toBeDefined();
+    expect(button('Copy New Link')).toBeDefined();
   });
 
   it('shows a URL-based name and notice when the SharePoint title is unavailable', async () => {
@@ -192,7 +188,7 @@ describe('URL fixer interactions', () => {
     await submit();
     expect(container.querySelector('a[aria-describedby="urlFixerDragInstructions"]')?.textContent).toBe('Guide.docx');
     expect(container.textContent).toContain('Title unavailable; using the URL name.');
-    expect(button('Open Updated Link')).toBeDefined();
+    expect(button('Open New Link')).toBeDefined();
   });
 
   it('does not restore cleared results when a title request finishes', async () => {
@@ -207,7 +203,7 @@ describe('URL fixer interactions', () => {
     });
     expect(textarea().value).toBe('');
     expect(container.querySelector('a')).toBeNull();
-    expect(button('Find Updated Link').disabled).toBe(false);
+    expect(button('Find New Link').disabled).toBe(false);
   });
 
   it('clears the input and result', async () => {
@@ -224,13 +220,14 @@ describe('URL fixer interactions', () => {
     const capturedInput = textarea().value;
     const before = Date.now();
     await submit();
+    expect(container.querySelector('[role="status"]')?.textContent).toBe('Your new link is ready');
     expect(log).toHaveBeenCalledTimes(1);
     expect(log).toHaveBeenCalledWith(expect.anything(), currentUser, {
       providedUrl: capturedInput,
       returnedUrl: fixed,
       bookmarkButtonName: 'Ultrasound Guide',
       outcome: 'Success',
-      message: 'Updated link ready.',
+      message: 'Your new link is ready',
       submittedAt: expect.any(String)
     });
     const loggedTime = log.mock.calls[0][2].submittedAt;
@@ -298,9 +295,9 @@ describe('URL fixer interactions', () => {
     expect(jest.mocked(Log.error).mock.calls[0][1].message).toContain('SharePoint denied access (403).');
     expect(container.querySelector('[role="alert"]')).toBeNull();
     expect(container.textContent).not.toMatch(/log|records|signed-in|403/i);
-    expect(container.querySelector('#urlFixerInstructions')?.textContent).toContain('Copy the full URL');
+    expect(textarea().getAttribute('aria-label')).toBe('SharePoint page or file URL');
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
-    expect(button('Copy Updated Link')).toBeDefined();
+    expect(button('Copy New Link')).toBeDefined();
     await submit();
     expect(log).toHaveBeenCalledTimes(2);
     expect(container.querySelector('[role="alert"]')).toBeNull();
@@ -310,11 +307,11 @@ describe('URL fixer interactions', () => {
     let resolveLookup: ((result: IFixResult) => void) | undefined;
     lookup.mockReturnValueOnce(new Promise((resolve) => { resolveLookup = resolve; }));
     enterUrl(original);
-    act(() => { Simulate.click(button('Find Updated Link')); });
+    act(() => { Simulate.click(button('Find New Link')); });
     act(() => { Simulate.click(button('Clear')); });
     await act(async () => {
       if (!resolveLookup) throw new Error('Missing pending lookup');
-      resolveLookup({ original, fixed, note: 'ok:Updated link ready.' });
+      resolveLookup({ original, fixed, note: 'ok:Your new link is ready' });
     });
     expect(log).toHaveBeenCalledTimes(1);
     expect(log.mock.calls[0][2]).toMatchObject({ providedUrl: original, returnedUrl: fixed });
@@ -328,7 +325,7 @@ describe('URL fixer interactions', () => {
     enterUrl(original);
     await submit();
     expect(container.querySelector('a')?.getAttribute('href')).toBe(fixed);
-    expect(button('Find Updated Link').disabled).toBe(false);
+    expect(button('Find New Link').disabled).toBe(false);
     await act(async () => {
       if (!rejectLog) throw new Error('Missing pending log write');
       rejectLog(new Error('Network unavailable.'));
@@ -347,8 +344,8 @@ describe('URL fixer interactions', () => {
     });
     enterUrl(original);
     await submit();
-    act(() => { Simulate.click(button('Open Updated Link')); });
-    await act(async () => { Simulate.click(button('Copy Updated Link')); });
+    act(() => { Simulate.click(button('Open New Link')); });
+    await act(async () => { Simulate.click(button('Copy New Link')); });
     act(() => { Simulate.click(button('Clear')); });
     expect(log).toHaveBeenCalledTimes(1);
   });

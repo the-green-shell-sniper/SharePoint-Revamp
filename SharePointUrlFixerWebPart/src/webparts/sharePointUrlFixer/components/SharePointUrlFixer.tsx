@@ -77,7 +77,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
       this.setState({
         results: input ? [row] : [],
         isChecking: false,
-        status: { level, message: level === 'ok' ? 'Updated link ready.' : note }
+        status: { level, message: level === 'ok' ? 'Your new link is ready' : note }
       });
     } catch (error) {
       if (requestId !== this.requestId) return;
@@ -129,15 +129,10 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
     return (
       <div className={styles.sharePointUrlFixer}>
-        <label className={styles.label} htmlFor="urlFixerInput">SharePoint page or file URL</label>
-        <p id="urlFixerInstructions" className={styles.inputInstructions}>
-          Copy the full URL from the browser&apos;s address bar, paste it here, then select <strong>Find Updated Link</strong> or press <kbd>Enter</kbd>.
-          Use the updated result to open or copy the migrated page.
-        </p>
         <textarea
           id="urlFixerInput"
           className={styles.textarea}
-          aria-describedby="urlFixerInstructions"
+          aria-label="SharePoint page or file URL"
           placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
           value={input}
           onChange={this.onInputChange}
@@ -146,10 +141,11 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         <div className={styles.primaryActions}>
           <button className={styles.button} disabled={isChecking} onClick={this.onConvert}>
-            {isChecking ? 'Finding link...' : 'Find Updated Link'}
+            {isChecking ? 'Finding link...' : 'Find New Link'}
           </button>
           <button className={styles.secondaryButton} onClick={this.onClear}>Clear</button>
         </div>
+        <br />
 
         {status && (
           <div className={this.statusClassName(status.level)} role={status.level === 'err' ? 'alert' : 'status'}>{status.message}</div>
@@ -157,25 +153,27 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
 
         {usableResult && (
           <div className={styles.resultBlock}>
+            <div className={styles.resultStep}>2. Open and confirm your new link</div>
+            <div className={styles.resultInstruction}>Select &quot;Open New Link&quot; and check that it takes you to the page or file you need.</div>
             <div className={styles.resultBox}>
               <a className={styles.resultLink} href={usableResult.fixed} draggable={true} target="_blank" rel="noreferrer">{usableResult.fixed}</a>
             </div>
             <div className={styles.resultActions}>
               <button
                 className={styles.openButton}
-                title="Opens in a new tab; after opening, press ctrl+d on your keyboard to create a favorite of this link."
+                title="Opens in a new tab"
                 onClick={() => window.open(usableResult.fixed, '_blank', 'noopener,noreferrer')}
               >
-                Open Updated Link
+                Open New Link
               </button>
-              <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy Updated Link</button>
+              <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy New Link</button>
             </div>
+            <br />
             <div className={styles.favoritesHelp}>
-              <div className={styles.favoritesHeading}>Save as a bookmark or shortcut</div>
+              <div className={styles.favoritesHeading}>3. Save your new link as a favorite or shortcut</div>
               <ul id="urlFixerDragInstructions" className={styles.favoritesInstructions}>
-                <li><strong>Bookmark by dragging:</strong> Drag the button below onto Edge&apos;s bookmarks bar. Press <kbd>Ctrl+Shift+B</kbd> to show the bar.</li>
-                <li><strong>Bookmark with the keyboard:</strong> Open the updated link, then press <kbd>Ctrl+D</kbd> in the new tab to save it as a bookmark.</li>
-                <li><strong>Desktop shortcut:</strong> Drag the button below onto your desktop to create a shortcut.</li>
+                <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
+                <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
               </ul>
               <a
                 className={styles.dragLink}
@@ -192,7 +190,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
                 <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
               )}
             </div>
-            <div className={styles.saveReminder}>You will need to manually delete any favorites, bookmarks, or shortcuts that have the old link.</div>
+            <div className={styles.saveReminder}>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</div>
           </div>
         )}
       </div>

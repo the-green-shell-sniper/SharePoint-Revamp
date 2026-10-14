@@ -1,13 +1,13 @@
 {
   "@microsoft/generator-sharepoint": {
     "whichFolder": "subdir",
-    "solutionName": "SharePointUrlFixer",
+    "solutionName": "CentralParkLinkFinder",
     "environment": "spo",
     "useGulp": false,
     "componentType": "webpart",
     "template": "react",
     "componentName": "SharePointUrlFixer",
-    "componentDescription": "SharePoint URL Fixer",
+    "componentDescription": "Central Park Link Finder",
     "plusBeta": false,
     "isCreatingSolution": true,
     "nodeVersion": "22.14.0",
@@ -16,7 +16,7 @@
     "libraryName": "share-point-url-fixer",
     "libraryId": "9ba348e3-9d0d-4d23-8e2e-0c060b45230d",
     "packageManager": "npm",
-    "solutionShortDescription": "SharePointUrlFixer description",
+    "solutionShortDescription": "Central Park Link Finder",
     "skipFeatureDeployment": true,
     "isDomainIsolated": false
   }

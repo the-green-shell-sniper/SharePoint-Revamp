@@ -18,11 +18,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Advanced
     "group": { "default": "Advanced" },
-    "title": { "default": "SharePoint URL Fixer" },
-    "description": { "default": "SharePoint URL Fixer" },
+    "title": { "default": "Central Park Link Finder" },
+    "description": { "default": "Central Park Link Finder" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "SharePoint URL Fixer"
+      "description": "Central Park Link Finder"
     }
   }]
 }

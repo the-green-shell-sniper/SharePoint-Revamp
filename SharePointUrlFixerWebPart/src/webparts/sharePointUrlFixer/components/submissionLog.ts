@@ -14,7 +14,7 @@ export interface ISubmission {
   submittedAt: string;
 }
 
-const LOG_SITE_URL = 'https://whallc.sharepoint.com/sites/SharePointLinkFixer';
+const LOG_SITE_URL = 'https://whallc.sharepoint.com/sites/CentralParkLinkFinder';
 const LOG_LIST_TITLE = 'URLFixerSubmissionLog';
 
 export async function logSubmission(
