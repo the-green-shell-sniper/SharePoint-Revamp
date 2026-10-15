@@ -7,6 +7,7 @@ export interface ISharePointUrlFixerProps {
   currentUser: ISubmissionUser;
   /** Old link passed in from the Favorites bar button; looked up automatically on load. */
   launchUrl?: string;
-  /** Address of the page hosting this web part, used to build the Favorites bar button. */
+  launchError?: string;
+  /** Published destination page used to build the Favorites bar button. */
   pageUrl?: string;
 }

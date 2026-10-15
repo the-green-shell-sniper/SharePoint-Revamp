@@ -2,399 +2,200 @@ import * as React from 'react';
 import { Log } from '@microsoft/sp-core-library';
 import styles from './SharePointUrlFixer.module.scss';
 import { ISharePointUrlFixerProps } from './ISharePointUrlFixerProps';
-import { IFixResult, LookupTableClient, lookupOrFixUrl } from './urlFixerLogic';
-import { getFavoriteTitle, IFavoriteTitle } from './favoriteTitle';
+import { LookupTableClient, lookupOrFixUrl } from './urlFixerLogic';
 import { logSubmission } from './submissionLog';
-import { buildQuickFindBookmarklet } from './quickFind';
+import { buildQuickFindBookmarklet, navigateToDestination, QUICK_FIND_PAGE_URL } from './quickFind';
 
-interface IResultRow extends IFixResult {
-  level: 'ok' | 'warn' | 'err';
-  note: string;
-  favorite?: IFavoriteTitle;
+interface IQuickFindState {
+  phase: 'setup' | 'checking' | 'ready' | 'warning' | 'error';
+  message: string;
+  destination?: string;
+  seconds: number;
+  paused: boolean;
 }
 
-interface ISharePointUrlFixerState {
-  input: string;
-  isDragOver: boolean;
-  results: IResultRow[];
-  status: { level: 'ok' | 'warn' | 'err'; message: string } | undefined;
-  isChecking: boolean;
-}
-
-export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, ISharePointUrlFixerState> {
+export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, IQuickFindState> {
+  private timer: ReturnType<typeof setInterval> | undefined;
+  private disposed = false;
   private readonly lookupClient: LookupTableClient;
-  private readonly inputRef = React.createRef<HTMLTextAreaElement>();
-  private requestId = 0;
 
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
     this.lookupClient = new LookupTableClient(props.spHttpClient, props.siteAbsoluteUrl);
-    this.state = { input: '', isDragOver: false, results: [], status: undefined, isChecking: false };
+    this.state = { phase: 'setup', message: '', seconds: 5, paused: false };
   }
-
-  private readonly onInputDragOver = (event: React.DragEvent<HTMLTextAreaElement>): void => {
-    event.preventDefault();
-    const { effectAllowed } = event.dataTransfer;
-    if (effectAllowed === 'copy' || effectAllowed === 'copyMove') {
-      event.dataTransfer.dropEffect = 'copy';
-    } else if (effectAllowed === 'move') {
-      event.dataTransfer.dropEffect = 'move';
-    } else if (effectAllowed === 'none') {
-      event.dataTransfer.dropEffect = 'none';
-    } else {
-      event.dataTransfer.dropEffect = 'link';
-    }
-    if (!this.state.isDragOver) this.setState({ isDragOver: true });
-  };
-
-  private readonly onInputDragLeave = (): void => {
-    this.setState({ isDragOver: false });
-  };
-
-  private readonly findWebUrl = (value: string): string | undefined => {
-    for (const line of value.split(/\r?\n/)) {
-      const candidate = line.replace(/^URL=/i, '').trim();
-      try {
-        const url = new URL(candidate);
-        if (url.protocol === 'http:' || url.protocol === 'https:') return candidate;
-      } catch {
-        // Ignore non-URL drag data and try the next line.
-      }
-    }
-    // Custom formats (for example browser favorites) may embed the URL in JSON or other text.
-    const match = value.match(/https?:\/\/[^\s"'<>\\]+/i);
-    return match ? match[0] : undefined;
-  };
-
-  private readonly getDroppedUrl = (dataTransfer: Pick<DataTransfer, 'getData'> & Partial<Pick<DataTransfer, 'types'>>): string | undefined => {
-    for (const type of ['text/uri-list', 'text/x-moz-url', 'text/plain']) {
-      const url = this.findWebUrl(dataTransfer.getData(type));
-      if (url) return url;
-    }
-
-    const html = dataTransfer.getData('text/html');
-    if (html) {
-      const anchor = new DOMParser().parseFromString(html, 'text/html').querySelector<HTMLAnchorElement>('a[href]');
-      if (anchor) {
-        try {
-          const url = new URL(anchor.href);
-          if (url.protocol === 'http:' || url.protocol === 'https:') return anchor.href;
-        } catch {
-          // Ignore malformed link markup.
-        }
-      }
-    }
-
-    for (const type of Array.from(dataTransfer.types ?? [])) {
-      if (type === 'Files' || type === 'text/html') continue;
-      const url = this.findWebUrl(dataTransfer.getData(type));
-      if (url) return url;
-    }
-    return undefined;
-  };
-
-  private readonly getDroppedFiles = (dataTransfer: DataTransfer): File[] => {
-    const files = Array.from(dataTransfer.files ?? []);
-    for (const item of Array.from(dataTransfer.items ?? [])) {
-      if (item.kind !== 'file') continue;
-      const file = item.getAsFile();
-      if (file && files.indexOf(file) === -1 && !files.some((existing) => existing.name === file.name && existing.size === file.size)) {
-        files.push(file);
-      }
-    }
-    return files;
-  };
-
-  private readonly onInputDrop = (event: React.DragEvent<HTMLTextAreaElement>): void => {
-    event.preventDefault();
-    this.setState({ isDragOver: false });
-
-    const droppedUrl = this.getDroppedUrl(event.dataTransfer);
-    if (droppedUrl) {
-      this.setState({ input: droppedUrl });
-      return;
-    }
-
-    const files = this.getDroppedFiles(event.dataTransfer);
-    const shortcutFile = files.find((file) => /\.url$/i.test(file.name)) ?? files.find((file) => file.size > 0 && file.size < 65536);
-    if (shortcutFile) {
-      shortcutFile.text().then((content) => {
-        const shortcutUrl = this.findWebUrl(content);
-        if (shortcutUrl) {
-          this.setState({ input: shortcutUrl });
-        } else {
-          this.setState({ status: { level: 'err', message: 'The dropped shortcut does not contain a valid web link.' } });
-        }
-      }).catch((error: unknown) => {
-        const detail = error instanceof Error ? error.message : 'Unknown file read error.';
-        this.setState({ status: { level: 'err', message: `Could not read the dropped shortcut. ${detail}` } });
-      });
-      return;
-    }
-
-    const typeList = Array.from(event.dataTransfer.types ?? []);
-    // Edge's Favorites menu only shares an internal drag ID, never the link itself.
-    if (typeList.length > 0 && typeList.every((type) => /^chromium\/x-/i.test(type))) {
-      this.setState({
-        status: {
-          level: 'err',
-          message: 'Edge doesn\'t share links dragged from the Favorites menu. Drag the favorite from your Favorites bar instead, or open the favorite and copy and paste the link from the address bar.'
-        }
-      });
-      return;
-    }
-
-    const types = typeList.join(', ') || 'none';
-    this.setState({
-      status: {
-        level: 'err',
-        message: `Could not read a link from the dropped item. Try copying and pasting the link instead. (Drop formats: ${types})`
-      }
-    });
-  };
-
-  private readonly onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    this.setState({ input: event.target.value });
-  };
-
-  private readonly resizeInput = (): void => {
-    const input = this.inputRef.current;
-    if (!input) return;
-    input.style.height = 'auto';
-    input.style.height = `${input.scrollHeight}px`;
-  };
 
   public componentDidMount(): void {
-    this.resizeInput();
-    const { launchUrl } = this.props;
-    if (launchUrl) {
-      this.setState({ input: launchUrl }, () => {
-        this.onConvert().catch(() => { /* onConvert reports its own errors */ });
+    if (this.props.launchError) {
+      this.setState({ phase: 'error', message: this.props.launchError });
+    } else if (this.props.launchUrl) {
+      this.findDestination().catch((error: unknown) => {
+        if (!this.disposed) {
+          this.setState({ phase: 'error', message: error instanceof Error ? error.message : 'Could not find the new link.' });
+        }
       });
     }
   }
-
-  // React warns about javascript: links in JSX, so the Favorites bar button's link is set directly.
-  private readonly setQuickFindButtonRef = (anchor: HTMLAnchorElement | null): void => {
-    if (anchor && this.props.pageUrl) {
-      anchor.setAttribute('href', buildQuickFindBookmarklet(this.props.pageUrl));
-    }
-  };
-
-  private readonly onQuickFindButtonClick = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    event.preventDefault();
-    this.setState({
-      status: { level: 'warn', message: 'Drag this button to your Favorites bar instead of clicking it here.' }
-    });
-  };
-
-  public componentDidUpdate(): void {
-    this.resizeInput();
-  }
-
-  private readonly onInputKeyDown = async (event: React.KeyboardEvent<HTMLTextAreaElement>): Promise<void> => {
-    if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
-      event.preventDefault();
-      await this.onConvert();
-    }
-  };
-
-  private readonly onConvert = async (): Promise<void> => {
-    if (this.state.isChecking) return;
-    const requestId = ++this.requestId;
-    const providedUrl = this.state.input;
-    const submittedAt = new Date().toISOString();
-    const input = providedUrl.trim().replace(/[\r\n]+/g, '');
-
-    this.setState({
-      results: [], isChecking: true,
-      status: { level: 'warn', message: 'Finding the updated link...' }
-    });
-
-    let result: IFixResult;
-    try {
-      result = input
-        ? await lookupOrFixUrl(input, this.lookupClient)
-        : { original: input, fixed: '', note: 'err:Paste a saved SharePoint link first.' };
-    } catch (error) {
-      result = {
-        original: input, fixed: '',
-        note: `err:${error instanceof Error ? error.message : 'Could not load the SharePoint lookup tables.'}`
-      };
-    }
-
-    const sepIndex = result.note.indexOf(':');
-    const level = result.note.slice(0, sepIndex) as 'ok' | 'warn' | 'err';
-    const note = result.note.slice(sepIndex + 1);
-    const row: IResultRow = { ...result, level, note };
-    try {
-      if (level !== 'err') {
-        row.favorite = await getFavoriteTitle(result.fixed);
-      }
-      if (requestId !== this.requestId) return;
-
-      this.setState({
-        results: input ? [row] : [],
-        isChecking: false,
-        status: { level, message: level === 'ok' ? 'Your new link is ready' : note }
-      });
-    } catch (error) {
-      if (requestId !== this.requestId) return;
-      this.setState({
-        isChecking: false,
-        status: { level: 'err', message: (error as Error).message || 'Could not load the SharePoint lookup tables.' }
-      });
-    } finally {
-      logSubmission(this.props.spHttpClient, this.props.currentUser, {
-        providedUrl,
-        returnedUrl: level === 'err' ? '' : result.fixed,
-        bookmarkButtonName: row.favorite?.title || '',
-        outcome: level === 'ok' ? 'Success' : (level === 'warn' ? 'Warning' : 'Error'),
-        message: result.lookupTableFileName ? `${note} Lookup table: ${result.lookupTableFileName}.` : note,
-        submittedAt
-      }).catch((error: unknown) => {
-        const detail = error instanceof Error ? error.message : 'Unknown logging error.';
-        Log.error('URLFixerSubmissionLog', new Error(`Submission log save was not confirmed. ${detail}`));
-      });
-    }
-  };
-
-  private readonly onClear = (): void => {
-    this.requestId++;
-    this.setState({ input: '', isDragOver: false, results: [], status: undefined, isChecking: false });
-  };
 
   public componentWillUnmount(): void {
-    this.requestId++;
+    this.disposed = true;
+    this.stopTimer();
   }
 
-  private readonly onCopyResults = (): void => {
-    const links = this.state.results.filter((r) => r.level !== 'err').map((r) => r.fixed);
-    if (links.length === 0) return;
-    navigator.clipboard.writeText(links.join('\n')).then(() => {
-      this.setState({ status: { level: 'ok', message: 'Copied to clipboard!' } });
-    }).catch(() => { /* clipboard permission denied - nothing actionable to do here */ });
+  private stopTimer(): void {
+    if (this.timer !== undefined) clearInterval(this.timer);
+    this.timer = undefined;
+  }
+
+  private async findDestination(): Promise<void> {
+    const providedUrl = this.props.launchUrl || '';
+    const submittedAt = new Date().toISOString();
+    this.setState({ phase: 'checking', message: 'Finding your new Central Park link...' });
+    const source = new URL(providedUrl);
+    if (source.hostname.toLowerCase() !== 'whallc.sharepoint.com' ||
+        (source.protocol !== 'https:' && source.protocol !== 'http:')) {
+      throw new Error('This tool only works with Central Park links on whallc.sharepoint.com.');
+    }
+    const result = await lookupOrFixUrl(providedUrl, this.lookupClient);
+    if (this.disposed) return;
+    const separator = result.note.indexOf(':');
+    const level = result.note.slice(0, separator);
+    const message = result.note.slice(separator + 1);
+    logSubmission(this.props.spHttpClient, this.props.currentUser, {
+      providedUrl, returnedUrl: level === 'err' ? '' : result.fixed, bookmarkButtonName: '',
+      outcome: level === 'ok' ? 'Success' : level === 'warn' ? 'Warning' : 'Error',
+      message: result.lookupTableFileName ? `${message} Lookup table: ${result.lookupTableFileName}.` : message,
+      submittedAt
+    }).catch((error: unknown) => {
+      Log.error('QuickFindSubmissionLog', new Error(
+        `Submission log save was not confirmed. ${error instanceof Error ? error.message : 'Unknown logging error.'}`
+      ));
+    });
+    if (level === 'err') {
+      this.setState({ phase: 'error', message });
+      return;
+    }
+    const destination = new URL(result.fixed);
+    const toolPage = new URL(this.props.pageUrl || QUICK_FIND_PAGE_URL);
+    if (destination.protocol !== 'https:' || destination.hostname.toLowerCase() !== 'whallc.sharepoint.com') {
+      throw new Error('The lookup did not return a trusted Central Park destination. Please contact the Help Desk.');
+    }
+    if (destination.origin === toolPage.origin &&
+        destination.pathname.toLowerCase() === toolPage.pathname.toLowerCase()) {
+      throw new Error('You are already on the Link Finder extension page. Open an old Central Park favorite before using Find New Link.');
+    }
+    const alreadyCurrent = level === 'warn' && /^\/sites\//i.test(source.pathname) &&
+      destination.href === source.href && /^Already has \/sites|^This link already points/.test(message);
+    if (level !== 'ok' && !alreadyCurrent) {
+      this.setState({ phase: 'warning', message, destination: destination.href });
+      return;
+    }
+    this.setState({
+      phase: 'ready', destination: destination.href,
+      message: alreadyCurrent ? 'This link is already up to date. Returning to your page.' : 'Your new link is ready.',
+      seconds: 5, paused: false
+    }, () => {
+      this.startTimer();
+    });
+  }
+
+  private startTimer(): void {
+    this.stopTimer();
+    this.timer = setInterval(() => {
+      if (this.state.seconds <= 1) this.openDestination();
+      else this.setState((state) => ({ seconds: state.seconds - 1 }));
+    }, 1000);
+  }
+
+  private readonly openDestination = (): void => {
+    this.stopTimer();
+    if (this.state.destination) {
+      try {
+        navigateToDestination(this.state.destination);
+      } catch (error: unknown) {
+        this.setState({ phase: 'error', message: error instanceof Error ? error.message : 'Could not open the new link.' });
+      }
+    }
   };
 
-  private readonly statusClassName = (level: 'ok' | 'warn' | 'err'): string => {
-    if (level === 'ok') return styles.statusOk;
-    if (level === 'warn') return styles.statusWarn;
-    return styles.statusErr;
+  private readonly togglePause = (): void => {
+    if (this.state.paused) {
+      this.setState({ paused: false });
+      this.startTimer();
+    } else {
+      this.stopTimer();
+      this.setState({ paused: true });
+    }
+  };
+
+  private readonly setButtonRef = (anchor: HTMLAnchorElement | null): void => {
+    if (anchor) anchor.setAttribute('href', buildQuickFindBookmarklet(this.props.pageUrl || QUICK_FIND_PAGE_URL));
+  };
+
+  private readonly explainDrag = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+    event.preventDefault();
+    this.setState({ message: 'Drag the Find New Link button to your Favorites bar instead of clicking it here.' });
   };
 
   public render(): React.ReactElement<ISharePointUrlFixerProps> {
-    const { input, isDragOver, results, status, isChecking } = this.state;
-    const usableResult = results.find((result) => result.level !== 'err');
-    const showFollowUpSteps = usableResult?.level === 'ok';
-
+    const { phase, message, destination, seconds, paused } = this.state;
     return (
-      <div className={styles.sharePointUrlFixer}>
-        <textarea
-          ref={this.inputRef}
-          id="urlFixerInput"
-          className={isDragOver ? `${styles.textarea} ${styles.dragOver}` : styles.textarea}
-          aria-label="SharePoint page or file URL"
-          title="Paste a URL or drag a favorite or shortcut here"
-          placeholder="https://whallc.sharepoint.com/CS/Ultrasound%20Department/..."
-          value={input}
-          onChange={this.onInputChange}
-          onKeyDown={this.onInputKeyDown}
-          onDragOver={this.onInputDragOver}
-          onDragLeave={this.onInputDragLeave}
-          onDrop={this.onInputDrop}
-        />
-
-        <div className={styles.primaryActions}>
-          <button className={styles.button} disabled={isChecking} onClick={this.onConvert}>
-            {isChecking ? 'Finding link...' : 'Find New Link'}
-          </button>
-          <button className={styles.secondaryButton} onClick={this.onClear}>Clear</button>
-        </div>
-        <br />
-
-        {status && (
-          <div className={this.statusClassName(status.level)} role={status.level === 'err' ? 'alert' : 'status'}>{status.message}</div>
-        )}
-
-        {usableResult && (
-          <div className={styles.resultBlock}>
-            {showFollowUpSteps && (
+      <main className={styles.sharePointUrlFixer}>
+        <header className={styles.pageHeader}>
+          <h1 className={styles.title}>Find New Link for Central Park</h1>
+          <p className={styles.subtitle}>Keep your saved links working after the Central Park migration.</p>
+        </header>
+        {phase === 'setup' ? (
+          <>
+            <section aria-labelledby="quickFindHowTo">
+              <h2 className={styles.favoritesHeading} id="quickFindHowTo">How it works</h2>
+              <ol className={styles.favoritesInstructions}>
+                <li>Open the old Central Park favorite or shortcut you want to update.</li>
+                <li>Select <strong>Find New Link</strong> on your Edge Favorites bar. We will find and open the new page automatically.</li>
+                <li>Confirm the new page, then press <kbd>Ctrl+D</kbd> to save it as a favorite.</li>
+              </ol>
+              <p className={styles.inputInstructions}>Works only with Central Park links on whallc.sharepoint.com. Other websites are not supported.</p>
+            </section>
+            <section className={`${styles.favoritesHelp} ${styles.quickFindSetup}`} aria-labelledby="quickFindSetup">
+              <h2 className={styles.favoritesHeading} id="quickFindSetup">One-time setup: save Find New Link</h2>
+              <p className={styles.favoritesInstructions} id="quickFindInstructions">
+                Drag the button below onto your Edge Favorites bar. If the bar is hidden, press <kbd>Ctrl+Shift+B</kbd> to show it.
+                Keep this button for whenever an old Central Park link stops working.
+              </p>
+              <div className={styles.dragLinkRow}>
+                <span className={styles.dragPrompt}>Drag to your Favorites bar <span aria-hidden="true">&rarr;</span></span>
+                <a ref={this.setButtonRef} className={styles.dragLink} draggable={true} onClick={this.explainDrag}
+                  aria-describedby="quickFindInstructions" title="Find New Link">Find New Link</a>
+              </div>
+              {message && <p role="status">{message}</p>}
+            </section>
+            <p className={styles.inputInstructions}>This tool cannot replace or delete existing favorites. Remove the old favorite yourself after saving the new one.</p>
+          </>
+        ) : (
+          <section aria-label="Link lookup">
+            <p className={phase === 'error' ? styles.statusErr : phase === 'warning' ? styles.statusWarn :
+              phase === 'checking' ? styles.status : styles.statusOk}
+              role={phase === 'error' ? 'alert' : 'status'}>{message}</p>
+            {phase === 'ready' && (
               <>
-                <div className={styles.resultStep}>2. Open and confirm your new link</div>
-                <div className={styles.resultInstruction}>Select &quot;Open New Link&quot; and check that it takes you to the page or file you need.</div>
-              </>
-            )}
-            <div className={styles.resultBox}>
-              <a className={styles.resultLink} href={usableResult.fixed} draggable={true} target="_blank" rel="noreferrer">{usableResult.fixed}</a>
-            </div>
-            <div className={styles.resultActions}>
-              <button
-                className={styles.openButton}
-                title="Opens in a new tab"
-                onClick={() => window.open(usableResult.fixed, '_blank', 'noopener,noreferrer')}
-              >
-                Open New Link
-              </button>
-              <button className={styles.secondaryButton} onClick={this.onCopyResults}>Copy New Link</button>
-            </div>
-            {showFollowUpSteps && (
-              <>
-                <br />
-                <div className={styles.favoritesHelp}>
-                  <div className={styles.favoritesHeading}>3. Save your new link as a favorite or shortcut</div>
-                  <div id="urlFixerDragInstructions">
-                    <ul className={`${styles.favoritesInstructions} ${styles.favoritesList}`}>
-                      <li><strong>Drag &amp; Drop favorite or shortcut:</strong> Drag the button below to your desktop to create a shortcut and/or to your Edge favorites bar to create a favorite (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
-                      <li><strong>Create a favorite with the keyboard:</strong> While on the new link tab, press <kbd>Ctrl+D</kbd> on your keyboard to save it as a favorite in Edge.</li>
-                    </ul>
-                  </div>
-                  <div className={styles.dragLinkRow}>
-                    <span className={styles.dragPrompt}>Drag &amp; Drop Me <span aria-hidden="true">→</span></span>
-                    <a
-                      className={styles.dragLink}
-                      href={usableResult.fixed}
-                      draggable={true}
-                      target="_blank"
-                      rel="noreferrer"
-                      title={usableResult.favorite?.title}
-                      aria-describedby="urlFixerDragInstructions"
-                    >
-                      {usableResult.favorite?.title}
-                    </a>
-                  </div>
-                  {usableResult.favorite?.notice && (
-                    <p className={styles.favoritesInstructions} role="status">{usableResult.favorite.notice}</p>
-                  )}
+                <p className={styles.saveHint}><strong>Save your new page:</strong> Once it opens, press <kbd>Ctrl+D</kbd> on your keyboard to save it as an Edge favorite.
+                  Save the destination page, not this Link Finder page.</p>
+                <p>{paused ? 'Automatic opening is paused.' : `Opening your page in ${seconds} seconds...`}</p>
+                <div className={styles.primaryActions}>
+                  <button className={styles.button} onClick={this.openDestination}>Open now</button>
+                  <button className={styles.secondaryButton} onClick={this.togglePause}>{paused ? 'Resume' : 'Pause'}</button>
                 </div>
-                <div className={styles.saveReminder}><strong>This tool cannot remove or change any of your existing saved favorites or shortcuts. You will need to manually remove any favorites or shortcuts to that no longer work.</strong></div>
               </>
             )}
-          </div>
+            {phase === 'warning' && destination && (
+              <p><a className={styles.resultLink} href={destination}>Open the unverified destination</a></p>
+            )}
+            {(phase === 'error' || phase === 'warning') && (
+              <p>For help, use the <a href="https://whallc.sharepoint.com/sites/CentralParkLinkFinder">manual Link Finder</a> or contact the Help Desk.</p>
+            )}
+          </section>
         )}
-
-        {this.props.pageUrl && (
-          <div className={`${styles.favoritesHelp} ${styles.quickFindSetup}`}>
-            <div className={styles.favoritesHeading}>Add the &quot;Find New Link&quot; button to your Favorites bar</div>
-            <ul className={`${styles.favoritesInstructions} ${styles.favoritesList}`} id="quickFindInstructions">
-              <li><strong>One-time setup:</strong> Drag the button below to your Edge Favorites bar (press <kbd>Ctrl+Shift+B</kbd> on your keyboard if you do not see the bar).</li>
-              <li><strong>Each time an old favorite doesn&apos;t work:</strong> Open the old favorite, then select &quot;Find New Link&quot; on your Favorites bar. This page opens and finds the new link for you.</li>
-            </ul>
-            <div className={styles.dragLinkRow}>
-              <span className={styles.dragPrompt}>Drag &amp; Drop Me <span aria-hidden="true">→</span></span>
-              <a
-                ref={this.setQuickFindButtonRef}
-                className={styles.dragLink}
-                draggable={true}
-                title="Find New Link"
-                aria-describedby="quickFindInstructions"
-                onClick={this.onQuickFindButtonClick}
-              >
-                Find New Link
-              </a>
-            </div>
-          </div>
-        )}
-      </div>
+      </main>
     );
   }
 }

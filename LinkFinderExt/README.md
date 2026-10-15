@@ -6,22 +6,36 @@
 
 ## Quick Find (Favorites bar button)
 
+### Full-page layout
+
+The manifest supports SharePoint full-page apps (`SharePointFullPage`). The extension
+provides its own heading, a short How it works guide, a centered responsive content column,
+and one-time Favorites bar setup instructions. It has no URL input or manual lookup form.
+Successful lookups show a **Ctrl+D** reminder and automatically open the destination in
+the same tab after five seconds. **Open now**, **Pause**, and **Resume** controls let users
+manage the countdown. Navigation replaces the intermediary history entry to avoid a Back loop.
+
 1. Build and upload `sharepoint/solution/link-finder-quick-find.sppkg` to the App Catalog,
-   then add the **Central Park Link Finder Quick Find** web part to a page (for example
-   `https://whallc.sharepoint.com/sites/CentralParkLinkFinder/SitePages/QuickFind.aspx`).
-2. The web part shows a **Find New Link** button under **Add the "Find New Link" button to
-   your Favorites bar**. Users drag it to their Edge Favorites bar once. Clicking it on the
+   then add the **Central Park Link Finder Quick Find** web part to the published page
+   `https://whallc.sharepoint.com/sites/CentralParkLinkFinder/SitePages/Link-Finder-Extension.aspx`.
+2. The web part shows a **Find New Link** button under **One-time setup: save Find New Link**.
+   Users drag it to their Edge Favorites bar once. Clicking it on the
    Quick Find page itself only shows a reminder to drag it.
 3. When an old favorite no longer works, the user opens it and then selects **Find New Link**
    on the Favorites bar. The button (a JavaScript favorite, or "bookmarklet") opens the Quick Find page
    with the current address in the `url` parameter, for example
-   `QuickFind.aspx?url=https%3A%2F%2Fwhallc.sharepoint.com%2FCS%2F...`.
-4. The web part fills in that link and looks it up automatically. Opening the page with a
-   `?url=` link from anywhere else (email, Teams, another page) works the same way. Only
-   `http`/`https` values are accepted.
+   `Link-Finder-Extension.aspx?url=https%3A%2F%2Fwhallc.sharepoint.com%2FCS%2F...`.
+4. The web part looks up that link automatically, reminds the user to press **Ctrl+D once
+   the destination opens**, then redirects. Already-current links return to the same destination.
+   Errors and unverified mappings stay on the extension page with Help Desk/manual-tool guidance;
+   unverified destinations require an explicit click. Opening with a `?url=` link from email or
+   Teams works the same way. Only Central Park links on `whallc.sharepoint.com` are supported.
 
-The button is built from the address of the page hosting the web part, so it always
-returns users to that page. If the Quick Find page moves, users need to drag the button again.
+The button targets the published `Link-Finder-Extension.aspx` page, not a temporary
+hosting or preview address. If that page moves, update `QUICK_FIND_PAGE_URL` in
+`src/webparts/sharePointUrlFixer/components/quickFind.ts` and redeploy.
+Existing favorites retain their saved destination: remove and re-add the **Find New Link**
+favorite after updating the destination.
 
 Limitations to test before rollout:
 
@@ -38,48 +52,18 @@ Limitations to test before rollout:
 SharePoint Framework web part that finds migrated WHA SharePoint URLs using
 pattern matching and SharePoint lookup tables.
 
-## Using the URL fixer
+## Saving the destination
 
-- Copy the full URL of a WHA SharePoint page or file from the browser's address bar,
-  or drag a favorite or Internet Shortcut (`.url`) onto the input box.
-- The input box expands to fit the pasted or typed URL.
-- Paste the URL into the tool and press **Enter**, or select **Find New Link**.
-- Use the updated result to open the migrated page or copy its URL. The tool processes one URL at a time.
-- External links are rejected with a red error message before any network lookup.
-- Use **Copy New Link** to copy the result, or **Open New Link** to open it in a new tab.
-- To save without opening the destination, drag the titled button in **3. Save your new link as a favorite or shortcut**
-  to Edge's favorites bar to create a favorite or your desktop to create a shortcut. It uses the SharePoint page/site title, list/library title, or
-  actual document filename (without its extension) rather than generic list-view page names
-  or document Title metadata, which can retain a template's name.
-  For document links, the current SharePoint filename takes precedence over the URL's `file` parameter.
-  Sites/subsites use their own web title; direct library/list URLs and their views
-  use that library/list's title. Folder links (including `id`/`RootFolder` view
-  links) use the folder name, not the containing library. List item display/edit
-  forms with an item ID use the item's Title, not the list title. Untitled items
-  fall back to the list name plus item ID with a lookup notice.
-  Subsite documents/pages are queried through their owning web. Metadata for
-  direct site/library/folder paths must identify that exact path before its name
-  is used; an ancestor container is not accepted as the destination.
-  If the title request fails or times out, a notice explains that the name is derived from the URL;
-  you can rename the bookmark in Edge. If the bar is hidden, press **Ctrl+Shift+B** to show it.
-  The displayed result URL is also draggable.
-- Keyboard alternative: while on the new link tab, press **Ctrl+D** on your keyboard
-  to save it as a favorite in Edge.
-- This tool cannot remove or change any of your existing saved favorites or shortcuts.
-  You will need to manually remove any favorites or shortcuts to that no longer work.
-  Dragging creates a favorite;
-  it does not find or replace an existing favorite.
-
-The web part cannot access browser favorites or trigger Edge's native favorite
-dialog. No extension is required for the drag-to-favorites workflow.
+After confirming the destination, press **Ctrl+D** to save it as an Edge favorite.
+The web part cannot display a hover prompt after leaving the extension page or trigger
+Edge's native favorite dialog. Users must remove obsolete favorites themselves.
+Use the separate original Link Finder for manual copy/paste lookups.
 
 ## Submission log
 
-The SPFx web part adds a separate list item for each **Find New Link** or
-Enter submission, including empty input, rejected URLs, lookup failures, and
-warning results. Merely viewing the page, copying/opening a result, or clearing
-the input does not create another row. Repeated submissions create separate rows.
-Clearing an in-progress lookup does not cancel its log write.
+The extension logs completed automatic lookup results, including lookup errors and warnings.
+Viewing setup instructions does not create a row. Invalid launch parameters and unsupported
+source hosts are rejected before lookup. Unexpected request failures are displayed to users.
 
 When a matching CSV row is used, `ResultMessage` appends its source filename,
 for example `Lookup table: CS-fixer.csv.` This applies to successful mappings,
@@ -87,11 +71,9 @@ mapped-link verification warnings, and matched rows marked not migrated.
 Pattern-only results and searches with no matching row do not claim a source
 table. The filename is included in the log only, not added to app messages.
 
-`BookmarkButtonName` stores the final drag/drop button label, including a
-URL-derived fallback name when metadata is unavailable. It is blank for failed
-URL submissions without a usable destination. Log creation starts after naming
-finishes so it records the same label as the button; clearing a pending submission
-does not prevent its log entry from being saved.
+`BookmarkButtonName` is blank: the extension no longer fetches a destination title or
+generates a per-result favorite button. Logging failures are reported to the browser
+console and do not block redirecting.
 
 The destination is the **URLFixerSubmissionLog** list on
 <https://whallc.sharepoint.com/sites/CentralParkLinkFinder>, even when the web part
@@ -120,7 +102,7 @@ After creating **Display Name**, you may rename its display label to **DisplayNa
 | ReturnedURL | ReturnedURL | Multiple lines of text | **Plain text**; optional; **Append changes: No** |
 | Outcome | Outcome | Choice | `Success`, `Warning`, `Error`; single selection |
 | ResultMessage | ResultMessage | Multiple lines of text | **Plain text**; **Append changes: No** |
-| BookmarkButtonName | BookmarkButtonName | Single line of text | Optional; final button label |
+| BookmarkButtonName | BookmarkButtonName | Single line of text | Blank for extension lookups |
 | SubmittedAt | SubmittedAt | Date and time | Include time |
 
 **Multiple lines of text alone is not sufficient.** SharePoint may default to
@@ -160,8 +142,8 @@ Permissions > Read items that were created by the user**. Administrators with
 Manage Lists permission can review all entries. Verify with a non-owner account;
 do not leave broad inherited Member/Edit access if the log should be restricted.
 
-The app keeps its pre-logging instructions and does not display logging notices
-or logging-failure warnings. Full URLs (including query strings), names,
+The app does not display logging notices or logging-failure warnings.
+Full URLs (including query strings), names,
 and login identifiers can contain sensitive information. Restrict list/export
 access and apply your organization's retention policy; this is a usage log, not
 a tamper-proof compliance audit.
@@ -173,14 +155,14 @@ DisplayName, Username, ProvidedURL, ReturnedURL, Outcome, ResultMessage,
 BookmarkButtonName, SubmittedAt, Created, and Created By in the export view.
 
 Build/package the web part and deploy the updated `.sppkg` through the existing
-app catalog process. With a regular user account, submit a valid old URL and an
-invalid URL, then confirm two rows with the correct identity, full input, and
-returned link (blank for the error). Also verify two simultaneous users produce
+app catalog process. With a regular user account, launch the favorite from a valid old URL
+and a Central Park URL with no migrated match, then confirm two rows with the correct
+identity, full input, and returned link (blank for the error). Also verify two simultaneous users produce
 separate rows, and that ordinary users cannot see other users' entries.
 
 If a write fails (missing list/columns, denied permission, network failure, or
 throttling), the failure is recorded using SPFx `Log.error` under
-`URLFixerSubmissionLog` for developer diagnostics, not displayed in the app.
+`QuickFindSubmissionLog` for developer diagnostics, not displayed in the app.
 Once the bookmark name is resolved, the log write runs independently and does
 not delay displaying the URL result.
 Failed/unconfirmed writes are not automatically

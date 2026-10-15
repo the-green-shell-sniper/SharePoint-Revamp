@@ -1,6 +1,7 @@
 .sharePointUrlFixer {
-  overflow: hidden;
-  padding: 4px 0 10px;
+  box-sizing: border-box;
+  padding: 40px 32px 56px;
+  margin: 0 auto;
   --fixer-primary: #96305B;
   --fixer-primary-hover: #762447;
   --fixer-accent: #DF2060;
@@ -11,7 +12,7 @@
   --fixer-font-size: 18px;
   color: var(--fixer-black);
   width: 100%;
-  max-width: 960px;
+  max-width: 1100px;
   font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
   font-size: var(--fixer-font-size);
   line-height: 1.3;
@@ -22,16 +23,22 @@
   }
 }
 
+.pageHeader {
+  margin-bottom: 32px;
+}
+
 .title {
-  margin: 0 0 6px;
+  margin: 0 0 12px;
   color: var(--fixer-primary);
-  font-size: var(--fixer-font-size);
+  font-size: 32px;
+  line-height: 1.2;
   font-weight: 600;
 }
 
 .subtitle {
   color: #4f5963;
-  margin: 0 0 24px;
+  margin: 0;
+  max-width: 70ch;
   font-size: var(--fixer-font-size);
 }
 
@@ -40,14 +47,15 @@
   font-weight: 600;
   color: var(--fixer-black);
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .inputInstructions {
   color: #4f5963;
   font-size: var(--fixer-font-size);
   line-height: 1.3;
-  margin: 0 0 8px;
+  margin: 0 0 16px;
+  max-width: 80ch;
 
   kbd {
     font-family: inherit;
@@ -118,7 +126,7 @@
 }
 
 .primaryActions {
-  margin-top: 10px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -141,7 +149,7 @@
 }
 
 .resultBlock {
-  margin-top: 10px;
+  margin-top: 24px;
 }
 
 .resultStep {
@@ -187,8 +195,8 @@
 
 .status {
   font-size: var(--fixer-font-size);
-  margin-top: 18px;
-  padding: 6px 10px;
+  margin-top: 24px;
+  padding: 12px 16px;
   border-radius: 6px;
 }
 
@@ -226,7 +234,7 @@
 }
 
 .resultActions {
-  margin-top: 8px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -250,10 +258,25 @@
 }
 
 .favoritesHelp {
-  margin-top: 24px;
-  padding: 12px;
+  margin-top: 32px;
+  padding: 24px;
   background: var(--fixer-surface);
   border-radius: 8px;
+}
+
+.saveHint {
+  margin: 24px 0 0;
+  padding: 16px 20px;
+  background: var(--fixer-surface);
+  border-left: 4px solid var(--fixer-primary);
+  border-radius: 4px;
+  line-height: 1.5;
+
+  kbd {
+    font-family: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+  }
 }
 
 .quickFindSetup {
@@ -261,18 +284,19 @@
 }
 
 .favoritesHeading {
-  font-size: var(--fixer-font-size);
+  margin: 0 0 16px;
+  font-size: 22px;
   font-weight: 600;
-  margin-bottom: 10.8px;
+  line-height: 1.3;
 }
 
 .favoritesInstructions {
   font-size: var(--fixer-font-size);
-  line-height: 1.3;
+  line-height: 1.5;
   margin: 0 0 10.8px;
 
   li + li {
-    margin-top: 8px;
+    margin-top: 16px;
   }
 
   kbd {
@@ -338,7 +362,15 @@
 
 @media (max-width: 768px) {
   .sharePointUrlFixer {
-    padding: 4px 0 10px;
+    padding: 24px 16px 40px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .favoritesHelp {
+    padding: 20px 16px;
   }
 
   .textarea {

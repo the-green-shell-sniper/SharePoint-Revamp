@@ -6,7 +6,7 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import SharePointUrlFixer from './components/SharePointUrlFixer';
 import { ISharePointUrlFixerProps } from './components/ISharePointUrlFixerProps';
-import { getLaunchUrl, getQuickFindPageUrl } from './components/quickFind';
+import { getLaunchUrl, QUICK_FIND_PAGE_URL } from './components/quickFind';
 
 export interface ISharePointUrlFixerWebPartProps {
   description: string;
@@ -25,7 +25,10 @@ export default class SharePointUrlFixerWebPart extends BaseClientSideWebPart<ISh
           displayName: this.context.pageContext.user.displayName
         },
         launchUrl: getLaunchUrl(window.location.search),
-        pageUrl: getQuickFindPageUrl(window.location)
+        launchError: new URLSearchParams(window.location.search).has('url') && !getLaunchUrl(window.location.search)
+          ? 'The favorite did not provide a valid web link. Open an old Central Park favorite and try Find New Link again.'
+          : undefined,
+        pageUrl: QUICK_FIND_PAGE_URL
       }
     );
 
