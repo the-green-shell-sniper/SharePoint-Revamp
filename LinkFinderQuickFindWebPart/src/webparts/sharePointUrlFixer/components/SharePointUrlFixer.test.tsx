@@ -138,7 +138,8 @@ describe('URL fixer interactions', () => {
     const quickFind = container.querySelector<HTMLAnchorElement>('.quickFindSetup .dragLink');
     expect(quickFind?.textContent).toBe('Find New Link');
     expect(quickFind?.getAttribute('draggable')).toBe('true');
-    expect(quickFind?.getAttribute('href')?.startsWith('javascript' + ':')).toBe(true);
+    // eslint-disable-next-line no-script-url -- the Favorites bar button is intentionally a JavaScript link
+    expect(quickFind?.getAttribute('href')?.startsWith(`javascript:`)).toBe(true);
     expect(quickFind?.getAttribute('href')).toContain('QuickFind.aspx?url=');
 
     act(() => { Simulate.click(quickFind as HTMLAnchorElement); });

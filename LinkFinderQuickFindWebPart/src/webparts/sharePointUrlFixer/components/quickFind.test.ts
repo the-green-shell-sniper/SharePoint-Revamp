@@ -12,7 +12,8 @@ describe('Quick Find helpers', () => {
     expect(getLaunchUrl('')).toBeUndefined();
     expect(getLaunchUrl('?url=')).toBeUndefined();
     expect(getLaunchUrl('?url=not-a-link')).toBeUndefined();
-    expect(getLaunchUrl(`?url=${encodeURIComponent('javascript' + ':alert(1)')}`)).toBeUndefined();
+    // eslint-disable-next-line no-script-url -- the Favorites bar button is intentionally a JavaScript link
+    expect(getLaunchUrl(`?url=${encodeURIComponent(`javascript:alert(1)`)}`)).toBeUndefined();
   });
 
   it('builds the page address without any query string or hash', () => {
@@ -24,7 +25,8 @@ describe('Quick Find helpers', () => {
 
   it('builds a Favorites bar button that sends the current page to Quick Find', () => {
     const href = buildQuickFindBookmarklet(pageUrl);
-    const prefix = 'javascript' + ':';
+    // eslint-disable-next-line no-script-url -- the Favorites bar button is intentionally a JavaScript link
+    const prefix = `javascript:`;
     expect(href.startsWith(prefix)).toBe(true);
 
     // Browsers percent-decode the link before running it.
