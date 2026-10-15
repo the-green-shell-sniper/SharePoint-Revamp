@@ -18,8 +18,8 @@ Instructions use short numbered steps; optional cleanup and help are collapsed u
 The redirect reminder shows just three actions to perform after the destination opens.
 It has no URL input or manual lookup form. The setup heading is hidden during lookup and redirect.
 On wide screens, setup and usage instructions sit side by side beneath the introduction.
-On smaller screens they stack in reading order. The app has no fixed page-width cap;
-individual introductory paragraphs retain a readable line length.
+On smaller screens they stack in reading order. Neither the page nor introductory
+paragraphs have fixed width caps; text wraps only when it fills its available space.
 Successful lookups show a **Ctrl+D** reminder and automatically open the destination in
 the same tab after ten seconds. **Open now**, **Pause**, and **Resume** controls let users
 manage the countdown. Navigation replaces the intermediary history entry to avoid a Back loop.
