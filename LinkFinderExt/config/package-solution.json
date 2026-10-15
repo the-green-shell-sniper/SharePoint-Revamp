@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Central Park Link Finder Quick Find",
+    "id": "2afb5dd7-3bb9-4a78-89e7-c31cc6b55213",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Central Park Link Finder Quick Find: opens from a Favorites bar button and finds the new link for the current page"
+      },
+      "longDescription": {
+        "default": "Central Park Link Finder Quick Find: opens from a Favorites bar button and finds the new link for the current page"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Central Park Link Finder Quick Find",
+        "description": "Activates the Central Park Link Finder Quick Find web part.",
+        "id": "71a6493f-fbf3-4183-b308-9da57367f3c8",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/link-finder-quick-find.sppkg"
+  }
+}
