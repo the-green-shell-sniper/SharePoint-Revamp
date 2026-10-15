@@ -71,10 +71,18 @@ describe('Quick Find setup and automatic navigation', () => {
     await render();
     expect(container.querySelector('textarea, input')).toBeNull();
     expect(container.querySelector('button')).toBeNull();
-    expect(container.textContent).toContain('How it works');
-    expect(container.textContent).toContain('Works only with Central Park links');
-    expect(container.textContent).toContain('Ctrl+D');
-    expect(container.textContent).toContain('Ctrl+Shift+B');
+    expect(container.querySelector('h1')?.textContent).toBe('Link Finder Extension');
+    expect(container.querySelector('header')?.textContent).toContain('For Central Park links only.');
+    expect(container.querySelector('header')?.textContent).toContain('It will not fix links to other websites.');
+    expect(container.textContent).toContain('extra option, not a replacement');
+    expect(container.textContent).toContain('For Central Park links only.');
+    expect(container.textContent).toContain('Done');
+    expect(container.textContent).toContain('Delete');
+    expect(container.textContent).toContain('left mouse button');
+    expect(container.querySelector('details')?.open).toBe(false);
+    expect(container.textContent).toContain('3. Save the new page for next time');
+    expect(container.querySelector('#quickFindUse')?.textContent).toBe('2. Use it when a Central Park link stops working');
+    expect(container.textContent).toContain('Look just below the box at the top of Edge that shows the website address.');
     expect(lookup).not.toHaveBeenCalled();
     const anchor = container.querySelector<HTMLAnchorElement>('.dragLink');
     expect(anchor?.draggable).toBe(true);
@@ -84,12 +92,15 @@ describe('Quick Find setup and automatic navigation', () => {
     expect(container.textContent).toContain('instead of clicking it here');
   });
 
-  it('automatically looks up and opens a new link after five seconds', async () => {
+  it('automatically looks up and opens a new link after ten seconds without the setup heading', async () => {
     await render(oldUrl);
     expect(lookup).toHaveBeenCalledWith(oldUrl, expect.anything());
     expect(container.textContent).toContain('Your new link is ready');
     expect(container.textContent).toContain('Ctrl+D');
-    advance(4);
+    expect(container.querySelector('h1')).toBeNull();
+    expect(container.textContent).not.toContain('Find New Link for Central Park');
+    expect(container.textContent).toContain('10 seconds');
+    advance(9);
     expect(navigate).not.toHaveBeenCalled();
     advance(1);
     expect(navigate).toHaveBeenCalledTimes(1);
@@ -107,7 +118,7 @@ describe('Quick Find setup and automatic navigation', () => {
     advance(10);
     expect(navigate).not.toHaveBeenCalled();
     click('Resume');
-    advance(3);
+    advance(8);
     expect(navigate).toHaveBeenCalledWith(newUrl);
   });
 
@@ -141,7 +152,7 @@ describe('Quick Find setup and automatic navigation', () => {
     lookup.mockResolvedValueOnce({ original: newUrl, fixed: newUrl, note: 'warn:Already has /sites — left unchanged.' });
     await render(newUrl);
     expect(container.textContent).toContain('already up to date');
-    advance(5);
+    advance(10);
     expect(navigate).toHaveBeenCalledWith(newUrl);
   });
 
@@ -203,7 +214,7 @@ describe('Quick Find setup and automatic navigation', () => {
     log.mockRejectedValueOnce(new Error('Log unavailable.'));
     await render(oldUrl);
     expect(Log.error).toHaveBeenCalledWith('QuickFindSubmissionLog', expect.any(Error));
-    advance(5);
+    advance(10);
     expect(navigate).toHaveBeenCalledWith(newUrl);
   });
 });

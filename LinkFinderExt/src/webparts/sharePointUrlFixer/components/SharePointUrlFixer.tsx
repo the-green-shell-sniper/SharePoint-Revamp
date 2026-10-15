@@ -14,6 +14,8 @@ interface IQuickFindState {
   paused: boolean;
 }
 
+const REDIRECT_SECONDS = 10;
+
 export default class SharePointUrlFixer extends React.Component<ISharePointUrlFixerProps, IQuickFindState> {
   private timer: ReturnType<typeof setInterval> | undefined;
   private disposed = false;
@@ -22,7 +24,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
   public constructor(props: ISharePointUrlFixerProps) {
     super(props);
     this.lookupClient = new LookupTableClient(props.spHttpClient, props.siteAbsoluteUrl);
-    this.state = { phase: 'setup', message: '', seconds: 5, paused: false };
+    this.state = { phase: 'setup', message: '', seconds: REDIRECT_SECONDS, paused: false };
   }
 
   public componentDidMount(): void {
@@ -93,7 +95,7 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     this.setState({
       phase: 'ready', destination: destination.href,
       message: alreadyCurrent ? 'This link is already up to date. Returning to your page.' : 'Your new link is ready.',
-      seconds: 5, paused: false
+      seconds: REDIRECT_SECONDS, paused: false
     }, () => {
       this.startTimer();
     });
@@ -141,35 +143,59 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
     const { phase, message, destination, seconds, paused } = this.state;
     return (
       <main className={styles.sharePointUrlFixer}>
-        <header className={styles.pageHeader}>
-          <h1 className={styles.title}>Find New Link for Central Park</h1>
-          <p className={styles.subtitle}>Keep your saved links working after the Central Park migration.</p>
-        </header>
         {phase === 'setup' ? (
           <>
+            <header className={styles.pageHeader}>
+              <h1 className={styles.title}>Link Finder Extension</h1>
+              <p className={styles.subtitle}>Has your usual Central Park link stopped working? Add a button to help find the new page.</p>
+              <p className={styles.saveHint}><strong>For Central Park links only.</strong> It will not fix links to other websites.</p>
+            </header>
             <section aria-labelledby="quickFindHowTo">
-              <h2 className={styles.favoritesHeading} id="quickFindHowTo">How it works</h2>
-              <ol className={styles.favoritesInstructions}>
-                <li>Open the old Central Park favorite or shortcut you want to update.</li>
-                <li>Select <strong>Find New Link</strong> on your Edge Favorites bar. We will find and open the new page automatically.</li>
-                <li>Confirm the new page, then press <kbd>Ctrl+D</kbd> to save it as a favorite.</li>
-              </ol>
-              <p className={styles.inputInstructions}>Works only with Central Park links on whallc.sharepoint.com. Other websites are not supported.</p>
+              <h2 className={styles.favoritesHeading} id="quickFindHowTo">Another way to use Link Finder</h2>
+              <p className={styles.inputInstructions}>No copying or typing needed. This is an extra option, not a replacement for the
+                original <a href="https://whallc.sharepoint.com/sites/CentralParkLinkFinder">Link Finder</a>.</p>
             </section>
             <section className={`${styles.favoritesHelp} ${styles.quickFindSetup}`} aria-labelledby="quickFindSetup">
-              <h2 className={styles.favoritesHeading} id="quickFindSetup">One-time setup: save Find New Link</h2>
-              <p className={styles.favoritesInstructions} id="quickFindInstructions">
-                Drag the button below onto your Edge Favorites bar. If the bar is hidden, press <kbd>Ctrl+Shift+B</kbd> to show it.
-                Keep this button for whenever an old Central Park link stops working.
-              </p>
+              <h2 className={styles.favoritesHeading} id="quickFindSetup">1. Add the button once</h2>
+              <ol className={styles.favoritesInstructions} id="quickFindInstructions">
+                <li>Open this page in <strong>Microsoft Edge</strong>.</li>
+                <li>Look just below the box at the top of Edge that shows the website address.
+                  The row of saved links there is the <strong>Favorites bar</strong>.
+                  If it is missing, hold <kbd>Ctrl</kbd> and <kbd>Shift</kbd>, press <kbd>B</kbd>, then let go.</li>
+                <li>On the button below, hold your <strong>left mouse button</strong> down.
+                  Move it up to that row, then let go. <strong>Drag it; do not just click it here.</strong></li>
+              </ol>
               <div className={styles.dragLinkRow}>
                 <span className={styles.dragPrompt}>Drag to your Favorites bar <span aria-hidden="true">&rarr;</span></span>
                 <a ref={this.setButtonRef} className={styles.dragLink} draggable={true} onClick={this.explainDrag}
                   aria-describedby="quickFindInstructions" title="Find New Link">Find New Link</a>
               </div>
+              <p className={styles.favoritesInstructions}><strong>Ready?</strong> You should see <strong>Find New Link</strong> in the row at the top of Edge.</p>
               {message && <p role="status">{message}</p>}
             </section>
-            <p className={styles.inputInstructions}>This tool cannot replace or delete existing favorites. Remove the old favorite yourself after saving the new one.</p>
+            <section className={styles.favoritesHelp} aria-labelledby="quickFindUse">
+              <h2 className={styles.favoritesHeading} id="quickFindUse">2. Use it when a Central Park link stops working</h2>
+              <ol className={styles.favoritesInstructions}>
+                <li>Open Central Park the way you normally do. When a Central Park link does not work, <strong>leave that page open</strong>.
+                  An error page is OK.</li>
+                <li>Click <strong>Find New Link</strong> in the row at the top of Edge.</li>
+                <li>Wait. If we find the new page, it will open automatically.</li>
+              </ol>
+              <h2 className={styles.favoritesHeading}>3. Save the new page for next time</h2>
+              <ol className={styles.favoritesInstructions}>
+                <li>Check that the new page or file is the one you need.</li>
+                <li>On that page, hold <kbd>Ctrl</kbd>, press <kbd>D</kbd>, then let go.</li>
+                <li>Click <strong>Done</strong> in the box that appears. This saves a <strong>favorite</strong>: a link you can click next time.</li>
+              </ol>
+              <details className={styles.favoritesInstructions}>
+                <summary>Need help, or want to remove an old saved link?</summary>
+                <p>If no new page is found, use the original <a href="https://whallc.sharepoint.com/sites/CentralParkLinkFinder">Link Finder</a> or contact the Help Desk.</p>
+                <p>Removing an old favorite is optional. First save and test the new one.
+                  Then open Edge&apos;s favorites list (the star-with-lines button near the top-right),
+                  right-click the old favorite, and choose <strong>Delete</strong>. If unsure, ask the Help Desk.</p>
+                <p>This tool cannot change or remove your saved favorites or desktop shortcuts.</p>
+              </details>
+            </section>
           </>
         ) : (
           <section aria-label="Link lookup">
@@ -178,8 +204,15 @@ export default class SharePointUrlFixer extends React.Component<ISharePointUrlFi
               role={phase === 'error' ? 'alert' : 'status'}>{message}</p>
             {phase === 'ready' && (
               <>
-                <p className={styles.saveHint}><strong>Save your new page:</strong> Once it opens, press <kbd>Ctrl+D</kbd> on your keyboard to save it as an Edge favorite.
-                  Save the destination page, not this Link Finder page.</p>
+                <div className={styles.saveHint}>
+                  <strong>After the new page opens:</strong>
+                  <ol className={styles.favoritesInstructions}>
+                    <li>Check that it is the page or file you need.</li>
+                    <li>Hold <kbd>Ctrl</kbd>, press <kbd>D</kbd>, then let go (<kbd>Ctrl+D</kbd>).</li>
+                    <li>Click <strong>Done</strong> to save it for next time.</li>
+                  </ol>
+                  <strong>Wait for the new page before pressing Ctrl+D.</strong>
+                </div>
                 <p>{paused ? 'Automatic opening is paused.' : `Opening your page in ${seconds} seconds...`}</p>
                 <div className={styles.primaryActions}>
                   <button className={styles.button} onClick={this.openDestination}>Open now</button>

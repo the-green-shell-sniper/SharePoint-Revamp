@@ -1,13 +1,13 @@
 {
   "@microsoft/generator-sharepoint": {
     "whichFolder": "subdir",
-    "solutionName": "CentralParkLinkFinderQuickFind",
+    "solutionName": "LinkFinderExtension",
     "environment": "spo",
     "useGulp": false,
     "componentType": "webpart",
     "template": "react",
     "componentName": "SharePointUrlFixer",
-    "componentDescription": "Central Park Link Finder Quick Find",
+    "componentDescription": "Link Finder Extension",
     "plusBeta": false,
     "isCreatingSolution": true,
     "nodeVersion": "22.14.0",
@@ -16,7 +16,7 @@
     "libraryName": "link-finder-quick-find",
     "libraryId": "2afb5dd7-3bb9-4a78-89e7-c31cc6b55213",
     "packageManager": "npm",
-    "solutionShortDescription": "Central Park Link Finder Quick Find",
+    "solutionShortDescription": "Link Finder Extension",
     "skipFeatureDeployment": true,
     "isDomainIsolated": false
   }

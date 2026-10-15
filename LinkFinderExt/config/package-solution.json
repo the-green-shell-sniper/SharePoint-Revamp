@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "Central Park Link Finder Quick Find",
+    "name": "Link Finder Extension",
     "id": "2afb5dd7-3bb9-4a78-89e7-c31cc6b55213",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
@@ -16,10 +16,10 @@
     },
     "metadata": {
       "shortDescription": {
-        "default": "Central Park Link Finder Quick Find: opens from a Favorites bar button and finds the new link for the current page"
+        "default": "Link Finder Extension: a companion to Central Park Link Finder that finds and opens new links from a Favorites bar button"
       },
       "longDescription": {
-        "default": "Central Park Link Finder Quick Find: opens from a Favorites bar button and finds the new link for the current page"
+        "default": "Link Finder Extension: a companion to Central Park Link Finder that finds and opens new links from a Favorites bar button"
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -27,8 +27,8 @@
     },
     "features": [
       {
-        "title": "Central Park Link Finder Quick Find",
-        "description": "Activates the Central Park Link Finder Quick Find web part.",
+        "title": "Link Finder Extension",
+        "description": "Activates the Link Finder Extension companion web part.",
         "id": "71a6493f-fbf3-4183-b308-9da57367f3c8",
         "version": "1.0.0.0"
       }

@@ -18,11 +18,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Advanced
     "group": { "default": "Advanced" },
-    "title": { "default": "Central Park Link Finder Quick Find" },
-    "description": { "default": "Central Park Link Finder Quick Find" },
+    "title": { "default": "Link Finder Extension" },
+    "description": { "default": "A companion to Central Park Link Finder for updating saved links" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "Central Park Link Finder Quick Find"
+      "description": "Link Finder Extension"
     }
   }]
 }

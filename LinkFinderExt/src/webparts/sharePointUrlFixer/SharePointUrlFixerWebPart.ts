@@ -48,7 +48,7 @@ export default class SharePointUrlFixerWebPart extends BaseClientSideWebPart<ISh
       pages: [
         {
           header: {
-            description: 'Central Park Link Finder Quick Find'
+            description: 'Link Finder Extension'
           },
           groups: [
             {

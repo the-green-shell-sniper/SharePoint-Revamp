@@ -1,7 +1,8 @@
-# Central Park Link Finder Quick Find
+# Link Finder Extension
 
 > This is a separate copy of the Central Park Link Finder web part (`../SharePointUrlFixerWebPart`)
 > with its own solution, feature, and web part IDs, so both can be installed side by side.
+> It is an additional way to use the original Link Finder, not a replacement.
 > It adds a **Find New Link** Favorites bar button that sends the page a user is on to this tool.
 
 ## Quick Find (Favorites bar button)
@@ -9,16 +10,24 @@
 ### Full-page layout
 
 The manifest supports SharePoint full-page apps (`SharePointFullPage`). The extension
-provides its own heading, a short How it works guide, a centered responsive content column,
-and one-time Favorites bar setup instructions. It has no URL input or manual lookup form.
+provides its own heading, a plain-language start-to-finish guide, a full-width responsive layout,
+and one-time Favorites bar setup instructions (including how to show the bar and drag the button).
+The guide covers opening an old link, using Find New Link, confirming the new page,
+saving it with Ctrl+D and Done, and removing the old favorite. It links back to the original manual tool.
+Instructions use short numbered steps; optional cleanup and help are collapsed under expandable help.
+The redirect reminder shows just three actions to perform after the destination opens.
+It has no URL input or manual lookup form. The setup heading is hidden during lookup and redirect.
+On wide screens, setup and usage instructions sit side by side beneath the introduction.
+On smaller screens they stack in reading order. The app has no fixed page-width cap;
+individual introductory paragraphs retain a readable line length.
 Successful lookups show a **Ctrl+D** reminder and automatically open the destination in
-the same tab after five seconds. **Open now**, **Pause**, and **Resume** controls let users
+the same tab after ten seconds. **Open now**, **Pause**, and **Resume** controls let users
 manage the countdown. Navigation replaces the intermediary history entry to avoid a Back loop.
 
 1. Build and upload `sharepoint/solution/link-finder-quick-find.sppkg` to the App Catalog,
-   then add the **Central Park Link Finder Quick Find** web part to the published page
+   then add the **Link Finder Extension** web part to the published page
    `https://whallc.sharepoint.com/sites/CentralParkLinkFinder/SitePages/Link-Finder-Extension.aspx`.
-2. The web part shows a **Find New Link** button under **One-time setup: save Find New Link**.
+2. The web part shows a **Find New Link** button under **First, add the button. You only do this once.**
    Users drag it to their Edge Favorites bar once. Clicking it on the
    Quick Find page itself only shows a reminder to drag it.
 3. When an old favorite no longer works, the user opens it and then selects **Find New Link**
