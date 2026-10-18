@@ -8,6 +8,7 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 - [Get-DocumentUrlLookup.ps1](Scripts/Get-DocumentUrlLookup.ps1)
 - [Get-FixItListOverviewOnly.ps1](Scripts/Get-FixItListOverviewOnly.ps1)
 - [Get-FixItListURLsv2.ps1](Scripts/Get-FixItListURLsv2.ps1)
+- [Search-PhrasesInSpreadsheets.ps1](Scripts/Search-PhrasesInSpreadsheets.ps1) - searches every CSV/Excel file under a folder tree for each phrase in a phrases CSV (exact match, then fuzzy for phrases with no exact hit) and writes the file path + row of each match to a CSV.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
