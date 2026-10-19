@@ -132,13 +132,36 @@ function Get-SPPermissionInventory {
             BaseTemplate = [int]$list.BaseTemplate; ItemCount = [int]$list.ItemCount
             Leaf = ($listKey -split '/')[-1]
         }
-        $select = 'Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Created,Title,Author/EMail'
-        $expand = 'Author'
-        if ($list.BaseType -eq 1) { $select += ',File/Length'; $expand += ',File' }
+        $fields = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
+        foreach ($field in @(Get-SPPermissionCollection $Connection ($listApi + '/fields?$select=InternalName,EntityPropertyName,TypeAsString'))) {
+            if (-not $field.InternalName -or -not $field.EntityPropertyName) { throw "Incomplete field schema in '$listKey'." }
+            $fields[$field.InternalName] = $field
+        }
+        $select = 'Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments'
+        $expansions = [Collections.Generic.List[string]]::new()
+        $optionalProperties = @{}
+        foreach ($name in @('Title', 'Created', 'Author')) {
+            if (-not $fields.ContainsKey($name)) {
+                Write-Warning "Optional matching metadata '$name' is absent in '$listKey' on '$WebUrl'; that signal will not be used."
+                continue
+            }
+            $property = [string]$fields[$name].EntityPropertyName
+            if ($name -eq 'Author') {
+                if ($fields[$name].TypeAsString -ne 'User') {
+                    Write-Warning "Author is not a single-user field in '$listKey'; author matching will not be used."
+                    continue
+                }
+                $select += ",$property/EMail"
+                $expansions.Add($property)
+            } else { $select += ",$property" }
+            $optionalProperties[$name] = $property
+        }
+        if ($list.BaseType -eq 1) { $select += ',File/Length'; $expansions.Add('File') }
+        $expandQuery = if ($expansions.Count) { '&$expand=' + ($expansions -join ',') } else { '' }
         $last = 0
         $itemCount = 0
         do {
-            $url = "$listApi/items?`$select=$select&`$expand=$expand&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
+            $url = "$listApi/items?`$select=$select$expandQuery&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
             $batch = @(Get-SPPermissionCollection $Connection $url)
             foreach ($item in $batch) {
                 $key = Get-SPPermissionRelativePath $item.FileRef $prefix
@@ -151,10 +174,12 @@ function Get-SPPermissionInventory {
                 $scopes[$key] = [pscustomobject]@{
                     Key = $key; Kind = $kind; Api = "$listApi/items($($item.Id))"
                     Unique = [bool]$item.HasUniqueRoleAssignments; Acl = $null; Id = [string]$item.Id
-                    Title = [string]$item.Title; ListKey = $listKey; Rel = $rel; Depth = ($rel -split '/').Count
+                    Title = $(if ($optionalProperties.ContainsKey('Title')) { [string]$item.($optionalProperties.Title) } else { '' })
+                    ListKey = $listKey; Rel = $rel; Depth = ($rel -split '/').Count
                     Leaf = [string]$item.FileLeafRef; FileRef = [string]$item.FileRef
                     Ext = [IO.Path]::GetExtension([string]$item.FileLeafRef).ToLowerInvariant()
-                    Created = [string]$item.Created; Author = [string]$item.Author.EMail
+                    Created = $(if ($optionalProperties.ContainsKey('Created')) { [string]$item.($optionalProperties.Created) } else { '' })
+                    Author = $(if ($optionalProperties.ContainsKey('Author')) { [string]$item.($optionalProperties.Author).EMail } else { '' })
                     Size = $(if ($kind -eq 'File' -and $null -ne $item.File.Length) { [double]$item.File.Length } else { $null })
                 }
                 $itemCount++

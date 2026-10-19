@@ -94,6 +94,10 @@ REST JSON is parsed as dictionaries to preserve SharePoint's case-distinct `Id`
 and `ID` fields, including nested item responses.
 Library file sizes are read from expanded `File/Length`, not the optional
 `File_x0020_Size` list field. Folders and ordinary list items have no file size.
+Before enumerating items, each list's field schema determines whether Title,
+Created and single-user Author metadata can be requested. Absent optional fields
+are reported as warnings and excluded from matching signals, without skipping
+the list's contents or permission scopes. Field-schema read failures still stop.
 
 Example server workflow, from the folder containing all three scripts:
 

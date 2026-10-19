@@ -149,6 +149,12 @@ try {
         function Get-SPPermissionCollection {
             param($Connection, $Url)
             if ($Url -match '/webs') { return }
+            if ($Url -match '/fields\?') {
+                foreach ($name in @('Title', 'Created', 'Author')) {
+                    [pscustomobject]@{ InternalName = $name; EntityPropertyName = $name; TypeAsString = $(if ($name -eq 'Author') { 'User' } else { 'Text' }) }
+                }
+                return
+            }
             if ($Url -match '/lists\?') {
                 return [pscustomobject]@{
                     Id = 'list'; Title = 'Docs'; BaseType = 1; BaseTemplate = 101; ItemCount = 1; HasUniqueRoleAssignments = $false
@@ -182,6 +188,12 @@ try {
                     @{ Id = 'list'; Title = 'Tasks'; BaseType = 0; BaseTemplate = 100; ItemCount = 1
                         HasUniqueRoleAssignments = $false; RootFolder = @{ ServerRelativeUrl = '/sites/source/Lists/Tasks' } }
                 ) }
+            } elseif ($Url -match '/fields\?') {
+                @{ value = @(
+                    @{ InternalName = 'Title'; EntityPropertyName = 'Title'; TypeAsString = 'Text' }
+                    @{ InternalName = 'Created'; EntityPropertyName = 'Created'; TypeAsString = 'DateTime' }
+                    @{ InternalName = 'Author'; EntityPropertyName = 'Author'; TypeAsString = 'User' }
+                ) }
             } elseif ($Url -match "lists\(guid'library'\)/items") {
                 Assert-Equal ($Url -match '\$select=[^&]*File/Length') $true
                 Assert-Equal ($Url -match '\$expand=Author,File&') $true
@@ -206,6 +218,54 @@ try {
         Assert-Equal ($null -eq $inventory['Docs/folder'].Size) $true
         Assert-Equal ($null -eq $inventory['Lists/Tasks/1_.000'].Size) $true
         Assert-Equal $inventory.Count 7
+    }
+    Test-Case 'Per-list schema omits missing Title Created and Author but retains available matching signals' {
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, [switch]$Raw, $ErrorAction)
+            $response = if ($Url -match '/_api/web\?') {
+                @{ Id = 'web'; Url = 'https://example.test/sites/source'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
+            } elseif ($Url -match '/webs\?') { @{ value = @() } }
+            elseif ($Url -match '/lists\?') {
+                @{ value = @(
+                    @{ Id = 'system'; Title = 'System'; BaseType = 1; BaseTemplate = 101; ItemCount = 1
+                        HasUniqueRoleAssignments = $false; RootFolder = @{ ServerRelativeUrl = '/sites/source/System' } }
+                    @{ Id = 'tasks'; Title = 'Tasks'; BaseType = 0; BaseTemplate = 100; ItemCount = 1
+                        HasUniqueRoleAssignments = $false; RootFolder = @{ ServerRelativeUrl = '/sites/source/Tasks' } }
+                ) }
+            } elseif ($Url -match "lists\(guid'system'\)/fields") {
+                @{ value = @(@{ InternalName = 'FileRef'; EntityPropertyName = 'FileRef'; TypeAsString = 'Text' }) }
+            } elseif ($Url -match "lists\(guid'tasks'\)/fields") {
+                @{ value = @(
+                    @{ InternalName = 'Title'; EntityPropertyName = 'ItemTitle'; TypeAsString = 'Text' }
+                    @{ InternalName = 'Created'; EntityPropertyName = 'Created'; TypeAsString = 'DateTime' }
+                    @{ InternalName = 'Author'; EntityPropertyName = 'Author'; TypeAsString = 'User' }
+                ) }
+            } elseif ($Url -match "lists\(guid'system'\)/items") {
+                if ($Url -match '\$select=[^&]*(Title|Created|Author)|\$expand=[^&]*Author') {
+                    throw "The field or property 'Title' does not exist."
+                }
+                Assert-Equal ($Url -match '\$expand=File&') $true
+                @{ value = @(@{ Id = 1; FileRef = '/sites/source/System/a.docx'; FileLeafRef = 'a.docx'
+                    FileSystemObjectType = 0; HasUniqueRoleAssignments = $true; File = @{ Length = '123' } }) }
+            } elseif ($Url -match "lists\(guid'tasks'\)/items") {
+                Assert-Equal ($Url -match '\$select=[^&]*,ItemTitle,Created,Author/EMail&') $true
+                Assert-Equal ($Url -match '\$expand=Author&') $true
+                @{ value = @(@{ Id = 1; FileRef = '/sites/source/Tasks/1_.000'; FileLeafRef = '1_.000'
+                    FileSystemObjectType = 0; HasUniqueRoleAssignments = $false; ItemTitle = 'Patient guide'
+                    Created = '2020-01-01T00:00:00Z'; Author = @{ EMail = 'author@example.test' } }) }
+            } else { throw "Unexpected request: $Url" }
+            $response | ConvertTo-Json -Depth 20 -Compress
+        }
+        $inventory = Get-SPPermissionInventory 'source' 'https://example.test/sites/source'
+        Assert-Equal $inventory.Count 5
+        Assert-Equal $inventory['System/a.docx'].Title ''
+        Assert-Equal $inventory['System/a.docx'].Created ''
+        Assert-Equal $inventory['System/a.docx'].Author ''
+        Assert-Equal $inventory['System/a.docx'].Unique $true
+        Assert-Equal $inventory['System/a.docx'].Size 123
+        Assert-Equal $inventory['Tasks/1_.000'].Title 'Patient guide'
+        Assert-Equal ([datetime]$inventory['Tasks/1_.000'].Created).Year 2020
+        Assert-Equal $inventory['Tasks/1_.000'].Author 'author@example.test'
     }
     Test-Case 'Security-trimmed or changing item counts cannot masquerade as complete enumeration' {
         function Invoke-SPPermissionRest {
