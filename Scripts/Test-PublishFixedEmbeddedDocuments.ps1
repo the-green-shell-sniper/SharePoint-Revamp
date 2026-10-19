@@ -88,7 +88,7 @@ try {
     Test-Case 'Default main execution only writes an offline plan' {
         function Connect-PnPOnline { throw 'Offline planning must not authenticate.' }
         Set-Variable -Name PlanCsv -Value $csv -Scope Script
-        $DocumentsFolder = $temp
+        Set-Variable -Name DocumentsFolder -Value $temp -Scope Script
         $OutputFolder = Join-Path $temp 'offline-output'
         Invoke-PublishFixedDocuments
         Assert-Equal @(Import-Csv -LiteralPath (Join-Path $OutputFolder 'upload-plan.csv')).Count 1
