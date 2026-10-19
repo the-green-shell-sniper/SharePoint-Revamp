@@ -92,6 +92,8 @@ be required. `-SkipPersistLoginSetup` omits cache enablement for the settings-lo
 problem described in the document-upload section; it does not clear cached tokens.
 REST JSON is parsed as dictionaries to preserve SharePoint's case-distinct `Id`
 and `ID` fields, including nested item responses.
+Library file sizes are read from expanded `File/Length`, not the optional
+`File_x0020_Size` list field. Folders and ordinary list items have no file size.
 
 Example server workflow, from the folder containing all three scripts:
 

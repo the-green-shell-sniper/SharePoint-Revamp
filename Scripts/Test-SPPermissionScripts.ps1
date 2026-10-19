@@ -168,6 +168,45 @@ try {
         Assert-Equal $desired['Visitors-login'].Id 55
         Assert-Equal $desired['Visitors-login'].Roles.Contains('Read') $true
     }
+    Test-Case 'Inventory reads File Length for library files without requiring the File_x0020_Size field' {
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, [switch]$Raw, $ErrorAction)
+            if ($Url -match 'File_x0020_Size') { throw "The field or property 'File_x0020_Size' does not exist." }
+            $response = if ($Url -match '/_api/web\?') {
+                @{ Id = 'web'; Url = 'https://example.test/sites/source'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
+            } elseif ($Url -match '/webs\?') { @{ value = @() } }
+            elseif ($Url -match '/lists\?') {
+                @{ value = @(
+                    @{ Id = 'library'; Title = 'Docs'; BaseType = 1; BaseTemplate = 101; ItemCount = 3
+                        HasUniqueRoleAssignments = $false; RootFolder = @{ ServerRelativeUrl = '/sites/source/Docs' } }
+                    @{ Id = 'list'; Title = 'Tasks'; BaseType = 0; BaseTemplate = 100; ItemCount = 1
+                        HasUniqueRoleAssignments = $false; RootFolder = @{ ServerRelativeUrl = '/sites/source/Lists/Tasks' } }
+                ) }
+            } elseif ($Url -match "lists\(guid'library'\)/items") {
+                Assert-Equal ($Url -match '\$select=[^&]*File/Length') $true
+                Assert-Equal ($Url -match '\$expand=Author,File&') $true
+                @{ value = @(
+                    @{ Id = 1; FileRef = '/sites/source/Docs/a.docx'; FileLeafRef = 'a.docx'
+                        FileSystemObjectType = 0; HasUniqueRoleAssignments = $false; File = @{ Length = '4294967296' } }
+                    @{ Id = 2; FileRef = '/sites/source/Docs/folder'; FileLeafRef = 'folder'
+                        FileSystemObjectType = 1; HasUniqueRoleAssignments = $false; File = $null }
+                    @{ Id = 3; FileRef = '/sites/source/Docs/empty.txt'; FileLeafRef = 'empty.txt'
+                        FileSystemObjectType = 0; HasUniqueRoleAssignments = $false; File = @{ Length = '0' } }
+                ) }
+            } elseif ($Url -match "lists\(guid'list'\)/items") {
+                Assert-Equal ($Url -match 'File/Length|\$expand=Author,File') $false
+                @{ value = @(@{ Id = 1; FileRef = '/sites/source/Lists/Tasks/1_.000'; FileLeafRef = '1_.000'
+                    FileSystemObjectType = 0; HasUniqueRoleAssignments = $false; Title = 'Task' }) }
+            } else { throw "Unexpected request: $Url" }
+            $response | ConvertTo-Json -Depth 20 -Compress
+        }
+        $inventory = Get-SPPermissionInventory 'source' 'https://example.test/sites/source'
+        Assert-Equal $inventory['Docs/a.docx'].Size 4294967296
+        Assert-Equal $inventory['Docs/empty.txt'].Size 0
+        Assert-Equal ($null -eq $inventory['Docs/folder'].Size) $true
+        Assert-Equal ($null -eq $inventory['Lists/Tasks/1_.000'].Size) $true
+        Assert-Equal $inventory.Count 7
+    }
     Test-Case 'Security-trimmed or changing item counts cannot masquerade as complete enumeration' {
         function Invoke-SPPermissionRest {
             [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }

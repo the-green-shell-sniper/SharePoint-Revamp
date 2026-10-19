@@ -133,11 +133,12 @@ function Get-SPPermissionInventory {
             Leaf = ($listKey -split '/')[-1]
         }
         $select = 'Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Created,Title,Author/EMail'
-        if ($list.BaseType -eq 1) { $select += ',File_x0020_Size' }
+        $expand = 'Author'
+        if ($list.BaseType -eq 1) { $select += ',File/Length'; $expand += ',File' }
         $last = 0
         $itemCount = 0
         do {
-            $url = "$listApi/items?`$select=$select&`$expand=Author&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
+            $url = "$listApi/items?`$select=$select&`$expand=$expand&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
             $batch = @(Get-SPPermissionCollection $Connection $url)
             foreach ($item in $batch) {
                 $key = Get-SPPermissionRelativePath $item.FileRef $prefix
@@ -154,7 +155,7 @@ function Get-SPPermissionInventory {
                     Leaf = [string]$item.FileLeafRef; FileRef = [string]$item.FileRef
                     Ext = [IO.Path]::GetExtension([string]$item.FileLeafRef).ToLowerInvariant()
                     Created = [string]$item.Created; Author = [string]$item.Author.EMail
-                    Size = $(if ($null -ne $item.File_x0020_Size) { [double]$item.File_x0020_Size } else { $null })
+                    Size = $(if ($kind -eq 'File' -and $null -ne $item.File.Length) { [double]$item.File.Length } else { $null })
                 }
                 $itemCount++
             }
