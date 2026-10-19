@@ -292,6 +292,34 @@ function Get-BytesSHA256 {
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($Bytes))
 }
 
+function Read-StableDocumentBackup {
+    param($Plan, $Connection)
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        $before = Get-RemoteDocumentState $Plan $Connection
+        Assert-RemoteDocumentWritable $before
+        $bytes = Get-RemoteDocumentBytes $Plan $Connection
+        $after = Get-RemoteDocumentState $Plan $Connection
+        Assert-RemoteDocumentWritable $after
+        foreach ($key in 'UniqueId','ItemId','ListId') {
+            if ($before.$key -cne $after.$key) {
+                throw "Destination identity changed while backing up $($Plan.FileRef): $key [$($before.$key)] -> [$($after.$key)]."
+            }
+        }
+        $differences = @(
+            foreach ($key in 'ETag','Author','Editor','Created','Modified') {
+                if ($before.$key -cne $after.$key) { "$key [$($before.$key)] -> [$($after.$key)]" }
+            }
+        )
+        if ($differences.Count -eq 0) {
+            return [pscustomobject]@{ State = $after; Bytes = $bytes }
+        }
+        $detail = "Destination changed while backing up $($Plan.FileRef) (attempt $attempt/3): $($differences -join '; ')"
+        if ($attempt -eq 3) { throw "$detail. No stable backup obtained; nothing uploaded." }
+        Write-Warning "$detail. Discarding this read and retrying the complete snapshot in 2 seconds."
+        Start-Sleep -Seconds 2
+    }
+}
+
 function Restore-DocumentMetadata {
     param($Plan, $Before, $Connection, [string]$ExpectedETag)
     $current = Get-RemoteDocumentState $Plan $Connection
@@ -412,13 +440,9 @@ function Invoke-PublishFixedDocuments {
                 $connections[$entry.WebUrl] = Connect-DocumentUploadSite -Url $entry.WebUrl -ApplicationId $ClientId
             }
             $connection = $connections[$entry.WebUrl]
-            $state = Get-RemoteDocumentState $entry $connection
-            Assert-RemoteDocumentWritable $state
-            $bytes = Get-RemoteDocumentBytes $entry $connection
-            $again = Get-RemoteDocumentState $entry $connection
-            if ($state.ETag -cne $again.ETag -or $state.UniqueId -ne $again.UniqueId) {
-                throw "Destination changed while backing up: $($entry.FileRef)"
-            }
+            $snapshot = Read-StableDocumentBackup $entry $connection
+            $state = $snapshot.State
+            $bytes = $snapshot.Bytes
             $backup = Join-Path (Join-Path $output 'remote-backups') $entry.RelativeFile
             New-Item -ItemType Directory -Path (Split-Path -Parent $backup) -Force | Out-Null
             [IO.File]::WriteAllBytes($backup, $bytes)

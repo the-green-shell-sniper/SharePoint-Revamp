@@ -171,6 +171,52 @@ try {
     $script:metadataFailure = $false
     function Get-RemoteDocumentState { param($Plan, $Connection) return $script:remote }
     function Get-RemoteDocumentBytes { param($Plan, $Connection) return ,$script:remoteBytes }
+    Test-Case 'Stable backup retries a changed snapshot and returns only stable bytes' {
+        $script:reads = 0
+        $script:downloads = 0
+        function Start-Sleep { param($Seconds) Assert-Equal $Seconds 2 }
+        function Get-RemoteDocumentState {
+            param($Plan, $Connection)
+            $script:reads++
+            $s = New-TestState
+            if ($script:reads -ge 2) { $s.ETag = '"2"' }
+            return $s
+        }
+        function Get-RemoteDocumentBytes {
+            param($Plan, $Connection)
+            $script:downloads++
+            return ,[Text.Encoding]::UTF8.GetBytes("download-$script:downloads")
+        }
+        $snapshot = Read-StableDocumentBackup $plan 'connection'
+        Assert-Equal $script:reads 4
+        Assert-Equal ([Text.Encoding]::UTF8.GetString($snapshot.Bytes)) 'download-2'
+        Assert-Equal $snapshot.State.ETag '"2"'
+    }
+    Test-Case 'Persistently changing backup fails after three reads with diagnostics' {
+        $script:reads = 0
+        function Start-Sleep { param($Seconds) }
+        function Get-RemoteDocumentState {
+            param($Plan, $Connection)
+            $script:reads++
+            $s = New-TestState
+            $s.ETag = [string]$script:reads
+            return $s
+        }
+        Assert-Throws { Read-StableDocumentBackup $plan 'connection' } 'attempt 3/3.*ETag.*No stable backup'
+        Assert-Equal $script:reads 6
+    }
+    Test-Case 'Backup rejects identity changes without retrying' {
+        $script:reads = 0
+        function Get-RemoteDocumentState {
+            param($Plan, $Connection)
+            $script:reads++
+            $s = New-TestState
+            $s.UniqueId = [string]$script:reads
+            return $s
+        }
+        Assert-Throws { Read-StableDocumentBackup $plan 'connection' } 'identity changed'
+        Assert-Equal $script:reads 2
+    }
     function Send-ConditionalDocumentContent {
         param($Plan, $Current)
         $script:uploads++

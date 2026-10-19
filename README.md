@@ -87,6 +87,11 @@ and does not change the document's internal Office author properties.
 
 Every target must already exist. The script never creates folders or files at
 missing destinations. Complete preflight for all files must pass before any upload.
+Each backup must have matching identity, ETag, author/editor and timestamps before
+and after downloading. A changing ETag or metadata causes the entire read to be
+discarded and retried, at most three times with two-second pauses. Warnings show
+the differing values; persistent changes fail preflight. Identity changes and
+locks fail immediately. These retries perform no remote writes and do not retry uploads.
 Checked-out/locked targets, required check-out, content approval, minor/draft versions,
 and retention-labelled files are refused rather than bypassing their workflows.
 Subfolder URLs and library `Forms/AllItems.aspx` URLs are resolved from the workbook;
