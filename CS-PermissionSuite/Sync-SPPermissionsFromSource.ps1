@@ -349,6 +349,12 @@ function Invoke-SyncSPPermissionsFromSource {
                     Detail = "$side - $($scope.InventoryCountReview)"
                 })
             }
+            foreach ($scope in $inventory.Values | Where-Object { $_.InventoryReadReview }) {
+                $log.Add([pscustomobject]@{
+                    Path = $scope.Key; Action = 'PnP inventory fallback'; Result = 'Review'
+                    Detail = "$side - $($scope.InventoryReadReview)"
+                })
+            }
         }
         $scopeMatches = Get-SPPermissionMatches $source $target $MatchFile $SourceUrl $TargetUrl
         $inventoryRows = @(

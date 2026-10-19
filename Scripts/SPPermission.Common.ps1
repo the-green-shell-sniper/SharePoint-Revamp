@@ -42,7 +42,7 @@ function Invoke-SPPermissionRest {
                 Start-Sleep -Seconds ([math]::Min(120, 5 * [math]::Pow(2, $attempt)))
                 continue
             }
-            throw
+            throw [InvalidOperationException]::new("SharePoint $Method failed at '$Url': $($_.Exception.Message)", $_.Exception)
         }
     }
 }
@@ -91,6 +91,38 @@ function Get-SPPermissionRelativePath {
         throw "Object path '$FileRef' is outside web '$Prefix'."
     }
     $FileRef.Substring($Prefix.Length).TrimStart('/')
+}
+
+function Get-SPPermissionPnPItems {
+    param($Connection, $List, $Fields, [int]$PageSize)
+    $names = @('ID') + @($Fields.Keys | Where-Object {
+        $_ -in @('FileRef', 'FileLeafRef', 'FSObjType', 'Title', 'Created', 'Author', 'File_x0020_Size')
+    })
+    $viewFields = (@($names | Sort-Object -Unique | ForEach-Object {
+        "<FieldRef Name='{0}'/>" -f [Security.SecurityElement]::Escape($_)
+    }) -join '')
+    $query = "<View Scope='RecursiveAll'><ViewFields>$viewFields</ViewFields><RowLimit Paged='TRUE'>$PageSize</RowLimit></View>"
+    foreach ($item in @(Get-PnPListItem -List $List.Id -Query $query -PageSize $PageSize -Connection $Connection -ErrorAction Stop)) {
+        $unique = Get-PnPProperty -ClientObject $item -Property HasUniqueRoleAssignments -Connection $Connection -ErrorAction Stop
+        if ($null -eq $unique) { throw "PnP inheritance state missing for list '$($List.Title)', item $($item.Id)." }
+        $values = $item.FieldValues
+        $result = @{
+            Id = $item.Id; FileRef = $values['FileRef']; FileLeafRef = $values['FileLeafRef']
+            FileSystemObjectType = $values['FSObjType']; HasUniqueRoleAssignments = [bool]$unique
+            File = $null
+        }
+        if ($null -eq $result.FileSystemObjectType) { throw "PnP object kind missing for '$($List.Title)', item $($item.Id)." }
+        foreach ($name in @('Title', 'Created', 'Author')) {
+            if (-not $Fields.ContainsKey($name)) { continue }
+            $value = $values[$name]
+            if ($name -eq 'Author') { $value = @{ EMail = $(if ($value) { $value.Email } else { '' }) } }
+            $result[[string]$Fields[$name].EntityPropertyName] = $value
+        }
+        if ($Fields.ContainsKey('File_x0020_Size') -and $null -ne $values['File_x0020_Size']) {
+            $result.File = @{ Length = $values['File_x0020_Size'] }
+        }
+        $result
+    }
 }
 
 function Get-SPPermissionInventory {
@@ -161,9 +193,18 @@ function Get-SPPermissionInventory {
         $last = 0
         $itemCount = 0
         $restIds = [Collections.Generic.HashSet[int]]::new()
+        $usedPnP = $false
         do {
             $url = "$listApi/items?`$select=$select$expandQuery&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
-            $batch = @(Get-SPPermissionCollection $Connection $url)
+            try {
+                $batch = @(Get-SPPermissionCollection $Connection $url)
+            } catch {
+                if ($last -ne 0 -or $_.Exception.Message -notmatch "Column 'ContentTypeId' does not exist") { throw }
+                Write-Warning "REST item expansion failed for '$listKey' on '$WebUrl': $($_.Exception.Message). Using recursive PnP field-value enumeration and explicit inheritance reads."
+                $batch = @(Get-SPPermissionPnPItems $Connection $list $fields $PageSize | Sort-Object { [int]$_.Id })
+                $usedPnP = $true
+                $scopes[$listKey] | Add-Member -NotePropertyName InventoryReadReview -NotePropertyValue 'REST ContentTypeId failure; enumerated using recursive PnP and explicit inheritance reads. File sizes are available only where the size field exists.'
+            }
             foreach ($item in $batch) {
                 $key = Get-SPPermissionRelativePath $item.FileRef $prefix
                 if (-not (Test-SPPermissionPathWithin $key $listKey) -or $key -ieq $listKey -or
@@ -181,7 +222,7 @@ function Get-SPPermissionInventory {
                     Ext = [IO.Path]::GetExtension([string]$item.FileLeafRef).ToLowerInvariant()
                     Created = $(if ($optionalProperties.ContainsKey('Created')) { [string]$item.($optionalProperties.Created) } else { '' })
                     Author = $(if ($optionalProperties.ContainsKey('Author')) { [string]$item.($optionalProperties.Author).EMail } else { '' })
-                    Size = $(if ($kind -eq 'File' -and $null -ne $item.File.Length) { [double]$item.File.Length } else { $null })
+                    Size = $(if ($kind -eq 'File' -and $null -ne $item.File -and $null -ne $item.File.Length) { [double]$item.File.Length } else { $null })
                 }
                 $itemCount++
                 if (-not $restIds.Add([int]$item.Id)) { throw "Duplicate item ID in '$listKey'." }
@@ -191,7 +232,7 @@ function Get-SPPermissionInventory {
                 if ($newLast -le $last) { throw "Item pagination did not advance in '$listKey'." }
                 $last = $newLast
             }
-        } while ($batch.Count -ge $PageSize)
+        } while (-not $usedPnP -and $batch.Count -ge $PageSize)
         if ($itemCount -ne [int]$list.ItemCount) {
             $query = "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='ID'/></ViewFields><RowLimit Paged='TRUE'>$PageSize</RowLimit></View>"
             $pnpIds = [Collections.Generic.HashSet[int]]::new()
@@ -201,7 +242,8 @@ function Get-SPPermissionInventory {
             if (-not $restIds.SetEquals($pnpIds)) {
                 throw "Inventory disagreement for '$listKey': REST read $itemCount items, recursive PnP read $($pnpIds.Count); list reports $($list.ItemCount). No permission changes may use this inventory."
             }
-            $detail = "Reported count $($list.ItemCount); REST and recursive PnP agree on all $itemCount item IDs. Visibility is limited to the signed-in account."
+            $readMethod = if ($usedPnP) { 'Recursive PnP reads' } else { 'REST and recursive PnP' }
+            $detail = "Reported count $($list.ItemCount); $readMethod agree on all $itemCount item IDs. Visibility is limited to the signed-in account."
             $scopes[$listKey] | Add-Member -NotePropertyName InventoryCountReview -NotePropertyValue $detail
             Write-Warning "Count discrepancy in '$listKey' on '$WebUrl': $detail"
         }

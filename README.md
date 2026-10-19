@@ -39,6 +39,13 @@ flagged for review, not explained away or used to authorize permission changes.
 Read failures are saved and cause an explicit failed result. The sync's current
 inventory now cross-checks live recursive PnP item IDs when REST differs from the
 reported count. ID disagreement or a failed verification read stops the run.
+If the initial REST item query specifically fails with `Column 'ContentTypeId'
+does not exist`, that list uses the scout's recursive PnP field-value enumeration
+and explicit inheritance reads instead. This fallback is warned and recorded in
+snapshots and sync log Review rows, not silently skipped. It does not handle
+authorization errors or resume a partially read REST list. Without a size field,
+file content comparison is unavailable for that list. REST errors include the
+failed URL to identify the exact list/query.
 Offline tests: `.\Scripts\Test-CSPermissionScout.ps1`.
 
 #### Scouting the remaining checklist sites
