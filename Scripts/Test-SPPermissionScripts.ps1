@@ -267,7 +267,7 @@ try {
         Assert-Equal ([datetime]$inventory['Tasks/1_.000'].Created).Year 2020
         Assert-Equal $inventory['Tasks/1_.000'].Author 'author@example.test'
     }
-    Test-Case 'Security-trimmed or changing item counts cannot masquerade as complete enumeration' {
+    Test-Case 'Count discrepancy requires live PnP ID agreement and reports the limited-visibility caveat' {
         function Invoke-SPPermissionRest {
             [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
         }
@@ -282,7 +282,20 @@ try {
             }
             return
         }
-        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'Incomplete or changing inventory'
+        function Get-PnPListItem {
+            param($List, $Query, $PageSize, $Connection, $ErrorAction)
+            Assert-Equal $List 'list'
+            Assert-Equal $Connection 'source'
+            Assert-Equal ($Query -match "Scope='RecursiveAll'") $true
+            [pscustomobject]@{ Id = 1 }
+        }
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'Inventory disagreement'
+        function Get-PnPListItem { return }
+        $inventory = Get-SPPermissionInventory 'source' 'https://example.test'
+        Assert-Equal $inventory.Count 2
+        Assert-Equal ($inventory['Docs'].InventoryCountReview -match 'agree on all 0 item IDs') $true
+        function Get-PnPListItem { throw 'MOCK PnP read denied' }
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'MOCK PnP read denied'
     }
     Test-Case 'Missing principal blocks all removals but allows available additions' {
         $desired = New-TestDesired 'missing'

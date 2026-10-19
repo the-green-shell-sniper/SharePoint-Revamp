@@ -37,7 +37,8 @@ subsites or change permissions. Timestamped `Reports\PermissionsReports\CS-Permi
 `Lists.csv`, `Fields.csv`, `Items.csv`, and `Errors.csv`. Count discrepancies are
 flagged for review, not explained away or used to authorize permission changes.
 Read failures are saved and cause an explicit failed result. The sync's current
-count safety check remains unchanged pending evidence from this scout.
+inventory now cross-checks live recursive PnP item IDs when REST differs from the
+reported count. ID disagreement or a failed verification read stops the run.
 Offline tests: `.\Scripts\Test-CSPermissionScout.ps1`.
 
 #### Scouting the remaining checklist sites
@@ -226,9 +227,12 @@ mapped target root; cross-site migrations cannot recreate source parent inherita
   treated as success. Dry-run picker misses are predictions; Apply uses EnsureUser
   and may legitimately produce a different plan. Apply may add target Site Users
   entries during preflight. Authorization, service and unknown resolution errors stop.
-- Complete inventory/ACL reads, item counts matching each list's reported count,
-  and matching permission-level **names and bitmasks** are required. Count mismatches
-  stop the run rather than accepting security-trimmed/changing inventories.
+- Complete inventory/ACL reads and matching permission-level **names and bitmasks**
+  are required. A reported count mismatch triggers a fresh recursive PnP ID read.
+  Only exact agreement with the REST ID set allows continued planning; disagreements
+  and failed reads stop. Count discrepancies remain warnings and sync log Review rows.
+  Both enumerators can be security-trimmed: agreement is not proof of unrestricted
+  visibility. Run as an account authorized to see/manage every selected scope.
   Permission levels are not created or silently substituted. Immediate subwebs are
   recorded as permission boundaries; the parent pair does not synchronize their
   roots/content directly. The CS/checklist runner processes matched webs separately.
