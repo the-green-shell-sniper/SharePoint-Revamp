@@ -250,17 +250,42 @@ function Get-RemoteDocumentState {
     Get-PnPProperty -ClientObject $item -Property ParentList -Connection $Connection | Out-Null
     $list = $item.ParentList
     Get-PnPProperty -ClientObject $list -Property Id,ForceCheckout,EnableModeration -Connection $Connection | Out-Null
-    $fields = $item.FieldValues
-    foreach ($name in 'Author','Editor','Created','Modified') {
-        if ($null -eq $fields[$name]) { throw "Destination has no $name value: $($Plan.FileRef)" }
-    }
+    $system = Get-RemoteSystemMetadata ([string]$list.Id) ([int]$item.Id) $Connection
     return [pscustomobject]@{
         File = $file; Item = $item; List = $list
         UniqueId = [string]$file.UniqueId; ETag = [string]$file.ETag
         ItemId = [int]$item.Id; ListId = [string]$list.Id
-        Author = [int]$fields['Author'].LookupId; Editor = [int]$fields['Editor'].LookupId
-        Created = ConvertTo-SharePointTimestamp $fields['Created']
-        Modified = ConvertTo-SharePointTimestamp $fields['Modified']
+        Author = $system.Author; Editor = $system.Editor
+        Created = $system.Created; Modified = $system.Modified
+    }
+}
+
+function Get-RemoteSystemMetadata {
+    param([string]$ListId, [int]$ItemId, $Connection)
+    $endpoint = "/_api/web/lists(guid'$ListId')/items($ItemId)?`$select=Id,Created,Modified,AuthorId,EditorId"
+    $fields = Invoke-PnPSPRestMethod -Url $endpoint -Method Get -Connection $Connection -ErrorAction Stop
+    if ([int]$fields.Id -ne $ItemId -or [int]$fields.AuthorId -le 0 -or [int]$fields.EditorId -le 0) {
+        throw 'REST metadata returned missing or inconsistent item/user IDs.'
+    }
+    $dates = @{}
+    foreach ($key in 'Created','Modified') {
+        $value = $fields.$key
+        if ($value -is [datetime]) {
+            if ($value.Kind -eq [DateTimeKind]::Unspecified) {
+                throw "REST $key has no timezone; refusing to infer UTC."
+            }
+            $dates[$key] = $value.ToUniversalTime().ToString('o')
+        } else {
+            if ([string]$value -notmatch '(Z|[+-]\d{2}:\d{2})$') {
+                throw "REST $key has no explicit timezone; refusing to infer UTC."
+            }
+            $date = [datetimeoffset]::Parse([string]$value, [cultureinfo]::InvariantCulture)
+            $dates[$key] = $date.UtcDateTime.ToString('o')
+        }
+    }
+    return [pscustomobject]@{
+        Author = [int]$fields.AuthorId; Editor = [int]$fields.EditorId
+        Created = $dates.Created; Modified = $dates.Modified
     }
 }
 
@@ -338,6 +363,8 @@ function Restore-DocumentMetadata {
     if ((Get-BytesSHA256 (Get-RemoteDocumentBytes $Plan $Connection)) -ne $Plan.SHA256) {
         throw 'Remote bytes differ from the planned upload; refusing to restore potentially stale metadata.'
     }
+    $changedFields = @('Author','Editor','Created','Modified' | Where-Object { $current.$_ -cne $Before.$_ })
+    if ($changedFields.Count -eq 0) { return }
     Set-DocumentMetadataValues $current @{
         Author = [string]$Before.Author; Editor = [string]$Before.Editor
         Created = [datetime]::Parse($Before.Created, [cultureinfo]::InvariantCulture).ToUniversalTime()
@@ -353,7 +380,7 @@ function Restore-DocumentMetadata {
 
 function Set-DocumentMetadataValues {
     param($Current, [hashtable]$Values)
-    # Assign UTC DateTimes directly; PnP's value conversion shifted them to server local time.
+    # Send UTC values directly; verify via REST rather than timezone-less CSOM field values.
     foreach ($key in 'Author','Editor') {
         $user = [Microsoft.SharePoint.Client.FieldUserValue]::new()
         $user.LookupId = [int]$Values[$key]

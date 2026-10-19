@@ -141,9 +141,12 @@ or `-Apply`. Use a new output directory; success writes `metadata-recovery.json`
   -OutputFolder "$work\UploadRuns\metadata-recovery-unique-name"
 ```
 
-This also repairs timestamps shifted by the initial uploader's PnP DateTime
-conversion on a non-UTC server. The current writer avoids that conversion by
-sending UTC DateTime values directly through CSOM. After recovery succeeds, a
+The initial verifier incorrectly treated timezone-less CSOM field dates as UTC;
+site-local representations could therefore report a false timestamp mismatch.
+The current script reads Author/Editor IDs and explicit UTC timestamps through
+SharePoint REST for both capture and verification, and sends UTC DateTime values
+directly through CSOM for writes. Recovery always uses the saved baseline rather
+than guessing an offset or adding hours. After recovery succeeds, a
 fresh `-Apply` run can safely skip already-identical content and process the rest.
 
 Offline tests (no SharePoint connection):

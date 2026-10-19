@@ -24,6 +24,30 @@ function Test-Case([string]$Name, [scriptblock]$Action) {
 $temp = Join-Path ([IO.Path]::GetTempPath()) ('wha-upload-tests-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
+    Test-Case 'REST metadata preserves explicit winter and summer UTC dates' {
+        function Invoke-PnPSPRestMethod {
+            param($Url, $Method, $Connection, $ErrorAction)
+            Assert-Equal $Method 'Get'
+            return [pscustomobject]@{
+                Id = 22; AuthorId = 100; EditorId = 249
+                Created = '2023-12-05T10:27:56Z'; Modified = '2024-07-08T15:12:21Z'
+            }
+        }
+        $s = Get-RemoteSystemMetadata '9d3531ea-1546-4827-ba72-ad0a5b77d11a' 22 'connection'
+        Assert-Equal $s.Created '2023-12-05T10:27:56.0000000Z'
+        Assert-Equal $s.Modified '2024-07-08T15:12:21.0000000Z'
+        Assert-Equal $s.Author 100
+    }
+    Test-Case 'REST metadata refuses timezone-less timestamps' {
+        function Invoke-PnPSPRestMethod {
+            param($Url, $Method, $Connection, $ErrorAction)
+            return [pscustomobject]@{
+                Id = 22; AuthorId = 100; EditorId = 249
+                Created = '2023-12-05T02:27:56'; Modified = '2024-07-08T08:12:21'
+            }
+        }
+        Assert-Throws { Get-RemoteSystemMetadata 'list' 22 'connection' } 'no explicit timezone'
+    }
     Test-Case 'Library view resolves without Forms/AllItems.aspx' {
         $d = Resolve-UploadDestination 'https://whallc.sharepoint.com/sites/Epic/Tip%20Sheets/Forms/AllItems.aspx' 'Guide.pdf'
         Assert-Equal $d.FileRef '/sites/Epic/Tip Sheets/Guide.pdf'
