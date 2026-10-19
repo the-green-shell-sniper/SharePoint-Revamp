@@ -1,0 +1,46 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Collections.Hashtable</T>
+      <T>System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">TargetUrl</S>
+        <S N="Value">https://whallc.sharepoint.com/sites/ClinicalandPatientServices</S>
+      </En>
+      <En>
+        <S N="Key">Tenant</S>
+        <S N="Value"></S>
+      </En>
+      <En>
+        <S N="Key">ClientId</S>
+        <S N="Value">2e20d82f-56ba-418e-b465-9718493f0df8</S>
+      </En>
+      <En>
+        <S N="Key">OutputFolder</S>
+        <S N="Value">C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermissionsReports\PermissionQueue\Queue-20261019-135949-254\ClinicalandPatientServices-E86E6768733F</S>
+      </En>
+      <En>
+        <S N="Key">NoContent</S>
+        <B N="Value">false</B>
+      </En>
+      <En>
+        <S N="Key">SourceUrl</S>
+        <S N="Value">https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS</S>
+      </En>
+      <En>
+        <S N="Key">ChecklistFile</S>
+        <S N="Value">C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\ReferenceFiles\NewSiteChecklist.csv</S>
+      </En>
+      <En>
+        <S N="Key">ReviewRoot</S>
+        <S N="Value">C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermissionsReports\PermissionReviews\ClinicalandPatientServices-E86E6768733F</S>
+      </En>
+      <En>
+        <S N="Key">SkipPersistLoginSetup</S>
+        <B N="Value">false</B>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

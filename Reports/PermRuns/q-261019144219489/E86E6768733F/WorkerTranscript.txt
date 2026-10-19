@@ -1,0 +1,50 @@
+**********************
+PowerShell transcript start
+Start time: 20261019144221
+Username: WHA\!bposey
+RunAs User: WHA\!bposey
+Configuration Name: 
+Machine: WHAITAPP09 (Microsoft Windows NT 10.0.14393.0)
+Host Application: C:\Program Files\PowerShell\7\pwsh.dll -NoLogo -NoProfile -NoExit -EncodedCommand JgAgACcAQwA6AFwAVQBzAGUAcgBzAFwAIQBiAHAAbwBzAGUAeQBcAEQAZQBzAGsAdABvAHAAXABHAGkAdABIAHUAYgBcAFMAaABhAHIAZQBQAG8AaQBuAHQALQBSAGUAdgBhAG0AcABcAEMAUwAtAFAAZQByAG0AaQBzAHMAaQBvAG4AUwB1AGkAdABlAFwASQBuAHYAbwBrAGUALQBTAFAAUABlAHIAbQBpAHMAcwBpAG8AbgBRAHUAZQB1AGUALgBwAHMAMQAnACAALQBXAG8AcgBrAGUAcgBKAG8AYgBGAGkAbABlACAAJwBDADoAXABVAHMAZQByAHMAXAAhAGIAcABvAHMAZQB5AFwARABlAHMAawB0AG8AcABcAEcAaQB0AEgAdQBiAFwAUwBoAGEAcgBlAFAAbwBpAG4AdAAtAFIAZQB2AGEAbQBwAFwAUgBlAHAAbwByAHQAcwBcAFAAZQByAG0AUgB1AG4AcwBcAHEALQAyADYAMQAwADEAOQAxADQANAAyADEAOQA0ADgAOQBcAEUAOAA2AEUANgA3ADYAOAA3ADMAMwBGAFwAVwBvAHIAawBlAHIASgBvAGIALgBjAGwAaQB4AG0AbAAnAA==
+Process ID: 4736
+PSVersion: 7.4.3
+PSEdition: Core
+GitCommitId: 7.4.3
+OS: Microsoft Windows 10.0.14393
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+[Auto] https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS -> https://whallc.sharepoint.com/sites/ClinicalandPatientServices
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/masterpage' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'Pages' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS'; that signal will not be used.
+WARNING: Count discrepancy in 'SitePages' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS': Reported count 5; REST and recursive PnP agree on all 4 item IDs. Visibility is limited to the signed-in account.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/appfiles' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'IWConvertedForms' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/lt' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'Pages' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/solutions' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/theme' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+PS>TerminatingError(Invoke-PnPSPRestMethod): "The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+>> TerminatingError(): "SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+>> TerminatingError(): "SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+WARNING: REST item expansion failed for '_catalogs/users' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices': SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}. Using recursive PnP field-value enumeration and explicit inheritance reads.
+WARNING: Count discrepancy in '_catalogs/users' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices': Reported count 417; Recursive PnP reads agree on all 401 item IDs. Visibility is limited to the signed-in account.
+Proposed pairs: 64; unmatched objects: 1016. ALL proposals require approval.
+Review: C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermRuns\q-261019144219489\E86E6768733F\w-E86E6768733F\Match\PermMatch_Review_20261019-144223-943.csv
+WARNING: Existing C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermissionsReports\PermissionReviews\ClinicalandPatientServices-E86E6768733F\ClinicalandPatientServices-E86E6768733F\MatchReview.csv retained. Fresh candidates: C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermRuns\q-261019144219489\E86E6768733F\w-E86E6768733F\Match\PermMatch_Review_20261019-144223-943.csv
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/masterpage' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'Pages' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS'; that signal will not be used.
+WARNING: Count discrepancy in 'SitePages' on 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS': Reported count 5; REST and recursive PnP agree on all 4 item IDs. Visibility is limited to the signed-in account.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/appfiles' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'IWConvertedForms' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/lt' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in 'Pages' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/solutions' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+WARNING: Optional matching metadata 'Title' is absent in '_catalogs/theme' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'; that signal will not be used.
+PS>TerminatingError(Invoke-PnPSPRestMethod): "The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+>> TerminatingError(): "SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+>> TerminatingError(): "SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}"
+WARNING: REST item expansion failed for '_catalogs/users' on 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices': SharePoint Get failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items?$select=Id,FileRef,FileLeafRef,FileSystemObjectType,HasUniqueRoleAssignments,Title,Created,Author/EMail&$expand=Author&$filter=Id gt 0&$orderby=Id&$top=500': {"odata.error":{"code":"-2147024809, System.ArgumentException","message":{"lang":"en-US","value":"Column 'ContentTypeId' does not exist. It may have been deleted by another user."}}}. Using recursive PnP field-value enumeration and explicit inheritance reads.

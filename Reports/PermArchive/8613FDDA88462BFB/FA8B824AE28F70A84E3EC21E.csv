@@ -1,0 +1,2 @@
+"TargetUrl","Status","Error"
+"https://whallc.sharepoint.com/sites/ClinicalandPatientServices","Failed","Post-Apply reporting incomplete: https://whallc.sharepoint.com/sites/ClinicalandPatientServices: Inventory disagreement for '_catalogs/users': REST read 397 items, recursive PnP read 398; list reports 413. No permission changes may use this inventory.. Inspect ChecklistSummary.csv for the application outcome."

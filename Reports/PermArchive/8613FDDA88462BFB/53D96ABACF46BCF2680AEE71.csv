@@ -1,0 +1,5 @@
+"Path","Action","Result","Detail"
+"SitePages","Inventory count discrepancy","Review","Source - Reported count 5; REST and recursive PnP agree on all 4 item IDs. Visibility is limited to the signed-in account."
+"_catalogs/users","Inventory count discrepancy","Review","Target - Reported count 413; Recursive PnP reads agree on all 397 item IDs. Visibility is limited to the signed-in account."
+"_catalogs/users","PnP inventory fallback","Review","Target - REST ContentTypeId failure; enumerated using recursive PnP and explicit inheritance reads. File sizes are available only where the size field exists."
+"","Run stopped","Error","Permission level 'Review' has different/unknown permission bits across webs."
