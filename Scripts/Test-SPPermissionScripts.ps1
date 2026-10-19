@@ -806,7 +806,7 @@ try {
         function Get-SPChecklistChildren {}
         $script:siteCalls = 0
         function Invoke-SPChecklistWeb { $script:siteCalls++; throw 'MOCK permission failure' }
-        function Invoke-SPChecklistReport {}
+        function Invoke-SPChecklistReport { throw 'MOCK secondary report failure' }
         $ChecklistFile = $path; $OutputFolder = Join-Path $temp 'runner-failure'
         $ReviewRoot = Join-Path $temp 'runner-failure-reviews'; $Mode = 'Apply'; $TargetSites = @()
         Assert-Throws { Invoke-SPPermissionChecklist } 'MOCK permission failure'
@@ -856,7 +856,7 @@ try {
                 @{ value = @(@{ Id = 12; Title = 'visitors'; LoginName = 'visitors' }) }
             } elseif ($Url -match '/AssociatedVisitorGroup\?') { @{ Id = 12; Title = 'visitors'; LoginName = 'visitors' } }
             elseif ($Url -match '/Associated(Owner|Member)Group\?') { @{ LoginName = '' } }
-            elseif ($Url -match '/(webs|lists|siteusers)\?') { @{ value = @() } }
+            elseif ($Url -match '/(webs|lists|siteusers|users)\?') { @{ value = @() } }
             elseif ($Url -match '/_api/web\?') {
                 @{ Id = 'web'; Url = $Connection; ServerRelativeUrl = ([uri]$Connection).AbsolutePath; HasUniqueRoleAssignments = $true }
             } else { throw "Unexpected mocked REST read: $Url" }
@@ -913,6 +913,95 @@ try {
             $_ -notin @('https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
                 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices')
         }).Count) 0
+    }
+    Test-Case 'Inventory retries discard disagreement, record recovery and stop after three attempts' {
+        $calls = 0
+        $alwaysFail = $false
+        function Get-SPPermissionInventoryRead {
+            $script:retryCalls++
+            if ($alwaysFail -or $script:retryCalls -eq 1) { throw "Inventory disagreement for 'users': changing IDs" }
+            $map = New-TestMap
+            $map[''] = New-TestScope ''
+            return ,$map
+        }
+        $script:retryCalls = $calls
+        $inventory = Get-SPPermissionInventory 'connection' 'https://target.test'
+        Assert-Equal $script:retryCalls 2
+        Assert-Equal ($inventory[''].InventoryReadReview -match 'attempt 2') $true
+        $alwaysFail = $true; $script:retryCalls = 0
+        Assert-Throws { Get-SPPermissionInventory 'connection' 'https://target.test' } 'Inventory disagreement'
+        Assert-Equal $script:retryCalls 3
+    }
+    Test-Case 'Review mapping preserves complete masks, plans without writes, and verifies created levels' {
+        $s = New-TestMap; $t = New-TestMap
+        $s['Review'] = [pscustomobject]@{ BasePermissions = @{ High = '176'; Low = '138629217' } }
+        $t['Review'] = [pscustomobject]@{ Id = 8; BasePermissions = @{ High = '176'; Low = '138612833' } }
+        $ids = [Collections.Generic.Dictionary[string, int]]::new()
+        $log = [Collections.Generic.List[object]]::new()
+        function Invoke-SPPermissionRest { throw 'DryRun must not create a permission level.' }
+        $mapping = Resolve-SPReviewLevel 'connection' 'https://target.test' $s $t $ids $log
+        Assert-Equal $mapping.Review 'Migrated Review H176 L138629217'
+        Assert-Equal $t['Review'].BasePermissions.Low '138612833'
+        Assert-Equal $ids[$mapping.Review] -1
+        $t.Remove($mapping.Review) | Out-Null
+        function Invoke-SPPermissionRest {
+            param($Connection, $Url, $Method, $Content)
+            Assert-Equal $Method 'Post'
+            Assert-Equal $Content.BasePermissions.High '176'
+            Assert-Equal $Content.BasePermissions.Low '138629217'
+        }
+        $returnedLow = '138629217'
+        function Get-SPPermissionCollection {
+            [pscustomobject]@{ Name = 'Migrated Review H176 L138629217'; Id = 99
+                BasePermissions = @{ High = '176'; Low = $returnedLow } }
+        }
+        $mapping = Resolve-SPReviewLevel 'connection' 'https://target.test' $s $t $ids $log -Write
+        Assert-Equal $ids[$mapping.Review] 99
+        $t.Remove($mapping.Review) | Out-Null
+        $returnedLow = '138612833'
+        Assert-Throws { Resolve-SPReviewLevel 'connection' 'https://target.test' $s $t $ids $log -Write } 'different/unknown mask'
+    }
+    Test-Case 'Migration principals and containing groups receive neither additions nor removals' {
+        $name = 'SharePoint.Migration.Team.Members'
+        Assert-Equal (Test-SPMigrationPrincipal "domain\$name" '') $true
+        $acl = @(New-TestAcl "claim|$name" @('Review'))
+        $groups = New-TestMap
+        $desired = Get-SPDesiredAcl $acl $groups ([pscustomobject]@{}) 'unused'
+        Assert-Equal $desired.Count 0
+        $desired = New-TestDesired "claim|$name" @('Read')
+        $ids = @{ Read = 1; Review = 2 }
+        $delta = Get-SPPermissionDelta $acl $desired (New-TestMap) @() $ids
+        Assert-Equal $delta.Operations.Count 0
+        $desired = New-TestDesired 'container' @('Read')
+        $delta = Get-SPPermissionDelta @(New-TestAcl 'container' @('Review')) $desired (New-TestMap) @('container') $ids
+        Assert-Equal $delta.Operations.Count 0
+    }
+    Test-Case 'Inheritance reset cannot alter migration-group grants on a unique target scope' {
+        $s = New-TestMap; $t = New-TestMap
+        $s[''] = New-TestScope '' $true @(New-TestAcl 'ordinary')
+        $s['Docs'] = New-TestScope 'Docs' $false @() 'Library'
+        $t[''] = New-TestScope '' $true @(New-TestAcl 'ordinary')
+        $t['Docs'] = New-TestScope 'Docs' $true @(New-TestAcl 'SharePoint.Migration.Team.Admins') 'Library'
+        $pairs = @{ '' = ''; Docs = 'Docs' }
+        $desired = @{ '' = (New-TestDesired 'ordinary'); Docs = (New-TestDesired 'ordinary') }
+        $plan = New-SPPermissionPlan $s $t $pairs $desired (New-TestMap) @{ Read = 1 } @() @()
+        Assert-Equal (@($plan.Steps | Where-Object Action -eq 'Reset').Count) 0
+        Assert-Equal (@($plan.Notes | Where-Object Result -eq 'Blocked').Count) 1
+        Assert-Equal $t['Docs'].Unique $true
+    }
+    Test-Case 'Migration-group membership discovery protects both claims and containing SharePoint groups' {
+        function Get-SPPermissionCollection {
+            param($Connection, $Url)
+            if ($Url -match '/users\?') {
+                [pscustomobject]@{ Title = 'SharePoint.Migration.Team.MSLs'; LoginName = 'claim|group-guid'; Id = 9 }
+            } else {
+                [pscustomobject]@{ Id = 8; Title = 'Container'; LoginName = 'Container' }
+            }
+        }
+        $protection = Get-SPMigrationProtection 'connection' 'https://target.test'
+        Assert-Equal $protection.Logins.Contains('claim|group-guid') $true
+        Assert-Equal $protection.Logins.Contains('Container') $true
+        Assert-Equal $protection.Memberships[0].MigrationPrincipal 'SharePoint.Migration.Team.MSLs'
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {

@@ -76,6 +76,16 @@ try {
     Test-Queue 'Recursive report includes inherited, unique and target-only content, root before child' {
         $script:reportOrder = [Collections.Generic.List[string]]::new()
         function Connect-SPPermissionSite { param($Url) $script:reportOrder.Add($Url); $Url }
+        function Get-SPPermissionCollection {
+            [pscustomobject]@{ Id = 2; Name = 'Read'; BasePermissions = @{ High = '0'; Low = '1' } }
+            [pscustomobject]@{ Id = 3; Name = 'Limited Access'; BasePermissions = @{ High = '0'; Low = '0' } }
+        }
+        function Get-SPMigrationProtection {
+            [pscustomobject]@{
+                Logins = [Collections.Generic.HashSet[string]]::new([string[]]@('visitors'))
+                Memberships = @([pscustomobject]@{ GroupLogin = 'visitors'; MigrationPrincipal = 'SharePoint.Migration.Team.Visitors' })
+            }
+        }
         function Get-SPPermissionInventory {
             param($Connection)
             $inventory = [Collections.Generic.Dictionary[string, object]]::new()
@@ -109,6 +119,8 @@ try {
         Assert-Queue ($inherited[0].InheritedFrom -eq 'https://target.test/sites/A/Docs') 'Wrong inheritance origin.'
         Assert-Queue (@($rows | Where-Object Path -eq 'TargetOnly').Count -eq 4) 'Target-only scope omitted.'
         Assert-Queue (@($rows | Where-Object Role -eq 'Limited Access').Count -eq 8) 'Hidden role bindings omitted.'
+        Assert-Queue ($rows[0].MigrationPolicy -like 'Intentionally preserved*') 'Migration policy missing.'
+        Assert-Queue ($rows[0].MigrationMembers -eq 'SharePoint.Migration.Team.Visitors') 'Containing group membership missing.'
     }
     Test-Queue 'Report failure persists Failed manifest and never success-shaped output' {
         function Get-SPPermissionReportRows { throw 'MOCK unreadable ACL' }
@@ -149,6 +161,40 @@ try {
         Assert-Queue ($script:peak -eq 4 -and $script:launched -eq 7) 'Queue concurrency/completion incorrect.'
         $csv = Get-ChildItem -LiteralPath $OutputFolder -Recurse -Filter QueueStatus.csv
         Assert-Queue (@(Import-Csv -LiteralPath $csv.FullName | Where-Object Status -eq 'Completed').Count -eq 7) 'Missing worker outcomes.'
+    }
+    Test-Queue 'Default queue report paths stay below 240 characters at both repository locations' {
+        $roots = @(
+            'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp'
+            [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+        )
+        foreach ($root in $roots) {
+            $relative = 'Reports\PermRuns\q-261019143547347\E86E6768733F\w-E86E6768733F\DryRun\PermSync_UnavailablePrincipals_DRYRUN_20261019-143547-347.csv'
+            Assert-Queue ((Join-Path $root $relative).Length -le 240) "Report path exceeds 240: $root"
+        }
+    }
+    Test-Queue 'Archive preview is read-only; Apply preserves hashes and supports resuming' {
+        $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+        $source = Join-Path $repoRoot ('Reports\path-test-' + [guid]::NewGuid().ToString('N'))
+        $archive = Join-Path $temp 'archive'
+        [void][IO.Directory]::CreateDirectory($source)
+        try {
+            $file = Join-Path $source 'example.csv'
+            'test,evidence' | Set-Content -LiteralPath $file
+            $hash = (Get-FileHash -LiteralPath $file).Hash
+            $scriptPath = Join-Path $PSScriptRoot 'Move-SPPermissionReportsToShortPaths.ps1'
+            & $scriptPath -SourceFolder $source -ArchiveRoot $archive | Out-Null
+            Assert-Queue (Test-Path -LiteralPath $file) 'Preview moved source.'
+            Assert-Queue (-not (Test-Path -LiteralPath $archive)) 'Preview wrote archive.'
+            & $scriptPath -SourceFolder $source -ArchiveRoot $archive -Apply
+            $manifest = Get-ChildItem -LiteralPath $archive -Recurse -Filter Paths.csv
+            $row = Import-Csv -LiteralPath $manifest.FullName
+            Assert-Queue ((Get-FileHash -LiteralPath $row.ArchivePath).Hash -eq $hash) 'Archive lost contents.'
+            Assert-Queue ($row.OriginalPath -eq $file) 'Original mapping lost.'
+            Assert-Queue (-not (Test-Path -LiteralPath $file)) 'Source not relocated.'
+            & $scriptPath -SourceFolder $source -ArchiveRoot $archive -Apply
+        } finally {
+            Remove-Item -LiteralPath $source -Recurse -Force
+        }
     }
     Write-Host "All $passed queue/report offline tests passed. No windows or live connections were opened."
 } finally {

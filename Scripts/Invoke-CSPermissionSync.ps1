@@ -37,7 +37,7 @@ function Invoke-CSPermissionSync {
         if (-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot $name))) { throw "Missing companion script: $name" }
     }
     [void][IO.Directory]::CreateDirectory($OutputFolder)
-    $runFolder = Join-Path $OutputFolder ("CS_${Mode}_" + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
+    $runFolder = Join-Path $OutputFolder ("cs-" + (Get-Date -Format 'yyMMddHHmmssfff'))
     [void][IO.Directory]::CreateDirectory($runFolder)
     $checklistPath = Join-Path $runFolder 'CS-SitePair.csv'
     [pscustomobject]@{

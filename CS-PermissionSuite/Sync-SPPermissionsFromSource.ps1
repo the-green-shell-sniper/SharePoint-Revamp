@@ -56,9 +56,11 @@ param(
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Get-SPDesiredAcl {
-    param($Acl, $GroupsByTitle, $Visitors, [string]$GroupToMap)
+    param($Acl, $GroupsByTitle, $Visitors, [string]$GroupToMap, [string[]]$PreservedLogins = @())
     $desired = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
     foreach ($assignment in @($Acl) | Where-Object { -not $_.Skip }) {
+        if ((Test-SPMigrationPrincipal $assignment.LoginName $assignment.Title) -or
+            $assignment.LoginName -iin $PreservedLogins) { continue }
         $login = $assignment.LoginName
         $title = $assignment.Title
         $id = 0
@@ -79,6 +81,45 @@ function Get-SPDesiredAcl {
     return ,$desired
 }
 
+function Resolve-SPReviewLevel {
+    param($Connection, [string]$WebUrl, $SourceRoles, $TargetRoles, $RoleIds, $Log, [switch]$Write)
+    if (-not $SourceRoles.ContainsKey('Review') -or -not $TargetRoles.ContainsKey('Review')) { return @{} }
+    $bits = $SourceRoles['Review'].BasePermissions
+    $targetBits = $TargetRoles['Review'].BasePermissions
+    if ($null -eq $bits.High -or $null -eq $bits.Low) { throw 'Source Review mask is incomplete.' }
+    if ([string]$bits.High -ceq [string]$targetBits.High -and [string]$bits.Low -ceq [string]$targetBits.Low) { return @{} }
+    $name = "Migrated Review H$($bits.High) L$($bits.Low)"
+    if (-not $TargetRoles.ContainsKey($name)) {
+        if ($Write) {
+            $Log.Add([pscustomobject]@{ Path = ''; Action = 'Create permission level'; Result = 'Write starting'; Detail = $name })
+            $body = @{
+                '__metadata' = @{ type = 'SP.RoleDefinition' }; Name = $name
+                Description = 'Source Review mask preserved for migration; existing target Review is unchanged.'
+                BasePermissions = @{ '__metadata' = @{ type = 'SP.BasePermissions' }; High = [string]$bits.High; Low = [string]$bits.Low }
+            }
+            $null = Invoke-SPPermissionRest $Connection ($WebUrl + '/_api/web/roledefinitions') -Method Post -Content $body
+            $found = @(Get-SPPermissionCollection $Connection ($WebUrl + '/_api/web/roledefinitions?$select=Id,Name,BasePermissions') |
+                Where-Object Name -CEQ $name)
+            if ($found.Count -ne 1) { throw "Created Review level could not be uniquely read: $name" }
+            $TargetRoles[$name] = $found[0]
+        } else {
+            $TargetRoles[$name] = [pscustomobject]@{ Id = -1; Name = $name; BasePermissions = $bits }
+        }
+    }
+    $actual = $TargetRoles[$name]
+    if ($null -eq $actual.BasePermissions.High -or $null -eq $actual.BasePermissions.Low -or
+        [string]$bits.High -cne [string]$actual.BasePermissions.High -or
+        [string]$bits.Low -cne [string]$actual.BasePermissions.Low -or ($Write -and $actual.Id -le 0)) {
+        throw "Dedicated Review level has a different/unknown mask: $name. No permission assignments may use it."
+    }
+    $RoleIds[$name] = [int]$actual.Id
+    $Log.Add([pscustomobject]@{
+        Path = ''; Action = 'Map source Review'; Result = $(if ($Write) { 'Verified' } else { 'Planned' })
+        Detail = "Review -> $name; existing target Review unchanged."
+    })
+    return @{ Review = $name }
+}
+
 function Get-SPPermissionDelta {
     param($CurrentAcl, $Desired, $Unavailable, [string[]]$ProtectedLogins, $RoleIds)
     $current = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -86,6 +127,8 @@ function Get-SPPermissionDelta {
     $operations = [Collections.Generic.List[object]]::new()
     $blocked = @($Desired.Keys | Where-Object { $Unavailable.ContainsKey($_) }).Count -gt 0
     foreach ($login in @($Desired.Keys | Sort-Object)) {
+        if ($ProtectedLogins -icontains $login -or
+            (Test-SPMigrationPrincipal $login $Desired[$login].Title)) { continue }
         if ($Unavailable.ContainsKey($login)) { continue }
         foreach ($role in @($Desired[$login].Roles | Sort-Object)) {
             if (-not $RoleIds.ContainsKey($role)) { throw "Permission level missing on target: $role" }
@@ -95,7 +138,8 @@ function Get-SPPermissionDelta {
     }
     if (-not $blocked) {
         foreach ($login in @($current.Keys | Sort-Object)) {
-            if ($ProtectedLogins -icontains $login -or $Unavailable.ContainsKey($login)) { continue }
+            if ($ProtectedLogins -icontains $login -or $Unavailable.ContainsKey($login) -or
+                (Test-SPMigrationPrincipal $login $current[$login].Title)) { continue }
             foreach ($role in @($current[$login].Roles | Sort-Object)) {
                 if ($Desired.ContainsKey($login) -and $Desired[$login].Roles.Contains($role)) { continue }
                 if (-not $RoleIds.ContainsKey($role)) { throw "Current target permission level not found: $role" }
@@ -187,7 +231,7 @@ function Add-SPDependentProtection {
 
 function New-SPPermissionPlan {
     param($Source, $Target, $ScopeMatches, $DesiredBySource, $Unavailable, $RoleIds, [string[]]$ProtectedAtRoot,
-        [string[]]$ExcludePaths, [switch]$NoFreeze)
+        [string[]]$ExcludePaths, [switch]$NoFreeze, [string[]]$PreservedLogins = @())
     $steps = [Collections.Generic.List[object]]::new()
     $log = [Collections.Generic.List[object]]::new()
     $eligible = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -239,9 +283,22 @@ function New-SPPermissionPlan {
                     $log.Add([pscustomobject]@{ Path = $targetKey; Action = 'Reset inheritance blocked'; Result = 'Blocked'; Detail = 'Effective source ACL includes unavailable principals; existing grants retained.' })
                     continue
                 }
-                Add-SPDependentProtection $Target $targetKey $eligible $steps $log -NoFreeze:$NoFreeze
                 $before = @($targetScope.Acl)
                 $after = @((Get-SPPermissionEffectiveScope $Target $targetParent).Acl)
+                $beforeProtected = @($before | Where-Object {
+                    $_.LoginName -iin $PreservedLogins -or (Test-SPMigrationPrincipal $_.LoginName $_.Title)
+                })
+                $afterProtected = @($after | Where-Object {
+                    $_.LoginName -iin $PreservedLogins -or (Test-SPMigrationPrincipal $_.LoginName $_.Title)
+                })
+                if ((Get-SPPreservedAclSignature $beforeProtected) -cne (Get-SPPreservedAclSignature $afterProtected)) {
+                    $log.Add([pscustomobject]@{
+                        Path = $targetKey; Action = 'Reset inheritance blocked'; Result = 'Blocked'
+                        Detail = 'Intentionally preserved migration-group grants differ from parent; no reset permitted.'
+                    })
+                    continue
+                }
+                Add-SPDependentProtection $Target $targetKey $eligible $steps $log -NoFreeze:$NoFreeze
                 $steps.Add((New-SPPermissionStep $targetScope 'Reset' $before $false $after $null))
                 $targetScope.Unique = $false; $targetScope.Acl = $null
             }
@@ -252,7 +309,7 @@ function New-SPPermissionPlan {
             $steps.Add((New-SPPermissionStep $targetScope 'Break' $current $true $current $null))
             $targetScope.Unique = $true; $targetScope.Acl = $current
         }
-        $protected = if ($sourceKey -eq '') { $ProtectedAtRoot } else { @() }
+        $protected = @($PreservedLogins) + @(if ($sourceKey -eq '') { $ProtectedAtRoot })
         $delta = Get-SPPermissionDelta $current $desired $Unavailable $protected $RoleIds
         if ($delta.RemovalsBlocked) {
             $log.Add([pscustomobject]@{ Path = $targetKey; Action = 'Removals blocked'; Result = 'Blocked'; Detail = 'Unavailable desired principals; available additions only. Existing grants retained.' })
@@ -267,6 +324,15 @@ function New-SPPermissionPlan {
         }
     }
     [pscustomobject]@{ Steps = $steps.ToArray(); Notes = $log.ToArray() }
+}
+
+function Get-SPPreservedAclSignature {
+    param($Acl)
+    $rows = foreach ($assignment in @($Acl)) {
+        $roles = if (@($assignment.Bindings).Count) { @($assignment.Bindings | ForEach-Object Name) } else { @($assignment.Roles) }
+        foreach ($role in $roles) { "$($assignment.LoginName.ToLowerInvariant())`t$($role.ToLowerInvariant())" }
+    }
+    @($rows | Sort-Object -Unique) -join "`n"
 }
 
 function Assert-SPPermissionState {
@@ -429,22 +495,60 @@ function Invoke-SyncSPPermissionsFromSource {
         foreach ($role in @(Get-SPPermissionCollection $targetConnection ($TargetUrl + '/_api/web/roledefinitions?$select=Id,Name,BasePermissions'))) {
             $targetRoles[$role.Name] = $role; $roleIds[$role.Name] = [int]$role.Id
         }
+        $sourceProtection = Get-SPMigrationProtection $sourceConnection $SourceUrl
+        $targetProtection = Get-SPMigrationProtection $targetConnection $TargetUrl
+        $needsReview = @($scopeMatches.Keys | Where-Object {
+            -not (Test-SPPermissionExcluded $_ $ExcludePaths) -and
+            -not (Test-SPPermissionExcluded $scopeMatches[$_] $ExcludePaths) -and
+            @((Get-SPPermissionEffectiveScope $source $_).Acl | Where-Object {
+                $_.Roles -icontains 'Review' -and -not $_.Skip -and
+                -not (Test-SPMigrationPrincipal $_.LoginName $_.Title) -and
+                -not $sourceProtection.Logins.Contains($_.LoginName)
+            }).Count
+        }).Count -gt 0
+        $roleMapping = if ($needsReview) {
+            Resolve-SPReviewLevel $targetConnection $TargetUrl $sourceRoles $targetRoles $roleIds $log -Write:$Apply
+        } else { @{} }
+        Export-SPPermissionCsv @($targetProtection.Memberships) @('WebUrl','MigrationPrincipal','MigrationLogin','SharePointGroup','GroupLogin','GroupId','Policy') (
+            Join-Path $OutputFolder "PermSync_PreservedMemberships_${mode}_$stamp.csv"
+        )
+        foreach ($scope in $target.Values) {
+            foreach ($assignment in @((Get-SPPermissionEffectiveScope $target $scope.Key).Acl) | Where-Object {
+                (Test-SPMigrationPrincipal $_.LoginName $_.Title) -or $targetProtection.Logins.Contains($_.LoginName)
+            }) {
+                $log.Add([pscustomobject]@{
+                    Path = $scope.Key; Action = 'Preserve migration-group assignment'; Result = 'Intentionally skipped'
+                    Detail = "$($assignment.Title): $($assignment.Roles -join '; '); direct or containing SharePoint group."
+                })
+            }
+        }
         $desiredBySource = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
         foreach ($sourceKey in $scopeMatches.Keys) {
             if ((Test-SPPermissionExcluded $sourceKey $ExcludePaths) -or (Test-SPPermissionExcluded $scopeMatches[$sourceKey] $ExcludePaths)) { continue }
             $effective = Get-SPPermissionEffectiveScope $source $sourceKey
-            $desired = Get-SPDesiredAcl $effective.Acl $groups $visitors $SourceGroupToMap
+            $desired = Get-SPDesiredAcl $effective.Acl $groups $visitors $SourceGroupToMap @($sourceProtection.Logins)
+            foreach ($login in @($desired.Keys)) {
+                if ($targetProtection.Logins.Contains($login) -or (Test-SPMigrationPrincipal $login $desired[$login].Title)) {
+                    [void]$desired.Remove($login)
+                }
+            }
             $desiredBySource[$sourceKey] = $desired
             foreach ($principal in $desired.Values) {
                 foreach ($role in $principal.Roles) {
-                    if (-not $sourceRoles.ContainsKey($role) -or -not $targetRoles.ContainsKey($role)) {
+                    $targetRole = if ($roleMapping.ContainsKey($role)) { $roleMapping[$role] } else { $role }
+                    if (-not $sourceRoles.ContainsKey($role) -or -not $targetRoles.ContainsKey($targetRole)) {
                         throw "Permission level '$role' must exist on BOTH webs. No permission writes performed."
                     }
-                    $sourceBits = $sourceRoles[$role].BasePermissions; $targetBits = $targetRoles[$role].BasePermissions
+                    $sourceBits = $sourceRoles[$role].BasePermissions; $targetBits = $targetRoles[$targetRole].BasePermissions
                     if ($null -eq $sourceBits -or $null -eq $targetBits -or
+                        $null -eq $sourceBits.High -or $null -eq $sourceBits.Low -or
+                        $null -eq $targetBits.High -or $null -eq $targetBits.Low -or
                         [string]$sourceBits.High -cne [string]$targetBits.High -or [string]$sourceBits.Low -cne [string]$targetBits.Low) {
                         throw "Permission level '$role' has different/unknown permission bits across webs."
                     }
+                }
+                if ($roleMapping.ContainsKey('Review') -and $principal.Roles.Remove('Review')) {
+                    [void]$principal.Roles.Add($roleMapping.Review)
                 }
                 if (-not $principalUse.ContainsKey($principal.Login)) {
                     $principalUse[$principal.Login] = [pscustomobject]@{
@@ -484,7 +588,7 @@ function Invoke-SyncSPPermissionsFromSource {
             foreach ($principal in $desired.Values) { $principal.Id = $principalUse[$principal.Login].Id }
         }
         # Planning mutates the in-memory target; the saved snapshots retain the read state.
-        $plan = New-SPPermissionPlan $source $target $scopeMatches $desiredBySource $unavailable $roleIds $protectedAtRoot $ExcludePaths -NoFreeze:$NoFreeze
+        $plan = New-SPPermissionPlan $source $target $scopeMatches $desiredBySource $unavailable $roleIds $protectedAtRoot $ExcludePaths -NoFreeze:$NoFreeze -PreservedLogins @($targetProtection.Logins)
         foreach ($note in $plan.Notes) { $log.Add($note) }
         $planPath = Join-Path $OutputFolder "PermSync_Plan_${mode}_$stamp.json"
         [pscustomobject]@{

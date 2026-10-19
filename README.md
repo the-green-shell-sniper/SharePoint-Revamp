@@ -22,6 +22,49 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ### Queued automatic application and recursive reporting
 
+#### Review level and intentionally preserved migration groups
+
+When source `Review` and target `Review` have different masks, the sync explicitly
+maps source grants to a dedicated target level named
+`Migrated Review H<High> L<Low>` (for CS: `Migrated Review H176 L138629217`).
+DryRun plans this level without creating it, using a placeholder role ID that must
+never be used for writes. Apply creates the definition if needed and reads it back
+to require an exact full-mask match before assigning it. Existing target `Review`
+is never modified. A dedicated definition can remain if later preflight fails;
+creation is not a role assignment and is not rolled back. Other mismatched levels
+still stop the run. Existing dedicated levels with wrong masks are not overwritten.
+
+These four principals are intentionally preserved at every scope:
+
+- `SharePoint.Migration.Team.Admins`
+- `SharePoint.Migration.Team.Members`
+- `SharePoint.Migration.Team.Visitors`
+- `SharePoint.Migration.Team.MSLs`
+
+No grants are added, removed or remapped for them. The scripts discover their
+direct membership in SharePoint groups; **containing SharePoint groups are also
+preserved**, because changing a container's role would change the migration group's
+access (and may preserve other members' access too). Inheritance resets that would
+change protected role bindings are blocked. This is an intentional exception to
+the source mirror and can stop automatic preflight. Reports retain these grants
+with `MigrationPolicy = Intentionally preserved...` and `MigrationMembers`.
+`MigrationGroupMemberships.csv` reports direct SharePoint-group membership, with
+explicit not-observed rows where none was returned; it does not expand nested
+Entra groups or prove a principal has no other access. Sync logs label preserved
+assignments `Intentionally skipped`; per-web membership evidence is also saved.
+Each site report also includes `PermissionLevels.csv` with the per-web role
+definitions and raw masks; effective rows resolve masks from that definition list.
+Protected domain-group identity is recognized by exact title/name or the name at
+the end of a login claim; discovered membership also resolves its opaque login claim.
+No directory group membership is changed.
+
+An application/preflight error is retained even if its follow-up permission report
+also fails. Both errors are reported rather than replacing the original blocker
+with a report failure. Inventory disagreement remains fatal; do not bypass it.
+An ID-set disagreement triggers at most three fresh whole-web inventory attempts,
+discarding each failed inventory. Persistent disagreement still fails closed;
+successful retry is warned and recorded as inventory review evidence.
+
 [Invoke-SPPermissionQueue.ps1](Scripts/Invoke-SPPermissionQueue.ps1) previews the
 checklist queue by default. `-Apply` explicitly authorizes automated changes:
 
@@ -73,11 +116,15 @@ requiring zero remaining actions. Failures stop that site, not the remaining que
 Earlier writes are not rolled back. Apply can ensure target site users before its
 final permission-plan gate; these directory entries are not role grants.
 
-Default outputs are under `Reports\PermissionsReports\PermissionQueue\Queue-*`:
+Default outputs are under `Reports\PermRuns\q-*`. Queue site folders use a
+12-character URL hash, per-web folders use `w-<hash>`, and combined reports use
+`r-<hash>`. Auto no longer nests a second timestamped checklist folder.
+Checklist summaries/status records retain the full URLs. Review locations and
+existing approval files are unchanged.
 
 - `QueueStatus.csv`: queued/running/completed/failed outcomes.
 - Per-worker `WorkerStatus.json` and `WorkerTranscript.txt`: retained failure details.
-- Per-site `SiteReport-*` folder (one combined report bundle for root and descendants):
+- Per-site `r-*` folder (one combined report bundle for root and descendants):
   - `Changes.csv`: web, path, action, principal/role detail, result and evidence log.
     **Verified** means a write completed and was checked; **Planned** is not applied.
     Write-start entries without a verified outcome require live inspection.
@@ -113,6 +160,30 @@ not terminate elevated workers; inspect retained windows before restarting.
 Four workers reduce pressure but do not guarantee Microsoft will not throttle.
 The existing bounded read retries remain in effect; ambiguous writes are not retried.
 Reports contain sensitive identities/paths; restrict access to the report repository.
+
+#### Shortening existing completed reports
+
+The new output layout is tested below 240 characters at both the server and
+development repository locations. Custom longer output roots can still exceed
+Windows limits. Old reports are not automatically renamed while workers run.
+Use the preview-first relocation script on a **completed** run, never a review
+folder or active run:
+
+```powershell
+$repo = 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp'
+$oldRun = "$repo\Reports\PermissionsReports\PermissionQueue\Queue-20261019-135949-254"
+& "$repo\Scripts\Move-SPPermissionReportsToShortPaths.ps1" -SourceFolder $oldRun
+# After inspecting the preview and confirming all workers have finished:
+& "$repo\Scripts\Move-SPPermissionReportsToShortPaths.ps1" -SourceFolder $oldRun -Apply
+```
+
+This relocates files into `Reports\PermArchive\<run-hash>\<file-hash>.<extension>`.
+`Paths.csv` preserves original absolute/relative names and SHA-256 hashes before
+any move; every move is checked and existing destinations are never overwritten.
+Reusing the same arguments resumes a partial move. Embedded paths are not rewritten:
+use the manifest to locate their archived evidence. Empty old directories are left
+alone. Include both relocated files and old-path deletions in the next commit.
+No Git long-path setting is required for the compact layout.
 
 Offline validation:
 

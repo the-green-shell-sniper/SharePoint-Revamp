@@ -14,7 +14,7 @@
 [CmdletBinding()]
 param(
     [string]$ChecklistFile = (Join-Path $PSScriptRoot '..\ReferenceFiles\NewSiteChecklist.csv'),
-    [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermissionsReports\PermissionQueue'),
+    [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermRuns'),
     [string]$ReviewRoot = (Join-Path $PSScriptRoot '..\Reports\PermissionsReports\PermissionReviews'),
     [string[]]$TargetSites,
     [ValidateRange(1, 4)][int]$MaxConcurrent = 4,
@@ -143,7 +143,7 @@ function Invoke-SPPermissionQueue {
         $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
         $reviews = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReviewRoot)
         $checklistPath = (Resolve-Path -LiteralPath $ChecklistFile -ErrorAction Stop).ProviderPath
-        $batch = Join-Path $root ('Queue-' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
+        $batch = Join-Path $root ('q-' + (Get-Date -Format 'yyMMddHHmmssfff'))
         [void][IO.Directory]::CreateDirectory($batch)
         $pending = [Collections.Generic.List[object]]::new()
         foreach ($pair in $pairs) { $pending.Add($pair) }
@@ -166,13 +166,13 @@ function Invoke-SPPermissionQueue {
             for ($index = 0; $index -lt $pending.Count -and $active.Count -lt $MaxConcurrent;) {
                 $pair = $pending[$index]
                 if (Test-SPQueueConflict $pair $active.ToArray()) { $index++; continue }
-                $key = Get-SPChecklistSiteKey $pair.TargetUrl
+                $key = (Get-SPChecklistSiteKey $pair.TargetUrl).Split('-')[-1]
                 $folder = Join-Path $batch $key
                 [void][IO.Directory]::CreateDirectory($folder)
                 $jobPath = Join-Path $folder 'WorkerJob.clixml'
                 @{
                     ChecklistFile = $checklistPath; SourceUrl = $pair.SourceUrl; TargetUrl = $pair.TargetUrl
-                    OutputFolder = $folder; ReviewRoot = (Join-Path $reviews $key)
+                    OutputFolder = $folder; ReviewRoot = (Join-Path $reviews (Get-SPChecklistSiteKey $pair.TargetUrl))
                     ClientId = $ClientId; Tenant = $Tenant; NoContent = [bool]$NoContent
                     SkipPersistLoginSetup = [bool]$SkipPersistLoginSetup
                 } | Export-Clixml -LiteralPath $jobPath

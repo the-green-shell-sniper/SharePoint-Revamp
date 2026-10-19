@@ -251,7 +251,9 @@ function Invoke-SPPermissionChecklist {
     }
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
-    $batchFolder = Join-Path $OutputFolder "Checklist_${Mode}_$stamp"
+    $batchFolder = if ($Mode -eq 'Auto') { $OutputFolder } else {
+        Join-Path $OutputFolder ("b-" + (Get-Date -Format 'yyMMddHHmmssfff'))
+    }
     [void][IO.Directory]::CreateDirectory($batchFolder)
     $summary = [Collections.Generic.List[object]]::new()
     $visitedSources = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -263,12 +265,13 @@ function Invoke-SPPermissionChecklist {
         ExcludePaths = $ExcludePaths; PageSize = $PageSize; MaxContentMB = $MaxContentMB
         NoContent = $NoContent; SkipPersistLoginSetup = $SkipPersistLoginSetup
     }
+    $applicationError = $null
     try {
         for ($index = 0; $index -lt $queue.Count; $index++) {
             $pair = $queue[$index]
             if (-not $visitedSources.Add($pair.SourceUrl) -or -not $visitedTargets.Add($pair.TargetUrl)) { throw 'Repeated web mapping refused.' }
             $siteKey = Get-SPChecklistSiteKey $pair.TargetUrl
-            $runFolder = Join-Path $batchFolder $siteKey
+            $runFolder = Join-Path $batchFolder ("w-" + $siteKey.Split('-')[-1])
             $siteReviewFolder = Join-Path $ReviewRoot $siteKey
             [void][IO.Directory]::CreateDirectory($runFolder)
             [void][IO.Directory]::CreateDirectory($siteReviewFolder)
@@ -335,6 +338,7 @@ function Invoke-SPPermissionChecklist {
             }
         }
     } catch {
+        $applicationError = $_
         $summary.Add([pscustomobject]@{
             SourceUrl = $pair.SourceUrl; TargetUrl = $pair.TargetUrl; Status = 'Stopped - error'
             Detail = $_.Exception.Message; ReportFolder = $runFolder
@@ -347,7 +351,7 @@ function Invoke-SPPermissionChecklist {
         if ($Mode -in @('Apply', 'Auto')) {
             $reportFailures = [Collections.Generic.List[string]]::new()
             foreach ($job in $jobs) {
-                $reportFolder = Join-Path $batchFolder ("SiteReport-" + (Get-SPChecklistSiteKey $job.TargetUrl))
+                $reportFolder = Join-Path $batchFolder ("r-" + (Get-SPChecklistSiteKey $job.TargetUrl).Split('-')[-1])
                 [void][IO.Directory]::CreateDirectory($reportFolder)
                 $reportOptions = @{
                     TargetUrl = $job.TargetUrl; OutputFolder = $reportFolder; ClientId = $ClientId
@@ -372,7 +376,9 @@ function Invoke-SPPermissionChecklist {
                     Write-Warning "Post-Apply report FAILED for '$($job.TargetUrl)': $($_.Exception.Message)"
                 }
             }
-            if ($reportFailures.Count) { throw "Post-Apply reporting incomplete: $($reportFailures -join '; '). Inspect ChecklistSummary.csv for the application outcome." }
+            if ($reportFailures.Count -and -not $applicationError) {
+                throw "Post-Apply reporting incomplete: $($reportFailures -join '; '). Inspect ChecklistSummary.csv for the application outcome."
+            }
         }
     }
 }

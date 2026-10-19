@@ -9,6 +9,47 @@ function Connect-SPPermissionSite {
     Connect-PnPOnline @options
 }
 
+function Test-SPMigrationPrincipal {
+    param([string]$Login, [string]$Title)
+    $names = @('SharePoint.Migration.Team.Admins', 'SharePoint.Migration.Team.Members',
+        'SharePoint.Migration.Team.Visitors', 'SharePoint.Migration.Team.MSLs')
+    return ($Title -iin $names -or $Login -iin $names -or ($Login -split '[|\\]')[-1] -iin $names)
+}
+
+function Get-SPMigrationProtection {
+    param($Connection, [string]$WebUrl)
+    $logins = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    $memberships = [Collections.Generic.List[object]]::new()
+    foreach ($group in @(Get-SPPermissionCollection $Connection (
+        $WebUrl + '/_api/web/sitegroups?$select=Id,Title,LoginName'
+    ))) {
+        foreach ($member in @(Get-SPPermissionCollection $Connection (
+            "$WebUrl/_api/web/sitegroups/getbyid($($group.Id))/users?`$select=Id,Title,LoginName,PrincipalType"
+        ))) {
+            if (-not (Test-SPMigrationPrincipal $member.LoginName $member.Title)) { continue }
+            [void]$logins.Add($member.LoginName)
+            [void]$logins.Add($group.LoginName)
+            $memberships.Add([pscustomobject]@{
+                WebUrl = $WebUrl; MigrationPrincipal = $member.Title; MigrationLogin = $member.LoginName
+                SharePointGroup = $group.Title; GroupLogin = $group.LoginName; GroupId = $group.Id
+                Policy = 'Intentionally preserved - migration group and containing SharePoint group'
+            })
+        }
+    }
+    foreach ($name in @('SharePoint.Migration.Team.Admins', 'SharePoint.Migration.Team.Members',
+        'SharePoint.Migration.Team.Visitors', 'SharePoint.Migration.Team.MSLs')) {
+        if (@($memberships | Where-Object {
+            $_.MigrationPrincipal -ieq $name -or ($_.MigrationLogin -split '[|\\]')[-1] -ieq $name
+        }).Count) { continue }
+        $memberships.Add([pscustomobject]@{
+            WebUrl = $WebUrl; MigrationPrincipal = $name; MigrationLogin = ''
+            SharePointGroup = ''; GroupLogin = ''; GroupId = ''
+            Policy = 'Not observed in SharePoint-group membership; direct grants reported separately. Intentionally preserved if present.'
+        })
+    }
+    [pscustomobject]@{ Logins = $logins; Memberships = $memberships.ToArray() }
+}
+
 function Assert-SPPermissionUrls {
     param([string]$SourceUrl, [string]$TargetUrl)
     foreach ($url in @($SourceUrl, $TargetUrl)) {
@@ -127,6 +168,24 @@ function Get-SPPermissionPnPItems {
 
 function Get-SPPermissionInventory {
     param($Connection, [string]$WebUrl, [ValidateRange(1, 5000)][int]$PageSize = 500)
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        try {
+            $inventory = Get-SPPermissionInventoryRead $Connection $WebUrl $PageSize
+            if ($attempt -gt 1) {
+                $inventory[''] | Add-Member -NotePropertyName InventoryReadReview -NotePropertyValue (
+                    "Fresh web inventory succeeded on attempt $attempt after item-ID disagreement; earlier inventories discarded. Account visibility remains limited."
+                )
+            }
+            return ,$inventory
+        } catch {
+            if ($attempt -eq 3 -or $_.Exception.Message -notmatch '^Inventory disagreement for ') { throw }
+            Write-Warning "Inventory changed or disagreed on '$WebUrl': $($_.Exception.Message) Discarding inventory and starting fresh attempt $($attempt + 1) of 3."
+        }
+    }
+}
+
+function Get-SPPermissionInventoryRead {
+    param($Connection, [string]$WebUrl, [ValidateRange(1, 5000)][int]$PageSize = 500)
     $webApi = "$WebUrl/_api/web"
     $web = Invoke-SPPermissionRest $Connection ($webApi + '?$select=Id,Url,ServerRelativeUrl,HasUniqueRoleAssignments')
     if ($null -eq $web.HasUniqueRoleAssignments -or -not $web.ServerRelativeUrl) { throw "Incomplete web metadata: $WebUrl" }
@@ -240,7 +299,8 @@ function Get-SPPermissionInventory {
                 if ([int]$item.Id -le 0 -or -not $pnpIds.Add([int]$item.Id)) { throw "Invalid or duplicate PnP item ID in '$listKey'." }
             }
             if (-not $restIds.SetEquals($pnpIds)) {
-                throw "Inventory disagreement for '$listKey': REST read $itemCount items, recursive PnP read $($pnpIds.Count); list reports $($list.ItemCount). No permission changes may use this inventory."
+                $method = if ($usedPnP) { 'initial recursive PnP' } else { 'REST' }
+                throw "Inventory disagreement for '$listKey': $method read $itemCount items, verification recursive PnP read $($pnpIds.Count); list reports $($list.ItemCount). No permission changes may use this inventory."
             }
             $readMethod = if ($usedPnP) { 'Recursive PnP reads' } else { 'REST and recursive PnP' }
             $detail = "Reported count $($list.ItemCount); $readMethod agree on all $itemCount item IDs. Visibility is limited to the signed-in account."
