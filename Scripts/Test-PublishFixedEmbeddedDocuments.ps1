@@ -137,6 +137,27 @@ try {
         Send-ConditionalDocumentContent $rebased ([pscustomobject]@{ File = $fakeFile; ETag = '"preflight-etag"' })
         Assert-Equal $script:queryCalls 1
     }
+    Test-Case 'Metadata CSOM write preserves UTC kinds and original user IDs' {
+        $script:metadataQueries = 0
+        $script:metadataUpdates = 0
+        $context = [pscustomobject]@{}
+        $context | Add-Member ScriptMethod ExecuteQuery { $script:metadataQueries++ }
+        $item = @{ Context = $context }
+        $item | Add-Member ScriptMethod UpdateOverwriteVersion { $script:metadataUpdates++ }
+        $values = @{
+            Author = '100'; Editor = '249'
+            Created = [datetime]::Parse('2023-12-05T10:27:56.0000000Z', [cultureinfo]::InvariantCulture, [Globalization.DateTimeStyles]::RoundtripKind)
+            Modified = [datetime]::Parse('2024-07-08T15:12:21.0000000Z', [cultureinfo]::InvariantCulture, [Globalization.DateTimeStyles]::RoundtripKind)
+        }
+        Set-DocumentMetadataValues ([pscustomobject]@{ Item = $item }) $values
+        Assert-Equal $item.Created.Kind ([DateTimeKind]::Utc)
+        Assert-Equal $item.Created.ToString('o') '2023-12-05T10:27:56.0000000Z'
+        Assert-Equal $item.Modified.ToString('o') '2024-07-08T15:12:21.0000000Z'
+        Assert-Equal $item.Author.LookupId 100
+        Assert-Equal $item.Editor.LookupId 249
+        Assert-Equal $script:metadataUpdates 1
+        Assert-Equal $script:metadataQueries 1
+    }
     $plan = @(Import-FixedDocumentPlan $csv $temp)[0]
     function New-TestState {
         return [pscustomobject]@{
@@ -225,12 +246,11 @@ try {
         $script:remote.Modified = '2026-10-19T00:00:00.0000000Z'
         if ($script:uploadFailure) { throw 'simulated ambiguous network failure' }
     }
-    function Set-PnPListItem {
-        param($List, $Identity, $UpdateType, $Values, $Connection, $ErrorAction)
+    function Set-DocumentMetadataValues {
+        param($Current, $Values)
         $script:setCalls++
-        Assert-Equal $List 'existing-list'
-        Assert-Equal $Identity 17
-        Assert-Equal $UpdateType 'UpdateOverwriteVersion'
+        Assert-Equal $Current.ListId 'existing-list'
+        Assert-Equal $Current.ItemId 17
         if ($script:metadataFailure) { throw 'simulated metadata denial' }
         $script:remote.Author = [int]$Values.Author
         $script:remote.Editor = [int]$Values.Editor
@@ -284,6 +304,37 @@ try {
         Assert-Throws { Restore-DocumentMetadata $plan $script:before 'connection' '"different-etag"' } 'ETag changed'
         $script:remoteBytes = [Text.Encoding]::UTF8.GetBytes('concurrent-editor-content')
         Assert-Throws { Restore-DocumentMetadata $plan $script:before 'connection' $script:remote.ETag } 'Remote bytes differ'
+    }
+    $backup = Join-Path $temp 'original-backup.pdf'
+    [IO.File]::WriteAllText($backup, 'original-content')
+    $snapshotPath = $backup + '.metadata.json'
+    $snapshotData = [ordered]@{
+        Target = $plan.FileRef; WebUrl = $plan.WebUrl
+        SHA256 = (Get-FileHash -LiteralPath $backup).Hash
+        UniqueId = 'existing-file'; ItemId = 17; ListId = 'existing-list'
+        Author = 8; Editor = 9
+        Created = '2024-01-02T03:04:05.0000000Z'; Modified = '2025-02-03T04:05:06.0000000Z'
+    }
+    $snapshotData | ConvertTo-Json | Set-Content -LiteralPath $snapshotPath
+    function Connect-DocumentUploadSite { param($Url, $ApplicationId) return 'connection' }
+    Test-Case 'Snapshot recovery preserves original UTC strings and never uploads content' {
+        $script:remote = New-TestState
+        $script:remote.Created = '2024-01-01T19:04:05.0000000Z'
+        $script:remoteBytes = [IO.File]::ReadAllBytes($plan.LocalPath)
+        $uploadsBefore = $script:uploads
+        $result = Restore-SnapshotDocumentMetadata $snapshotPath @($plan)
+        Assert-Equal $result.Status 'MetadataRestoredAndVerified'
+        Assert-Equal $script:remote.Created $snapshotData.Created
+        Assert-Equal $script:uploads $uploadsBefore
+    }
+    Test-Case 'Snapshot recovery rejects mismatched destination and damaged backup' {
+        $snapshotData.Target = '/sites/Epic/Wrong/Guide.pdf'
+        $snapshotData | ConvertTo-Json | Set-Content -LiteralPath $snapshotPath
+        Assert-Throws { Restore-SnapshotDocumentMetadata $snapshotPath @($plan) } 'exactly one'
+        $snapshotData.Target = $plan.FileRef
+        $snapshotData | ConvertTo-Json | Set-Content -LiteralPath $snapshotPath
+        [IO.File]::WriteAllText($backup, 'damaged')
+        Assert-Throws { Restore-SnapshotDocumentMetadata $snapshotPath @($plan) } 'backup hash'
     }
     Write-Host "$script:passed tests passed. No SharePoint connections or writes were made."
 } finally {

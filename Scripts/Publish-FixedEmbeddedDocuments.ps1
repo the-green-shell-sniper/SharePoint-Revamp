@@ -20,6 +20,7 @@ param(
     [string]$PlanCsv,
     [string]$OutputFolder,
     [string]$ClientId,
+    [string]$RestoreMetadataSnapshot,
     [switch]$Preflight,
     [switch]$Apply
 )
@@ -333,14 +334,78 @@ function Restore-DocumentMetadata {
     if ((Get-BytesSHA256 (Get-RemoteDocumentBytes $Plan $Connection)) -ne $Plan.SHA256) {
         throw 'Remote bytes differ from the planned upload; refusing to restore potentially stale metadata.'
     }
-    Set-PnPListItem -List $Before.ListId -Identity $Before.ItemId -UpdateType UpdateOverwriteVersion -Values @{
+    Set-DocumentMetadataValues $current @{
         Author = [string]$Before.Author; Editor = [string]$Before.Editor
         Created = [datetime]::Parse($Before.Created, [cultureinfo]::InvariantCulture).ToUniversalTime()
         Modified = [datetime]::Parse($Before.Modified, [cultureinfo]::InvariantCulture).ToUniversalTime()
-    } -Connection $Connection -ErrorAction Stop | Out-Null
+    }
     $after = Get-RemoteDocumentState $Plan $Connection
     foreach ($key in 'Author','Editor','Created','Modified','UniqueId','ItemId','ListId') {
-        if ($after.$key -cne $Before.$key) { throw "Post-upload verification failed for $key." }
+        if ($after.$key -cne $Before.$key) {
+            throw "Post-upload verification failed for $key. Expected [$($Before.$key)], actual [$($after.$key)]."
+        }
+    }
+}
+
+function Set-DocumentMetadataValues {
+    param($Current, [hashtable]$Values)
+    # Assign UTC DateTimes directly; PnP's value conversion shifted them to server local time.
+    foreach ($key in 'Author','Editor') {
+        $user = [Microsoft.SharePoint.Client.FieldUserValue]::new()
+        $user.LookupId = [int]$Values[$key]
+        $Current.Item[$key] = $user
+    }
+    foreach ($key in 'Created','Modified') {
+        $date = [datetime]$Values[$key]
+        if ($date.Kind -ne [DateTimeKind]::Utc) { throw "$key must be an explicitly UTC DateTime." }
+        $Current.Item[$key] = $date
+    }
+    $Current.Item.UpdateOverwriteVersion()
+    $Current.Item.Context.ExecuteQuery()
+}
+
+function Restore-SnapshotDocumentMetadata {
+    param([string]$Path, [object[]]$Plan, [string]$ApplicationId)
+    $json = [System.Text.Json.JsonDocument]::Parse([IO.File]::ReadAllText($Path))
+    try {
+        $root = $json.RootElement
+        $before = [pscustomobject]@{
+            UniqueId = $root.GetProperty('UniqueId').GetString()
+            ItemId = $root.GetProperty('ItemId').GetInt32()
+            ListId = $root.GetProperty('ListId').GetString()
+            Author = $root.GetProperty('Author').GetInt32()
+            Editor = $root.GetProperty('Editor').GetInt32()
+            Created = $root.GetProperty('Created').GetString()
+            Modified = $root.GetProperty('Modified').GetString()
+        }
+        $target = $root.GetProperty('Target').GetString()
+        $web = $root.GetProperty('WebUrl').GetString()
+        $backupHash = $root.GetProperty('SHA256').GetString()
+    } finally { $json.Dispose() }
+    $entries = @($Plan | Where-Object { $_.FileRef -ceq $target -and $_.WebUrl -ceq $web })
+    if ($entries.Count -ne 1) { throw 'Snapshot must match exactly one planned destination.' }
+    if (-not $Path.EndsWith('.metadata.json', [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Expected a .metadata.json snapshot adjacent to its original backup.'
+    }
+    $backup = $Path.Substring(0, $Path.Length - '.metadata.json'.Length)
+    if ((Get-FileHash -LiteralPath $backup -Algorithm SHA256).Hash -ne $backupHash) {
+        throw 'Original backup hash does not match its metadata snapshot.'
+    }
+    foreach ($key in 'Created','Modified') {
+        $date = [datetime]::Parse($before.$key, [cultureinfo]::InvariantCulture, [Globalization.DateTimeStyles]::RoundtripKind)
+        if ($date.Kind -ne [DateTimeKind]::Utc) { throw "Snapshot $key must specify UTC." }
+    }
+    $entry = $entries[0]
+    $connection = Connect-DocumentUploadSite -Url $web -ApplicationId $ApplicationId
+    $current = Get-RemoteDocumentState $entry $connection
+    Restore-DocumentMetadata $entry $before $connection $current.ETag
+    if ((Get-BytesSHA256 (Get-RemoteDocumentBytes $entry $connection)) -ne $entry.SHA256) {
+        throw 'Post-recovery content verification failed.'
+    }
+    return [pscustomobject]@{
+        Target = $target; Status = 'MetadataRestoredAndVerified'; Snapshot = $Path
+        Author = $before.Author; Editor = $before.Editor
+        Created = $before.Created; Modified = $before.Modified
     }
 }
 
@@ -413,6 +478,9 @@ function Invoke-PublishFixedDocuments {
         Join-Path $root ('UploadRuns\' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
     }
     if ($Apply -and $Preflight) { throw 'Choose -Apply or -Preflight, not both.' }
+    if ($RestoreMetadataSnapshot -and ($Apply -or $Preflight)) {
+        throw 'Metadata recovery is a separate write operation; do not combine it with -Apply or -Preflight.'
+    }
     if (Test-Path -LiteralPath $output) { throw 'OutputFolder already exists; use a new folder for every run.' }
     $plan = if ($PlanCsv) { @(Import-FixedDocumentPlan ([IO.Path]::GetFullPath($PlanCsv)) $documents) } else {
         @(New-FixedDocumentPlan $documents $workbook $runs)
@@ -421,6 +489,13 @@ function Invoke-PublishFixedDocuments {
     $plan | Select-Object RelativeFile,SHA256,WebUrl,Folder,FileRef |
         Export-Csv -LiteralPath (Join-Path $output 'upload-plan.csv') -NoTypeInformation -Encoding utf8BOM
     Write-Host "Planned $($plan.Count) corrected documents. Review: $(Join-Path $output 'upload-plan.csv')"
+    if ($RestoreMetadataSnapshot) {
+        Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
+        $result = Restore-SnapshotDocumentMetadata ([IO.Path]::GetFullPath($RestoreMetadataSnapshot)) $plan $ClientId
+        $result | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $output 'metadata-recovery.json') -Encoding utf8
+        Write-Host "MetadataRestoredAndVerified: $($result.Target). No document content uploaded."
+        return
+    }
     if (-not $Apply -and -not $Preflight) {
         Write-Host 'Offline plan only. No SharePoint connection or remote changes.'
         return

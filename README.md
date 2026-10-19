@@ -78,8 +78,9 @@ $options = @{
 
 The script captures the **existing destination file's** `Author` (Created By),
 `Editor` (Modified By), `Created`, and `Modified` immediately before upload.
-It overwrites the existing file, then uses `Set-PnPListItem -UpdateType
-UpdateOverwriteVersion` to restore those fields and verifies all four, plus file/item
+It overwrites the existing file, then assigns typed user lookup values and explicitly
+UTC DateTimes directly through CSOM `ListItem.UpdateOverwriteVersion()` to restore
+those fields and verifies all four, plus file/item
 identity and the uploaded byte hash. User IDs are reused within the same site;
 no user-account creation or cross-site identity guessing is needed.
 This preserves the current target metadata, **not old-site metadata from before migration**,
@@ -122,6 +123,28 @@ may change metadata after verification. Coordinate with the site owner before
 applying, and spot-check the destination fields afterward. Insufficient permissions,
 retention policies, and tenant automation can prevent preservation; failures are
 reported, never silently treated as success.
+
+### Recovering metadata after an interrupted upload
+
+Do not blindly rerun `-Apply` after a metadata verification failure: a fresh run
+would capture the already-changed destination metadata. Keep the original apply
+run's backups. `-RestoreMetadataSnapshot` is an explicit **metadata-only write**
+mode using the original adjacent `.metadata.json` and backup. It verifies the
+backup hash, plan destination, remote file/item identity, writability, current
+ETag and corrected content hash before restoring, then verifies metadata and
+content. It never uploads document bytes. It cannot be combined with `-Preflight`
+or `-Apply`. Use a new output directory; success writes `metadata-recovery.json`.
+
+```powershell
+& "$work\Publish-FixedEmbeddedDocuments.ps1" @options `
+  -RestoreMetadataSnapshot '<full-path-to-original-backup.metadata.json>' `
+  -OutputFolder "$work\UploadRuns\metadata-recovery-unique-name"
+```
+
+This also repairs timestamps shifted by the initial uploader's PnP DateTime
+conversion on a non-UTC server. The current writer avoids that conversion by
+sending UTC DateTime values directly through CSOM. After recovery succeeds, a
+fresh `-Apply` run can safely skip already-identical content and process the rest.
 
 Offline tests (no SharePoint connection):
 
