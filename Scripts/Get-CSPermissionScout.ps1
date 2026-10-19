@@ -19,7 +19,7 @@
 param(
     [string]$SourceUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
     [string]$TargetUrl = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
-    [string]$OutputFolder = (Join-Path $PSScriptRoot 'CS-PermissionScout'),
+    [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermissionsReports\CS-PermissionScout'),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$SkipPersistLoginSetup
 )

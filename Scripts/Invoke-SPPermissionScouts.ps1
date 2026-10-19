@@ -20,7 +20,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$ChecklistFile,
-    [string]$OutputFolder = (Join-Path $PSScriptRoot 'Site-PermissionScouts'),
+    [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermissionsReports'),
     [string[]]$TargetSites,
     [switch]$IncludeCS,
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',

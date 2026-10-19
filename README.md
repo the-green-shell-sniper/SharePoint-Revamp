@@ -33,7 +33,7 @@ If inventory counts/fields fail on the server, run the read-only
 This uses the existing document-lookup scanner's recursive paged PnP/CAML pattern,
 discovers fields, reads item inheritance explicitly, and compares item IDs against
 REST on both CS webs. It includes hidden/empty lists but does not recurse into
-subsites or change permissions. Timestamped `CS-PermissionScout` reports include
+subsites or change permissions. Timestamped `Reports\PermissionsReports\CS-PermissionScout` reports include
 `Lists.csv`, `Fields.csv`, `Items.csv`, and `Errors.csv`. Count discrepancies are
 flagged for review, not explained away or used to authorize permission changes.
 Read failures are saved and cause an explicit failed result. The sync's current
@@ -59,7 +59,15 @@ No permission-sync/apply scripts are called.
     -TargetSites 'https://whallc.sharepoint.com/sites/Accounting'
 ```
 
-Reports default to `Site-PermissionScouts\Scouts_<timestamp>` beside the runner.
+Reports default to `Reports\PermissionsReports\Scouts_<timestamp>` under the repo root.
+The server checkout is `C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp`, so the
+shared report root there is
+`C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermissionsReports`.
+Both the `Scripts` CS scout and the copy in `CS-PermissionSuite` default to
+`Reports\PermissionsReports\CS-PermissionScout` under that same repo root.
+Paths are relative to the scripts, not hard-coded to a Windows account.
+Explicit `-OutputFolder` arguments still override these defaults; already completed
+or running scouts retain their original output paths. Existing reports are not moved.
 Each pair has its own subfolder with the existing four scout reports.
 `ScoutSummary.csv` is saved after every pair and identifies failures, count/ID
 discrepancies needing review, and each report location. Read failures do not stop
