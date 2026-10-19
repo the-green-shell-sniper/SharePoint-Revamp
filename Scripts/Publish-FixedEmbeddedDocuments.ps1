@@ -407,9 +407,30 @@ function Compare-OfficeDocumentPackage {
                     $py.DocumentElement.LocalName -cne 'datastoreItem' -or
                     $px.DocumentElement.NamespaceURI -cne $ns -or
                     $py.DocumentElement.NamespaceURI -cne $ns) { continue }
-                # Only the metadata datastore ID may differ, never schema references.
+                # SharePoint can drop schemaRefs when rebuilding a library metadata datastore.
                 $px.DocumentElement.RemoveAttribute('itemID', $ns)
                 $py.DocumentElement.RemoveAttribute('itemID', $ns)
+                $oldRefs = @($px.DocumentElement.ChildNodes | Where-Object {
+                    $_ -is [Xml.XmlElement] -and $_.LocalName -ceq 'schemaRefs' -and $_.NamespaceURI -ceq $ns
+                })
+                $newRefs = @($py.DocumentElement.ChildNodes | Where-Object {
+                    $_ -is [Xml.XmlElement] -and $_.LocalName -ceq 'schemaRefs' -and $_.NamespaceURI -ceq $ns
+                })
+                if ($oldRefs.Count -eq 1 -and $newRefs.Count -eq 0) {
+                    $validRefs = $oldRefs[0].Attributes.Count -eq 0
+                    foreach ($ref in $oldRefs[0].ChildNodes) {
+                        if ($ref -is [Xml.XmlWhitespace]) { continue }
+                        if ($ref -isnot [Xml.XmlElement] -or $ref.LocalName -cne 'schemaRef' -or
+                            $ref.NamespaceURI -cne $ns -or $ref.Attributes.Count -ne 1 -or
+                            -not $ref.HasAttribute('uri', $ns) -or $ref.HasChildNodes) {
+                            $validRefs = $false
+                        }
+                    }
+                    if ($validRefs) { [void]$px.DocumentElement.RemoveChild($oldRefs[0]) }
+                }
+                foreach ($document in @($px, $py)) {
+                    if (-not $document.DocumentElement.HasChildNodes) { $document.DocumentElement.IsEmpty = $true }
+                }
                 if ($px.OuterXml -ceq $py.OuterXml) { [void]$allowed.Add($propsName) }
             }
         }

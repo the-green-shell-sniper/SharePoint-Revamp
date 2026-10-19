@@ -95,6 +95,35 @@ try {
         Write-TestOfficePackage $cp $b
         Assert-Throws { Compare-OfficeDocumentPackage $ap ([IO.File]::ReadAllBytes($cp)) } 'unapproved'
     }
+    Test-Case 'Observed C-17 schema-reference removal is accepted without ignoring content' {
+        $repo = Split-Path -Parent $PSScriptRoot
+        $remotePath = Join-Path $repo 'UploadRuns\diagnostic-C17-20261019-062325\C-17.remote.docx'
+        if (Test-Path -LiteralPath $remotePath) {
+            $sourcePath = Join-Path $repo 'UpdatedEmbeddedLinkCopies\HR\C-17 Blood Specimen Collection & Competency Checklist 2026.04.15.docx'
+            $diffs = Compare-OfficeDocumentPackage $sourcePath ([IO.File]::ReadAllBytes($remotePath))
+            Assert-Equal $diffs.Count 9
+        }
+    }
+    Test-Case 'Metadata datastore permits schema list removal but rejects replacement' {
+        $a = $parts.Clone()
+        $b = $parts.Clone()
+        $rels = '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXmlProps" Target="itemProps1.xml"/></Relationships>'
+        $head = '<ds:datastoreItem xmlns:ds="http://schemas.openxmlformats.org/officeDocument/2006/customXml" ds:itemID="old">'
+        $refs = '<ds:schemaRefs><ds:schemaRef ds:uri="original"/></ds:schemaRefs>'
+        $a['customXml/_rels/item1.xml.rels'] = $rels
+        $b['customXml/_rels/item1.xml.rels'] = $rels
+        $a['customXml/itemProps1.xml'] = $head + $refs + '</ds:datastoreItem>'
+        $b['customXml/itemProps1.xml'] = $head + '</ds:datastoreItem>'
+        $ap = Join-Path $temp 'schema-original.docx'
+        $bp = Join-Path $temp 'schema-removed.docx'
+        Write-TestOfficePackage $ap $a
+        Write-TestOfficePackage $bp $b
+        Assert-Equal (Compare-OfficeDocumentPackage $ap ([IO.File]::ReadAllBytes($bp))).Count 1
+        $b['customXml/itemProps1.xml'] = $head + $refs.Replace('original','replacement') + '</ds:datastoreItem>'
+        $cp = Join-Path $temp 'schema-replaced.docx'
+        Write-TestOfficePackage $cp $b
+        Assert-Throws { Compare-OfficeDocumentPackage $ap ([IO.File]::ReadAllBytes($cp)) } 'unapproved'
+    }
     Test-Case 'Office comparison is opt-in, audited and does not weaken PDFs' {
         $p = [pscustomobject]@{
             LocalPath = $officeLocal; SHA256 = (Get-FileHash -LiteralPath $officeLocal).Hash

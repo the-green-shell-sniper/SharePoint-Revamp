@@ -165,8 +165,12 @@ and metadata recovery:
 - All package part names and uncompressed bytes must match, except recognized
   `docProps/core.xml`, `docProps/custom.xml`, and custom XML rooted in the Office
   document-property or content-type-schema namespaces.
-- Datastore properties linked to those metadata parts may change only their item ID;
-  schema references must remain unchanged. Relationships themselves must match exactly.
+- Datastore properties linked to those metadata parts may change their item ID.
+  SharePoint may also remove the complete schema-reference list from such a datastore
+  when rebuilding library metadata (observed on C-17). Only a list consisting entirely
+  of empty `schemaRef` elements with a single schema-URI attribute may be removed.
+  Added or replaced references, unrelated attributes/children, and changes in
+  non-metadata datastores are rejected. Relationships themselves must match exactly.
 - Added `[trash]/<digits>.dat` entries are permitted. Other additions, deletions,
   content/hyperlink changes, or arbitrary custom XML changes fail verification.
 - Digitally signed Office packages and all other formats, including PDFs, still
