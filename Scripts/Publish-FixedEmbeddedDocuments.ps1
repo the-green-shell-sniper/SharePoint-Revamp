@@ -10,6 +10,10 @@ Existing target files are required. No folders, permissions, publication or rete
 settings are changed. Use a new OutputFolder each run. A portable -PlanCsv lets the
 server use only this script, the plan and -DocumentsFolder, without the workbook
 or remediation history.
+Metadata writes use explicitly UTC CSOM DateTimes to avoid server-local timezone
+conversion. After an interrupted upload, -RestoreMetadataSnapshot performs a
+separate metadata-only recovery from the original backup's .metadata.json file.
+Do not combine recovery with -Apply or -Preflight.
 #>
 [CmdletBinding()]
 param(
