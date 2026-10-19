@@ -31,6 +31,8 @@ param(
 
 function Invoke-CSPermissionSync {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
+    $ReviewRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReviewRoot)
     foreach ($name in @('SPPermission.Common.ps1', 'New-SPPermissionMatchMap.ps1', 'Sync-SPPermissionsFromSource.ps1', 'Invoke-SPPermissionChecklist.ps1')) {
         if (-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot $name))) { throw "Missing companion script: $name" }
     }

@@ -3,7 +3,8 @@
 .SYNOPSIS
     Read-only CS inventory diagnostics, using the repository's recursive PnP pattern.
 .DESCRIPTION
-    Reads only archived CS and Clinical & Patient Services (not their subsites).
+    Defaults to archived CS and Clinical & Patient Services. SourceUrl and TargetUrl
+    can select another explicit pair. Does not recurse into subsites.
     Does not resolve/create users or change content, permissions or authentication settings
     except enabling the existing PnP persistent login option.
     Enumerates all lists, including hidden/empty lists; compares recursive CAML item IDs
@@ -16,6 +17,8 @@
 #>
 [CmdletBinding()]
 param(
+    [string]$SourceUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
+    [string]$TargetUrl = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermissionsReports\CS-PermissionScout'),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$SkipPersistLoginSetup
@@ -33,6 +36,10 @@ function Get-CSScoutQuery {
 
 function Invoke-CSPermissionScout {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
+    Assert-SPPermissionUrls $SourceUrl $TargetUrl
+    $SourceUrl = $SourceUrl.TrimEnd('/')
+    $TargetUrl = $TargetUrl.TrimEnd('/')
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $folder = Join-Path $OutputFolder (Get-Date -Format 'yyyyMMdd-HHmmss-fff')
     [void][IO.Directory]::CreateDirectory($folder)
@@ -41,8 +48,8 @@ function Invoke-CSPermissionScout {
     $itemsReport = [Collections.Generic.List[object]]::new()
     $errorsReport = [Collections.Generic.List[object]]::new()
     $sites = @(
-        @{ Side = 'Source'; Url = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS' }
-        @{ Side = 'Target'; Url = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices' }
+        @{ Side = 'Source'; Url = $SourceUrl }
+        @{ Side = 'Target'; Url = $TargetUrl }
     )
     try {
         foreach ($site in $sites) {

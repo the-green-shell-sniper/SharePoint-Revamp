@@ -36,6 +36,7 @@ function Get-CSScoutQuery {
 
 function Invoke-CSPermissionScout {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     Assert-SPPermissionUrls $SourceUrl $TargetUrl
     $SourceUrl = $SourceUrl.TrimEnd('/')
     $TargetUrl = $TargetUrl.TrimEnd('/')

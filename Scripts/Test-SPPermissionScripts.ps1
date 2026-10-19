@@ -817,7 +817,19 @@ try {
         $launcher = Join-Path $PSScriptRoot 'Invoke-CSPermissionSync.ps1'
         $output = Join-Path $temp 'cs-suite'
         $reviews = Join-Path $temp 'cs-suite-reviews'
-        & $launcher -Mode Match -OutputFolder $output -ReviewRoot $reviews
+        $processDirectory = [Environment]::CurrentDirectory
+        $otherDirectory = Join-Path $temp 'different-process-directory'
+        [void][IO.Directory]::CreateDirectory($otherDirectory)
+        Push-Location $temp
+        try {
+            [Environment]::CurrentDirectory = $otherDirectory
+            & $launcher -Mode Match -OutputFolder '.\cs-suite' -ReviewRoot '.\cs-suite-reviews'
+            Assert-Equal (Test-Path -LiteralPath (Join-Path $otherDirectory 'cs-suite')) $false
+            Assert-Equal (@(Get-ChildItem -LiteralPath $output -Recurse -Filter 'CS-SitePair.csv').Count) 1
+        } finally {
+            [Environment]::CurrentDirectory = $processDirectory
+            Pop-Location
+        }
         Assert-Equal (@(Get-ChildItem -LiteralPath $reviews -Recurse -Filter 'MatchReview.csv').Count) 1
         & $launcher -Mode DryRun -OutputFolder $output -ReviewRoot $reviews
         Assert-Equal $csState.TargetAcl[0].Member.LoginName 'old-user'

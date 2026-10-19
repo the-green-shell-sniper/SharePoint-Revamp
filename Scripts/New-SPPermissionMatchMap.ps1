@@ -116,6 +116,7 @@ function Get-SPMatchScore {
 
 function Invoke-NewSPPermissionMatchMap {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     Assert-SPPermissionUrls $SourceUrl $TargetUrl
     $SourceUrl = $SourceUrl.TrimEnd('/')
     $TargetUrl = $TargetUrl.TrimEnd('/')

@@ -67,6 +67,9 @@ shared report root there is
 Both the `Scripts` CS scout and the copy in `CS-PermissionSuite` default to
 `Reports\PermissionsReports\CS-PermissionScout` under that same repo root.
 Paths are relative to the scripts, not hard-coded to a Windows account.
+Explicit relative output/review arguments are resolved against PowerShell's current
+filesystem location before .NET directory creation; they do not use the process's
+potentially different working directory (such as `C:\Windows\System32`).
 Explicit `-OutputFolder` arguments still override these defaults; already completed
 or running scouts retain their original output paths. Existing reports are not moved.
 Each pair has its own subfolder with the existing four scout reports.
