@@ -20,6 +20,107 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### Queued automatic application and recursive reporting
+
+[Invoke-SPPermissionQueue.ps1](Scripts/Invoke-SPPermissionQueue.ps1) previews the
+checklist queue by default. `-Apply` explicitly authorizes automated changes:
+
+```powershell
+$repo = 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp'
+
+# Preview only (no connections, windows or writes).
+& "$repo\Scripts\Invoke-SPPermissionQueue.ps1" `
+    -TargetSites 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+
+# Authorizes changes for CS only. Omit TargetSites to select the entire checklist.
+& "$repo\Scripts\Invoke-SPPermissionQueue.ps1" -Apply -MaxConcurrent 4 `
+    -TargetSites 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+```
+
+There are at most four active site workers per queue (configurable downward).
+Each uses its own elevated PowerShell **7** window, retained with `-NoExit`.
+The site root and its content finish Match, DryRun, Apply and measured verification
+before the first matched subsite starts; subsites run sequentially, depth-first,
+in the same window. Completed windows release the active slot without closing.
+Related **target site collections** are serialized, even across checklist rows;
+shared read-only source archive collections do not serialize otherwise independent
+targets. There is no per-list/item parallelism.
+Worker-held named mutexes also cap actual work at four and serialize related
+collections if the scheduler is restarted while earlier worker windows still run.
+
+Auto mode approves exact paths through the existing matcher and fuzzy proposals
+with **Score >= 0.80**. This is a similarity score, **not an 80% identity guarantee**.
+It intentionally does not require the matcher's High tier or runner-up margin.
+Ambiguous high-scoring proposals can therefore be approved; inspect score evidence.
+Renamed children cannot bypass unapproved containers. Existing approvals are kept;
+previously unapproved high-score rows are automatically approved, with an
+`ApprovalPolicy` column documenting this decision. Existing review files are retained,
+not replaced by new proposals. Review/merge fresh candidates when content changes.
+Lower scores remain `Approved=No` for manual review and are not synchronized. After
+approving those rows, rerun the site explicitly. A completed worker with pending
+review rows is **not** a claim that everything was synchronized.
+
+The CS `COVID19 Resources` and `COVID19 Workflows` libraries are explicitly excluded
+from synchronization by the checklist runner, regardless of score, but still appear
+in the permission report. As with other unmatched content, inherited access may be
+protected by breaking inheritance **with copy**, retaining grants before ancestor
+changes. No source is written. Source `Team Site Members` still maps to target
+Visitors; root target Owners/Members remain protected.
+
+Each site's Auto workflow refuses Apply if DryRun has blocked scopes or unavailable
+principals, rechecks the live Apply plan, and performs a fresh post-Apply DryRun
+requiring zero remaining actions. Failures stop that site, not the remaining queue.
+Earlier writes are not rolled back. Apply can ensure target site users before its
+final permission-plan gate; these directory entries are not role grants.
+
+Default outputs are under `Reports\PermissionsReports\PermissionQueue\Queue-*`:
+
+- `QueueStatus.csv`: queued/running/completed/failed outcomes.
+- Per-worker `WorkerStatus.json` and `WorkerTranscript.txt`: retained failure details.
+- Per-site `SiteReport-*` folder (one combined report bundle for root and descendants):
+  - `Changes.csv`: web, path, action, principal/role detail, result and evidence log.
+    **Verified** means a write completed and was checked; **Planned** is not applied.
+    Write-start entries without a verified outcome require live inspection.
+  - `EffectivePermissions.csv`: every enumerated target web, list/library, folder,
+    file and item, including hidden lists, unmatched and excluded content; one row per
+    principal/role binding with inheritance origin, observation time and inventory caveats.
+    Target-only subsites are reported even though they are not permission-synced.
+  - `ReportStatus.json`: Complete or Failed, object/web/row counts and limitations.
+    A partial CSV with a Failed manifest is **not** a complete reference.
+- Per-web snapshots, plans, inventory matches and logs remain available as evidence.
+
+The recursive report is generated after application (also attempted after failure);
+`Changes.csv` is saved before scanning so a reporting failure cannot hide earlier
+changes. The report streams CSV rows, retaining one web inventory/ACL set at a time.
+This bounds memory by web size, not by a fixed byte limit. It is not a transactional
+snapshot and can reflect concurrent edits. Enumeration is limited to the signed-in
+account; agreement between methods does not prove unrestricted visibility.
+Role assignments include observed limited-access and sharing-link bindings but do
+not expand SharePoint/Entra groups, link recipients, site admins, app permissions or
+tenant policies into individual effective access. Treat these reports as permission
+references, not an exhaustive authorization simulation.
+
+Use [Export-SPPermissionSiteReport.ps1](Scripts/Export-SPPermissionSiteReport.ps1)
+standalone to refresh a read-only recursive reference. The checklist `Apply` mode
+also produces reports without enabling Auto. The CS launcher's existing
+Match/DryRun/Apply/Verify workflow stays manual.
+
+Run the queue in an elevated PowerShell 7 console using the same Windows account
+as the cached PnP login. UAC/browser authentication may still be needed. Do not launch
+another queue or manual apply/scout on overlapping sites while workers remain active.
+Keep the scheduler open until workers publish their final status. Closing it does
+not terminate elevated workers; inspect retained windows before restarting.
+Four workers reduce pressure but do not guarantee Microsoft will not throttle.
+The existing bounded read retries remain in effect; ambiguous writes are not retried.
+Reports contain sensitive identities/paths; restrict access to the report repository.
+
+Offline validation:
+
+```powershell
+.\Scripts\Test-SPPermissionScripts.ps1
+.\Scripts\Test-SPPermissionQueue.ps1
+```
+
 ### CS only: do this first
 
 If inventory counts/fields fail on the server, run the read-only

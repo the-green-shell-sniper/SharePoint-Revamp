@@ -50,6 +50,7 @@ param(
     [ValidateRange(1, 5000)][int]$PageSize = 500,
     [switch]$NoFreeze,
     [switch]$SkipPersistLoginSetup,
+    [switch]$RequireCompletePlan,
     [switch]$Apply
 )
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
@@ -283,11 +284,19 @@ function Assert-SPPermissionState {
 }
 
 function Invoke-SPPermissionPlan {
-    param($Connection, $Plan, $Log)
+    param($Connection, $Plan, $Log, [string]$LogPath)
     foreach ($step in $Plan.Steps) {
         try {
             Assert-SPPermissionState $Connection $step $false
             $operation = $step.Operation
+            if ($LogPath) {
+                $started = [pscustomobject]@{
+                    Path = $step.Key; Action = $step.Action; Result = 'Write starting - outcome not yet verified'
+                    Detail = "$([datetime]::UtcNow.ToString('o')) $($operation.Login) $($operation.Role)"
+                }
+                $Log.Add($started)
+                $started | Export-Csv -LiteralPath $LogPath -Append -NoTypeInformation -Encoding utf8
+            }
             switch ($step.Action) {
                 { $_ -in @('Freeze', 'Break') } {
                     $null = Invoke-SPPermissionRest $Connection ($step.Api + '/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)') -Method Post
@@ -307,6 +316,7 @@ function Invoke-SPPermissionPlan {
                 Path = $step.Key; Action = $step.Action; Result = 'Verified'
                 Detail = "$($operation.Login) $($operation.Role)"
             })
+            if ($LogPath) { $Log[-1] | Export-Csv -LiteralPath $LogPath -Append -NoTypeInformation -Encoding utf8 }
         } catch {
             $Log.Add([pscustomobject]@{
                 Path = $step.Key; Action = $step.Action; Result = 'Failed - inspect live state'
@@ -489,7 +499,11 @@ function Invoke-SyncSPPermissionsFromSource {
         }
         # Persist the complete plan before the first permission write.
         Export-SPPermissionCsv $log.ToArray() @('Path','Action','Result','Detail') $logPath
-        if ($Apply) { Invoke-SPPermissionPlan $targetConnection $plan $log }
+        if ($RequireCompletePlan -and
+            (@($plan.Notes | Where-Object Result -eq 'Blocked').Count -or $unavailable.Count)) {
+            throw 'Automatic Apply refused: live plan has blocked scopes or unavailable principals. No permission-plan writes performed.'
+        }
+        if ($Apply) { Invoke-SPPermissionPlan $targetConnection $plan $log $logPath }
         $blockedCount = @($plan.Notes | Where-Object Result -eq 'Blocked').Count
         Write-Host "[$mode] Permission actions: $($plan.Steps.Count); blocked scopes: $blockedCount; unavailable principals: $($unavailable.Count)"
         Write-Host "Plan: $planPath"

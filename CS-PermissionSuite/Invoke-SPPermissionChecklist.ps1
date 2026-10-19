@@ -4,6 +4,9 @@
     Process checklist sites and matched descendant webs sequentially, never the tenant.
 .DESCRIPTION
     Match generates content and subweb proposals. DryRun is the default; Apply is explicit.
+    Auto explicitly authorizes per-web Match -> approve Score >= 0.80 -> DryRun ->
+    Apply -> measured verification. Lower scores stay unapproved. Score is similarity,
+    not a probability of identity. Auto can approve ambiguous high-scoring proposals.
     Each web is completely inventoried, planned and reported (and applied in Apply mode)
     before the next web starts. Explicit checklist mappings override descendant matching.
     Exact child-web paths are automatic; renamed child webs require Approved=Yes in
@@ -25,7 +28,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$ChecklistFile,
-    [ValidateSet('Match', 'DryRun', 'Apply')][string]$Mode = 'DryRun',
+    [ValidateSet('Match', 'DryRun', 'Apply', 'Auto')][string]$Mode = 'DryRun',
     [string]$OutputFolder = (Join-Path $PSScriptRoot 'PermissionRuns'),
     [string]$ReviewRoot = (Join-Path $PSScriptRoot 'PermissionReviews'),
     [string[]]$TargetSites,
@@ -39,6 +42,57 @@ param(
     [switch]$SkipPersistLoginSetup
 )
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
+
+function Set-SPChecklistAutoApprovals {
+    param([string]$Path, [switch]$Webs)
+    $rows = @(Import-Csv -LiteralPath $Path -ErrorAction Stop)
+    foreach ($row in $rows) {
+        if ($null -eq $row.PSObject.Properties['ApprovalPolicy']) {
+            $row | Add-Member -NotePropertyName ApprovalPolicy -NotePropertyValue 'Manual review'
+        }
+        if ($row.Approved -match '^(?i:Yes|True|1|Y)$') { continue }
+        $score = 0.0
+        if (-not [double]::TryParse($row.Score, [Globalization.NumberStyles]::Float,
+            [Globalization.CultureInfo]::InvariantCulture, [ref]$score) -or $score -lt 0 -or $score -gt 1) {
+            throw "Invalid match score in '$Path': $($row.Score)"
+        }
+        if ($score -ge 0.80) {
+            $row.Approved = 'Yes'
+            $row.ApprovalPolicy = 'Automatic Score >= 0.80'
+        }
+    }
+    if (-not $Webs) {
+        # A high-scoring child cannot authorize an unapproved renamed container.
+        foreach ($row in $rows | Sort-Object { $_.SourcePath.Length }) {
+            $parents = @($rows | Where-Object {
+                $_.Kind -in @('Library', 'List', 'Folder') -and $_.SourcePath -ine $row.SourcePath -and
+                (Test-SPPermissionPathWithin $row.SourcePath $_.SourcePath)
+            })
+            if (@($parents | Where-Object { $_.Approved -notmatch '^(?i:Yes|True|1|Y)$' }).Count) {
+                $row.Approved = 'No'
+                $row.ApprovalPolicy = 'Manual review - renamed parent not approved'
+            }
+        }
+    }
+    if ($rows.Count) { $rows | Export-Csv -LiteralPath $Path -NoTypeInformation -Encoding utf8 }
+}
+
+function Assert-SPChecklistDryRun {
+    param([string]$Folder)
+    $plans = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_Plan_DRYRUN_*.json')
+    $principals = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_UnavailablePrincipals_DRYRUN_*.csv')
+    if ($plans.Count -ne 1 -or $principals.Count -ne 1) { throw "Incomplete automatic preflight in '$Folder'." }
+    $plan = Get-Content -LiteralPath $plans[0].FullName -Raw | ConvertFrom-Json -Depth 100
+    if (@($plan.Notes | Where-Object Result -eq 'Blocked').Count -or
+        @(Import-Csv -LiteralPath $principals[0].FullName).Count) {
+        throw "Automatic Apply stopped: blocked scopes or unavailable principals in '$Folder'."
+    }
+}
+
+function Invoke-SPChecklistReport {
+    param([hashtable]$Options)
+    & (Join-Path $PSScriptRoot 'Export-SPPermissionSiteReport.ps1') @Options
+}
 
 function Get-SPChecklistPairs {
     param([string]$Path)
@@ -141,6 +195,29 @@ function Invoke-SPChecklistWeb {
     $arguments = $Options.Clone()
     $arguments.SourceUrl = $Pair.SourceUrl; $arguments.TargetUrl = $Pair.TargetUrl
     $arguments.OutputFolder = $RunFolder
+    if ($RunMode -eq 'Auto') {
+        foreach ($stage in @('Match', 'DryRun', 'Apply')) {
+            $stageFolder = Join-Path $RunFolder $stage
+            [void][IO.Directory]::CreateDirectory($stageFolder)
+            $stageOptions = $Options.Clone()
+            if ($stage -eq 'Apply') { $stageOptions.RequireCompletePlan = $true }
+            Invoke-SPChecklistWeb $Pair $stageFolder $SiteReviewFolder $stageOptions $stage
+            if ($stage -eq 'Match') {
+                Set-SPChecklistAutoApprovals (Join-Path $SiteReviewFolder 'MatchReview.csv')
+            } elseif ($stage -eq 'DryRun') {
+                Assert-SPChecklistDryRun $stageFolder
+            } elseif ($stage -eq 'Apply') {
+                $verifyFolder = Join-Path $RunFolder 'Verify'
+                [void][IO.Directory]::CreateDirectory($verifyFolder)
+                Invoke-SPChecklistWeb $Pair $verifyFolder $SiteReviewFolder $Options 'DryRun'
+                Assert-SPChecklistDryRun $verifyFolder
+                $verifyPlan = Get-ChildItem -LiteralPath $verifyFolder -Filter 'PermSync_Plan_DRYRUN_*.json'
+                $remaining = Get-Content -LiteralPath $verifyPlan.FullName -Raw | ConvertFrom-Json -Depth 100
+                if (@($remaining.Steps).Count) { throw "Post-Apply verification found remaining actions in '$verifyFolder'." }
+            }
+        }
+        return
+    }
     if ($RunMode -eq 'Match') {
         [void]$arguments.Remove('SourceGroupToMap')
         & (Join-Path $PSScriptRoot 'New-SPPermissionMatchMap.ps1') @arguments
@@ -196,12 +273,17 @@ function Invoke-SPPermissionChecklist {
             [void][IO.Directory]::CreateDirectory($runFolder)
             [void][IO.Directory]::CreateDirectory($siteReviewFolder)
             Write-Host "[$Mode] $($pair.SourceUrl) -> $($pair.TargetUrl)"
+            $webOptions = $options.Clone()
+            if ($pair.TargetUrl -ieq 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices') {
+                $webOptions.ExcludePaths = @($ExcludePaths) + @('COVID19 Resources', 'COVID19 Workflows')
+            }
             $sourceConnection = Connect-SPPermissionSite $pair.SourceUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup
             $targetConnection = Connect-SPPermissionSite $pair.TargetUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup
             try {
                 $sourceChildren = @(Get-SPChecklistChildren $sourceConnection $pair.SourceUrl)
                 $targetChildren = @(Get-SPChecklistChildren $targetConnection $pair.TargetUrl)
             } catch {
+                if ($Mode -eq 'Auto') { throw }
                 $status = $_.Exception.Response.StatusCode
                 if ([string]$status -notin @('404', 'NotFound') -and $_.Exception.Message -notmatch '\b404\b') { throw }
                 $summary.Add([pscustomobject]@{
@@ -212,13 +294,21 @@ function Invoke-SPPermissionChecklist {
                 continue
             }
             $webReview = Join-Path $siteReviewFolder 'WebReview.csv'
+            if ($Mode -eq 'Auto' -and (Test-Path -LiteralPath $webReview)) {
+                Set-SPChecklistAutoApprovals $webReview -Webs
+            }
             $approvals = if (Test-Path -LiteralPath $webReview) { @(Import-Csv -LiteralPath $webReview -ErrorAction Stop) } else { @() }
             $selection = Select-SPChecklistChildren $sourceChildren $targetChildren $checklist $approvals $pair.SourceUrl $pair.TargetUrl
             $columns = @('Approved','SourceParent','TargetParent','SourceUrl','TargetUrl','Score','Evidence','RunnerUp')
             $webCandidates = Join-Path $runFolder 'WebCandidates.csv'
             Export-SPPermissionCsv $selection.Proposals $columns $webCandidates
-            if ($Mode -eq 'Match' -and -not (Test-Path -LiteralPath $webReview)) {
+            if ($Mode -in @('Match', 'Auto') -and -not (Test-Path -LiteralPath $webReview)) {
                 Copy-Item -LiteralPath $webCandidates -Destination $webReview -ErrorAction Stop
+                if ($Mode -eq 'Auto') {
+                    Set-SPChecklistAutoApprovals $webReview -Webs
+                    $approvals = @(Import-Csv -LiteralPath $webReview)
+                    $selection = Select-SPChecklistChildren $sourceChildren $targetChildren $checklist $approvals $pair.SourceUrl $pair.TargetUrl
+                }
             }
             $webInventory = @(
                 foreach ($side in @('Source', 'Target')) {
@@ -232,7 +322,7 @@ function Invoke-SPPermissionChecklist {
                 }
             )
             Export-SPPermissionCsv $webInventory @('Side','Url','Unique','Status') (Join-Path $runFolder 'WebInventory.csv')
-            Invoke-SPChecklistWeb $pair $runFolder $siteReviewFolder $options $Mode
+            Invoke-SPChecklistWeb $pair $runFolder $siteReviewFolder $webOptions $Mode
             $summary.Add([pscustomobject]@{
                 SourceUrl = $pair.SourceUrl; TargetUrl = $pair.TargetUrl; Status = "$Mode completed - review site reports"
                 Detail = "Matched descendant webs queued: $($selection.Pairs.Count)"; ReportFolder = $runFolder
@@ -254,6 +344,36 @@ function Invoke-SPPermissionChecklist {
         $summaryPath = Join-Path $batchFolder 'ChecklistSummary.csv'
         Export-SPPermissionCsv $summary.ToArray() @('SourceUrl','TargetUrl','Status','Detail','ReportFolder') $summaryPath
         Write-Host "Checklist summary: $summaryPath"
+        if ($Mode -in @('Apply', 'Auto')) {
+            $reportFailures = [Collections.Generic.List[string]]::new()
+            foreach ($job in $jobs) {
+                $reportFolder = Join-Path $batchFolder ("SiteReport-" + (Get-SPChecklistSiteKey $job.TargetUrl))
+                [void][IO.Directory]::CreateDirectory($reportFolder)
+                $reportOptions = @{
+                    TargetUrl = $job.TargetUrl; OutputFolder = $reportFolder; ClientId = $ClientId
+                    Tenant = $Tenant; PageSize = $PageSize; SkipPersistLoginSetup = $SkipPersistLoginSetup
+                }
+                $changeRows = @(
+                    foreach ($entry in $summary | Where-Object { Test-SPPermissionPathWithin $_.TargetUrl $job.TargetUrl }) {
+                        foreach ($file in Get-ChildItem -LiteralPath $entry.ReportFolder -Recurse -Filter 'PermSync_Log_APPLY_*.csv') {
+                            foreach ($row in Import-Csv -LiteralPath $file.FullName) {
+                                [pscustomobject]@{
+                                    WebUrl = $entry.TargetUrl; Path = $row.Path; Action = $row.Action
+                                    Result = $row.Result; Detail = $row.Detail; EvidenceFile = $file.FullName
+                                }
+                            }
+                        }
+                    }
+                )
+                Export-SPPermissionCsv $changeRows @('WebUrl','Path','Action','Result','Detail','EvidenceFile') (Join-Path $reportFolder 'Changes.csv')
+                try { Invoke-SPChecklistReport $reportOptions }
+                catch {
+                    $reportFailures.Add("$($job.TargetUrl): $($_.Exception.Message)")
+                    Write-Warning "Post-Apply report FAILED for '$($job.TargetUrl)': $($_.Exception.Message)"
+                }
+            }
+            if ($reportFailures.Count) { throw "Post-Apply reporting incomplete: $($reportFailures -join '; '). Inspect ChecklistSummary.csv for the application outcome." }
+        }
     }
 }
 

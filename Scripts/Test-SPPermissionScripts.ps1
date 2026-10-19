@@ -806,6 +806,7 @@ try {
         function Get-SPChecklistChildren {}
         $script:siteCalls = 0
         function Invoke-SPChecklistWeb { $script:siteCalls++; throw 'MOCK permission failure' }
+        function Invoke-SPChecklistReport {}
         $ChecklistFile = $path; $OutputFolder = Join-Path $temp 'runner-failure'
         $ReviewRoot = Join-Path $temp 'runner-failure-reviews'; $Mode = 'Apply'; $TargetSites = @()
         Assert-Throws { Invoke-SPPermissionChecklist } 'MOCK permission failure'
@@ -885,6 +886,29 @@ try {
         Assert-Equal $csState.TargetAcl.Count 1
         Assert-Equal $csState.TargetAcl[0].Member.LoginName 'visitors'
         & $launcher -Mode Verify -OutputFolder $output -ReviewRoot $reviews
+        $checklist = Get-ChildItem -LiteralPath $output -Recurse -Filter 'CS-SitePair.csv' | Select-Object -First 1
+        & (Join-Path $PSScriptRoot 'Invoke-SPPermissionChecklist.ps1') -ChecklistFile $checklist.FullName `
+            -Mode Auto -OutputFolder (Join-Path $temp 'auto-cs') -ReviewRoot $reviews
+        foreach ($stage in @('Match', 'DryRun', 'Apply', 'Verify')) {
+            Assert-Equal (@(Get-ChildItem -LiteralPath (Join-Path $temp 'auto-cs') -Recurse -Directory |
+                Where-Object Name -eq $stage).Count) 1
+        }
+        $report = Get-ChildItem -LiteralPath (Join-Path $temp 'auto-cs') -Recurse -Filter 'ReportStatus.json'
+        Assert-Equal (Get-Content -LiteralPath $report.FullName -Raw | ConvertFrom-Json).Status 'Complete'
+        $permissions = Get-ChildItem -LiteralPath (Join-Path $temp 'auto-cs') -Recurse -Filter 'EffectivePermissions.csv'
+        Assert-Equal (@(Import-Csv -LiteralPath $permissions.FullName)[0].Principal) 'visitors'
+        $workerFolder = Join-Path $temp 'worker-cs'
+        [void][IO.Directory]::CreateDirectory($workerFolder)
+        $jobFile = Join-Path $workerFolder 'WorkerJob.clixml'
+        @{
+            ChecklistFile = $checklist.FullName; TargetUrl = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+            OutputFolder = $workerFolder; ReviewRoot = $reviews
+            ClientId = 'offline-client'; Tenant = ''; NoContent = $true; SkipPersistLoginSetup = $false
+        } | Export-Clixml -LiteralPath $jobFile
+        & (Join-Path $PSScriptRoot 'Invoke-SPPermissionQueue.ps1') -WorkerJobFile $jobFile
+        $workerStatus = Get-Content -LiteralPath (Join-Path $workerFolder 'WorkerStatus.json') -Raw | ConvertFrom-Json
+        Assert-Equal $workerStatus.Status 'Completed'
+        Assert-Equal (Test-Path -LiteralPath (Join-Path $workerFolder 'WorkerTranscript.txt')) $true
         Assert-Equal (@($csState.Calls | Where-Object {
             $_ -notin @('https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
                 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices')
