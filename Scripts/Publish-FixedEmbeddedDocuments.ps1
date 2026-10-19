@@ -29,6 +29,7 @@ param(
     [string]$ClientId,
     [string]$RestoreMetadataSnapshot,
     [switch]$AllowOfficeMetadataChanges,
+    [switch]$SkipPersistLoginSetup,
     [switch]$Preflight,
     [switch]$Apply
 )
@@ -650,9 +651,11 @@ function Connect-DocumentUploadSite {
     $connectParams = @{
         Url = $Url
         Interactive = $true
-        PersistLogin = $true
         ReturnConnection = $true
         ErrorAction = 'Stop'
+    }
+    if (-not $SkipPersistLoginSetup) {
+        $connectParams.PersistLogin = $true
     }
     if ($ApplicationId) {
         $parsedId = [guid]::Empty

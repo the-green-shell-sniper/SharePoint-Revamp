@@ -54,6 +54,12 @@ existing application configuration and persisted sign-in. If needed, supply
 `-ClientId` with your actual Entra application client ID GUID, not a placeholder.
 A cached tenant ID or Microsoft Graph session alone is not a PnP application
 configuration or PnP token cache; sign-in may still be required.
+If PnP fails in `Settings.Save()` / `EnableCaching()` because its local
+`.m365pnppowershell/settings.json` is locked, use `-SkipPersistLoginSetup`.
+This omits `-PersistLogin`, avoiding that cache-enablement settings write without
+deleting settings or clearing authentication. Existing cache entries can still
+be used by PnP; this is not a general cache-disable switch and does not bypass
+all possible settings-file reads/locks. Authentication failures still stop the run.
 The signed-in user/app
 must have permission to update document content and the system metadata fields.
 

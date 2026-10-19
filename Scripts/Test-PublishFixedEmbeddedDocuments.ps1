@@ -254,6 +254,17 @@ try {
         }
         Assert-Equal (Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic') 'cached-connection'
     }
+    Test-Case 'SkipPersistLoginSetup omits cache-enablement write without forcing ClientId' {
+        $SkipPersistLoginSetup = $true
+        function Connect-PnPOnline {
+            param($Url, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ClientId, $ErrorAction)
+            Assert-Equal $PSBoundParameters.ContainsKey('PersistLogin') $false
+            Assert-Equal $PSBoundParameters.ContainsKey('ClientId') $false
+            Assert-Equal $Interactive.IsPresent $true
+            return 'connection-without-cache-setup'
+        }
+        Assert-Equal (Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic') 'connection-without-cache-setup'
+    }
     Test-Case 'Explicit PnP application ID is passed through; placeholders are rejected' {
         function Connect-PnPOnline {
             param($Url, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ClientId, $ErrorAction)
