@@ -131,7 +131,7 @@ try {
         }
         $bytes = [IO.File]::ReadAllBytes($officeRemote)
         Assert-Throws { Assert-PlannedDocumentContent $p $bytes } 'Remote bytes differ'
-        $AllowOfficeMetadataChanges = $true
+        $script:AllowOfficeMetadataChanges = $true
         Assert-Equal (Assert-PlannedDocumentContent $p $bytes) 'OfficePackageContent'
         $audit = Get-Content -LiteralPath $p.VerificationAuditPath -Raw | ConvertFrom-Json
         Assert-Equal @($audit.Differences).Count 3
@@ -255,7 +255,7 @@ try {
         Assert-Equal (Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic') 'cached-connection'
     }
     Test-Case 'SkipPersistLoginSetup omits cache-enablement write without forcing ClientId' {
-        $SkipPersistLoginSetup = $true
+        Set-Variable -Name SkipPersistLoginSetup -Value $true -Scope Script
         function Connect-PnPOnline {
             param($Url, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ClientId, $ErrorAction)
             Assert-Equal $PSBoundParameters.ContainsKey('PersistLogin') $false
@@ -486,7 +486,8 @@ try {
         Assert-Equal $script:uploads $uploadsBefore
     }
     Test-Case 'Snapshot recovery accepts audited metadata-only Office variants without content upload' {
-        $AllowOfficeMetadataChanges = $true
+        $script:AllowOfficeMetadataChanges = $true
+        Assert-Equal $script:AllowOfficeMetadataChanges $true
         $officePlan = [pscustomobject]@{
             LocalPath = $officeLocal; SHA256 = (Get-FileHash -LiteralPath $officeLocal).Hash
             FileRef = $plan.FileRef; WebUrl = $plan.WebUrl
