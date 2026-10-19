@@ -13,10 +13,58 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 - [Publish-FixedEmbeddedDocuments.ps1](Scripts/Publish-FixedEmbeddedDocuments.ps1) - plans and uploads corrected files to the priority workbook's destinations, preserving existing target authors/editors and timestamps.
 - [New-SPPermissionMatchMap.ps1](Scripts/New-SPPermissionMatchMap.ps1) - read-only proposals for renamed permission scopes; every proposal requires manual approval.
 - [Sync-SPPermissionsFromSource.ps1](Scripts/Sync-SPPermissionsFromSource.ps1) - dry-run-first permission synchronization, with explicit source/target connections, snapshots, dependent-content protection and verified writes.
+- [Invoke-CSPermissionSync.ps1](Scripts/Invoke-CSPermissionSync.ps1) - CS-only launcher with Match, DryRun, Apply and measured Verify steps; does not select the other checklist sites.
+- [Invoke-SPPermissionChecklist.ps1](Scripts/Invoke-SPPermissionChecklist.ps1) - sequential processing of checklist pairs and their exact/approved matching descendant webs.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
+
+### CS only: do this first
+
+You do **not** need to process every site to fix Clinical & Patient Services.
+Copy these five scripts together to `P:\IT\Private\zzBPosey\whaitapp09`:
+
+- [Invoke-CSPermissionSync.ps1](Scripts/Invoke-CSPermissionSync.ps1)
+- [Invoke-SPPermissionChecklist.ps1](Scripts/Invoke-SPPermissionChecklist.ps1)
+- [New-SPPermissionMatchMap.ps1](Scripts/New-SPPermissionMatchMap.ps1)
+- [Sync-SPPermissionsFromSource.ps1](Scripts/Sync-SPPermissionsFromSource.ps1)
+- [SPPermission.Common.ps1](Scripts/SPPermission.Common.ps1)
+
+The CS launcher pins archived CS to Clinical & Patient Services; it never loads the
+full checklist. It uses persistent login by default, with no tenant prompt.
+It includes matching descendant webs, processing one web's inventory, plan, writes
+and reports before the next. It does not discover unrelated tenant sites.
+
+```powershell
+Set-Location 'P:\IT\Private\zzBPosey\whaitapp09'
+
+# 1. Read-only inventories and matching proposals.
+.\Invoke-CSPermissionSync.ps1 -Mode Match
+
+# 2. Review MatchReview.csv and WebReview.csv under CS-PermissionReviews.
+#    Approve confirmed fuzzy matches only. Empty/header-only CSVs need no edits.
+#    If you approve a renamed subsite, run Match again to scan that subsite's content.
+
+# 3. Read-only plan; inspect logs, removals, resets, freezes and blocked scopes.
+.\Invoke-CSPermissionSync.ps1 -Mode DryRun
+
+# 4. Only after reviewing the dry-run plan: changes CS and matched descendants.
+.\Invoke-CSPermissionSync.ps1 -Mode Apply
+
+# 5. Read-only verification. Throws if actions, blocked scopes or unavailable
+#    principals remain, or if a selected web could not be read.
+.\Invoke-CSPermissionSync.ps1 -Mode Verify
+```
+
+Reports are saved beneath `CS-PermissionRuns`; stable approval files live beneath
+`CS-PermissionReviews`. Both default to folders beside the launcher, so no path edits
+are needed. Match never overwrites existing approval files; when refreshing,
+explicitly merge/replace them using the fresh timestamped candidates in the reports.
+Verify covers matched scopes only: unmatched/unapproved objects remain skipped.
+EEEU membership and testing-account access still need separate confirmation.
+
+### Shared requirements and single-pair commands
 
 These scripts run against SharePoint **on your execution server**. Local regression
 tests use mocks only; they do not establish that your tenant, application consent,
@@ -42,13 +90,13 @@ application configuration. **A tenant ID is not an application ClientId.**
 Both scripts use `-Interactive -PersistLogin -ReturnConnection`; sign-in can still
 be required. `-SkipPersistLoginSetup` omits cache enablement for the settings-lock
 problem described in the document-upload section; it does not clear cached tokens.
+REST JSON is parsed as dictionaries to preserve SharePoint's case-distinct `Id`
+and `ID` fields, including nested item responses.
 
 Example server workflow, from the folder containing all three scripts:
 
 ```powershell
-$tenant = Read-Host 'Entra tenant GUID or verified tenant domain'
 $options = @{
-    Tenant = $tenant
     OutputFolder = (Join-Path $PWD 'PermissionRuns')
 }
 
@@ -75,12 +123,25 @@ approved one-to-one rows for the selected webs and rejects missing paths, confli
 exact matches, incompatible kinds/templates/extensions, and malformed approvals.
 Approval does not expand a parent alias implicitly: each renamed child needs its
 own approved row. Inherited objects must retain compatible mapped parents; a move
-to an unrelated parent is rejected rather than silently changing effective access.
+to an unrelated/unapproved parent is logged and skipped, with its existing access
+protected before ancestor changes, rather than silently changing effective access.
 Exact paths are assumed to identify the same migrated object, including list items;
 the scripts do not prove content identity for exact matches. Verify migration
 identity before using them on sites where paths or list-item IDs were reused.
 
 ### Permission policy and safety limits
+
+For later multi-site work, the checklist runner reads only `Old Site URL` and
+`New Site URL` from [NewSiteChecklist.csv](ReferenceFiles/NewSiteChecklist.csv).
+Explicit rows take precedence over recursive child-path matching, including relocated
+subsites such as IT-Internal. `-TargetSites` can select exact checklist target URLs.
+Exact child paths recurse automatically; renamed child webs require approved rows
+in their parent's `WebReview.csv`. Unmatched webs and their contents are skipped,
+not created or searched across unrelated trees. Existing inherited target subwebs
+can receive a protective inheritance break before their parent's access changes;
+their effective access is preserved, then matched webs are processed separately.
+An inherited source web's effective permissions are materialized uniquely at its
+mapped target root; cross-site migrations cannot recreate source parent inheritance.
 
 - `Team Site Members` maps to the target's **associated Visitors** group. Other
   SharePoint groups must exist by title; users/Entra groups use their login claims.
@@ -106,8 +167,9 @@ identity before using them on sites where paths or list-item IDs were reused.
 - Complete inventory/ACL reads, item counts matching each list's reported count,
   and matching permission-level **names and bitmasks** are required. Count mismatches
   stop the run rather than accepting security-trimmed/changing inventories.
-  Permission levels are not created or silently substituted. Subwebs
-  cause a stop; select a leaf web rather than assuming recursive coverage.
+  Permission levels are not created or silently substituted. Immediate subwebs are
+  recorded as permission boundaries; the parent pair does not synchronize their
+  roots/content directly. The CS/checklist runner processes matched webs separately.
 - Adds precede removals on each scope. Each apply step checks its expected ACL and
   inheritance before writing and verifies them afterward; final modified states are
   checked again. Failed freezes, failed additions and ambiguous write responses stop
@@ -118,7 +180,8 @@ identity before using them on sites where paths or list-item IDs were reused.
   Review the log and live state before retrying.
 
 Each run saves source/target JSON snapshots (all enumerated inheritance states and
-unique ACLs, including system-managed bindings), a JSON permission plan, a CSV log,
+unique ACLs, including system-managed bindings), a complete inventory/match CSV
+before permission changes, a JSON permission plan, a CSV log,
 and an unavailable-principals CSV with headers even when empty. These are **manual
 rollback references**, not an executable restore operation. Store them securely:
 they contain identities, paths and access information. Files use timestamped names

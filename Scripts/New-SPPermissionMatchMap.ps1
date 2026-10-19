@@ -30,40 +30,6 @@ param(
 )
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
-function Get-SPNameRatio {
-    param([string]$Left, [string]$Right)
-    if ($Left -ceq $Right) { return 1.0 }
-    $length = [math]::Max($Left.Length, $Right.Length)
-    if (-not $Left -or -not $Right) { return 0.0 }
-    $previous = [int[]](0..$Right.Length)
-    $current = [int[]]::new($Right.Length + 1)
-    for ($i = 1; $i -le $Left.Length; $i++) {
-        $current[0] = $i
-        for ($j = 1; $j -le $Right.Length; $j++) {
-            $cost = if ($Left[$i - 1] -ceq $Right[$j - 1]) { 0 } else { 1 }
-            $current[$j] = [math]::Min([math]::Min($current[$j - 1] + 1, $previous[$j] + 1), $previous[$j - 1] + $cost)
-        }
-        $swap = $previous; $previous = $current; $current = $swap
-    }
-    1.0 - $previous[$Right.Length] / $length
-}
-
-function Get-SPNormalizedName {
-    param([string]$Name)
-    $nameOnly = [IO.Path]::GetFileNameWithoutExtension($Name).ToLowerInvariant()
-    $nameOnly = $nameOnly -replace '\(\d+\)', ' ' -replace '\b(copy|final|rev(ised)?|v\d+(\.\d+)*|version\s*\d+)\b', ' '
-    (($nameOnly -replace '[^\p{L}\p{Nd}]+', ' ') -replace '\s+', ' ').Trim()
-}
-
-function Get-SPNameSimilarity {
-    param([string]$Left, [string]$Right)
-    $leftName = Get-SPNormalizedName $Left; $rightName = Get-SPNormalizedName $Right
-    if (-not $leftName -or -not $rightName) { return 0.0 }
-    $leftSorted = (($leftName -split ' ') | Sort-Object) -join ' '
-    $rightSorted = (($rightName -split ' ') | Sort-Object) -join ' '
-    [math]::Max((Get-SPNameRatio $leftName $rightName), (Get-SPNameRatio $leftSorted $rightSorted))
-}
-
 function Get-SPContentFingerprint {
     param($Connection, $Item, [int]$MaxMB)
     $stream = $null; $zip = $null; $zipStream = $null

@@ -14,8 +14,8 @@
 
     The effective ACL of an inherited SOURCE ROOT is read from its first unique
     ancestor and mirrored onto the target root as unique permissions. Only at that
-    root, target associated Owners/Members grants are preserved. Subweb recursion,
-    group membership synchronization, permission-level creation and sharing links
+    root, target associated Owners/Members grants are preserved. Use the checklist
+    runner to process matched subsites individually. Group membership synchronization, permission-level creation and sharing links
     are NOT supported. Limited Access and sharing-link assignments are not edited.
 
     Target-only and excluded content that inherits a changing scope is frozen first,
@@ -150,8 +150,8 @@ function Test-SPPickerPrincipal {
     $response = Invoke-SPPermissionRest $Connection (
         $WebUrl + '/_api/SP.UI.ApplicationPages.ClientPeoplePickerWebServiceInterface.clientPeoplePickerSearchUser'
     ) -Method Post -Content $body
-    if ($null -eq $response -or $null -eq $response.PSObject.Properties['value']) { throw 'Unexpected people-picker response; availability is unknown.' }
-    $hits = @($response.value | ConvertFrom-Json -Depth 30 -ErrorAction Stop)
+    if (-not (Test-SPPermissionResponseKey $response 'value')) { throw 'Unexpected people-picker response; availability is unknown.' }
+    $hits = @($response.value | ConvertFrom-Json -Depth 30 -AsHashtable -ErrorAction Stop)
     return @($hits | Where-Object { $_.Key -ieq $Login -and $_.IsResolved -ne $false }).Count -gt 0
 }
 
@@ -196,6 +196,23 @@ function New-SPPermissionPlan {
             [void]$eligible.Add($targetKey)
         }
     }
+    do {
+        $removed = $false
+        foreach ($sourceKey in $ScopeMatches.Keys) {
+            $targetKey = $ScopeMatches[$sourceKey]
+            if (-not $sourceKey -or $Source[$sourceKey].Unique -or -not $eligible.Contains($targetKey)) { continue }
+            $sourceParent = Get-SPPermissionParent $Source $sourceKey
+            $targetParent = Get-SPPermissionParent $Target $targetKey
+            if (-not $ScopeMatches.ContainsKey($sourceParent) -or $ScopeMatches[$sourceParent] -ine $targetParent -or -not $eligible.Contains($targetParent)) {
+                [void]$eligible.Remove($targetKey)
+                $removed = $true
+                $log.Add([pscustomobject]@{
+                    Path = $targetKey; Action = 'Incompatible or unmatched parent'; Result = 'Skipped'
+                    Detail = "Source: $sourceKey. Effective access cannot be mirrored by inheritance at this destination."
+                })
+            }
+        }
+    } while ($removed)
     foreach ($scope in $Source.Values) {
         if (-not $ScopeMatches.ContainsKey($scope.Key)) {
             $log.Add([pscustomobject]@{ Path = $scope.Key; Action = 'Source-only object'; Result = 'Skipped'; Detail = $scope.Kind })
@@ -215,9 +232,6 @@ function New-SPPermissionPlan {
         if ($sourceKey -and -not $sourceScope.Unique) {
             $sourceParent = Get-SPPermissionParent $Source $sourceKey
             $targetParent = Get-SPPermissionParent $Target $targetKey
-            if (-not $ScopeMatches.ContainsKey($sourceParent) -or $ScopeMatches[$sourceParent] -ine $targetParent -or -not $eligible.Contains($targetParent)) {
-                throw "Inherited object has incompatible/unapproved parent mapping: '$sourceKey' -> '$targetKey'. Review the parent rows or exclude this object."
-            }
             if ($targetScope.Unique) {
                 $blocked = @($desired.Keys | Where-Object { $Unavailable.ContainsKey($_) }).Count -gt 0
                 if ($blocked) {
@@ -327,6 +341,31 @@ function Invoke-SyncSPPermissionsFromSource {
         $source = Get-SPPermissionInventory $sourceConnection $SourceUrl $PageSize
         $target = Get-SPPermissionInventory $targetConnection $TargetUrl $PageSize
         $scopeMatches = Get-SPPermissionMatches $source $target $MatchFile $SourceUrl $TargetUrl
+        $inventoryRows = @(
+            foreach ($side in @('Source', 'Target')) {
+                $inventory = if ($side -eq 'Source') { $source } else { $target }
+                foreach ($scope in $inventory.Values | Sort-Object Key) {
+                    $otherPath = ''
+                    $matched = $false
+                    if ($side -eq 'Source' -and $scopeMatches.ContainsKey($scope.Key)) {
+                        $matched = $true; $otherPath = $scopeMatches[$scope.Key]
+                    } elseif ($side -eq 'Target') {
+                        $sourceKeys = @($scopeMatches.Keys | Where-Object { $scopeMatches[$_] -ieq $scope.Key })
+                        if ($sourceKeys.Count) { $matched = $true; $otherPath = $sourceKeys[0] }
+                    }
+                    $state = if ($scope.Kind -eq 'Subweb') { 'Subweb boundary - processed separately by checklist runner' }
+                        elseif (Test-SPPermissionExcluded $scope.Key $ExcludePaths) { 'Excluded' }
+                        elseif ($matched) { 'Matched' } else { 'Unmatched - skipped' }
+                    [pscustomobject]@{
+                        Side = $side; Path = $scope.Key; Kind = $scope.Kind; Unique = $scope.Unique
+                        CounterpartPath = $otherPath; Status = $state
+                    }
+                }
+            }
+        )
+        Export-SPPermissionCsv $inventoryRows @('Side','Path','Kind','Unique','CounterpartPath','Status') (
+            Join-Path $OutputFolder "PermSync_InventoryMatches_$stamp.csv"
+        )
         foreach ($side in @('Source', 'Target')) {
             $inventory = if ($side -eq 'Source') { $source } else { $target }
             $connection = if ($side -eq 'Source') { $sourceConnection } else { $targetConnection }

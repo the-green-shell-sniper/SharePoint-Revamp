@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'New-SPPermissionMatchMap.ps1')
 . (Join-Path $PSScriptRoot 'Sync-SPPermissionsFromSource.ps1')
+. (Join-Path $PSScriptRoot 'Invoke-SPPermissionChecklist.ps1') -ChecklistFile 'offline-test-placeholder.csv'
 
 $script:passed = 0
 function Assert-Equal($Actual, $Expected) {
@@ -90,6 +91,37 @@ try {
         }
         Assert-Throws { Invoke-SPPermissionRest 'target-only' 'https://example.test/_api' -Method Post } '503'
         Assert-Equal $script:writeAttempts 1
+    }
+    Test-Case 'Real REST JSON preserves Id and ID through nested collections and pagination' {
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, [switch]$Raw, $ErrorAction)
+            Assert-Equal $Connection 'source'
+            if ($Url -match 'page2') { return '{"value":[]}' }
+            '{"value":[{"Id":7,"ID":7,"Author":{"Id":3,"ID":3,"EMail":"author@example.test"}}],"odata.nextLink":"https://example.test/page2"}'
+        }
+        $result = @(Get-SPPermissionCollection 'source' 'https://example.test/page1')
+        Assert-Equal $result.Count 1
+        Assert-Equal $result[0].Contains('Id') $true
+        Assert-Equal $result[0].Contains('ID') $true
+        Assert-Equal $result[0].Id 7
+        Assert-Equal $result[0].Author.Id 3
+        Assert-Equal $result[0].Author.EMail 'author@example.test'
+    }
+    Test-Case 'Dictionary response validation distinguishes missing value from empty value' {
+        Assert-Equal (Test-SPPermissionResponseKey ('{"value":[]}' | ConvertFrom-Json -AsHashtable) 'value') $true
+        Assert-Equal (Test-SPPermissionResponseKey ('{"error":"denied"}' | ConvertFrom-Json -AsHashtable) 'value') $false
+        Assert-Equal (Test-SPPermissionResponseKey $null 'value') $false
+        function Invoke-PnPSPRestMethod { '{"error":"denied"}' }
+        Assert-Throws { Get-SPPermissionCollection 'source' 'https://example.test' } 'Expected REST collection'
+    }
+    Test-Case 'People-picker parses dictionary response and case-distinct nested entity keys' {
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, $Content, [switch]$Raw, $ErrorAction)
+            Assert-Equal $Connection 'target'
+            Assert-Equal $Content.queryParams.QueryString 'user@example.test'
+            @{ value = '[{"Key":"i:0#.f|membership|user@example.test","IsResolved":true,"EntityData":{"Id":5,"ID":5}}]' } | ConvertTo-Json -Compress
+        }
+        Assert-Equal (Test-SPPickerPrincipal 'target' 'https://example.test' 'i:0#.f|membership|user@example.test' 'User') $true
     }
     Test-Case 'REST collection pagination follows continuation and accepts an empty final page' {
         function Invoke-SPPermissionRest {
@@ -219,14 +251,16 @@ try {
         Assert-Equal (@($plan.Steps | Where-Object Action -eq 'Reset').Count) 0
         Assert-Equal $fixture.Target['Docs/a.docx'].Unique $true
     }
-    Test-Case 'Inherited moved object with an incompatible parent is rejected' {
+    Test-Case 'Inherited moved object with an incompatible parent is skipped and protected before parent changes' {
         $fixture = New-TestPlanFixture
         $fixture.Target['Other'] = New-TestScope 'Other' $true @(New-TestAcl 'other') 'Library'
         $fixture.Target['Other/a.docx'] = New-TestScope 'Other/a.docx' $false
         $fixture.Matches['Docs/a.docx'] = 'Other/a.docx'
-        Assert-Throws {
-            New-SPPermissionPlan $fixture.Source $fixture.Target $fixture.Matches $fixture.Desired (New-TestMap) $roles @() @()
-        } 'incompatible/unapproved parent'
+        $fixture.Target['Other'].Unique = $false
+        $plan = New-SPPermissionPlan $fixture.Source $fixture.Target $fixture.Matches $fixture.Desired (New-TestMap) $roles @() @()
+        Assert-Equal (@($plan.Notes | Where-Object Action -eq 'Incompatible or unmatched parent').Count) 1
+        Assert-Equal (@($plan.Steps | Where-Object { $_.Key -eq 'Other/a.docx' }).Count) 0
+        Assert-Equal ((Get-SPPermissionEffectiveScope $fixture.Target 'Other/a.docx').Acl[0].LoginName) 'old-user'
     }
     Test-Case 'Failed addition halts apply before removal' {
         $fixture = New-TestPlanFixture
@@ -491,6 +525,199 @@ try {
         $beforeFile = Get-ChildItem -LiteralPath $OutputFolder -Filter 'PermSync_TargetSnapshot_*.json'
         $before = Get-Content -LiteralPath $beforeFile.FullName -Raw | ConvertFrom-Json
         Assert-Equal (@($before.Scopes | Where-Object Key -eq '')[0].Acl[0].LoginName) 'old-user'
+    }
+    Test-Case 'Immediate subwebs are inventoried as boundaries without stopping or recursing into content' {
+        function Invoke-SPPermissionRest {
+            [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/'; HasUniqueRoleAssignments = $true }
+        }
+        function Get-SPPermissionCollection {
+            param($Connection, $Url)
+            if ($Url -match '/webs') {
+                return [pscustomobject]@{
+                    Id = 'child'; Title = 'Child'; Url = 'https://example.test/child'; ServerRelativeUrl = '/child'; HasUniqueRoleAssignments = $false
+                }
+            }
+            if ($Url -match '/lists\?') { return }
+            throw "Unexpected recursive content query: $Url"
+        }
+        $inventory = Get-SPPermissionInventory 'parent' 'https://example.test'
+        Assert-Equal $inventory.Count 2
+        Assert-Equal $inventory['child'].Kind 'Subweb'
+        Assert-Equal $inventory['child'].Unique $false
+        Assert-Equal $inventory['child'].Api 'https://example.test/child/_api/web'
+    }
+    Test-Case 'Matching child-web paths do not authorize parent script to synchronize subweb roots' {
+        $fixture = New-TestPlanFixture
+        $fixture.Source['child'] = New-TestScope 'child' $false @() 'Subweb'
+        $fixture.Target['child'] = New-TestScope 'child' $false @() 'Subweb'
+        $scopeMatches = Get-SPPermissionMatches $fixture.Source $fixture.Target '' 'https://source.test' 'https://target.test'
+        Assert-Equal $scopeMatches.ContainsKey('child') $false
+        $plan = New-SPPermissionPlan $fixture.Source $fixture.Target $scopeMatches $fixture.Desired (New-TestMap) $roles @() @()
+        Assert-Equal (@($plan.Steps | Where-Object { $_.Key -eq 'child' -and $_.Action -eq 'Freeze' }).Count) 1
+        Assert-Equal $plan.Steps[0].Key 'child'
+        Assert-Equal ((Get-SPPermissionEffectiveScope $fixture.Target 'child').Acl[0].LoginName) 'old-user'
+    }
+    Test-Case 'Checklist validation reads source-target columns and refuses duplicate mappings' {
+        $path = Join-Path $temp 'checklist.csv'
+        @(
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/archive/CS'; 'New Site URL' = 'https://target.test/sites/CS'; 'New Link Base URL' = 'ignored' }
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/archive/IT'; 'New Site URL' = 'https://target.test/sites/IT'; 'New Link Base URL' = 'ignored' }
+        ) | Export-Csv -LiteralPath $path -NoTypeInformation
+        $pairs = @(Get-SPChecklistPairs $path)
+        Assert-Equal $pairs.Count 2
+        Assert-Equal $pairs[0].SourceUrl 'https://source.test/archive/CS'
+        Assert-Equal $pairs[0].TargetUrl 'https://target.test/sites/CS'
+        @($pairs | ForEach-Object {
+            [pscustomobject]@{ 'Old Site URL' = $_.SourceUrl; 'New Site URL' = 'https://target.test/sites/same' }
+        }) | Export-Csv -LiteralPath $path -NoTypeInformation
+        Assert-Throws { Get-SPChecklistPairs $path } 'one-to-one'
+    }
+    Test-Case 'Explicit relocated checklist subsites override recursive paths and fuzzy suggestions' {
+        $checklist = @([pscustomobject]@{ SourceUrl = 'https://source.test/CS'; TargetUrl = 'https://target.test/sites/Clinical' })
+        $sourceChildren = @(
+            [pscustomobject]@{ Url = 'https://source.test/CS'; RelativePath = 'CS'; Title = 'CS' }
+            [pscustomobject]@{ Url = 'https://source.test/child'; RelativePath = 'child'; Title = 'Child' }
+            [pscustomobject]@{ Url = 'https://source.test/old-guides'; RelativePath = 'old-guides'; Title = 'Clinical guides' }
+            [pscustomobject]@{ Url = 'https://source.test/missing'; RelativePath = 'missing'; Title = 'Missing' }
+        )
+        $targetChildren = @(
+            [pscustomobject]@{ Url = 'https://target.test/child'; RelativePath = 'child'; Title = 'Child' }
+            [pscustomobject]@{ Url = 'https://target.test/new-guides'; RelativePath = 'new-guides'; Title = 'Clinical guides' }
+        )
+        $result = Select-SPChecklistChildren $sourceChildren $targetChildren $checklist @() 'https://source.test' 'https://target.test'
+        Assert-Equal $result.Pairs.Count 1
+        Assert-Equal $result.Pairs[0].SourceUrl 'https://source.test/child'
+        Assert-Equal $result.Proposals.Count 1
+        Assert-Equal $result.Proposals[0].Approved 'No'
+        $approval = $result.Proposals[0] | Select-Object *
+        $approval.Approved = 'Yes'
+        $approved = Select-SPChecklistChildren $sourceChildren $targetChildren $checklist @($approval) 'https://source.test' 'https://target.test'
+        Assert-Equal $approved.Pairs.Count 2
+        Assert-Equal $approved.Proposals.Count 0
+        Assert-Throws {
+            Select-SPChecklistChildren $sourceChildren $targetChildren $checklist @($approval,$approval) 'https://source.test' 'https://target.test'
+        } 'conflicts with an exact match or another approval'
+    }
+    Test-Case 'Checklist runner completes each web before the next, recurses exact children, and skips missing counterparts' {
+        $path = Join-Path $temp 'sequential.csv'
+        @(
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test'; 'New Site URL' = 'https://target.test' }
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/OldCS'; 'New Site URL' = 'https://target.test/sites/CS' }
+        ) | Export-Csv -LiteralPath $path -NoTypeInformation
+        $script:sequence = [Collections.Generic.List[string]]::new()
+        function Import-Module {}
+        function Connect-SPPermissionSite { param($Url) $Url }
+        function Get-SPChecklistChildren {
+            param($Connection, $Url)
+            $script:sequence.Add("Scan:$Url")
+            switch ($Url) {
+                'https://source.test' {
+                    [pscustomobject]@{ Url = "$Url/OldCS"; RelativePath = 'OldCS'; Title = 'CS'; Unique = $true }
+                    [pscustomobject]@{ Url = "$Url/child"; RelativePath = 'child'; Title = 'Child'; Unique = $false }
+                    [pscustomobject]@{ Url = "$Url/missing"; RelativePath = 'missing'; Title = 'No counterpart'; Unique = $true }
+                }
+                'https://target.test' { [pscustomobject]@{ Url = "$Url/child"; RelativePath = 'child'; Title = 'Child'; Unique = $false } }
+            }
+        }
+        function Invoke-SPChecklistWeb {
+            param($Pair, $RunFolder, $SiteReviewFolder, $Options, $RunMode)
+            $script:sequence.Add("Finish:$($Pair.TargetUrl)")
+            Assert-Equal $RunMode 'DryRun'
+            Assert-Equal $Options.SkipPersistLoginSetup.IsPresent $false
+        }
+        $ChecklistFile = $path; $OutputFolder = Join-Path $temp 'sequential-output'
+        $ReviewRoot = Join-Path $temp 'sequential-reviews'; $Mode = 'DryRun'; $TargetSites = @()
+        Invoke-SPPermissionChecklist
+        $finishes = @($script:sequence | Where-Object { $_ -like 'Finish:*' })
+        Assert-Equal ($finishes -join ',') 'Finish:https://target.test,Finish:https://target.test/child,Finish:https://target.test/sites/CS'
+        Assert-Equal ($script:sequence.IndexOf('Finish:https://target.test') -lt $script:sequence.IndexOf('Scan:https://source.test/child')) $true
+        $inventoryPath = Get-ChildItem -LiteralPath $OutputFolder -Recurse -Filter 'WebInventory.csv' |
+            Where-Object { @(Import-Csv -LiteralPath $_.FullName | Where-Object Url -eq 'https://source.test/missing').Count }
+        $inventory = @(Import-Csv -LiteralPath $inventoryPath.FullName | Where-Object Url -eq 'https://source.test/missing')
+        Assert-Equal $inventory[0].Status 'Unmatched/unapproved - skipped'
+    }
+    Test-Case 'Checklist runner stops after an actual failure rather than hiding failed permission writes' {
+        $path = Join-Path $temp 'runner-failure.csv'
+        @(
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/a'; 'New Site URL' = 'https://target.test/a' }
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/b'; 'New Site URL' = 'https://target.test/b' }
+        ) | Export-Csv -LiteralPath $path -NoTypeInformation
+        function Import-Module {}
+        function Connect-SPPermissionSite { param($Url) $Url }
+        function Get-SPChecklistChildren {}
+        $script:siteCalls = 0
+        function Invoke-SPChecklistWeb { $script:siteCalls++; throw 'MOCK permission failure' }
+        $ChecklistFile = $path; $OutputFolder = Join-Path $temp 'runner-failure'
+        $ReviewRoot = Join-Path $temp 'runner-failure-reviews'; $Mode = 'Apply'; $TargetSites = @()
+        Assert-Throws { Invoke-SPPermissionChecklist } 'MOCK permission failure'
+        Assert-Equal $script:siteCalls 1
+        $summaryPath = Get-ChildItem -LiteralPath $OutputFolder -Recurse -Filter 'ChecklistSummary.csv'
+        $rows = @(Import-Csv -LiteralPath $summaryPath.FullName)
+        Assert-Equal $rows[0].Status 'Stopped - error'
+    }
+    Test-Case 'CS launcher stays CS-only through Match, DryRun, Apply and measured Verify using mocked REST' {
+        $csState = [pscustomobject]@{ Calls = [Collections.Generic.List[string]]::new(); TargetAcl = @(
+            [pscustomobject]@{
+                Member = @{ Id = 42; LoginName = 'old-user'; Title = 'old-user'; PrincipalType = 1 }
+                RoleDefinitionBindings = @(@{ Id = 1073741826; Name = 'Read'; Hidden = $false; RoleTypeKind = 2 })
+            }
+        ) }
+        function Import-Module {}
+        function Connect-PnPOnline {
+            param($Url, $ClientId, $Tenant, [switch]$Interactive, [switch]$ReturnConnection, [switch]$PersistLogin, $ErrorAction)
+            Assert-Equal $PersistLogin.IsPresent $true
+            $csState.Calls.Add($Url)
+            $Url
+        }
+        function New-PnPUser { throw 'No EnsureUser needed for a mapped SharePoint group.' }
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, [switch]$Raw, $Content, $ErrorAction)
+            $source = $Connection -like '*/archive-*/CS'
+            $role = @{ Id = 1073741826; Name = 'Read'; Hidden = $false; RoleTypeKind = 2 }
+            if ($Method -eq 'Post') {
+                Assert-Equal $Connection 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+                if ($Url -match '/addroleassignment') {
+                    $csState.TargetAcl += [pscustomobject]@{
+                        Member = @{ Id = 12; LoginName = 'visitors'; Title = 'visitors'; PrincipalType = 8 }
+                        RoleDefinitionBindings = @($role)
+                    }
+                } elseif ($Url -match '/removeroleassignment') {
+                    $csState.TargetAcl = @($csState.TargetAcl | Where-Object { $_.Member.LoginName -ne 'old-user' })
+                } else { throw "Unexpected write: $Url" }
+                return ''
+            }
+            $response = if ($Url -match '/roleassignments\?') {
+                if ($source) {
+                    @{ value = @(@{ Member = @{ Id = 22; LoginName = 'Team Site Members'; Title = 'Team Site Members'; PrincipalType = 8 }; RoleDefinitionBindings = @($role) }) }
+                } else { @{ value = @($csState.TargetAcl) } }
+            } elseif ($Url -match '/roledefinitions\?') {
+                @{ value = @(@{ Id = 1073741826; Name = 'Read'; BasePermissions = @{ High = '0'; Low = '1' } }) }
+            } elseif ($Url -match '/sitegroups\?') {
+                @{ value = @(@{ Id = 12; Title = 'visitors'; LoginName = 'visitors' }) }
+            } elseif ($Url -match '/AssociatedVisitorGroup\?') { @{ Id = 12; Title = 'visitors'; LoginName = 'visitors' } }
+            elseif ($Url -match '/Associated(Owner|Member)Group\?') { @{ LoginName = '' } }
+            elseif ($Url -match '/(webs|lists|siteusers)\?') { @{ value = @() } }
+            elseif ($Url -match '/_api/web\?') {
+                @{ Id = 'web'; Url = $Connection; ServerRelativeUrl = ([uri]$Connection).AbsolutePath; HasUniqueRoleAssignments = $true }
+            } else { throw "Unexpected mocked REST read: $Url" }
+            $response | ConvertTo-Json -Depth 20 -Compress
+        }
+        $launcher = Join-Path $PSScriptRoot 'Invoke-CSPermissionSync.ps1'
+        $output = Join-Path $temp 'cs-suite'
+        $reviews = Join-Path $temp 'cs-suite-reviews'
+        & $launcher -Mode Match -OutputFolder $output -ReviewRoot $reviews
+        Assert-Equal (@(Get-ChildItem -LiteralPath $reviews -Recurse -Filter 'MatchReview.csv').Count) 1
+        & $launcher -Mode DryRun -OutputFolder $output -ReviewRoot $reviews
+        Assert-Equal $csState.TargetAcl[0].Member.LoginName 'old-user'
+        Assert-Throws { & $launcher -Mode Verify -OutputFolder $output -ReviewRoot $reviews } '2 remaining actions'
+        & $launcher -Mode Apply -OutputFolder $output -ReviewRoot $reviews
+        Assert-Equal $csState.TargetAcl.Count 1
+        Assert-Equal $csState.TargetAcl[0].Member.LoginName 'visitors'
+        & $launcher -Mode Verify -OutputFolder $output -ReviewRoot $reviews
+        Assert-Equal (@($csState.Calls | Where-Object {
+            $_ -notin @('https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
+                'https://whallc.sharepoint.com/sites/ClinicalandPatientServices')
+        }).Count) 0
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {

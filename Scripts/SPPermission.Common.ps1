@@ -32,7 +32,8 @@ function Invoke-SPPermissionRest {
                 if ($Method -eq 'Get') { throw "Empty SharePoint response: $Url" }
                 return
             }
-            return ($raw | ConvertFrom-Json -Depth 100)
+            # SharePoint item responses can contain both Id and ID.
+            return ($raw | ConvertFrom-Json -Depth 100 -AsHashtable)
         } catch {
             # Writes are not retried: a lost response can mean the write already succeeded.
             if ($Method -eq 'Get' -and $attempt -lt 5 -and
@@ -46,13 +47,20 @@ function Invoke-SPPermissionRest {
     }
 }
 
+function Test-SPPermissionResponseKey {
+    param($Response, [string]$Key)
+    if ($null -eq $Response) { return $false }
+    if ($Response -is [Collections.IDictionary]) { return $Response.Contains($Key) }
+    return $null -ne $Response.PSObject.Properties[$Key]
+}
+
 function Get-SPPermissionCollection {
     param($Connection, [string]$Url)
     $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     while ($Url) {
         if (-not $seen.Add($Url)) { throw "Repeated REST continuation: $Url" }
         $response = Invoke-SPPermissionRest $Connection $Url
-        if ($null -eq $response.PSObject.Properties['value']) { throw "Expected REST collection: $Url" }
+        if (-not (Test-SPPermissionResponseKey $response 'value')) { throw "Expected REST collection: $Url" }
         foreach ($entry in $response.value) { $entry }
         $next = $response.'odata.nextLink'
         if (-not $next) { $next = $response.'@odata.nextLink' }
@@ -97,8 +105,19 @@ function Get-SPPermissionInventory {
         Key = ''; Kind = 'Web'; Api = $webApi; Unique = [bool]$web.HasUniqueRoleAssignments
         Acl = $null; Id = [string]$web.Id; Title = ''; ListKey = ''; Depth = 0
     }
-    $subwebs = @(Get-SPPermissionCollection $Connection ($webApi + '/webs?$select=Url'))
-    if ($subwebs.Count) { throw "Subwebs exist under $WebUrl. Select a leaf web; recursive subweb synchronization is not supported." }
+    $subwebs = @(Get-SPPermissionCollection $Connection ($webApi + '/webs?$select=Id,Title,Url,ServerRelativeUrl,HasUniqueRoleAssignments'))
+    foreach ($subweb in $subwebs) {
+        $key = Get-SPPermissionRelativePath $subweb.ServerRelativeUrl $prefix
+        if (-not $key -or $null -eq $subweb.HasUniqueRoleAssignments -or -not $subweb.Url -or $scopes.ContainsKey($key)) {
+            throw "Incomplete or duplicate subweb metadata under '$WebUrl'."
+        }
+        # A boundary protects this web and all descendants while another web is processed.
+        $scopes[$key] = [pscustomobject]@{
+            Key = $key; Kind = 'Subweb'; Api = "$($subweb.Url.TrimEnd('/'))/_api/web"
+            Unique = [bool]$subweb.HasUniqueRoleAssignments; Acl = $null; Id = [string]$subweb.Id
+            Title = [string]$subweb.Title; ListKey = ''; Depth = 0; Url = $subweb.Url.TrimEnd('/')
+        }
+    }
     $lists = @(Get-SPPermissionCollection $Connection ($webApi + '/lists?$select=Id,Title,BaseType,BaseTemplate,ItemCount,HasUniqueRoleAssignments,RootFolder/ServerRelativeUrl&$expand=RootFolder'))
     foreach ($list in $lists) {
         $listKey = Get-SPPermissionRelativePath $list.RootFolder.ServerRelativeUrl $prefix
@@ -218,6 +237,9 @@ function Get-SPPermissionMatches {
             if (-not $sourceKey -or -not $targetKey -or -not $Source.ContainsKey($sourceKey) -or -not $Target.ContainsKey($targetKey)) {
                 throw "Approved match path is missing or invalid: '$sourceKey' -> '$targetKey'."
             }
+            if ($Source[$sourceKey].Kind -eq 'Subweb' -or $Target[$targetKey].Kind -eq 'Subweb') {
+                throw 'Subwebs must be paired using the checklist runner WebReview.csv, not a content match CSV.'
+            }
             if ($scopeMatches.ContainsKey($sourceKey) -or -not $used.Add($targetKey)) { throw 'Approved matches must be one-to-one.' }
             if ($Source[$sourceKey].Kind -ne $Target[$targetKey].Kind) { throw "Approved match kind mismatch: $sourceKey -> $targetKey" }
             if ($Source[$sourceKey].Kind -in @('List', 'Library') -and
@@ -232,6 +254,7 @@ function Get-SPPermissionMatches {
         }
     }
     foreach ($key in $Source.Keys) {
+        if ($Source[$key].Kind -eq 'Subweb' -or ($Target.ContainsKey($key) -and $Target[$key].Kind -eq 'Subweb')) { continue }
         if ($scopeMatches.ContainsKey($key) -or -not $Target.ContainsKey($key) -or $used.Contains($key)) { continue }
         if ($Source[$key].Kind -ne $Target[$key].Kind) { throw "Exact-path kind mismatch: $key" }
         if ($Source[$key].Kind -in @('List', 'Library') -and $Source[$key].BaseTemplate -ne $Target[$key].BaseTemplate) {
@@ -247,4 +270,38 @@ function Export-SPPermissionCsv {
     param([object[]]$Rows, [string[]]$Columns, [string]$Path)
     if ($Rows.Count) { $Rows | Select-Object $Columns | Export-Csv -LiteralPath $Path -NoTypeInformation -Encoding utf8 }
     else { (($Columns | ForEach-Object { '"' + $_.Replace('"', '""') + '"' }) -join ',') | Set-Content -LiteralPath $Path -Encoding utf8 }
+}
+
+function Get-SPNameRatio {
+    param([string]$Left, [string]$Right)
+    if ($Left -ceq $Right) { return 1.0 }
+    $length = [math]::Max($Left.Length, $Right.Length)
+    if (-not $Left -or -not $Right) { return 0.0 }
+    $previous = [int[]](0..$Right.Length)
+    $current = [int[]]::new($Right.Length + 1)
+    for ($i = 1; $i -le $Left.Length; $i++) {
+        $current[0] = $i
+        for ($j = 1; $j -le $Right.Length; $j++) {
+            $cost = if ($Left[$i - 1] -ceq $Right[$j - 1]) { 0 } else { 1 }
+            $current[$j] = [math]::Min([math]::Min($current[$j - 1] + 1, $previous[$j] + 1), $previous[$j - 1] + $cost)
+        }
+        $swap = $previous; $previous = $current; $current = $swap
+    }
+    1.0 - $previous[$Right.Length] / $length
+}
+
+function Get-SPNormalizedName {
+    param([string]$Name)
+    $nameOnly = [IO.Path]::GetFileNameWithoutExtension($Name).ToLowerInvariant()
+    $nameOnly = $nameOnly -replace '\(\d+\)', ' ' -replace '\b(copy|final|rev(ised)?|v\d+(\.\d+)*|version\s*\d+)\b', ' '
+    (($nameOnly -replace '[^\p{L}\p{Nd}]+', ' ') -replace '\s+', ' ').Trim()
+}
+
+function Get-SPNameSimilarity {
+    param([string]$Left, [string]$Right)
+    $leftName = Get-SPNormalizedName $Left; $rightName = Get-SPNormalizedName $Right
+    if (-not $leftName -or -not $rightName) { return 0.0 }
+    $leftSorted = (($leftName -split ' ') | Sort-Object) -join ' '
+    $rightSorted = (($rightName -split ' ') | Sort-Object) -join ' '
+    [math]::Max((Get-SPNameRatio $leftName $rightName), (Get-SPNameRatio $leftSorted $rightSorted))
 }
