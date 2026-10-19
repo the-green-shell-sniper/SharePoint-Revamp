@@ -10,8 +10,114 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 - [Get-FixItListURLsv2.ps1](Scripts/Get-FixItListURLsv2.ps1)
 - [Search-PhrasesInSpreadsheets.ps1](Scripts/Search-PhrasesInSpreadsheets.ps1) - searches every CSV/Excel file under a folder tree for each phrase in a phrases CSV (exact match, then fuzzy for phrases with no exact hit) and writes the file path + row of each match to a CSV.
 - [Update-EmbeddedLinks.py](Scripts/Update-EmbeddedLinks.py) - offline, backup-first editing of authored Office/PDF hyperlink targets using the supplied migration lookups.
+- [Publish-FixedEmbeddedDocuments.ps1](Scripts/Publish-FixedEmbeddedDocuments.ps1) - plans and uploads corrected files to the priority workbook's destinations, preserving existing target authors/editors and timestamps.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
+
+## Uploading corrected documents
+
+[Publish-FixedEmbeddedDocuments.ps1](Scripts/Publish-FixedEmbeddedDocuments.ps1) selects
+**only documents with an applied `updated` record** in the remediation-run manifests,
+matches their exact filenames to [EmbeddedLinksPriorityList-Copy.xlsx](EmbeddedLinksPriorityList-Copy.xlsx),
+and checks current local SHA-256 hashes against the latest remediation snapshots.
+It reads XLSX directly; Excel and ImportExcel are not required.
+No filename fuzzy matching is used for upload destinations. Duplicate/missing workbook
+rows or targets, changed local files, and unsafe URLs stop planning.
+
+Default execution is **offline plan only**:
+
+```powershell
+# On the repository workstation: no SharePoint connection or upload.
+.\Scripts\Publish-FixedEmbeddedDocuments.ps1 `
+  -OutputFolder .\UploadRuns\server-plan-unique-name
+```
+
+Copy the generated `upload-plan.csv` and the script to your server working folder,
+for example `P:\IT\Private\zzBPosey\whaitapp09`. The plan contains relative document
+paths, hashes and exact remote targets. Keep the corrected document subfolders
+intact under `P:\IT\Private\zzBPosey\whaitapp09\UpdatedEmbeddedLinkCopies`.
+With `-PlanCsv`, you do **not** need to copy the workbook, Python/PDF tooling, or
+the remediation history/backups to the server. Edits made after planning require
+a fresh verified plan; do not change the hashes to bypass validation.
+
+Use **PowerShell 7.4.6+**, not Windows PowerShell 5.1, and `PnP.PowerShell` 3.3.0+.
+If the module is missing, install it in your server user profile:
+
+```powershell
+Install-Module PnP.PowerShell -Scope CurrentUser
+```
+
+Run the following from PowerShell 7 on the server. Replace the ClientId with
+the Entra application ID you use for your other PnP scripts. The signed-in user/app
+must have permission to update document content and the system metadata fields.
+
+```powershell
+$work = 'P:\IT\Private\zzBPosey\whaitapp09'
+$options = @{
+    DocumentsFolder = "$work\UpdatedEmbeddedLinkCopies"
+    PlanCsv = "$work\upload-plan.csv"
+    ClientId = '<your-existing-PnP-application-client-id>'
+}
+
+# Live read-only SharePoint preflight; backs up remote bytes/metadata locally.
+& "$work\Publish-FixedEmbeddedDocuments.ps1" @options `
+  -OutputFolder "$work\UploadRuns\preflight-unique-name" -Preflight
+
+# Only after reviewing the plan/preflight and confirming replacement is intended:
+# use a NEW folder. Apply repeats complete live preflight before writing anything.
+& "$work\Publish-FixedEmbeddedDocuments.ps1" @options `
+  -OutputFolder "$work\UploadRuns\apply-unique-name" -Apply
+```
+
+### Metadata preservation and safety
+
+The script captures the **existing destination file's** `Author` (Created By),
+`Editor` (Modified By), `Created`, and `Modified` immediately before upload.
+It overwrites the existing file, then uses `Set-PnPListItem -UpdateType
+UpdateOverwriteVersion` to restore those fields and verifies all four, plus file/item
+identity and the uploaded byte hash. User IDs are reused within the same site;
+no user-account creation or cross-site identity guessing is needed.
+This preserves the current target metadata, **not old-site metadata from before migration**,
+and does not change the document's internal Office author properties.
+
+Every target must already exist. The script never creates folders or files at
+missing destinations. Complete preflight for all files must pass before any upload.
+Checked-out/locked targets, required check-out, content approval, minor/draft versions,
+and retention-labelled files are refused rather than bypassing their workflows.
+Subfolder URLs and library `Forms/AllItems.aspx` URLs are resolved from the workbook;
+`id`/`RootFolder` folder selectors must remain inside the specified library.
+
+Immediately before each upload, remote identity, metadata, ETag and content hash
+are rechecked. The CSOM binary write supplies the current ETag to reject concurrent
+changes and disables automatic query retries. Identical content is skipped.
+Uploads are not a tenant-wide transaction: an error stops further files, but earlier
+verified uploads remain. No automatic content rollback is attempted. A failed or
+ambiguous upload may have changed remote bytes; its result is explicitly marked
+for review. Metadata is not written after an upload exception, because the error
+could represent another person's concurrent edit. Inspect the backups and remote
+state before retrying. After an acknowledged upload, metadata restoration also
+checks the uploaded bytes, identity and post-upload ETag before writing.
+
+Each run saves `upload-plan.csv`; live runs also save `upload-results.csv`,
+`remote-backups/` with original SharePoint bytes, and adjacent `.metadata.json`
+snapshots containing user IDs, timestamps, identity, ETag and original SHA-256.
+These are backups of the remote files **before uploading**, separate from the
+earlier local hyperlink-editing backups. Retain them until validation is complete.
+
+**Important:** preserving the current item fields does not erase audit records,
+retain every historical version's attribution, or prevent a new content version.
+SharePoint audit/version history can still identify the uploading user. Uploads
+and `UpdateOverwriteVersion` can trigger automation/Power Automate flows; a flow
+may change metadata after verification. Coordinate with the site owner before
+applying, and spot-check the destination fields afterward. Insufficient permissions,
+retention policies, and tenant automation can prevent preservation; failures are
+reported, never silently treated as success.
+
+Offline tests (no SharePoint connection):
+
+```powershell
+.\Scripts\Test-PublishFixedEmbeddedDocuments.ps1
+```
 
 ## Offline embedded hyperlink updates
 
