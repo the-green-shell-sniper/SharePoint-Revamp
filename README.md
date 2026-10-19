@@ -11,8 +11,143 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 - [Search-PhrasesInSpreadsheets.ps1](Scripts/Search-PhrasesInSpreadsheets.ps1) - searches every CSV/Excel file under a folder tree for each phrase in a phrases CSV (exact match, then fuzzy for phrases with no exact hit) and writes the file path + row of each match to a CSV.
 - [Update-EmbeddedLinks.py](Scripts/Update-EmbeddedLinks.py) - offline, backup-first editing of authored Office/PDF hyperlink targets using the supplied migration lookups.
 - [Publish-FixedEmbeddedDocuments.ps1](Scripts/Publish-FixedEmbeddedDocuments.ps1) - plans and uploads corrected files to the priority workbook's destinations, preserving existing target authors/editors and timestamps.
+- [New-SPPermissionMatchMap.ps1](Scripts/New-SPPermissionMatchMap.ps1) - read-only proposals for renamed permission scopes; every proposal requires manual approval.
+- [Sync-SPPermissionsFromSource.ps1](Scripts/Sync-SPPermissionsFromSource.ps1) - dry-run-first permission synchronization, with explicit source/target connections, snapshots, dependent-content protection and verified writes.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
+
+## Synchronizing migrated site permissions
+
+These scripts run against SharePoint **on your execution server**. Local regression
+tests use mocks only; they do not establish that your tenant, application consent,
+account permissions or server authentication cache are configured correctly.
+Use PowerShell **7.4.6+** and `PnP.PowerShell` **3.3.0+**. The signed-in user/app
+must be able to enumerate all scopes and read source permissions, and must have
+permission to manage target permissions. A trimmed/inaccessible inventory is not
+sufficient. No elevated role is assigned automatically.
+
+Copy these three files together into the same server folder:
+
+- [New-SPPermissionMatchMap.ps1](Scripts/New-SPPermissionMatchMap.ps1)
+- [Sync-SPPermissionsFromSource.ps1](Scripts/Sync-SPPermissionsFromSource.ps1)
+- [SPPermission.Common.ps1](Scripts/SPPermission.Common.ps1) (required shared helper)
+
+The defaults select archived CS at
+`https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS` as source and
+`https://whallc.sharepoint.com/sites/ClinicalandPatientServices` as target, with the
+application ClientId from the original scripts. Override `-SourceUrl`, `-TargetUrl`
+and `-ClientId` for other migrations. Use `-ClientId ''` to defer to existing PnP
+application configuration. **A tenant ID is not an application ClientId.**
+`-Tenant` optionally pins the tenant by GUID or verified domain.
+Both scripts use `-Interactive -PersistLogin -ReturnConnection`; sign-in can still
+be required. `-SkipPersistLoginSetup` omits cache enablement for the settings-lock
+problem described in the document-upload section; it does not clear cached tokens.
+
+Example server workflow, from the folder containing all three scripts:
+
+```powershell
+$tenant = Read-Host 'Entra tenant GUID or verified tenant domain'
+$options = @{
+    Tenant = $tenant
+    OutputFolder = (Join-Path $PWD 'PermissionRuns')
+}
+
+# Read-only: complete inventories, then rename/content-match proposals.
+.\New-SPPermissionMatchMap.ps1 @options
+
+# Open the generated PermMatch_Review CSV. ALL rows start Approved=No.
+# Approve only confirmed pairs. Approve parent renames and child rows explicitly.
+$review = Read-Host 'Full path to the reviewed PermMatch_Review CSV'
+
+# Live read-only dry run. No EnsureUser or permission writes.
+.\Sync-SPPermissionsFromSource.ps1 @options -MatchFile $review
+
+# Review the CSV log and JSON plan, especially Remove, Reset, Freeze and Blocked.
+# Only after review, explicitly apply; this re-reads and rebuilds the live plan.
+.\Sync-SPPermissionsFromSource.ps1 @options -MatchFile $review -Apply
+
+# Confirm no remaining actions, blocked scopes or unavailable-principal warnings.
+.\Sync-SPPermissionsFromSource.ps1 @options -MatchFile $review
+```
+
+Omit `-MatchFile` for exact site-relative paths only. The apply script accepts only
+approved one-to-one rows for the selected webs and rejects missing paths, conflicting
+exact matches, incompatible kinds/templates/extensions, and malformed approvals.
+Approval does not expand a parent alias implicitly: each renamed child needs its
+own approved row. Inherited objects must retain compatible mapped parents; a move
+to an unrelated parent is rejected rather than silently changing effective access.
+Exact paths are assumed to identify the same migrated object, including list items;
+the scripts do not prove content identity for exact matches. Verify migration
+identity before using them on sites where paths or list-item IDs were reused.
+
+### Permission policy and safety limits
+
+- `Team Site Members` maps to the target's **associated Visitors** group. Other
+  SharePoint groups must exist by title; users/Entra groups use their login claims.
+  Group memberships, site collection administrators and app permissions are not
+  synchronized. Adding EEEU to Visitors is a separate, intentional operation.
+- Inheritance follows the source. If the **source root inherits**, its effective
+  ancestor ACL is copied onto a unique target root; the target is not made to
+  inherit from an unrelated site. Target associated Owners/Members grants are
+  preserved **only at the root**.
+- Limited Access and sharing-link assignments are not edited. Existing sharing
+  links, group membership differences and protected root grants mean this is not
+  a guarantee of identical effective access for every person.
+- Unmatched and excluded target content is not directly synchronized. If it inherits
+  a changing scope, the script freezes its current grants first. `-NoFreeze`
+  deliberately lets that content follow the changed parent instead. Excluded paths
+  can therefore still receive a protective inheritance break; they are not absolute
+  no-write scopes. The default exclusion is `Access Requests`.
+- A missing principal is reported once. Available additions may proceed, but
+  removals and inheritance resets depending on missing grants are **blocked**, not
+  treated as success. Dry-run picker misses are predictions; Apply uses EnsureUser
+  and may legitimately produce a different plan. Apply may add target Site Users
+  entries during preflight. Authorization, service and unknown resolution errors stop.
+- Complete inventory/ACL reads, item counts matching each list's reported count,
+  and matching permission-level **names and bitmasks** are required. Count mismatches
+  stop the run rather than accepting security-trimmed/changing inventories.
+  Permission levels are not created or silently substituted. Subwebs
+  cause a stop; select a leaf web rather than assuming recursive coverage.
+- Adds precede removals on each scope. Each apply step checks its expected ACL and
+  inheritance before writing and verifies them afterward; final modified states are
+  checked again. Failed freezes, failed additions and ambiguous write responses stop
+  further writes. Writes are not automatically retried or rolled back.
+- Use a quiet maintenance window. Snapshots/plans are point-in-time reads, not locks;
+  concurrent content additions, group-membership changes and permission changes are
+  not transactionally isolated. Earlier successful writes remain after an error.
+  Review the log and live state before retrying.
+
+Each run saves source/target JSON snapshots (all enumerated inheritance states and
+unique ACLs, including system-managed bindings), a JSON permission plan, a CSV log,
+and an unavailable-principals CSV with headers even when empty. These are **manual
+rollback references**, not an executable restore operation. Store them securely:
+they contain identities, paths and access information. Files use timestamped names
+under `Outputs\PermissionRuns` by default; specify a server-local `-OutputFolder`
+when copying the scripts elsewhere. Do not commit generated permission reports.
+
+The matcher compares only objects in matched list/library pairs; cross-library
+moves are not searched. Signals include names, created/author, size, identical-byte
+SHA-256 and word-set similarity for Office/text files. Candidates are cheaply
+filtered before downloading; PDFs/images have byte comparison only. Downloads are
+in-memory and limited by `-MaxContentMB` (25 by default); expanded Office text is
+limited to 50 MB. `-NoContent` disables downloads. Comparison errors are warnings
+and evidence, not proof of a match. Scores are heuristics, never approval.
+
+The supplied [old CS](SupportFiles/PermissionsMatrixReports/oldCS_Permissions%20matrix%20report.xlsx)
+and [new CS](SupportFiles/PermissionsMatrixReports/newCS_Permissions%20matrix%20report.xlsx)
+reports informed these defaults: the source snapshot contains 108 custom scopes
+(including the web), 91 explicit Team Site Members Read assignments, and the target
+has 81 explicit extra Contribute assignments for CentralPark.CS.Designer. These
+are historical report counts, **not hard-coded expected live changes**. New target
+libraries such as COVID19 Resources/Workflows are not inferred to be old CS content.
+The scripts always inventory the selected live webs when run on your server.
+
+Run the mock-only regression suite locally or on the server, without PnP installed
+or a SharePoint connection:
+
+```powershell
+.\Scripts\Test-SPPermissionScripts.ps1
+```
 
 ## Uploading corrected documents
 
