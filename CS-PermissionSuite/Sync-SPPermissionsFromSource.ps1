@@ -323,6 +323,7 @@ function Invoke-SPPermissionPlan {
 
 function Invoke-SyncSPPermissionsFromSource {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     Assert-SPPermissionUrls $SourceUrl $TargetUrl
     $SourceUrl = $SourceUrl.TrimEnd('/')
     $TargetUrl = $TargetUrl.TrimEnd('/')
@@ -340,6 +341,15 @@ function Invoke-SyncSPPermissionsFromSource {
         $targetConnection = Connect-SPPermissionSite $TargetUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup
         $source = Get-SPPermissionInventory $sourceConnection $SourceUrl $PageSize
         $target = Get-SPPermissionInventory $targetConnection $TargetUrl $PageSize
+        foreach ($side in @('Source', 'Target')) {
+            $inventory = if ($side -eq 'Source') { $source } else { $target }
+            foreach ($scope in $inventory.Values | Where-Object { $_.InventoryCountReview }) {
+                $log.Add([pscustomobject]@{
+                    Path = $scope.Key; Action = 'Inventory count discrepancy'; Result = 'Review'
+                    Detail = "$side - $($scope.InventoryCountReview)"
+                })
+            }
+        }
         $scopeMatches = Get-SPPermissionMatches $source $target $MatchFile $SourceUrl $TargetUrl
         $inventoryRows = @(
             foreach ($side in @('Source', 'Target')) {

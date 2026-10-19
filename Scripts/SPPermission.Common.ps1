@@ -160,6 +160,7 @@ function Get-SPPermissionInventory {
         $expandQuery = if ($expansions.Count) { '&$expand=' + ($expansions -join ',') } else { '' }
         $last = 0
         $itemCount = 0
+        $restIds = [Collections.Generic.HashSet[int]]::new()
         do {
             $url = "$listApi/items?`$select=$select$expandQuery&`$filter=Id gt $last&`$orderby=Id&`$top=$PageSize"
             $batch = @(Get-SPPermissionCollection $Connection $url)
@@ -183,6 +184,7 @@ function Get-SPPermissionInventory {
                     Size = $(if ($kind -eq 'File' -and $null -ne $item.File.Length) { [double]$item.File.Length } else { $null })
                 }
                 $itemCount++
+                if (-not $restIds.Add([int]$item.Id)) { throw "Duplicate item ID in '$listKey'." }
             }
             if ($batch.Count) {
                 $newLast = [int]$batch[-1].Id
@@ -191,7 +193,17 @@ function Get-SPPermissionInventory {
             }
         } while ($batch.Count -ge $PageSize)
         if ($itemCount -ne [int]$list.ItemCount) {
-            throw "Incomplete or changing inventory for '$listKey': read $itemCount items, list reports $($list.ItemCount). Check permissions and concurrent edits."
+            $query = "<View Scope='RecursiveAll'><ViewFields><FieldRef Name='ID'/></ViewFields><RowLimit Paged='TRUE'>$PageSize</RowLimit></View>"
+            $pnpIds = [Collections.Generic.HashSet[int]]::new()
+            foreach ($item in @(Get-PnPListItem -List $list.Id -Query $query -PageSize $PageSize -Connection $Connection -ErrorAction Stop)) {
+                if ([int]$item.Id -le 0 -or -not $pnpIds.Add([int]$item.Id)) { throw "Invalid or duplicate PnP item ID in '$listKey'." }
+            }
+            if (-not $restIds.SetEquals($pnpIds)) {
+                throw "Inventory disagreement for '$listKey': REST read $itemCount items, recursive PnP read $($pnpIds.Count); list reports $($list.ItemCount). No permission changes may use this inventory."
+            }
+            $detail = "Reported count $($list.ItemCount); REST and recursive PnP agree on all $itemCount item IDs. Visibility is limited to the signed-in account."
+            $scopes[$listKey] | Add-Member -NotePropertyName InventoryCountReview -NotePropertyValue $detail
+            Write-Warning "Count discrepancy in '$listKey' on '$WebUrl': $detail"
         }
     }
     return ,$scopes

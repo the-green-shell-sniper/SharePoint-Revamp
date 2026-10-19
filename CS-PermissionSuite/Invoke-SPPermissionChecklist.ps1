@@ -161,6 +161,8 @@ function Invoke-SPChecklistWeb {
 
 function Invoke-SPPermissionChecklist {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
+    $ReviewRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReviewRoot)
     $checklist = @(Get-SPChecklistPairs $ChecklistFile)
     $jobs = @($checklist | Sort-Object @{ Expression = { ([uri]$_.TargetUrl).AbsolutePath.Split('/').Count } }, TargetUrl)
     if ($TargetSites.Count) {

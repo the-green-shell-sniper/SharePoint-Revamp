@@ -267,7 +267,7 @@ try {
         Assert-Equal ([datetime]$inventory['Tasks/1_.000'].Created).Year 2020
         Assert-Equal $inventory['Tasks/1_.000'].Author 'author@example.test'
     }
-    Test-Case 'Security-trimmed or changing item counts cannot masquerade as complete enumeration' {
+    Test-Case 'Count discrepancy requires live PnP ID agreement and reports the limited-visibility caveat' {
         function Invoke-SPPermissionRest {
             [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
         }
@@ -282,7 +282,20 @@ try {
             }
             return
         }
-        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'Incomplete or changing inventory'
+        function Get-PnPListItem {
+            param($List, $Query, $PageSize, $Connection, $ErrorAction)
+            Assert-Equal $List 'list'
+            Assert-Equal $Connection 'source'
+            Assert-Equal ($Query -match "Scope='RecursiveAll'") $true
+            [pscustomobject]@{ Id = 1 }
+        }
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'Inventory disagreement'
+        function Get-PnPListItem { return }
+        $inventory = Get-SPPermissionInventory 'source' 'https://example.test'
+        Assert-Equal $inventory.Count 2
+        Assert-Equal ($inventory['Docs'].InventoryCountReview -match 'agree on all 0 item IDs') $true
+        function Get-PnPListItem { throw 'MOCK PnP read denied' }
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'MOCK PnP read denied'
     }
     Test-Case 'Missing principal blocks all removals but allows available additions' {
         $desired = New-TestDesired 'missing'
@@ -804,7 +817,19 @@ try {
         $launcher = Join-Path $PSScriptRoot 'Invoke-CSPermissionSync.ps1'
         $output = Join-Path $temp 'cs-suite'
         $reviews = Join-Path $temp 'cs-suite-reviews'
-        & $launcher -Mode Match -OutputFolder $output -ReviewRoot $reviews
+        $processDirectory = [Environment]::CurrentDirectory
+        $otherDirectory = Join-Path $temp 'different-process-directory'
+        [void][IO.Directory]::CreateDirectory($otherDirectory)
+        Push-Location $temp
+        try {
+            [Environment]::CurrentDirectory = $otherDirectory
+            & $launcher -Mode Match -OutputFolder '.\cs-suite' -ReviewRoot '.\cs-suite-reviews'
+            Assert-Equal (Test-Path -LiteralPath (Join-Path $otherDirectory 'cs-suite')) $false
+            Assert-Equal (@(Get-ChildItem -LiteralPath $output -Recurse -Filter 'CS-SitePair.csv').Count) 1
+        } finally {
+            [Environment]::CurrentDirectory = $processDirectory
+            Pop-Location
+        }
         Assert-Equal (@(Get-ChildItem -LiteralPath $reviews -Recurse -Filter 'MatchReview.csv').Count) 1
         & $launcher -Mode DryRun -OutputFolder $output -ReviewRoot $reviews
         Assert-Equal $csState.TargetAcl[0].Member.LoginName 'old-user'

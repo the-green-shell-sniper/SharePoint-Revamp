@@ -30,6 +30,7 @@ param(
 
 function Invoke-SPPermissionScouts {
     $ErrorActionPreference = 'Stop'
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $scoutPath = Join-Path $PSScriptRoot 'Get-CSPermissionScout.ps1'
     if (-not (Test-Path -LiteralPath $scoutPath)) { throw 'Missing companion Get-CSPermissionScout.ps1.' }
     $rows = @(Import-Csv -LiteralPath $ChecklistFile -ErrorAction Stop)
