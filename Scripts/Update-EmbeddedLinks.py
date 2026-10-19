@@ -83,7 +83,7 @@ def read_csv(path):
 class Resolver:
     """Only use destinations recorded as found; conflicts are never guessed."""
 
-    def __init__(self, root, allow_view_filter_drop=False):
+    def __init__(self, root, allow_view_filter_drop=False, confirmed_mappings=None):
         self.index = defaultdict(dict)
         self.blocked = defaultdict(set)
         self.new_guids = {}
@@ -91,6 +91,7 @@ class Resolver:
         self.new_urls = set()
         self.allow_view_filter_drop = allow_view_filter_drop
         self.sources = []
+        self.confirmed = {}
         master_rows = []
         for folder in ("Masters", "FixerFiles"):
             for path in sorted((root / folder).glob("*.csv")):
@@ -151,6 +152,24 @@ class Resolver:
                     self.add(old, dest, f"{path.relative_to(root)}:{number}")
         if not self.sources:
             raise ValueError("No lookup CSVs found under the supplied root.")
+        if confirmed_mappings:
+            self.sources.append(confirmed_mappings)
+            for number, row in enumerate(read_csv(confirmed_mappings), 2):
+                old, new = row.get("OldURL", ""), row.get("NewURL", "")
+                evidence = row.get("Evidence", "").strip()
+                drop = row.get("DropFragment", "").lower()
+                if not tenant_url(old) or not tenant_url(new) or not evidence or drop not in {"yes", "no"}:
+                    raise ValueError(f"Invalid confirmed mapping at {confirmed_mappings}:{number}")
+                entry = (new, drop == "yes", evidence)
+                for key in self.keys(old):
+                    previous = self.confirmed.get(key)
+                    if previous and previous[:2] != entry[:2]:
+                        raise ValueError(f"Conflicting confirmed mapping at {confirmed_mappings}:{number}")
+                    self.confirmed[key] = entry
+                self.new_urls.add(exact_key(new))
+                path = file_path(tenant_url(new))
+                if path:
+                    self.new_paths.add(path.lower())
 
     @staticmethod
     def path_destination(path):
@@ -219,6 +238,18 @@ class Resolver:
         if not parsed:
             return value, "external", ""
         keys = self.keys(value)
+        confirmed = {self.confirmed[key] for key in keys if key in self.confirmed}
+        if confirmed:
+            destinations = {(dest, drop) for dest, drop, _ in confirmed}
+            if len(destinations) != 1:
+                return value, "ambiguous", "Conflicting explicit confirmations."
+            dest, drop = next(iter(destinations))
+            if parsed.fragment and not drop:
+                dest = urlunsplit((*urlsplit(dest)[:4], parsed.fragment))
+            evidence = "; ".join(sorted({source for _, _, source in confirmed}))
+            if dest == value:
+                return value, "already-current", evidence
+            return dest, "resolved", evidence
         # Combine all applicable evidence, rather than letting an exact match
         # hide a conflicting GUID/path mapping from another table.
         candidates = defaultdict(set)
@@ -426,8 +457,8 @@ class Editor:
             offset += len(value)
 
     def pdf(self, path):
-        from pypdf import PdfReader, PdfWriter
-        from pypdf.generic import NameObject, TextStringObject
+        from pypdf import PdfReader
+        from pypdf.generic import ArrayObject, DictionaryObject, NameObject, TextStringObject
 
         original = path.read_bytes()
         reader = PdfReader(io.BytesIO(original), strict=True)
@@ -436,13 +467,12 @@ class Editor:
         fields = reader.get_fields() or {}
         if any(f.get("/FT") == "/Sig" for f in fields.values()):
             raise ValueError("PDF contains a signature field; editing could invalidate a signature.")
-        # Incremental updates retain the original PDF bytes and append only
-        # modified objects. This also avoids rewriting unrelated damaged objects.
-        writer = PdfWriter(io.BytesIO(original), incremental=True)
-        changed = False
-        for page_number, page in enumerate(writer.pages, 1):
+        updates = {}
+        for page_number, page in enumerate(reader.pages, 1):
             annotations = page.get("/Annots", [])
             annotations = annotations.get_object() if hasattr(annotations, "get_object") else annotations
+            page_annotations = ArrayObject(annotations)
+            changed_page = False
             for number, ref in enumerate(annotations, 1):
                 annotation = ref.get_object()
                 action = annotation.get("/A")
@@ -453,15 +483,26 @@ class Editor:
                     old = str(action["/URI"])
                     new = self.target(old, f"PDF page {page_number}, annotation {number}")
                     if new != old:
-                        action[NameObject("/URI")] = TextStringObject(new)
-                        changed = True
-        if not changed:
+                        new_action = DictionaryObject(dict(action))
+                        new_action[NameObject("/URI")] = TextStringObject(new)
+                        new_annotation = DictionaryObject(dict(annotation))
+                        new_annotation[NameObject("/A")] = new_action
+                        if hasattr(ref, "idnum"):
+                            updates[(ref.idnum, ref.generation)] = new_annotation
+                        else:
+                            page_annotations[number - 1] = new_annotation
+                            changed_page = True
+            if changed_page:
+                page_ref = page.indirect_reference
+                if page_ref is None:
+                    raise ValueError("Cannot safely update a PDF page without an object reference.")
+                new_page = DictionaryObject(dict(page))
+                new_page[NameObject("/Annots")] = page_annotations
+                updates[(page_ref.idnum, page_ref.generation)] = new_page
+        if not updates:
             return None
-        result = io.BytesIO()
-        writer.write(result)
-        if not result.getvalue().startswith(original):
-            raise ValueError("Incremental PDF update did not retain the original bytes.")
-        checked = PdfReader(io.BytesIO(result.getvalue()), strict=True)
+        result = self.append_pdf_objects(original, reader, updates)
+        checked = PdfReader(io.BytesIO(result), strict=True)
         if len(reader.pages) != len(checked.pages):
             raise ValueError("PDF page count changed.")
         for a, b in zip(reader.pages, checked.pages):
@@ -492,7 +533,45 @@ class Editor:
                         actual = str(bb["/A"].get_object().get("/URI", ""))
                         if expected != actual:
                             raise ValueError("PDF hyperlink verification failed.")
-        return result.getvalue()
+        return result
+
+    @staticmethod
+    def append_pdf_objects(original, reader, updates):
+        from pypdf.generic import DictionaryObject, NameObject, NumberObject
+
+        # Append a standard incremental xref table using the existing object IDs.
+        # pypdf 6.12's writer can reuse a prior xref-stream ID on a second pass;
+        # retaining IDs here also avoids cloning unrelated malformed PDF objects.
+        previous = re.search(rb"startxref\s+(\d+)\s+%%EOF\s*$", original)
+        if not previous:
+            raise ValueError("PDF has no valid final startxref/EOF marker.")
+        output = io.BytesIO()
+        output.write(original)
+        output.write(b"\n")
+        offsets = {}
+        for (number, generation), obj in sorted(updates.items()):
+            offsets[(number, generation)] = output.tell()
+            output.write(f"{number} {generation} obj\n".encode("ascii"))
+            obj.write_to_stream(output)
+            output.write(b"\nendobj\n")
+        xref = output.tell()
+        output.write(b"xref\n0 1\n0000000000 65535 f \n")
+        for (number, generation), offset in offsets.items():
+            if offset > 9999999999 or generation > 65535:
+                raise ValueError("PDF object offset/generation exceeds classic xref limits.")
+            output.write(f"{number} 1\n{offset:010d} {generation:05d} n \n".encode("ascii"))
+        trailer = DictionaryObject({
+            NameObject("/Size"): NumberObject(int(reader.trailer["/Size"])),
+            NameObject("/Root"): reader.trailer.raw_get("/Root"),
+            NameObject("/Prev"): NumberObject(int(previous[1])),
+        })
+        for name in ("/Info", "/ID"):
+            if name in reader.trailer:
+                trailer[NameObject(name)] = reader.trailer.raw_get(name)
+        output.write(b"trailer\n")
+        trailer.write_to_stream(output)
+        output.write(f"\nstartxref\n{xref}\n%%EOF\n".encode("ascii"))
+        return output.getvalue()
 
     def legacy_word(self, path):
         helper = Path(__file__).with_name("Edit-LegacyWordLinks.ps1")
@@ -547,6 +626,8 @@ def main():
                         help="Use locally installed desktop Word for .doc files (Windows only).")
     parser.add_argument("--allow-view-filter-drop", action="store_true",
                         help="Allow confirmed library/page destinations to drop view/filter/sort parameters.")
+    parser.add_argument("--confirmed-mappings", type=Path,
+                        help="CSV of explicitly confirmed OldURL, NewURL, Evidence, DropFragment (Yes/No).")
     args = parser.parse_args()
     root, input_dir, run_dir = args.root.resolve(), args.input.resolve(), args.run_dir.resolve()
     if not input_dir.is_dir():
@@ -560,7 +641,8 @@ def main():
     except ImportError:
         parser.error("Missing pypdf. Install Scripts\\embedded-link-requirements.txt first.")
     run_dir.mkdir(parents=True)
-    resolver = Resolver(root, allow_view_filter_drop=args.allow_view_filter_drop)
+    resolver = Resolver(root, allow_view_filter_drop=args.allow_view_filter_drop,
+                        confirmed_mappings=args.confirmed_mappings.resolve() if args.confirmed_mappings else None)
     files, links = [], []
     for path in sorted(p for p in input_dir.rglob("*") if p.is_file()):
         relative = path.relative_to(input_dir)
@@ -619,7 +701,7 @@ def main():
                     AllowViewFilterDrop=args.allow_view_filter_drop, Timestamp=datetime.now().isoformat(),
                     Files=len(files), FileStatuses=dict_count(files, "Status"),
                     LinkStatuses=dict_count(links, "Status"),
-                    LookupSources=[dict(Path=str(p.relative_to(root)), SHA256=digest(p))
+                    LookupSources=[dict(Path=os.path.relpath(p, root), SHA256=digest(p))
                                    for p in resolver.sources])
     review = {}
     for link in links:

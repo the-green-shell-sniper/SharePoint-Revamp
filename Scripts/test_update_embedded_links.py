@@ -59,6 +59,37 @@ class LinkTests(unittest.TestCase):
         url = fix.ORIGIN + "/HR/Missing.docx"
         self.assertEqual(self.resolver.resolve(url)[:2], (url, "unresolved"))
 
+    def test_confirmed_rename_drops_only_explicitly_approved_fragment(self):
+        path = self.root / "confirmed.csv"
+        old = fix.ORIGIN + "/HR/Old.pdf#search%3Dold"
+        new = fix.ORIGIN + "/sites/HR/New.docx"
+        self.write_rows(path, [dict(OldURL=old, NewURL=new, Evidence="User confirmed", DropFragment="Yes")])
+        resolver = fix.Resolver(self.root, confirmed_mappings=path)
+        self.assertEqual(resolver.resolve(old)[:2], (new, "resolved"))
+        self.assertEqual(resolver.resolve(new)[1], "already-current")
+        self.write_rows(path, [dict(OldURL=old, NewURL=new, Evidence="User confirmed", DropFragment="No")])
+        resolver = fix.Resolver(self.root, confirmed_mappings=path)
+        self.assertEqual(resolver.resolve(old)[0], new + "#search%3Dold")
+
+    def test_confirmed_mapping_can_override_outdated_scan(self):
+        path = self.root / "confirmed.csv"
+        self.write_rows(path, [dict(OldURL=OLD, NewURL=fix.ORIGIN + "/sites/HR/Renamed.docx",
+                                   Evidence="Live SharePoint metadata", DropFragment="No")])
+        resolver = fix.Resolver(self.root, confirmed_mappings=path)
+        self.assertEqual(resolver.resolve(OLD)[0], fix.ORIGIN + "/sites/HR/Renamed.docx")
+
+    def test_confirmed_mapping_rejects_invalid_and_conflicting_rows(self):
+        path = self.root / "confirmed.csv"
+        self.write_rows(path, [dict(OldURL=OLD, NewURL="https://example.com",
+                                   Evidence="invalid", DropFragment="No")])
+        with self.assertRaisesRegex(ValueError, "Invalid confirmed"):
+            fix.Resolver(self.root, confirmed_mappings=path)
+        self.write_rows(path, [dict(OldURL=OLD, NewURL=NEW, Evidence="first", DropFragment="No"),
+                               dict(OldURL=OLD, NewURL=fix.ORIGIN + "/sites/HR/Other.docx",
+                                    Evidence="second", DropFragment="No")])
+        with self.assertRaisesRegex(ValueError, "Conflicting confirmed"):
+            fix.Resolver(self.root, confirmed_mappings=path)
+
     def test_current_is_idempotent(self):
         self.assertEqual(self.resolver.resolve(NEW)[:2], (NEW, "already-current"))
 
@@ -196,6 +227,33 @@ class LinkTests(unittest.TestCase):
         self.assertEqual(targets, [NEW, "https://example.com"])
         path.write_bytes(result)
         self.assertIsNone(self.editor.pdf(path))
+        newer = fix.ORIGIN + "/sites/HR/Guide-v2.docx"
+        self.resolver.add(NEW, newer, "later-migration.csv:2")
+        second = self.editor.pdf(path)
+        self.assertTrue(second.startswith(result))
+        checked = PdfReader(io.BytesIO(second), strict=True)
+        self.assertEqual(str(checked.pages[0]["/Annots"][0].get_object()["/A"]["/URI"]), newer)
+
+    def test_pdf_direct_annotations_are_edited_without_changing_shared_action(self):
+        path = self.root / "direct.pdf"
+        writer = PdfWriter()
+        page = writer.add_blank_page(600, 800)
+        shared = writer._add_object(DictionaryObject({
+            NameObject("/S"): NameObject("/URI"), NameObject("/URI"): TextStringObject(OLD)}))
+        annotation = DictionaryObject({
+            NameObject("/Subtype"): NameObject("/Link"),
+            NameObject("/Rect"): ArrayObject([NumberObject(x) for x in (0, 0, 50, 50)]),
+            NameObject("/A"): shared})
+        untouched = DictionaryObject({
+            NameObject("/Subtype"): NameObject("/Widget"), NameObject("/A"): shared})
+        page[NameObject("/Annots")] = ArrayObject([annotation, writer._add_object(untouched)])
+        with path.open("wb") as stream:
+            writer.write(stream)
+        result = self.editor.pdf(path)
+        checked = PdfReader(io.BytesIO(result), strict=True)
+        annotations = checked.pages[0]["/Annots"]
+        self.assertEqual(str(annotations[0]["/A"]["/URI"]), NEW)
+        self.assertEqual(str(annotations[1].get_object()["/A"]["/URI"]), OLD)
 
 
 if __name__ == "__main__":

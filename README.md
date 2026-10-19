@@ -68,6 +68,13 @@ parameters are still protected. When an old link selects a specific file and the
 tables confirm that file's new path, that path takes precedence over a less-specific
 view in the very same library; conflicting file or cross-library destinations
 remain unresolved.
+Explicit user confirmations and authenticated live checks can be supplied with
+`--confirmed-mappings .\ReferenceFiles\ConfirmedEmbeddedLinkMappings.csv`.
+This CSV requires `OldURL`, `NewURL`, `Evidence`, and `DropFragment` (`Yes`/`No`).
+Confirmed mappings override older scan evidence by URL/document identity; conflicting
+confirmations or invalid/external destinations abort the run. Fragments are preserved
+unless explicitly approved for removal, such as an obsolete PDF search fragment
+after a confirmed conversion to DOCX. The confirmation CSV is hashed in the run manifest.
 Fragments/bookmarks are preserved. Confirmed file destinations use encoded,
 direct new file paths rather than old GUIDs or obsolete sharing tokens.
 
