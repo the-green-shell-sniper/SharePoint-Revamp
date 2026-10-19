@@ -9,8 +9,95 @@ This repository contains PowerShell scripts used for SharePoint migration analys
 - [Get-FixItListOverviewOnly.ps1](Scripts/Get-FixItListOverviewOnly.ps1)
 - [Get-FixItListURLsv2.ps1](Scripts/Get-FixItListURLsv2.ps1)
 - [Search-PhrasesInSpreadsheets.ps1](Scripts/Search-PhrasesInSpreadsheets.ps1) - searches every CSV/Excel file under a folder tree for each phrase in a phrases CSV (exact match, then fuzzy for phrases with no exact hit) and writes the file path + row of each match to a CSV.
+- [Update-EmbeddedLinks.py](Scripts/Update-EmbeddedLinks.py) - offline, backup-first editing of authored Office/PDF hyperlink targets using the supplied migration lookups.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
+
+## Offline embedded hyperlink updates
+
+[Update-EmbeddedLinks.py](Scripts/Update-EmbeddedLinks.py) recursively processes a local
+document folder without connecting to SharePoint. It changes only hyperlink targets
+on `whallc.sharepoint.com` (including bare-host URLs), not visible labels, visible URL
+text, external URLs, images, or document relationships such as templates.
+Legacy `http://centralpark/...` links are outside this hostname scope and remain unchanged.
+
+Requirements: Python 3.10+ and the pinned `pypdf` dependency below. Acrobat, OCR,
+Java/Tika, and PDF rendering utilities are not needed to edit existing PDF links.
+Optional legacy `.doc` support uses installed desktop Word via PowerShell 7 and
+[Edit-LegacyWordLinks.ps1](Scripts/Edit-LegacyWordLinks.ps1). Run that option in a
+Windows desktop user session, not an unattended server/service account. Word is
+not needed for DOCX/XLSX/PPTX editing.
+
+From the repository root in PowerShell:
+
+```powershell
+python -m pip install -r .\Scripts\embedded-link-requirements.txt
+
+# Preview: reads documents, produces audit reports, changes no documents.
+python .\Scripts\Update-EmbeddedLinks.py `
+  --input .\UpdatedEmbeddedLinkCopies `
+  --run-dir .\LinkRemediationRuns\preview-unique-name `
+  --legacy-word
+
+# Apply in place. Use a NEW run directory on every invocation.
+python .\Scripts\Update-EmbeddedLinks.py `
+  --input .\UpdatedEmbeddedLinkCopies `
+  --run-dir .\LinkRemediationRuns\apply-unique-name `
+  --legacy-word --apply
+
+python -m unittest discover -s .\Scripts -p test_update_embedded_links.py -v
+```
+
+Omit `--legacy-word` if Word is unavailable; legacy DOC files will be explicitly
+reported as unsupported. Copy the repository lookup folders and scripts with the
+documents if running on another machine. `--root` can specify a different lookup root.
+These commands only edit local files: they neither download nor upload documents.
+
+Resolution uses `Masters`, `FixerFiles`, and `EmbeddedLinks` CSVs, matching exact
+URLs, document GUIDs, and document paths. Opaque sharing tokens are case-sensitive.
+Only destinations recorded as **found** are used. `FirstPassDocURLLookupTables`
+can fill gaps but never override a later mapping or a later "not found".
+The site-base map alone is not proof that a file exists; the script deliberately
+does not blindly replace site prefixes or guess renamed files. Conflicting and
+unresolved URLs stay untouched, even if a report contains an unconfirmed proposed URL.
+Mappings that omit or change an ASPX page's list-item/filter/view query context are
+also rejected rather than silently changing what the link displays.
+With explicit approval, add `--allow-view-filter-drop` to accept a confirmed
+destination without its old view/filter/sort parameters. Item IDs and folder
+parameters are still protected. When an old link selects a specific file and the
+tables confirm that file's new path, that path takes precedence over a less-specific
+view in the very same library; conflicting file or cross-library destinations
+remain unresolved.
+Fragments/bookmarks are preserved. Confirmed file destinations use encoded,
+direct new file paths rather than old GUIDs or obsolete sharing tokens.
+
+Each run produces:
+
+- `files.csv`: per-file outcome, SHA-256 hashes, errors, and backup path.
+- `links.csv`: each tenant hyperlink target/location, old/new URL, status, and lookup evidence.
+- `review.csv`: unresolved/conflicting URLs grouped for follow-up.
+- `manifest.json`: totals and hashes of the lookup sources used.
+- `backups/`: exact original bytes of every file actually replaced.
+
+Office edits retain all ZIP members and only change external hyperlink
+relationships, Word HYPERLINK field instructions (including split runs), or literal
+first arguments of Excel HYPERLINK formulas. Visible text and cached formula values
+are verified unchanged. PDF edits append incremental URI-annotation updates,
+preserving every original byte, page drawing/text streams, extracted text, dimensions,
+annotation rectangles, and external URI targets. Plain visible PDF URLs without an
+existing clickable annotation are not converted into links. Signed/encrypted files
+are rejected rather than invalidating signatures or removing protection.
+
+Every changed file is verified in memory, backed up and hash-checked, then replaced
+atomically. A nonzero exit code and explicit error row indicate any failed file.
+No-change and dry-run files are never rewritten. Keep the backups until the corrected
+copies have been reviewed and uploaded. To roll back, copy the selected file from
+the run's `backups` tree over the corresponding input file.
+
+Lookup evidence is offline confirmation from the supplied reports, **not** a fresh
+availability/permissions check. Unresolved sharing tokens, absent GUID mappings, and
+conflicting destinations need fresh authoritative SharePoint data or human review;
+installing Acrobat/OCR does not resolve those missing mappings.
 
 ## Get-FixItListOverviewOnly.ps1
 
