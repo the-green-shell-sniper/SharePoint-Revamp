@@ -22,6 +22,24 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ### CS only: do this first
 
+If inventory counts/fields fail on the server, run the read-only
+[Get-CSPermissionScout.ps1](Scripts/Get-CSPermissionScout.ps1) beside
+[SPPermission.Common.ps1](Scripts/SPPermission.Common.ps1) before retrying Apply:
+
+```powershell
+.\Get-CSPermissionScout.ps1
+```
+
+This uses the existing document-lookup scanner's recursive paged PnP/CAML pattern,
+discovers fields, reads item inheritance explicitly, and compares item IDs against
+REST on both CS webs. It includes hidden/empty lists but does not recurse into
+subsites or change permissions. Timestamped `CS-PermissionScout` reports include
+`Lists.csv`, `Fields.csv`, `Items.csv`, and `Errors.csv`. Count discrepancies are
+flagged for review, not explained away or used to authorize permission changes.
+Read failures are saved and cause an explicit failed result. The sync's current
+count safety check remains unchanged pending evidence from this scout.
+Offline tests: `.\Scripts\Test-CSPermissionScout.ps1`.
+
 You do **not** need to process every site to fix Clinical & Patient Services.
 Copy these five scripts together to `P:\IT\Private\zzBPosey\whaitapp09`:
 
