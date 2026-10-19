@@ -87,7 +87,7 @@ try {
     }
     Test-Case 'Default main execution only writes an offline plan' {
         function Connect-PnPOnline { throw 'Offline planning must not authenticate.' }
-        $PlanCsv = $csv
+        Set-Variable -Name PlanCsv -Value $csv -Scope Script
         $DocumentsFolder = $temp
         $OutputFolder = Join-Path $temp 'offline-output'
         Invoke-PublishFixedDocuments
