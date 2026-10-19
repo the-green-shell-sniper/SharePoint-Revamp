@@ -64,6 +64,11 @@ not roll back additions; inspect application status/log separately. Old-user
 unavailability does not block this narrow pass because those users are not processed.
 The full mirror continues to block unresolved users; this does not silently change
 its policy or treat picker misses as proof of deletion.
+Parameter-only REST POST operations send explicit empty JSON (`{}`), rather than
+leaving the PnP request body implicit. Failed writes are never automatically retried.
+After a failed Apply, inspect `Changes.csv` for verified earlier operations and
+unknown outcomes before rerunning; a new run rereads live state and plans only
+missing additions.
 
 ### Queued automatic application and recursive reporting
 

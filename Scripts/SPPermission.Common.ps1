@@ -66,6 +66,9 @@ function Invoke-SPPermissionRest {
     param($Connection, [string]$Url, [ValidateSet('Get', 'Post')][string]$Method = 'Get', $Content)
     $options = @{ Connection = $Connection; Url = $Url; Method = $Method; Raw = $true; ErrorAction = 'Stop' }
     if ($PSBoundParameters.ContainsKey('Content')) { $options.Content = $Content }
+    elseif ($Method -eq 'Post') {
+        $options.Content = '{}'
+    }
     for ($attempt = 0; ; $attempt++) {
         try {
             $raw = Invoke-PnPSPRestMethod @options

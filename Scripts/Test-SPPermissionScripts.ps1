@@ -1099,6 +1099,21 @@ try {
             Assert-CSVisitorsGroup ([pscustomobject]@{ Id = 11; LoginName = 'other'; Title = 'Other Visitors' })
         } 'Expected associated group'
     }
+    Test-Case 'Parameter-only REST writes send valid empty JSON and failed writes are never retried' {
+        $script:postCalls = 0
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, $Content, [switch]$Raw, $ErrorAction)
+            Assert-Equal $Method 'Post'
+            Assert-Equal $Content '{}'
+            $script:postCalls++
+            if ($Url -like '*fail*') { throw 'Cannot handle the data at position 0.' }
+            return ''
+        }
+        Invoke-SPPermissionRest 'target' 'https://target.test/roleassignments/addroleassignment(principalid=4,roledefid=1073741826)' -Method Post
+        Assert-Equal $script:postCalls 1
+        Assert-Throws { Invoke-SPPermissionRest 'target' 'https://target.test/fail' -Method Post } 'Cannot handle the data'
+        Assert-Equal $script:postCalls 2
+    }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {
     Remove-Item -LiteralPath $temp -Recurse -Force
