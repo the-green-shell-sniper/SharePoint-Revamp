@@ -267,6 +267,53 @@ try {
         Assert-Equal ([datetime]$inventory['Tasks/1_.000'].Created).Year 2020
         Assert-Equal $inventory['Tasks/1_.000'].Author 'author@example.test'
     }
+    Test-Case 'ContentTypeId REST failure uses recursive PnP without hiding missing inheritance or unrelated errors' {
+        function Invoke-SPPermissionRest {
+            [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
+        }
+        function Get-SPPermissionCollection {
+            param($Connection, $Url)
+            if ($Url -match '/webs') { return }
+            if ($Url -match '/lists\?') {
+                return [pscustomobject]@{
+                    Id = 'list'; Title = 'Docs'; BaseType = 1; BaseTemplate = 101; ItemCount = 2; HasUniqueRoleAssignments = $false
+                    RootFolder = [pscustomobject]@{ ServerRelativeUrl = '/sites/source/Docs' }
+                }
+            }
+            if ($Url -match '/fields\?') {
+                foreach ($name in @('FileRef', 'FileLeafRef', 'FSObjType', 'Title', 'Author')) {
+                    [pscustomobject]@{ InternalName = $name; EntityPropertyName = $name; TypeAsString = $(if ($name -eq 'Author') { 'User' } else { 'Text' }) }
+                }
+                return
+            }
+            throw $restFailure
+        }
+        function Get-PnPListItem {
+            param($List, $Query, $PageSize, $Connection, $ErrorAction)
+            Assert-Equal $Connection 'source'
+            Assert-Equal ($Query -match "RecursiveAll") $true
+            foreach ($id in @(2, 1)) {
+                [pscustomobject]@{ Id = $id; FieldValues = @{
+                    FileRef = "/sites/source/Docs/$id.docx"; FileLeafRef = "$id.docx"; FSObjType = 0
+                    Title = "Document $id"; Author = [pscustomobject]@{ Email = 'author@example.test' }
+                } }
+            }
+        }
+        function Get-PnPProperty { return $inheritance }
+        $restFailure = "Column 'ContentTypeId' does not exist. It may have been deleted by another user."
+        $inheritance = $true
+        $inventory = Get-SPPermissionInventory 'source' 'https://example.test' 1
+        Assert-Equal $inventory.Count 4
+        Assert-Equal $inventory['Docs/1.docx'].Title 'Document 1'
+        Assert-Equal $inventory['Docs/1.docx'].Author 'author@example.test'
+        Assert-Equal $inventory['Docs/1.docx'].Unique $true
+        Assert-Equal ($null -eq $inventory['Docs/1.docx'].Size) $true
+        Assert-Equal ($inventory['Docs'].InventoryReadReview -match 'ContentTypeId') $true
+        $inheritance = $null
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } 'inheritance state missing'
+        $restFailure = '403 access denied'
+        Assert-Throws { Get-SPPermissionInventory 'source' 'https://example.test' } '403 access denied'
+    }
     Test-Case 'Count discrepancy requires live PnP ID agreement and reports the limited-visibility caveat' {
         function Invoke-SPPermissionRest {
             [pscustomobject]@{ Id = 'web'; Url = 'https://example.test'; ServerRelativeUrl = '/sites/source'; HasUniqueRoleAssignments = $true }
