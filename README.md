@@ -40,6 +40,36 @@ Read failures are saved and cause an explicit failed result. The sync's current
 count safety check remains unchanged pending evidence from this scout.
 Offline tests: `.\Scripts\Test-CSPermissionScout.ps1`.
 
+#### Scouting the remaining checklist sites
+
+[Invoke-SPPermissionScouts.ps1](Scripts/Invoke-SPPermissionScouts.ps1) reuses that
+same scout **sequentially**, completing the source and target of each checklist row
+before starting the next. By default it excludes CS, which can continue independently.
+Copy the runner, the updated [Get-CSPermissionScout.ps1](Scripts/Get-CSPermissionScout.ps1),
+[SPPermission.Common.ps1](Scripts/SPPermission.Common.ps1), and
+[NewSiteChecklist.csv](ReferenceFiles/NewSiteChecklist.csv) into the same server folder.
+No permission-sync/apply scripts are called.
+
+```powershell
+# All remaining checklist pairs, one pair at a time, using persistent login.
+.\Invoke-SPPermissionScouts.ps1 -ChecklistFile .\NewSiteChecklist.csv
+
+# Or run just one pair first / retry a failed pair.
+.\Invoke-SPPermissionScouts.ps1 -ChecklistFile .\NewSiteChecklist.csv `
+    -TargetSites 'https://whallc.sharepoint.com/sites/Accounting'
+```
+
+Reports default to `Site-PermissionScouts\Scouts_<timestamp>` beside the runner.
+Each pair has its own subfolder with the existing four scout reports.
+`ScoutSummary.csv` is saved after every pair and identifies failures, count/ID
+discrepancies needing review, and each report location. Read failures do not stop
+the other read-only scouts; the batch throws at the end if any pair failed.
+`-IncludeCS` includes CS in a full run. An explicit `-TargetSites` selection can
+also select CS. Unlisted targets and duplicate mappings are rejected before reads.
+Only the explicit checklist webs are scouted: listed subsites run as separate
+rows, without automatic recursion into unlisted subsites or tenant enumeration.
+No content or permissions are changed. Keep all output private.
+
 You do **not** need to process every site to fix Clinical & Patient Services.
 Copy these five scripts together to `P:\IT\Private\zzBPosey\whaitapp09`:
 

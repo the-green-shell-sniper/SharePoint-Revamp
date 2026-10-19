@@ -65,6 +65,70 @@ try {
     $errorsPath = Get-ChildItem -LiteralPath $OutputFolder -Recurse -Filter 'Errors.csv'
     Assert-Equal (@(Import-Csv -LiteralPath $errorsPath.FullName).Count) 2
     Write-Host 'PASS read failures persist in Errors.csv and cause explicit failure.'
+    $checklist = Join-Path $temp 'sites.csv'
+    @(
+        [pscustomobject]@{ 'Old Site URL' = 'https://source.test/a'; 'New Site URL' = 'https://target.test/a' }
+        [pscustomobject]@{ 'Old Site URL' = 'https://source.test/CS'; 'New Site URL' = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices' }
+        [pscustomobject]@{ 'Old Site URL' = 'https://source.test/b'; 'New Site URL' = 'https://target.test/b' }
+    ) | Export-Csv -LiteralPath $checklist -NoTypeInformation
+    $state = [pscustomobject]@{ Calls = [Collections.Generic.List[string]]::new(); FailUrl = '' }
+    function Connect-PnPOnline {
+        param($Url, $ClientId, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ErrorAction)
+        Assert-Equal $Interactive.IsPresent $true
+        Assert-Equal $PersistLogin.IsPresent $true
+        Assert-Equal $ReturnConnection.IsPresent $true
+        $state.Calls.Add($Url)
+        $Url
+    }
+    function Get-PnPWeb {
+        param($Connection, $Includes, $ErrorAction)
+        if ($Connection -eq $state.FailUrl) { throw 'MOCK inaccessible web' }
+        [pscustomobject]@{ Url = $Connection }
+    }
+    $failInheritance = $false
+    $runner = Join-Path $PSScriptRoot 'Invoke-SPPermissionScouts.ps1'
+    $batchOutput = Join-Path $temp 'batch'
+    & $runner -ChecklistFile $checklist -OutputFolder $batchOutput
+    Assert-Equal ($state.Calls -join ',') 'https://source.test/a,https://target.test/a,https://source.test/b,https://target.test/b'
+    $batchSummary = Get-ChildItem -LiteralPath $batchOutput -Recurse -Filter 'ScoutSummary.csv'
+    $batchRows = @(Import-Csv -LiteralPath $batchSummary.FullName)
+    Assert-Equal $batchRows.Count 2
+    Assert-Equal $batchRows[0].Status 'Needs review'
+    Assert-Equal $batchRows[0].ListsNeedingReview '2'
+    Write-Host 'PASS sequential checklist runner reuses the actual scout, excludes CS by default, and flags count differences.'
+    $state.Calls.Clear()
+    & $runner -ChecklistFile $checklist -OutputFolder (Join-Path $temp 'selected') -TargetSites 'https://target.test/b/'
+    Assert-Equal ($state.Calls -join ',') 'https://source.test/b,https://target.test/b'
+    Write-Host 'PASS single-pair selection scouts exactly the selected URLs.'
+    $state.Calls.Clear()
+    & $runner -ChecklistFile $checklist -OutputFolder (Join-Path $temp 'include-cs') -IncludeCS
+    Assert-Equal $state.Calls.Count 6
+    Assert-Equal $state.Calls.Contains('https://whallc.sharepoint.com/sites/ClinicalandPatientServices') $true
+    Write-Host 'PASS IncludeCS opts the CS pair back in.'
+    $state.Calls.Clear()
+    $state.FailUrl = 'https://source.test/a'
+    $failedOutput = Join-Path $temp 'batch-failure'
+    $caught = $false
+    try { & $runner -ChecklistFile $checklist -OutputFolder $failedOutput } catch {
+        if ($_.Exception.Message -notmatch 'site scout\(s\) failed') { throw }
+        $caught = $true
+    }
+    Assert-Equal $caught $true
+    Assert-Equal ($state.Calls -join ',') 'https://source.test/a,https://source.test/b,https://target.test/b'
+    $batchSummary = Get-ChildItem -LiteralPath $failedOutput -Recurse -Filter 'ScoutSummary.csv'
+    $batchRows = @(Import-Csv -LiteralPath $batchSummary.FullName)
+    Assert-Equal $batchRows[0].Status 'Failed'
+    Assert-Equal $batchRows[1].Status 'Needs review'
+    Write-Host 'PASS failed pair is reported explicitly, the next pair completes, and batch fails at the end.'
+    $caught = $false
+    $state.Calls.Clear()
+    try { & $runner -ChecklistFile $checklist -OutputFolder $batchOutput -TargetSites 'https://unlisted.test' } catch {
+        if ($_.Exception.Message -notmatch 'not in the checklist') { throw }
+        $caught = $true
+    }
+    Assert-Equal $caught $true
+    Assert-Equal $state.Calls.Count 0
+    Write-Host 'PASS unlisted targets are rejected before authentication.'
     Write-Host 'All scout tests passed using offline mocks; no PnP module or live connection used.'
 } finally {
     if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Recurse -Force }
