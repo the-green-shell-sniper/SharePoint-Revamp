@@ -24,6 +24,100 @@ function Test-Case([string]$Name, [scriptblock]$Action) {
 $temp = Join-Path ([IO.Path]::GetTempPath()) ('wha-upload-tests-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $temp | Out-Null
 try {
+    function Write-TestOfficePackage {
+        param([string]$Path, [hashtable]$Parts)
+        $zip = [IO.Compression.ZipFile]::Open($Path, [IO.Compression.ZipArchiveMode]::Create)
+        try {
+            foreach ($name in $Parts.Keys) {
+                $writer = [IO.StreamWriter]::new($zip.CreateEntry($name).Open())
+                try { $writer.Write($Parts[$name]) } finally { $writer.Dispose() }
+            }
+        } finally { $zip.Dispose() }
+    }
+    $officeLocal = Join-Path $temp 'local.docx'
+    $officeRemote = Join-Path $temp 'remote.docx'
+    $parts = @{
+        '[Content_Types].xml' = '<Types/>'
+        'word/document.xml' = '<document>Visible label</document>'
+        'word/_rels/document.xml.rels' = '<Relationships><Relationship Target="https://whallc.sharepoint.com/sites/Epic/Tip/Fixed.docx"/></Relationships>'
+        'customXml/item1.xml' = '<p:properties xmlns:p="http://schemas.microsoft.com/office/2006/metadata/properties"><documentManagement><Audience>Lab</Audience></documentManagement></p:properties>'
+        'customXml/item9.xml' = '<businessData>Do not ignore me</businessData>'
+        'docProps/custom.xml' = '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/custom-properties"><property>old-library</property></Properties>'
+    }
+    Write-TestOfficePackage $officeLocal $parts
+    $changed = $parts.Clone()
+    $changed['customXml/item1.xml'] = $parts['customXml/item1.xml'].Replace('Lab', 'Destination Lab')
+    $changed['docProps/custom.xml'] = $parts['docProps/custom.xml'].Replace('old-library','new-library')
+    $changed['[trash]/0001.dat'] = 'discarded metadata'
+    Write-TestOfficePackage $officeRemote $changed
+    Test-Case 'Office package comparison accepts only recognized metadata changes' {
+        $result = Compare-OfficeDocumentPackage $officeLocal ([IO.File]::ReadAllBytes($officeRemote))
+        Assert-Equal $result.Count 3
+    }
+    Test-Case 'Office package comparison rejects visible text, hyperlink and arbitrary custom XML edits' {
+        foreach ($part in 'word/document.xml','word/_rels/document.xml.rels','customXml/item9.xml','[Content_Types].xml') {
+            $bad = $changed.Clone()
+            $bad[$part] = $bad[$part].Replace('Visible label','Changed label').Replace('Fixed.docx','Wrong.docx').
+                Replace('Do not ignore me','Changed data').Replace('<Types/>','<Types><Changed/></Types>')
+            $path = Join-Path $temp ([guid]::NewGuid().ToString('N') + '.docx')
+            Write-TestOfficePackage $path $bad
+            Assert-Throws { Compare-OfficeDocumentPackage $officeLocal ([IO.File]::ReadAllBytes($path)) } 'differs'
+        }
+    }
+    Test-Case 'Office package comparison rejects missing parts and signatures' {
+        $bad = $changed.Clone()
+        $bad.Remove('word/document.xml')
+        $path = Join-Path $temp 'missing-part.docx'
+        Write-TestOfficePackage $path $bad
+        Assert-Throws { Compare-OfficeDocumentPackage $officeLocal ([IO.File]::ReadAllBytes($path)) } 'added or removed'
+        $bad = $changed.Clone()
+        $bad['_xmlsignatures/sig1.xml'] = '<signature/>'
+        $path = Join-Path $temp 'signed.docx'
+        Write-TestOfficePackage $path $bad
+        Assert-Throws { Compare-OfficeDocumentPackage $officeLocal ([IO.File]::ReadAllBytes($path)) } 'Signed Office'
+    }
+    Test-Case 'Office metadata datastore allowance rejects unrelated property edits' {
+        $a = $parts.Clone()
+        $b = $parts.Clone()
+        $rels = '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXmlProps" Target="itemProps1.xml"/></Relationships>'
+        $props = '<ds:datastoreItem xmlns:ds="http://schemas.openxmlformats.org/officeDocument/2006/customXml" ds:itemID="{old}"/>'
+        $a['customXml/_rels/item1.xml.rels'] = $rels
+        $b['customXml/_rels/item1.xml.rels'] = $rels
+        $a['customXml/itemProps1.xml'] = $props
+        $b['customXml/itemProps1.xml'] = $props.Replace('{old}','{new}')
+        $ap = Join-Path $temp 'datastore-a.docx'
+        $bp = Join-Path $temp 'datastore-b.docx'
+        Write-TestOfficePackage $ap $a
+        Write-TestOfficePackage $bp $b
+        Assert-Equal (Compare-OfficeDocumentPackage $ap ([IO.File]::ReadAllBytes($bp))).Count 1
+        $b['customXml/itemProps1.xml'] = $props.Replace('/>','><ds:schemaRefs/></ds:datastoreItem>')
+        $cp = Join-Path $temp 'datastore-bad.docx'
+        Write-TestOfficePackage $cp $b
+        Assert-Throws { Compare-OfficeDocumentPackage $ap ([IO.File]::ReadAllBytes($cp)) } 'unapproved'
+    }
+    Test-Case 'Office comparison is opt-in, audited and does not weaken PDFs' {
+        $p = [pscustomobject]@{
+            LocalPath = $officeLocal; SHA256 = (Get-FileHash -LiteralPath $officeLocal).Hash
+            FileRef = '/sites/Epic/Tip/local.docx'; VerificationAuditPath = (Join-Path $temp 'office-audit.jsonl')
+        }
+        $bytes = [IO.File]::ReadAllBytes($officeRemote)
+        Assert-Throws { Assert-PlannedDocumentContent $p $bytes } 'Remote bytes differ'
+        $AllowOfficeMetadataChanges = $true
+        Assert-Equal (Assert-PlannedDocumentContent $p $bytes) 'OfficePackageContent'
+        $audit = Get-Content -LiteralPath $p.VerificationAuditPath -Raw | ConvertFrom-Json
+        Assert-Equal @($audit.Differences).Count 3
+        $p.LocalPath = Join-Path $temp 'local.pdf'
+        Assert-Throws { Assert-PlannedDocumentContent $p $bytes } 'Remote bytes differ'
+    }
+    Test-Case 'Observed SharePoint Word rewrite preserves all non-metadata parts' {
+        $repo = Split-Path -Parent $PSScriptRoot
+        $remotePath = Join-Path $repo 'UploadRuns\diagnostic-20261019-061217\Documenting an Adverse Reaction.remote.docx'
+        if (Test-Path -LiteralPath $remotePath) {
+            $sourcePath = Join-Path $repo 'UpdatedEmbeddedLinkCopies\Epic\Documenting an Adverse Reaction.docx'
+            $diffs = Compare-OfficeDocumentPackage $sourcePath ([IO.File]::ReadAllBytes($remotePath))
+            Assert-Equal $diffs.Count 8
+        }
+    }
     Test-Case 'REST metadata preserves explicit winter and summer UTC dates' {
         function Invoke-PnPSPRestMethod {
             param($Url, $Method, $Connection, $ErrorAction)
@@ -350,6 +444,23 @@ try {
         Assert-Equal $result.Status 'MetadataRestoredAndVerified'
         Assert-Equal $script:remote.Created $snapshotData.Created
         Assert-Equal $script:uploads $uploadsBefore
+    }
+    Test-Case 'Snapshot recovery accepts audited metadata-only Office variants without content upload' {
+        $AllowOfficeMetadataChanges = $true
+        $officePlan = [pscustomobject]@{
+            LocalPath = $officeLocal; SHA256 = (Get-FileHash -LiteralPath $officeLocal).Hash
+            FileRef = $plan.FileRef; WebUrl = $plan.WebUrl
+            VerificationAuditPath = (Join-Path $temp 'recovery-office-audit.jsonl')
+        }
+        $script:remote = New-TestState
+        $script:remote.Editor = 999
+        $script:remoteBytes = [IO.File]::ReadAllBytes($officeRemote)
+        $uploadsBefore = $script:uploads
+        $result = Restore-SnapshotDocumentMetadata $snapshotPath @($officePlan)
+        Assert-Equal $result.Status 'MetadataRestoredAndVerified'
+        Assert-Equal $script:remote.Editor 9
+        Assert-Equal $script:uploads $uploadsBefore
+        Assert-Equal @(Get-Content -LiteralPath $officePlan.VerificationAuditPath).Count 2
     }
     Test-Case 'Snapshot recovery rejects mismatched destination and damaged backup' {
         $snapshotData.Target = '/sites/Epic/Wrong/Guide.pdf'

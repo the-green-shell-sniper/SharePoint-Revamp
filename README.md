@@ -81,7 +81,8 @@ The script captures the **existing destination file's** `Author` (Created By),
 It overwrites the existing file, then assigns typed user lookup values and explicitly
 UTC DateTimes directly through CSOM `ListItem.UpdateOverwriteVersion()` to restore
 those fields and verifies all four, plus file/item
-identity and the uploaded byte hash. User IDs are reused within the same site;
+identity and the uploaded byte hash (or the explicitly opted-in Office package
+comparison described below). User IDs are reused within the same site;
 no user-account creation or cross-site identity guessing is needed.
 This preserves the current target metadata, **not old-site metadata from before migration**,
 and does not change the document's internal Office author properties.
@@ -100,7 +101,7 @@ Subfolder URLs and library `Forms/AllItems.aspx` URLs are resolved from the work
 
 Immediately before each upload, remote identity, metadata, ETag and content hash
 are rechecked. The CSOM binary write supplies the current ETag to reject concurrent
-changes and disables automatic query retries. Identical content is skipped.
+changes and disables automatic query retries. Exact-byte identical content is skipped.
 Uploads are not a tenant-wide transaction: an error stops further files, but earlier
 verified uploads remain. No automatic content rollback is attempted. A failed or
 ambiguous upload may have changed remote bytes; its result is explicitly marked
@@ -148,6 +149,37 @@ SharePoint REST for both capture and verification, and sends UTC DateTime values
 directly through CSOM for writes. Recovery always uses the saved baseline rather
 than guessing an offset or adding hours. After recovery succeeds, a
 fresh `-Apply` run can safely skip already-identical content and process the rest.
+
+### Office metadata rewriting during upload
+
+SharePoint can rewrite Office package properties when a file enters its destination
+library. A verified example changed the library content-type schema, custom document
+properties, metadata datastore ID, and added `[trash]` entries while leaving every
+Word content, relationship and media part byte-identical. Whole-file SHA-256 therefore
+changed even though the authored content and corrected hyperlinks did not.
+
+Exact-byte verification remains the default. Explicit `-AllowOfficeMetadataChanges`
+enables a restricted DOCX/XLSX/PPTX package comparison during upload verification
+and metadata recovery:
+
+- All package part names and uncompressed bytes must match, except recognized
+  `docProps/core.xml`, `docProps/custom.xml`, and custom XML rooted in the Office
+  document-property or content-type-schema namespaces.
+- Datastore properties linked to those metadata parts may change only their item ID;
+  schema references must remain unchanged. Relationships themselves must match exactly.
+- Added `[trash]/<digits>.dat` entries are permitted. Other additions, deletions,
+  content/hyperlink changes, or arbitrary custom XML changes fail verification.
+- Digitally signed Office packages and all other formats, including PDFs, still
+  require exact bytes. No metadata allowance applies to them.
+- Every accepted comparison appends local/remote hashes and differing part names to
+  `office-verification.jsonl`. Success after such a comparison is reported as
+  `UploadedAndVerifiedOfficeContent`, not as a whole-file hash match.
+
+Add the switch to both metadata recovery and subsequent `-Apply` commands if this
+behavior is approved. The script does not suppress content mismatches or loosen
+lock/identity/concurrency checks. Metadata-only differences can be applied again on
+a subsequent upload; only exact-byte matches are automatically skipped. Keep the
+original failed apply snapshot for recovery before starting a fresh apply run.
 
 Offline tests (no SharePoint connection):
 

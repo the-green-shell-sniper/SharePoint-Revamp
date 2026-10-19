@@ -14,6 +14,9 @@ Metadata writes use explicitly UTC CSOM DateTimes to avoid server-local timezone
 conversion. After an interrupted upload, -RestoreMetadataSnapshot performs a
 separate metadata-only recovery from the original backup's .metadata.json file.
 Do not combine recovery with -Apply or -Preflight.
+Exact SHA-256 verification is the default. -AllowOfficeMetadataChanges permits
+recognized metadata-only DOCX/XLSX/PPTX package differences and writes a part audit;
+all other package parts and all PDF bytes must still match.
 #>
 [CmdletBinding()]
 param(
@@ -25,6 +28,7 @@ param(
     [string]$OutputFolder,
     [string]$ClientId,
     [string]$RestoreMetadataSnapshot,
+    [switch]$AllowOfficeMetadataChanges,
     [switch]$Preflight,
     [switch]$Apply
 )
@@ -322,6 +326,149 @@ function Get-BytesSHA256 {
     return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($Bytes))
 }
 
+function Read-OfficePartXml {
+    param($Entry)
+    $stream = $Entry.Open()
+    try {
+        $settings = [Xml.XmlReaderSettings]::new()
+        $settings.DtdProcessing = [Xml.DtdProcessing]::Prohibit
+        $settings.XmlResolver = $null
+        $reader = [Xml.XmlReader]::Create($stream, $settings)
+        try {
+            $xml = [Xml.XmlDocument]::new()
+            $xml.XmlResolver = $null
+            $xml.PreserveWhitespace = $true
+            $xml.Load($reader)
+            return ,$xml
+        } finally { $reader.Dispose() }
+    } finally { $stream.Dispose() }
+}
+
+function Compare-OfficeDocumentPackage {
+    param([string]$LocalPath, [byte[]]$RemoteBytes)
+    $local = [IO.Compression.ZipFile]::OpenRead($LocalPath)
+    $memory = [IO.MemoryStream]::new($RemoteBytes, $false)
+    $remote = $null
+    try {
+        $remote = [IO.Compression.ZipArchive]::new($memory, [IO.Compression.ZipArchiveMode]::Read)
+        $maps = @()
+        foreach ($zip in @($local, $remote)) {
+            $map = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+            foreach ($entry in $zip.Entries) {
+                if (-not $map.TryAdd($entry.FullName, $entry)) { throw "Duplicate Office package part: $($entry.FullName)" }
+            }
+            $maps += ,$map
+        }
+        if (@($maps[0].Keys | Where-Object { $_.StartsWith('_xmlsignatures/', [StringComparison]::OrdinalIgnoreCase) }).Count -or
+            @($maps[1].Keys | Where-Object { $_.StartsWith('_xmlsignatures/', [StringComparison]::OrdinalIgnoreCase) }).Count) {
+            throw 'Signed Office packages require exact-byte verification.'
+        }
+        $allowed = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+        foreach ($name in $maps[0].Keys) {
+            if (-not $maps[1].ContainsKey($name)) { continue }
+            $expectedRoot = switch -Regex ($name) {
+                '^docProps/core\.xml$' { @('coreProperties','http://schemas.openxmlformats.org/package/2006/metadata/core-properties'); break }
+                '^docProps/custom\.xml$' { @('Properties','http://schemas.openxmlformats.org/officeDocument/2006/custom-properties'); break }
+                '^customXml/item\d+\.xml$' { @(); break }
+                default { continue }
+            }
+            if ($name -notmatch '^docProps/(core|custom)\.xml$|^customXml/item\d+\.xml$') { continue }
+            $x = Read-OfficePartXml $maps[0][$name]
+            $y = Read-OfficePartXml $maps[1][$name]
+            if ($name.StartsWith('customXml/')) {
+                $roots = @{
+                    properties = 'http://schemas.microsoft.com/office/2006/metadata/properties'
+                    contentTypeSchema = 'http://schemas.microsoft.com/office/2006/metadata/contentType'
+                }
+                $rootName = $x.DocumentElement.LocalName
+                if (-not $roots.ContainsKey($rootName)) { continue }
+                $expectedRoot = @($rootName, $roots[$rootName])
+            }
+            if ($x.DocumentElement.LocalName -cne $expectedRoot[0] -or
+                $y.DocumentElement.LocalName -cne $expectedRoot[0] -or
+                $x.DocumentElement.NamespaceURI -cne $expectedRoot[1] -or
+                $y.DocumentElement.NamespaceURI -cne $expectedRoot[1]) { continue }
+            [void]$allowed.Add($name)
+            if ($name -notmatch '^customXml/(item\d+)\.xml$') { continue }
+            $relsName = 'customXml/_rels/' + $Matches[1] + '.xml.rels'
+            if (-not $maps[0].ContainsKey($relsName) -or -not $maps[1].ContainsKey($relsName)) { continue }
+            $rels = Read-OfficePartXml $maps[0][$relsName]
+            foreach ($rel in $rels.DocumentElement.ChildNodes) {
+                if ($rel -isnot [Xml.XmlElement] -or
+                    $rel.GetAttribute('Type') -cne 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXmlProps' -or
+                    $rel.GetAttribute('TargetMode') -eq 'External' -or
+                    $rel.GetAttribute('Target') -notmatch '^itemProps\d+\.xml$') { continue }
+                $propsName = 'customXml/' + $rel.GetAttribute('Target')
+                if (-not $maps[0].ContainsKey($propsName) -or -not $maps[1].ContainsKey($propsName)) { continue }
+                $px = Read-OfficePartXml $maps[0][$propsName]
+                $py = Read-OfficePartXml $maps[1][$propsName]
+                $ns = 'http://schemas.openxmlformats.org/officeDocument/2006/customXml'
+                if ($px.DocumentElement.LocalName -cne 'datastoreItem' -or
+                    $py.DocumentElement.LocalName -cne 'datastoreItem' -or
+                    $px.DocumentElement.NamespaceURI -cne $ns -or
+                    $py.DocumentElement.NamespaceURI -cne $ns) { continue }
+                # Only the metadata datastore ID may differ, never schema references.
+                $px.DocumentElement.RemoveAttribute('itemID', $ns)
+                $py.DocumentElement.RemoveAttribute('itemID', $ns)
+                if ($px.OuterXml -ceq $py.OuterXml) { [void]$allowed.Add($propsName) }
+            }
+        }
+        $differences = [Collections.Generic.List[object]]::new()
+        $names = [Collections.Generic.HashSet[string]]::new($maps[0].Keys, [StringComparer]::Ordinal)
+        $names.UnionWith($maps[1].Keys)
+        foreach ($name in $names | Sort-Object) {
+            $a = if ($maps[0].ContainsKey($name)) { $maps[0][$name] } else { $null }
+            $b = if ($maps[1].ContainsKey($name)) { $maps[1][$name] } else { $null }
+            if ($null -eq $a -or $null -eq $b) {
+                if ($null -eq $a -and $name -cmatch '^\[trash\]/\d+\.dat$') {
+                    $differences.Add([pscustomobject]@{ Part = $name; Change = 'AddedSharePointTrash' })
+                    continue
+                }
+                throw "Office package part added or removed outside the metadata allowance: $name"
+            }
+            $as = $a.Open(); $bs = $b.Open()
+            try {
+                $ah = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($as))
+                $bh = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bs))
+            } finally { $as.Dispose(); $bs.Dispose() }
+            if ($ah -ceq $bh) { continue }
+            if (-not $allowed.Contains($name)) {
+                throw "Office content or unapproved package part differs: $name"
+            }
+            $differences.Add([pscustomobject]@{ Part = $name; Change = 'RecognizedOfficeMetadata' })
+        }
+        return ,$differences.ToArray()
+    } finally {
+        if ($null -ne $remote) { $remote.Dispose() }
+        $memory.Dispose()
+        $local.Dispose()
+    }
+}
+
+function Assert-PlannedDocumentContent {
+    param($Plan, [byte[]]$Bytes)
+    $remoteHash = Get-BytesSHA256 $Bytes
+    if ($remoteHash -eq $Plan.SHA256) { return 'ExactSHA256' }
+    if (-not $AllowOfficeMetadataChanges -or [IO.Path]::GetExtension($Plan.LocalPath) -notin '.docx','.xlsx','.pptx') {
+        throw 'Remote bytes differ from the planned upload; refusing to restore potentially stale metadata.'
+    }
+    if ((Get-FileHash -LiteralPath $Plan.LocalPath -Algorithm SHA256).Hash -ne $Plan.SHA256) {
+        throw 'Local document changed; refusing Office package comparison.'
+    }
+    $differences = Compare-OfficeDocumentPackage $Plan.LocalPath $Bytes
+    if (-not $Plan.PSObject.Properties['VerificationAuditPath'] -or -not $Plan.VerificationAuditPath) {
+        throw 'Office metadata acceptance requires a persistent verification audit path.'
+    }
+    [ordered]@{
+        Timestamp = [datetime]::UtcNow.ToString('o')
+        Target = $Plan.FileRef; LocalSHA256 = $Plan.SHA256; RemoteSHA256 = $remoteHash
+        Differences = @($differences)
+    } | ConvertTo-Json -Depth 5 -Compress |
+        Add-Content -LiteralPath $Plan.VerificationAuditPath -Encoding utf8
+    Write-Warning "Accepted Office metadata-only differences for $($Plan.FileRef); package content and relationships match. See $($Plan.VerificationAuditPath)"
+    return 'OfficePackageContent'
+}
+
 function Read-StableDocumentBackup {
     param($Plan, $Connection)
     for ($attempt = 1; $attempt -le 3; $attempt++) {
@@ -360,9 +507,7 @@ function Restore-DocumentMetadata {
         throw 'Remote ETag changed after upload; refusing to restore potentially stale metadata.'
     }
     Assert-RemoteDocumentWritable $current
-    if ((Get-BytesSHA256 (Get-RemoteDocumentBytes $Plan $Connection)) -ne $Plan.SHA256) {
-        throw 'Remote bytes differ from the planned upload; refusing to restore potentially stale metadata.'
-    }
+    Assert-PlannedDocumentContent $Plan (Get-RemoteDocumentBytes $Plan $Connection) | Out-Null
     $changedFields = @('Author','Editor','Created','Modified' | Where-Object { $current.$_ -cne $Before.$_ })
     if ($changedFields.Count -eq 0) { return }
     Set-DocumentMetadataValues $current @{
@@ -430,9 +575,7 @@ function Restore-SnapshotDocumentMetadata {
     $connection = Connect-DocumentUploadSite -Url $web -ApplicationId $ApplicationId
     $current = Get-RemoteDocumentState $entry $connection
     Restore-DocumentMetadata $entry $before $connection $current.ETag
-    if ((Get-BytesSHA256 (Get-RemoteDocumentBytes $entry $connection)) -ne $entry.SHA256) {
-        throw 'Post-recovery content verification failed.'
-    }
+    Assert-PlannedDocumentContent $entry (Get-RemoteDocumentBytes $entry $connection) | Out-Null
     return [pscustomobject]@{
         Target = $target; Status = 'MetadataRestoredAndVerified'; Snapshot = $Path
         Author = $before.Author; Editor = $before.Editor
@@ -462,8 +605,8 @@ function Invoke-FixedDocumentUpload {
     }
     $written = Get-RemoteDocumentState $Plan $Connection
     Restore-DocumentMetadata $Plan $Before $Connection $written.ETag
-    $uploadedHash = Get-BytesSHA256 (Get-RemoteDocumentBytes $Plan $Connection)
-    if ($uploadedHash -ne $Plan.SHA256) { throw 'Uploaded bytes do not match the local SHA256; upload is not verified.' }
+    $verification = Assert-PlannedDocumentContent $Plan (Get-RemoteDocumentBytes $Plan $Connection)
+    if ($verification -eq 'OfficePackageContent') { return 'UploadedAndVerifiedOfficeContent' }
     return 'UploadedAndVerified'
 }
 
@@ -517,6 +660,11 @@ function Invoke-PublishFixedDocuments {
         @(New-FixedDocumentPlan $documents $workbook $runs)
     }
     New-Item -ItemType Directory -Path $output -Force | Out-Null
+    if ($AllowOfficeMetadataChanges) {
+        foreach ($entry in $plan) {
+            $entry | Add-Member -NotePropertyName VerificationAuditPath -NotePropertyValue (Join-Path $output 'office-verification.jsonl')
+        }
+    }
     $plan | Select-Object RelativeFile,SHA256,WebUrl,Folder,FileRef |
         Export-Csv -LiteralPath (Join-Path $output 'upload-plan.csv') -NoTypeInformation -Encoding utf8BOM
     Write-Host "Planned $($plan.Count) corrected documents. Review: $(Join-Path $output 'upload-plan.csv')"
