@@ -1042,10 +1042,13 @@ try {
             else { New-TestAcl 'existing' @('Edit') }
         }
         function Get-SPMigrationProtection {
-            [pscustomobject]@{ Logins = [Collections.Generic.HashSet[string]]::new(); Memberships = @() }
+            [pscustomobject]@{
+                Logins = [Collections.Generic.HashSet[string]]::new([string[]]@('visitors'))
+                Memberships = @([pscustomobject]@{ GroupId = 11; MigrationPrincipal = 'SharePoint.Migration.Team.Visitors' })
+            }
         }
         function Invoke-SPPermissionRest {
-            [pscustomobject]@{ Id = 11; LoginName = 'visitors'; Title = 'Clinical Visitors' }
+            [pscustomobject]@{ Id = 11; LoginName = 'visitors'; Title = 'Clinical & Patient Services Visitors' }
         }
         $script:eeeuPresent = $false; $script:eeeuWrites = 0; $script:planCalls = 0
         function Get-SPPermissionCollection {
@@ -1082,6 +1085,19 @@ try {
         Invoke-CSVisitorsRead
         Assert-Equal $script:eeeuWrites 1
         Assert-Equal $script:planCalls 2
+    }
+    Test-Case 'Additive pass requires the named site Visitors group and rejects migration/wrong groups' {
+        . (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1')
+        Assert-CSVisitorsGroup ([pscustomobject]@{ Id = 11; LoginName = 'site-visitors'; Title = 'Clinical & Patient Services Visitors' })
+        Assert-Throws {
+            Assert-CSVisitorsGroup ([pscustomobject]@{ Id = 12; LoginName = 'migration'; Title = 'SharePoint.Migration.Team.Visitors' })
+        } 'Expected associated group'
+        Assert-Throws {
+            Assert-CSVisitorsGroup ([pscustomobject]@{ Id = 11; LoginName = 'claim|SharePoint.Migration.Team.Visitors'; Title = 'Clinical & Patient Services Visitors' })
+        } 'protected migration group'
+        Assert-Throws {
+            Assert-CSVisitorsGroup ([pscustomobject]@{ Id = 11; LoginName = 'other'; Title = 'Other Visitors' })
+        } 'Expected associated group'
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {

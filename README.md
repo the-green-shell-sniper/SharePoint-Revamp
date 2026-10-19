@@ -43,8 +43,13 @@ are paired, and unmatched source Read locations are explicit in `Coverage.csv`.
 The two new COVID19 libraries and Access Requests are excluded. Unmatched/excluded
 inherited targets can be frozen with copy to retain their grants before a parent
 addition; no grants are removed. Four protected migration groups are not edited.
-If Visitors itself is protected or directly contains a migration group, the pass
-stops rather than alter their roles indirectly.
+The associated Visitors group must have the exact title
+`Clinical & Patient Services Visitors`; a different associated group stops the pass.
+It must not itself be a migration principal. By explicit authorization, this named
+site group may receive Read/EEEU even if it contains a protected migration group.
+That indirect access is logged as `By design`; direct migration-group grants and
+their membership entries remain unchanged. This exception is limited to this
+additive CS pass; the full mirror retains its containing-group protection.
 
 The target tenant's EEEU claim is constructed from its discovered tenant ID.
 DryRun reports its Visitors membership without writes. Apply adds it only if

@@ -75,6 +75,17 @@ function Invoke-CSVisitorsReadReport {
     & (Join-Path $PSScriptRoot 'Export-SPPermissionSiteReport.ps1') @Options
 }
 
+function Assert-CSVisitorsGroup {
+    param($Visitors)
+    if (-not $Visitors.Id -or -not $Visitors.LoginName -or
+        $Visitors.Title -ine 'Clinical & Patient Services Visitors') {
+        throw "Expected associated group 'Clinical & Patient Services Visitors'; received '$($Visitors.Title)' (ID $($Visitors.Id)). No changes permitted."
+    }
+    if (Test-SPMigrationPrincipal $Visitors.LoginName $Visitors.Title) {
+        throw 'The selected Visitors principal is a protected migration group. No changes permitted.'
+    }
+}
+
 function Invoke-CSVisitorsRead {
     $ErrorActionPreference = 'Stop'
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
@@ -103,10 +114,13 @@ function Invoke-CSVisitorsRead {
                 ConvertTo-Json -Depth 50 | Set-Content -LiteralPath (Join-Path $folder "$side.json") -Encoding utf8
         }
         $visitors = Invoke-SPPermissionRest $targetConnection ($targetUrl + '/_api/web/AssociatedVisitorGroup?$select=Id,Title,LoginName')
-        if (-not $visitors.Id -or -not $visitors.LoginName) { throw 'Associated target Visitors group is unavailable.' }
+        Assert-CSVisitorsGroup $visitors
         $protection = Get-SPMigrationProtection $targetConnection $targetUrl
-        if ((Test-SPMigrationPrincipal $visitors.LoginName $visitors.Title) -or $protection.Logins.Contains($visitors.LoginName)) {
-            throw 'Visitors is a protected migration group or contains one; refusing to alter its roles or membership.'
+        foreach ($membership in $protection.Memberships | Where-Object { $_.GroupId -eq $visitors.Id }) {
+            $log.Add([pscustomobject]@{
+                Path = ''; Action = 'Authorized site Visitors container'; Result = 'By design'
+                Detail = "$($visitors.Title) contains $($membership.MigrationPrincipal). Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+            })
         }
         $read = @(Get-SPPermissionCollection $targetConnection ($targetUrl + '/_api/web/roledefinitions?$select=Id,Name,BasePermissions') |
             Where-Object Name -IEQ 'Read')
