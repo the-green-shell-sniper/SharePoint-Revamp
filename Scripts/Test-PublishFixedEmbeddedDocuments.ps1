@@ -95,6 +95,27 @@ try {
         Remove-Item -LiteralPath (Join-Path $OutputFolder 'upload-plan.csv')
         Remove-Item -LiteralPath $OutputFolder
     }
+    Test-Case 'PnP authentication reuses persistent login without forcing ClientId' {
+        function Connect-PnPOnline {
+            param($Url, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ClientId, $ErrorAction)
+            Assert-Equal $Url 'https://whallc.sharepoint.com/sites/Epic'
+            Assert-Equal $Interactive.IsPresent $true
+            Assert-Equal $PersistLogin.IsPresent $true
+            Assert-Equal $ReturnConnection.IsPresent $true
+            Assert-Equal $PSBoundParameters.ContainsKey('ClientId') $false
+            return 'cached-connection'
+        }
+        Assert-Equal (Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic') 'cached-connection'
+    }
+    Test-Case 'Explicit PnP application ID is passed through; placeholders are rejected' {
+        function Connect-PnPOnline {
+            param($Url, [switch]$Interactive, [switch]$PersistLogin, [switch]$ReturnConnection, $ClientId, $ErrorAction)
+            Assert-Equal $ClientId '12345678-1234-1234-1234-123456789abc'
+            return 'explicit-connection'
+        }
+        Assert-Equal (Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic' '12345678-1234-1234-1234-123456789abc') 'explicit-connection'
+        Assert-Throws { Connect-DocumentUploadSite 'https://whallc.sharepoint.com/sites/Epic' '<your-existing-PnP-application-client-id>' } 'GUID'
+    }
     Test-Case 'Conditional CSOM write submits the original ETag and disables retries' {
         Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
         $script:information = $null

@@ -357,6 +357,25 @@ function Send-ConditionalDocumentContent {
     } finally { $stream.Dispose() }
 }
 
+function Connect-DocumentUploadSite {
+    param([string]$Url, [string]$ApplicationId)
+    $connectParams = @{
+        Url = $Url
+        Interactive = $true
+        PersistLogin = $true
+        ReturnConnection = $true
+        ErrorAction = 'Stop'
+    }
+    if ($ApplicationId) {
+        $parsedId = [guid]::Empty
+        if (-not [guid]::TryParse($ApplicationId, [ref]$parsedId) -or $parsedId -eq [guid]::Empty) {
+            throw 'ClientId must be an application client ID GUID, not a placeholder or tenant name. Omit it to use the existing PnP configuration.'
+        }
+        $connectParams.ClientId = $ApplicationId
+    }
+    return Connect-PnPOnline @connectParams
+}
+
 function Invoke-PublishFixedDocuments {
     $root = [IO.Path]::GetFullPath($RepositoryRoot)
     $documents = if ($DocumentsFolder) { [IO.Path]::GetFullPath($DocumentsFolder) } else { Join-Path $root 'UpdatedEmbeddedLinkCopies' }
@@ -378,7 +397,6 @@ function Invoke-PublishFixedDocuments {
         Write-Host 'Offline plan only. No SharePoint connection or remote changes.'
         return
     }
-    if (-not $ClientId) { throw '-ClientId is required for interactive PnP authentication.' }
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $connections = @{}
     $baselines = @{}
@@ -391,7 +409,7 @@ function Invoke-PublishFixedDocuments {
         for ($i = 0; $i -lt $plan.Count; $i++) {
             $entry = $plan[$i]
             if (-not $connections.ContainsKey($entry.WebUrl)) {
-                $connections[$entry.WebUrl] = Connect-PnPOnline -Url $entry.WebUrl -ClientId $ClientId -Interactive -ReturnConnection -ErrorAction Stop
+                $connections[$entry.WebUrl] = Connect-DocumentUploadSite -Url $entry.WebUrl -ApplicationId $ClientId
             }
             $connection = $connections[$entry.WebUrl]
             $state = Get-RemoteDocumentState $entry $connection

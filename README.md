@@ -47,8 +47,14 @@ If the module is missing, install it in your server user profile:
 Install-Module PnP.PowerShell -Scope CurrentUser
 ```
 
-Run the following from PowerShell 7 on the server. Replace the ClientId with
-the Entra application ID you use for your other PnP scripts. The signed-in user/app
+Run the following from PowerShell 7 on the server, under the same Windows user
+as your working PnP scripts. Like `Get-DocumentUrlLookup.ps1`, the uploader uses
+`-Interactive -PersistLogin` and leaves `ClientId` optional so PnP can use its
+existing application configuration and persisted sign-in. If needed, supply
+`-ClientId` with your actual Entra application client ID GUID, not a placeholder.
+A cached tenant ID or Microsoft Graph session alone is not a PnP application
+configuration or PnP token cache; sign-in may still be required.
+The signed-in user/app
 must have permission to update document content and the system metadata fields.
 
 ```powershell
@@ -56,7 +62,6 @@ $work = 'P:\IT\Private\zzBPosey\whaitapp09'
 $options = @{
     DocumentsFolder = "$work\UpdatedEmbeddedLinkCopies"
     PlanCsv = "$work\upload-plan.csv"
-    ClientId = '<your-existing-PnP-application-client-id>'
 }
 
 # Live read-only SharePoint preflight; backs up remote bytes/metadata locally.
