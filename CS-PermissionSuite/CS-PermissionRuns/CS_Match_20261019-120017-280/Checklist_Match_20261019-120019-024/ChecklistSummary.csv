@@ -1,0 +1,2 @@
+"SourceUrl","TargetUrl","Status","Detail","ReportFolder"
+"https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS","https://whallc.sharepoint.com/sites/ClinicalandPatientServices","Stopped - error","{""odata.error"":{""code"":""-1, Microsoft.SharePoint.SPException"",""message"":{""lang"":""en-US"",""value"":""The field or property 'File_x0020_Size' does not exist.""}}}","P:\IT\Private\zzBPosey\whaitapp09\CS-PermissionSuite\CS-PermissionRuns\CS_Match_20261019-120017-280\Checklist_Match_20261019-120019-024\ClinicalandPatientServices-E86E6768733F"
