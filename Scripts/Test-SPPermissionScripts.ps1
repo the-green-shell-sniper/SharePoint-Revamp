@@ -1003,6 +1003,86 @@ try {
         Assert-Equal $protection.Logins.Contains('Container') $true
         Assert-Equal $protection.Memberships[0].MigrationPrincipal 'SharePoint.Migration.Team.MSLs'
     }
+    Test-Case 'Additive CS plan ignores obsolete users and Review; preserves target grants and excluded libraries' {
+        . (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1')
+        $s = New-TestMap; $t = New-TestMap
+        $team = New-TestAcl 'Team Site Members' @('Read') 10 8
+        $s[''] = New-TestScope '' $true @($team, (New-TestAcl 'obsolete-user' @('Review')))
+        $s['Docs'] = New-TestScope 'Docs' $false @() 'Library'
+        $t[''] = New-TestScope '' $true @(New-TestAcl 'existing' @('Edit'))
+        $t['Docs'] = New-TestScope 'Docs' $true @(New-TestAcl 'SharePoint.Migration.Team.Admins' @('Full Control')) 'Library'
+        $t['COVID19 Resources'] = New-TestScope 'COVID19 Resources' $false @() 'Library'
+        $t['TargetOnly'] = New-TestScope 'TargetOnly' $false @() 'Library'
+        $pairs = [Collections.Generic.Dictionary[string, string]]::new()
+        $pairs[''] = ''; $pairs['Docs'] = 'Docs'
+        $visitors = [pscustomobject]@{ Id = 11; LoginName = 'visitors'; Title = 'Clinical Visitors' }
+        $plan = New-CSVisitorsReadPlan $s $t $pairs $visitors 2
+        Assert-Equal (@($plan.Steps | Where-Object Action -eq 'Add').Count) 2
+        Assert-Equal (@($plan.Steps | Where-Object { $_.Action -notin @('Add','Break','Freeze') }).Count) 0
+        Assert-Equal (@($plan.Steps | Where-Object { $_.Operation -and $_.Operation.Login -ne 'visitors' }).Count) 0
+        Assert-Equal (@($plan.Steps | Where-Object { $_.Action -eq 'Freeze' -and $_.Key -eq 'COVID19 Resources' }).Count) 1
+        Assert-Equal (@($t['Docs'].Acl | Where-Object LoginName -eq 'SharePoint.Migration.Team.Admins').Count) 1
+        Assert-Equal (@($t[''].Acl | Where-Object LoginName -eq 'existing').Count) 1
+        $again = New-CSVisitorsReadPlan $s $t $pairs $visitors 2
+        Assert-Equal $again.Steps.Count 0
+    }
+    Test-Case 'Additive runner DryRun does not write; Apply ensures EEEU once and never resolves source users' {
+        . (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1')
+        function Import-Module {}
+        function Connect-SPPermissionSite { param($Url) $Url }
+        function Get-SPPermissionInventory {
+            param($Connection)
+            $map = New-TestMap
+            $map[''] = New-TestScope '' $true @()
+            return ,$map
+        }
+        function Get-SPPermissionAcl {
+            param($Connection)
+            if ($Connection -like '*/CS') { New-TestAcl 'Team Site Members' @('Read') 10 8 }
+            else { New-TestAcl 'existing' @('Edit') }
+        }
+        function Get-SPMigrationProtection {
+            [pscustomobject]@{ Logins = [Collections.Generic.HashSet[string]]::new(); Memberships = @() }
+        }
+        function Invoke-SPPermissionRest {
+            [pscustomobject]@{ Id = 11; LoginName = 'visitors'; Title = 'Clinical Visitors' }
+        }
+        $script:eeeuPresent = $false; $script:eeeuWrites = 0; $script:planCalls = 0
+        function Get-SPPermissionCollection {
+            param($Connection, $Url)
+            if ($Url -match '/roledefinitions') {
+                [pscustomobject]@{ Id = 2; Name = 'Read'; BasePermissions = @{ High = '0'; Low = '1' } }
+            } elseif ($Url -match '/users\?' -and $script:eeeuPresent) {
+                [pscustomobject]@{ LoginName = 'c:0-.f|rolemanager|spo-grid-all-users/11111111-1111-1111-1111-111111111111' }
+            }
+        }
+        function Get-PnPTenantId { '11111111-1111-1111-1111-111111111111' }
+        function Add-PnPGroupMember {
+            param($Group, $LoginName, $Connection, $ErrorAction)
+            Assert-Equal $Group 11
+            Assert-Equal $LoginName 'c:0-.f|rolemanager|spo-grid-all-users/11111111-1111-1111-1111-111111111111'
+            $script:eeeuPresent = $true; $script:eeeuWrites++
+        }
+        function New-PnPUser { throw 'Must not resolve obsolete source users.' }
+        function Invoke-SPPermissionPlan {
+            param($Connection, $Plan, $Log, $LogPath)
+            $script:planCalls++
+            Assert-Equal (@($Plan.Steps | Where-Object Action -eq 'Add').Count) 1
+            Assert-Equal (@($Plan.Steps | Where-Object Action -in @('Remove','Reset')).Count) 0
+        }
+        function Invoke-CSVisitorsReadReport {}
+        $OutputFolder = Join-Path $temp 'additive-runner'; $Apply = $false
+        Invoke-CSVisitorsRead
+        Assert-Equal $script:eeeuWrites 0
+        Assert-Equal $script:planCalls 0
+        $Apply = $true
+        Invoke-CSVisitorsRead
+        Assert-Equal $script:eeeuWrites 1
+        Assert-Equal $script:planCalls 1
+        Invoke-CSVisitorsRead
+        Assert-Equal $script:eeeuWrites 1
+        Assert-Equal $script:planCalls 2
+    }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {
     Remove-Item -LiteralPath $temp -Recurse -Force

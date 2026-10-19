@@ -20,6 +20,46 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### Urgent CS additive-only Visitors Read pass
+
+[Add-CSVisitorsRead.ps1](Scripts/Add-CSVisitorsRead.ps1) is separate from the full
+mirror/queue. It only adds target associated Visitors `Read` at exact/approved
+matched scopes where source `Team Site Members` has effective `Read`, including
+inherited source access at unique target children. It never removes existing
+Contribute/Edit/etc., resets inheritance, creates Review levels or attempts to
+resolve obsolete source users. The current CS root has no discovered subsites;
+this permission pass processes that web only, while its post-Apply report recurses.
+
+```powershell
+$repo = 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp'
+# Read-only plan:
+& "$repo\CS-PermissionSuite\Add-CSVisitorsRead.ps1"
+# Explicit production additions, after inspecting the plan:
+& "$repo\CS-PermissionSuite\Add-CSVisitorsRead.ps1" -Apply
+```
+
+Optionally supply `-MatchFile` with approved aliases; without it only exact paths
+are paired, and unmatched source Read locations are explicit in `Coverage.csv`.
+The two new COVID19 libraries and Access Requests are excluded. Unmatched/excluded
+inherited targets can be frozen with copy to retain their grants before a parent
+addition; no grants are removed. Four protected migration groups are not edited.
+If Visitors itself is protected or directly contains a migration group, the pass
+stops rather than alter their roles indirectly.
+
+The target tenant's EEEU claim is constructed from its discovered tenant ID.
+DryRun reports its Visitors membership without writes. Apply adds it only if
+absent and rechecks membership. This intentionally makes **all existing Visitors
+grants** available through EEEU, not just new Read assignments; review existing
+Visitors access before applying. No other group membership is changed.
+
+Evidence uses compact `Reports\PermRead\rd-*` folders: before snapshots, `Plan.json`,
+`Coverage.csv`, `Changes.csv`, `Status.json` and a post-Apply recursive `Report`.
+Verified additions are not a full permission mirror. A later report failure does
+not roll back additions; inspect application status/log separately. Old-user
+unavailability does not block this narrow pass because those users are not processed.
+The full mirror continues to block unresolved users; this does not silently change
+its policy or treat picker misses as proof of deletion.
+
 ### Queued automatic application and recursive reporting
 
 #### Review level and intentionally preserved migration groups
