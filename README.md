@@ -565,7 +565,14 @@ $review = Read-Host 'Full path to the reviewed PermMatch_Review CSV'
 
 Omit `-MatchFile` for exact site-relative paths only. The apply script accepts only
 approved one-to-one rows for the selected webs and rejects missing paths, conflicting
-exact matches, incompatible kinds/templates/extensions, and malformed approvals.
+exact matches, incompatible kinds/extensions, and malformed approvals.
+Different list templates (`BaseTemplate`) do not block otherwise matching lists or
+libraries in any site, including subsites. Exact-path and approved matches emit a
+warning with both template numbers and web URLs, but continue through Match,
+DryRun and Apply. Renamed-list/library proposals may also span different templates;
+their review CSV evidence includes both template numbers and still requires explicit
+approval. List-to-library matches remain rejected. This is permission matching only:
+the scripts do not convert list templates, schemas or content.
 Approval does not expand a parent alias implicitly: each renamed child needs its
 own approved row. Inherited objects must retain compatible mapped parents; a move
 to an unrelated/unapproved parent is logged and skipped, with its existing access

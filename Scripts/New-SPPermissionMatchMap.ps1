@@ -5,7 +5,9 @@
 .DESCRIPTION
     Every proposal starts with Approved=No, including High confidence proposals.
     Review each row and approve parent renames AND their proposed children explicitly.
-    Exact site-relative paths are reserved before fuzzy matching. Files are compared
+    Exact site-relative paths are reserved before fuzzy matching.
+    List template differences are allowed; list/library kinds must still match.
+    Files are compared
     only within a matched library and with the same extension. No SharePoint writes
     are performed. Content downloads remain in memory; errors appear in evidence.
     Copy SPPermission.Common.ps1 beside this script when running on another machine.
@@ -143,7 +145,7 @@ function Invoke-NewSPPermissionMatchMap {
             continue
         }
         $candidates = @($targetInventory.Values | Where-Object {
-            $_.Kind -eq $sourceList.Kind -and $_.BaseTemplate -eq $sourceList.BaseTemplate -and
+            $_.Kind -eq $sourceList.Kind -and
             -not $usedTargets.Contains($_.Key) -and -not (Test-SPPermissionExcluded $_.Key $ExcludePaths)
         } | ForEach-Object {
             $name = [math]::Max((Get-SPNameSimilarity $sourceList.Title $_.Title), (Get-SPNameSimilarity $sourceList.Leaf $_.Leaf))
@@ -159,7 +161,7 @@ function Invoke-NewSPPermissionMatchMap {
             Approved = 'No'; Confidence = $tier; Score = $best.Score; Kind = $sourceList.Kind
             PermissionRelevant = 'Yes'; SourceUnique = $sourceList.Unique; TargetUnique = $best.Target.Unique
             SourcePath = $sourceList.Key; TargetPath = $best.Target.Key; Method = 'Fuzzy list'
-            Evidence = 'Title/URL similarity and item count; review list identity'
+            Evidence = "Title/URL similarity and item count; review list identity; BaseTemplate source=$($sourceList.BaseTemplate), target=$($best.Target.BaseTemplate)"
             RunnerUp = $(if ($candidates.Count -gt 1) { "$($candidates[1].Target.Key) ($($candidates[1].Score))" } else { '' })
             SourceUrl = $SourceUrl; TargetUrl = $TargetUrl
         })

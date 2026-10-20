@@ -479,6 +479,60 @@ try {
         Assert-Throws { Get-SPPermissionMatches $source $target $path 'https://source.test' 'https://target.test' } 'conflicts with an exact'
         Assert-Throws { Get-SPPermissionMatches $source $target $path 'https://wrong.test' 'https://target.test' } 'different source/target'
     }
+    Test-Case 'Distributed matching scripts stay identical' {
+        foreach ($name in @('SPPermission.Common.ps1', 'New-SPPermissionMatchMap.ps1')) {
+            $suitePath = Join-Path $PSScriptRoot "..\CS-PermissionSuite\$name"
+            Assert-Equal (Get-Content -LiteralPath (Join-Path $PSScriptRoot $name) -Raw) (Get-Content -LiteralPath $suitePath -Raw)
+        }
+    }
+    Test-Case 'Exact-path lists and libraries allow different templates with a contextual warning' {
+        foreach ($kind in @('List', 'Library')) {
+            $source = New-TestMap; $target = New-TestMap
+            $key = 'Lists/Agenda'
+            $source[$key] = New-TestScope $key $true @() $kind
+            $target[$key] = New-TestScope $key $true @() $kind
+            $source[$key].BaseTemplate = 100
+            $target[$key].BaseTemplate = 106
+            $warnings = @(& {
+                $result = Get-SPPermissionMatches $source $target '' 'https://source.test/PSC' 'https://target.test/PSC'
+                Assert-Equal $result.Count 1
+                Assert-Equal $result[$key] $key
+            } 3>&1)
+            Assert-Equal $warnings.Count 1
+            Assert-Equal ($warnings[0].Message -match 'Allowing exact-path list template mismatch.*source.test/PSC.*Lists/Agenda.*BaseTemplate 100.*target.test/PSC.*BaseTemplate 106') $true
+            $target[$key].BaseTemplate = 100
+            $warnings = @(& {
+                $result = Get-SPPermissionMatches $source $target '' 'https://source.test' 'https://target.test'
+                Assert-Equal $result[$key] $key
+            } 3>&1)
+            Assert-Equal $warnings.Count 0
+            $target[$key].Kind = if ($kind -eq 'List') { 'Library' } else { 'List' }
+            Assert-Throws { Get-SPPermissionMatches $source $target '' 'https://source.test' 'https://target.test' } 'Exact-path kind mismatch'
+        }
+    }
+    Test-Case 'Approved list and library aliases allow different templates but still reject kind mismatches' {
+        foreach ($kind in @('List', 'Library')) {
+            $source = New-TestMap; $target = New-TestMap
+            $source['OldAgenda'] = New-TestScope 'OldAgenda' $true @() $kind
+            $target['NewAgenda'] = New-TestScope 'NewAgenda' $true @() $kind
+            $source['OldAgenda'].BaseTemplate = 100
+            $target['NewAgenda'].BaseTemplate = 106
+            $path = Join-Path $temp 'template-alias.csv'
+            [pscustomobject]@{
+                Approved = 'Yes'; SourcePath = 'OldAgenda'; TargetPath = 'NewAgenda'
+                SourceUrl = 'https://source.test'; TargetUrl = 'https://target.test'
+            } | Export-Csv -LiteralPath $path -NoTypeInformation
+            $warnings = @(& {
+                $result = Get-SPPermissionMatches $source $target $path 'https://source.test' 'https://target.test'
+                Assert-Equal $result.Count 1
+                Assert-Equal $result['OldAgenda'] 'NewAgenda'
+            } 3>&1)
+            Assert-Equal $warnings.Count 1
+            Assert-Equal ($warnings[0].Message -match 'Allowing approved list template mismatch.*OldAgenda.*BaseTemplate 100.*NewAgenda.*BaseTemplate 106') $true
+            $target['NewAgenda'].Kind = if ($kind -eq 'List') { 'Library' } else { 'List' }
+            Assert-Throws { Get-SPPermissionMatches $source $target $path 'https://source.test' 'https://target.test' } 'Approved match kind mismatch'
+        }
+    }
     Test-Case 'CSV header is written even when there are no proposals' {
         $path = Join-Path $temp 'empty.csv'
         Export-SPPermissionCsv @() @('Approved','SourcePath','TargetPath') $path
@@ -553,6 +607,7 @@ try {
             $map['Docs'] = New-TestScope 'Docs' $false @() 'Library'
         }
         $sourceFixture['Docs/Patient Guide.docx'] = New-TestScope 'Docs/Patient Guide.docx'
+        $targetFixture['Docs'].BaseTemplate = 119
         $sourceFixture['Docs/Second Guide.docx'] = New-TestScope 'Docs/Second Guide.docx'
         $targetFixture['Docs/Patient Guide revised.docx'] = New-TestScope 'Docs/Patient Guide revised.docx'
         $targetFixture['Docs/Second Guide revised.docx'] = New-TestScope 'Docs/Second Guide revised.docx'
@@ -573,6 +628,34 @@ try {
         Assert-Equal $sourceFixture.Count 4
         Assert-Equal $targetFixture.Count 4
     }
+    Test-Case 'Renamed lists with different templates are proposed unapproved with template evidence' {
+        $sourceFixture = New-TestMap; $targetFixture = New-TestMap
+        $sourceFixture['Lists/OldAgenda'] = New-TestScope 'Lists/OldAgenda' $false @() 'List'
+        $targetFixture['Lists/NewAgenda'] = New-TestScope 'Lists/NewAgenda' $false @() 'List'
+        $sourceFixture['Lists/OldAgenda'].Title = 'Agenda'
+        $targetFixture['Lists/NewAgenda'].Title = 'Agenda'
+        $sourceFixture['Lists/OldAgenda'].BaseTemplate = 100
+        $targetFixture['Lists/NewAgenda'].BaseTemplate = 106
+        $targetFixture['AgendaLibrary'] = New-TestScope 'AgendaLibrary' $false @() 'Library'
+        $targetFixture['AgendaLibrary'].Title = 'Agenda'
+        function Import-Module {}
+        function Connect-SPPermissionSite { param($Url) $Url }
+        function Get-SPPermissionInventory {
+            param($Connection)
+            if ($Connection -eq 'https://source.test') { return ,$sourceFixture }
+            return ,$targetFixture
+        }
+        $SourceUrl = 'https://source.test'; $TargetUrl = 'https://target.test'
+        $OutputFolder = Join-Path $temp 'matcher-list-templates'; $NoContent = $true
+        Invoke-NewSPPermissionMatchMap
+        $csv = Get-ChildItem -LiteralPath $OutputFolder -Filter 'PermMatch_Review_*.csv'
+        $rows = @(Import-Csv -LiteralPath $csv.FullName)
+        Assert-Equal $rows.Count 1
+        Assert-Equal $rows[0].SourcePath 'Lists/OldAgenda'
+        Assert-Equal $rows[0].TargetPath 'Lists/NewAgenda'
+        Assert-Equal $rows[0].Approved 'No'
+        Assert-Equal ($rows[0].Evidence -match 'BaseTemplate source=100, target=106') $true
+    }
     Test-Case 'Renamed library and translated descendants remain explicit unapproved CSV rows' {
         $sourceFixture = New-TestMap; $targetFixture = New-TestMap
         $sourceFixture[''] = New-TestScope ''; $targetFixture[''] = New-TestScope ''
@@ -580,6 +663,7 @@ try {
         $targetFixture['NewDocs'] = New-TestScope 'NewDocs' $false @() 'Library'
         $sourceFixture['OldDocs'].Title = 'Clinical guides'
         $targetFixture['NewDocs'].Title = 'Clinical guides'
+        $targetFixture['NewDocs'].BaseTemplate = 119
         $sourceFixture['OldDocs/guide.docx'] = New-TestScope 'OldDocs/guide.docx'
         $sourceFixture['OldDocs/guide.docx'].ListKey = 'OldDocs'
         $targetFixture['NewDocs/guide.docx'] = New-TestScope 'NewDocs/guide.docx'

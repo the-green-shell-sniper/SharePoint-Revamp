@@ -386,7 +386,9 @@ function Get-SPPermissionMatches {
             if ($scopeMatches.ContainsKey($sourceKey) -or -not $used.Add($targetKey)) { throw 'Approved matches must be one-to-one.' }
             if ($Source[$sourceKey].Kind -ne $Target[$targetKey].Kind) { throw "Approved match kind mismatch: $sourceKey -> $targetKey" }
             if ($Source[$sourceKey].Kind -in @('List', 'Library') -and
-                $Source[$sourceKey].BaseTemplate -ne $Target[$targetKey].BaseTemplate) { throw "List template mismatch: $sourceKey" }
+                $Source[$sourceKey].BaseTemplate -ne $Target[$targetKey].BaseTemplate) {
+                Write-Warning "Allowing approved list template mismatch: '$SourceUrl' [$sourceKey] (BaseTemplate $($Source[$sourceKey].BaseTemplate)) -> '$TargetUrl' [$targetKey] (BaseTemplate $($Target[$targetKey].BaseTemplate)). Only permissions are matched; list schemas are not converted."
+            }
             if ($Source[$sourceKey].Kind -eq 'File' -and $Source[$sourceKey].Ext -ine $Target[$targetKey].Ext) {
                 throw "File extension mismatch: $sourceKey"
             }
@@ -401,7 +403,7 @@ function Get-SPPermissionMatches {
         if ($scopeMatches.ContainsKey($key) -or -not $Target.ContainsKey($key) -or $used.Contains($key)) { continue }
         if ($Source[$key].Kind -ne $Target[$key].Kind) { throw "Exact-path kind mismatch: $key" }
         if ($Source[$key].Kind -in @('List', 'Library') -and $Source[$key].BaseTemplate -ne $Target[$key].BaseTemplate) {
-            throw "Exact-path list template mismatch: $key"
+            Write-Warning "Allowing exact-path list template mismatch: '$SourceUrl' [$key] (BaseTemplate $($Source[$key].BaseTemplate)) -> '$TargetUrl' [$key] (BaseTemplate $($Target[$key].BaseTemplate)). Only permissions are matched; list schemas are not converted."
         }
         $scopeMatches[$key] = $key
         [void]$used.Add($key)
