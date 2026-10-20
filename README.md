@@ -20,6 +20,42 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### Accounting individual additive runner
+
+[Invoke-AccountingVisitorsRead.ps1](Scripts/Invoke-AccountingVisitorsRead.ps1)
+uses the same sequential workflow as PFS, with explicit Accounting URLs and the
+exact associated group `Accounting Visitors`. It processes the root followed by
+exact-path subsites (the matrices contain `Private` on both sides). It adds Read
+only where matching live source scopes have `Team Site Members` Read; unmatched
+content is never guessed. No Accounting-specific business-library exclusion is
+assumed; Access Requests remains excluded. EEEU membership is report-only on a web
+with zero source Read scopes. Direct migration-group assignments/memberships remain
+unchanged; normal Visitors container additions are authorized as for CS.
+
+The existing Accounting scout is already in
+`Reports\PermissionsReports\Scouts_20261019-131307-438\02-Accounting\20261019-140402-894`:
+18 source lists, 30 target lists, no error records. The target User Information
+List reports 71 items but both methods agree on 70 IDs. These are historical
+observations, not unrestricted visibility guarantees. The batch scout writes its
+summary after **each** site, not only at batch completion.
+
+```powershell
+# Existing scout can be reviewed first; Scout refreshes it if needed.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-AccountingVisitorsRead.ps1' -Mode Scout
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-AccountingVisitorsRead.ps1' -Mode Match
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-AccountingVisitorsRead.ps1' -Mode DryRun
+# After inspecting coverage, plan and membership:
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-AccountingVisitorsRead.ps1' -Mode Apply
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-AccountingVisitorsRead.ps1' -Mode Report
+```
+
+Outputs: `Reports\Accounting`; stable approvals: `Reports\AccountingReview`.
+The runner reuses `Invoke-PFSVisitorsRead.ps1`, so keep both and their existing
+companions together. PFS and CS defaults are unchanged. Modern team-site subsite
+to communication-site migration does not imply matching associated groups,
+inheritance or role definitions: live validation remains necessary. No Microsoft
+365 group membership API is used.
+
 ### PFS start-to-finish additive workflow
 
 [Invoke-PFSVisitorsRead.ps1](Scripts/Invoke-PFSVisitorsRead.ps1) is scoped to

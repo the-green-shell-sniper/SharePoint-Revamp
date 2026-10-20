@@ -10,6 +10,11 @@
 #>
 [CmdletBinding()]
 param(
+    [string]$SourceSiteUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/PFS',
+    [string]$TargetSiteUrl = 'https://whallc.sharepoint.com/sites/PatientFinancialServices',
+    [string]$VisitorsTitle = 'Patient Financial Services Visitors',
+    [string[]]$ExcludedPaths = @('Access Requests', '2021 EM Coding Changes'),
+    [string]$SiteLabel = 'PFS',
     [ValidateSet('Scout', 'Match', 'DryRun', 'Apply', 'Report')][string]$Mode = 'DryRun',
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PFS'),
     [string]$ReviewRoot = (Join-Path $PSScriptRoot '..\Reports\PFSReview'),
@@ -20,11 +25,12 @@ param(
 
 function Invoke-PFSVisitorsRead {
     $ErrorActionPreference = 'Stop'
-    $sourceRoot = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/PFS'
-    $targetRoot = 'https://whallc.sharepoint.com/sites/PatientFinancialServices'
+    $sourceRoot = $SourceSiteUrl.TrimEnd('/')
+    $targetRoot = $TargetSiteUrl.TrimEnd('/')
     $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $reviews = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReviewRoot)
     . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
+    Assert-SPPermissionUrls $sourceRoot $targetRoot
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $folder = Join-Path $root ('p-' + (Get-Date -Format 'yyMMddHHmmssfff'))
     [void][IO.Directory]::CreateDirectory($folder)
@@ -41,14 +47,14 @@ function Invoke-PFSVisitorsRead {
     try {
         for ($index = 0; $index -lt $queue.Count; $index++) {
             $pair = $queue[$index]
-            if (-not $seen.Add($pair.TargetUrl)) { throw "Repeated PFS web: $($pair.TargetUrl)" }
+            if (-not $seen.Add($pair.TargetUrl)) { throw "Repeated $SiteLabel web: $($pair.TargetUrl)" }
             $key = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData(
                 [Text.Encoding]::UTF8.GetBytes($pair.TargetUrl.ToLowerInvariant()))).Substring(0, 12)
             $webFolder = Join-Path $folder $key
             $reviewFolder = Join-Path $reviews $key
             [void][IO.Directory]::CreateDirectory($webFolder)
             [void][IO.Directory]::CreateDirectory($reviewFolder)
-            Write-Host "[$Mode PFS] $($pair.SourceUrl) -> $($pair.TargetUrl)"
+            Write-Host "[$Mode $SiteLabel] $($pair.SourceUrl) -> $($pair.TargetUrl)"
             $sourceConnection = Connect-SPPermissionSite -Url $pair.SourceUrl @auth
             $targetConnection = Connect-SPPermissionSite -Url $pair.TargetUrl @auth
             $sourceChildren = @(Get-SPPermissionCollection $sourceConnection ($pair.SourceUrl + '/_api/web/webs?$select=Url,Title'))
@@ -87,7 +93,7 @@ function Invoke-PFSVisitorsRead {
                     & (Join-Path $PSScriptRoot 'Get-CSPermissionScout.ps1') @options @scoutAuth
                 }
                 'Match' {
-                    & (Join-Path $PSScriptRoot 'New-SPPermissionMatchMap.ps1') @options @auth -ExcludePaths @('Access Requests', '2021 EM Coding Changes')
+                    & (Join-Path $PSScriptRoot 'New-SPPermissionMatchMap.ps1') @options @auth -ExcludePaths $ExcludedPaths
                     $generated = @(Get-ChildItem -LiteralPath $webFolder -Filter 'PermMatch_Review_*.csv')
                     if ($generated.Count -ne 1) { throw 'Expected one PFS match review.' }
                     if (-not (Test-Path -LiteralPath $reviewFile)) {
@@ -102,8 +108,8 @@ function Invoke-PFSVisitorsRead {
                 default {
                     if (Test-Path -LiteralPath $reviewFile) { $options.MatchFile = $reviewFile }
                     & (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1') @options @auth `
-                        -ExpectedVisitorsTitle 'Patient Financial Services Visitors' `
-                        -ExcludePaths @('Access Requests', '2021 EM Coding Changes') `
+                        -ExpectedVisitorsTitle $VisitorsTitle `
+                        -ExcludePaths $ExcludedPaths `
                         -NoMembershipWithoutSourceRead -SkipFinalReport -Apply:($Mode -eq 'Apply')
                 }
             }
@@ -121,7 +127,7 @@ function Invoke-PFSVisitorsRead {
     } finally {
         Export-SPPermissionCsv $summary.ToArray() @('SourceUrl','TargetUrl','Mode','Status','EvidenceFolder','Error') (Join-Path $folder 'Summary.csv')
         Export-SPPermissionCsv $webRows.ToArray() @('SourceUrl','TargetUrl','Status') (Join-Path $folder 'Webs.csv')
-        Write-Host "PFS evidence: $folder"
+        Write-Host "$SiteLabel evidence: $folder"
     }
     if ($Mode -eq 'Apply') {
         & (Join-Path $PSScriptRoot 'Export-SPPermissionSiteReport.ps1') -TargetUrl $targetRoot `

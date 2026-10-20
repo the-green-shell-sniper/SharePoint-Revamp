@@ -1127,6 +1127,8 @@ try {
         Assert-Equal $script:postCalls 2
     }
     Test-Case 'PFS DryRun covers root then Coding and preserves no-source zero-additions behavior' {
+        $individualChild = 'Coding'
+        $individualVisitors = 'Patient Financial Services Visitors'
         function Import-Module {}
         function Connect-PnPOnline {
             param($Url, $ClientId, $Tenant, [switch]$Interactive, [switch]$ReturnConnection, [switch]$PersistLogin, $ErrorAction)
@@ -1138,14 +1140,14 @@ try {
             param($Connection, $Url, $Method, $Content, [switch]$Raw, $ErrorAction)
             if ($Method -ne 'Get') { throw "Unexpected write in PFS zero-source test: $Url" }
             $response = if ($Url -match '/webs\?') {
-                @{ value = @(if ($Connection -notlike '*/Coding') {
-                    @{ Url = "$Connection/Coding"; Title = 'Coding'; Id = 'coding'
-                        ServerRelativeUrl = "$(([uri]$Connection).AbsolutePath)/Coding"; HasUniqueRoleAssignments = $true }
+                @{ value = @(if ($Connection -notlike "*/$individualChild") {
+                    @{ Url = "$Connection/$individualChild"; Title = $individualChild; Id = 'child'
+                        ServerRelativeUrl = "$(([uri]$Connection).AbsolutePath)/$individualChild"; HasUniqueRoleAssignments = $true }
                 }) }
             } elseif ($Url -match '/roledefinitions\?') {
                 @{ value = @(@{ Id = 2; Name = 'Read'; BasePermissions = @{ High = '0'; Low = '1' } }) }
             } elseif ($Url -match '/AssociatedVisitorGroup\?') {
-                @{ Id = 4; LoginName = 'pfs-visitors'; Title = 'Patient Financial Services Visitors' }
+                @{ Id = 4; LoginName = 'site-visitors'; Title = $individualVisitors }
             } elseif ($Url -match '/(lists|sitegroups|roleassignments|users)\?') {
                 @{ value = @() }
             } elseif ($Url -match '/_api/web\?') {
@@ -1165,6 +1167,20 @@ try {
             Assert-Equal $result.SourceReadScopes 0
             Assert-Equal $result.PlannedOperations 0
             Assert-Equal $result.Mode 'DryRun'
+        }
+        $individualChild = 'Private'; $individualVisitors = 'Accounting Visitors'
+        $accountingOutput = Join-Path $temp 'accounting-dryrun'
+        & (Join-Path $PSScriptRoot 'Invoke-AccountingVisitorsRead.ps1') -Mode DryRun `
+            -OutputFolder $accountingOutput -ReviewRoot (Join-Path $temp 'accounting-reviews')
+        $summaryFile = Get-ChildItem -LiteralPath $accountingOutput -Recurse -Filter Summary.csv
+        $rows = @(Import-Csv -LiteralPath $summaryFile.FullName)
+        Assert-Equal $rows.Count 2
+        Assert-Equal $rows[0].TargetUrl 'https://whallc.sharepoint.com/sites/Accounting'
+        Assert-Equal $rows[1].TargetUrl 'https://whallc.sharepoint.com/sites/Accounting/Private'
+        foreach ($file in Get-ChildItem -LiteralPath $accountingOutput -Recurse -Filter Status.json) {
+            $result = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
+            Assert-Equal $result.SourceReadScopes 0
+            Assert-Equal $result.PlannedOperations 0
         }
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
