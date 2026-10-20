@@ -20,6 +20,61 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### PFS start-to-finish additive workflow
+
+[Invoke-PFSVisitorsRead.ps1](Scripts/Invoke-PFSVisitorsRead.ps1) is scoped to
+archived `/PFS` -> `/sites/PatientFinancialServices`, using source `Team Site Members`
+and the exact associated target group `Patient Financial Services Visitors`.
+It reuses the tested additive engine (CS defaults remain unchanged), processing
+the root web/content first, then exact-path subsites sequentially in the same
+PowerShell session. The supplied matrices include a `Coding` subsite on both sides.
+Unmatched webs are listed in `Webs.csv`, never automatically paired by title.
+
+The supplied old/new PFS matrices have no `Team Site Members` rows. Matrix evidence
+is a baseline, not a substitute for live reads. **Zero live source Read scopes means
+zero permission changes and no EEEU membership changes**, even with `-Mode Apply`.
+Membership is still reported. There is no fallback to Everyone, a similarly named
+group or a broad Visitors grant. The full mirror's unavailable-user/Review behavior
+is not involved. Existing migration-group membership entries are not moved/removed;
+the normal Visitors container may receive the explicitly authorized additions.
+
+The target-only business library found in the matrices is `2021 E&M Coding Changes`,
+site-relative URL path `2021 EM Coding Changes`. It is explicitly excluded.
+Other target-only matrix paths are `_catalogs/appdata`, `_catalogs/appfiles`,
+`_catalogs/hubsite`, `_catalogs/lt`, `_catalogs/solutions`, `_catalogs/theme`,
+`_catalogs/wp`, `FormServerTemplates`, `IWConvertedForms`, `Lists/Events`,
+`Lists/TaxonomyHiddenList`, and `Style Library`. These remain unmatched unless
+an explicit counterpart/approval exists; do not infer intended migration identity
+from similar titles. Access Requests is excluded. CS-specific COVID library
+exclusions are not transferred to PFS.
+
+After syncing scripts to the server, run each step and inspect its reports before
+continuing:
+
+```powershell
+# Read-only schema and inventory comparison, root then subsites.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-PFSVisitorsRead.ps1' -Mode Scout
+# Read-only matching. Scores >= 0.80 are approved in the separate PFS review files;
+# lower scores remain pending. Nothing is applied by Match.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-PFSVisitorsRead.ps1' -Mode Match
+# Read-only additive plan and EEEU membership observation.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-PFSVisitorsRead.ps1' -Mode DryRun
+# Explicit production additions only if source Read coverage requires them.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-PFSVisitorsRead.ps1' -Mode Apply
+# Standalone recursive target reference; no permission/membership changes.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-PFSVisitorsRead.ps1' -Mode Report
+```
+
+Evidence is under compact `Reports\PFS\p-*\<web-hash>` folders and stable approvals
+under `Reports\PFSReview\<web-hash>`. Every mode records `Summary.csv` and `Webs.csv`.
+Per-web additive evidence includes `Coverage.csv`, `Plan.json`, `Changes.csv`,
+`Status.json`, and before snapshots. Inspect `SourceReadScopes` and
+`PlannedOperations` for the expected zero-additions case. Apply performs the existing
+per-write/final state checks and then generates one combined recursive target report.
+Report mode can be used without Apply; reports include unmatched target-only content.
+If a web fails, later webs stop, and earlier writes are not rolled back. Do not run
+this alongside another apply process on the same site collection.
+
 ### Urgent CS additive-only Visitors Read pass
 
 [Add-CSVisitorsRead.ps1](Scripts/Add-CSVisitorsRead.ps1) is separate from the full

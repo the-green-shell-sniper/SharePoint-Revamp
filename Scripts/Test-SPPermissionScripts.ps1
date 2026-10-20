@@ -1038,7 +1038,9 @@ try {
         }
         function Get-SPPermissionAcl {
             param($Connection)
-            if ($Connection -like '*/CS') { New-TestAcl 'Team Site Members' @('Read') 10 8 }
+            if ($Connection -like '*/CS') {
+                if (-not $script:zeroSourceRead) { New-TestAcl 'Team Site Members' @('Read') 10 8 }
+            }
             else { New-TestAcl 'existing' @('Edit') }
         }
         function Get-SPMigrationProtection {
@@ -1050,7 +1052,7 @@ try {
         function Invoke-SPPermissionRest {
             [pscustomobject]@{ Id = 11; LoginName = 'visitors'; Title = 'Clinical & Patient Services Visitors' }
         }
-        $script:eeeuPresent = $false; $script:eeeuWrites = 0; $script:planCalls = 0
+        $script:eeeuPresent = $false; $script:eeeuWrites = 0; $script:planCalls = 0; $script:zeroSourceRead = $false
         function Get-SPPermissionCollection {
             param($Connection, $Url)
             if ($Url -match '/roledefinitions') {
@@ -1070,7 +1072,7 @@ try {
         function Invoke-SPPermissionPlan {
             param($Connection, $Plan, $Log, $LogPath)
             $script:planCalls++
-            Assert-Equal (@($Plan.Steps | Where-Object Action -eq 'Add').Count) 1
+            Assert-Equal (@($Plan.Steps | Where-Object Action -eq 'Add').Count) $(if ($script:zeroSourceRead) { 0 } else { 1 })
             Assert-Equal (@($Plan.Steps | Where-Object Action -in @('Remove','Reset')).Count) 0
         }
         function Invoke-CSVisitorsReadReport {}
@@ -1085,6 +1087,16 @@ try {
         Invoke-CSVisitorsRead
         Assert-Equal $script:eeeuWrites 1
         Assert-Equal $script:planCalls 2
+        $script:zeroSourceRead = $true; $script:eeeuPresent = $false
+        $NoMembershipWithoutSourceRead = $true
+        Invoke-CSVisitorsRead
+        Assert-Equal $script:eeeuWrites 1
+        $latest = Get-ChildItem -LiteralPath $OutputFolder -Directory | Sort-Object Name -Descending | Select-Object -First 1
+        $status = Get-Content -LiteralPath (Join-Path $latest.FullName 'Status.json') -Raw | ConvertFrom-Json
+        Assert-Equal $status.SourceReadScopes 0
+        Assert-Equal $status.PlannedOperations 0
+        $logRows = @(Import-Csv -LiteralPath (Join-Path $latest.FullName 'Changes.csv'))
+        Assert-Equal (@($logRows | Where-Object Result -eq 'Report only - zero source Read scopes').Count) 1
     }
     Test-Case 'Additive pass requires the named site Visitors group and rejects migration/wrong groups' {
         . (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1')
@@ -1113,6 +1125,47 @@ try {
         Assert-Equal $script:postCalls 1
         Assert-Throws { Invoke-SPPermissionRest 'target' 'https://target.test/fail' -Method Post } 'Cannot handle the data'
         Assert-Equal $script:postCalls 2
+    }
+    Test-Case 'PFS DryRun covers root then Coding and preserves no-source zero-additions behavior' {
+        function Import-Module {}
+        function Connect-PnPOnline {
+            param($Url, $ClientId, $Tenant, [switch]$Interactive, [switch]$ReturnConnection, [switch]$PersistLogin, $ErrorAction)
+            $Url
+        }
+        function Get-PnPTenantId { '11111111-1111-1111-1111-111111111111' }
+        function Add-PnPGroupMember { throw 'PFS DryRun must not add EEEU.' }
+        function Invoke-PnPSPRestMethod {
+            param($Connection, $Url, $Method, $Content, [switch]$Raw, $ErrorAction)
+            if ($Method -ne 'Get') { throw "Unexpected write in PFS zero-source test: $Url" }
+            $response = if ($Url -match '/webs\?') {
+                @{ value = @(if ($Connection -notlike '*/Coding') {
+                    @{ Url = "$Connection/Coding"; Title = 'Coding'; Id = 'coding'
+                        ServerRelativeUrl = "$(([uri]$Connection).AbsolutePath)/Coding"; HasUniqueRoleAssignments = $true }
+                }) }
+            } elseif ($Url -match '/roledefinitions\?') {
+                @{ value = @(@{ Id = 2; Name = 'Read'; BasePermissions = @{ High = '0'; Low = '1' } }) }
+            } elseif ($Url -match '/AssociatedVisitorGroup\?') {
+                @{ Id = 4; LoginName = 'pfs-visitors'; Title = 'Patient Financial Services Visitors' }
+            } elseif ($Url -match '/(lists|sitegroups|roleassignments|users)\?') {
+                @{ value = @() }
+            } elseif ($Url -match '/_api/web\?') {
+                @{ Id = 'web'; Url = $Connection; ServerRelativeUrl = ([uri]$Connection).AbsolutePath; HasUniqueRoleAssignments = $true }
+            } else { throw "Unexpected PFS read: $Url" }
+            $response | ConvertTo-Json -Depth 20 -Compress
+        }
+        $output = Join-Path $temp 'pfs-dryrun'
+        & (Join-Path $PSScriptRoot 'Invoke-PFSVisitorsRead.ps1') -Mode DryRun -OutputFolder $output -ReviewRoot (Join-Path $temp 'pfs-reviews')
+        $summaryFile = Get-ChildItem -LiteralPath $output -Recurse -Filter Summary.csv
+        $rows = @(Import-Csv -LiteralPath $summaryFile.FullName)
+        Assert-Equal $rows.Count 2
+        Assert-Equal $rows[0].TargetUrl 'https://whallc.sharepoint.com/sites/PatientFinancialServices'
+        Assert-Equal $rows[1].TargetUrl 'https://whallc.sharepoint.com/sites/PatientFinancialServices/Coding'
+        foreach ($file in Get-ChildItem -LiteralPath $output -Recurse -Filter Status.json) {
+            $result = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
+            Assert-Equal $result.SourceReadScopes 0
+            Assert-Equal $result.PlannedOperations 0
+            Assert-Equal $result.Mode 'DryRun'
+        }
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {

@@ -1,7 +1,7 @@
 #requires -Version 7.4.6
 <#
 .SYNOPSIS
-    Additive-only CS Team Site Members Read -> associated target Visitors Read.
+    Additive-only source-group Read -> associated target Visitors Read; CS defaults.
 .DESCRIPTION
     DryRun by default. Never removes roles, resets inheritance, creates permission
     levels or resolves old source users. Only exact paths and approved MatchFile
@@ -12,6 +12,13 @@
 #>
 [CmdletBinding()]
 param(
+    [string]$SourceUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS',
+    [string]$TargetUrl = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
+    [string]$ExpectedVisitorsTitle = 'Clinical & Patient Services Visitors',
+    [string]$SourceReadGroup = 'Team Site Members',
+    [string[]]$ExcludePaths = @('Access Requests', 'COVID19 Resources', 'COVID19 Workflows'),
+    [switch]$NoMembershipWithoutSourceRead,
+    [switch]$SkipFinalReport,
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\PermRead'),
     [string]$MatchFile,
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
@@ -20,20 +27,23 @@ param(
     [switch]$Apply
 )
 . (Join-Path $PSScriptRoot 'Sync-SPPermissionsFromSource.ps1') `
+    -SourceUrl $SourceUrl -TargetUrl $TargetUrl -ExcludePaths $ExcludePaths `
     -OutputFolder $OutputFolder -MatchFile $MatchFile -ClientId $ClientId -Tenant $Tenant `
     -SkipPersistLoginSetup:$SkipPersistLoginSetup -Apply:$Apply
 
 function New-CSVisitorsReadPlan {
-    param($Source, $Target, $Pairs, $Visitors, [int]$ReadId)
+    param($Source, $Target, $Pairs, $Visitors, [int]$ReadId,
+        [string]$ReadGroup = 'Team Site Members',
+        [string[]]$Excluded = @('Access Requests', 'COVID19 Resources', 'COVID19 Workflows'))
     $eligible = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     $coverage = [Collections.Generic.List[object]]::new()
     $steps = [Collections.Generic.List[object]]::new()
     $notes = [Collections.Generic.List[object]]::new()
-    $exclusions = @('Access Requests', 'COVID19 Resources', 'COVID19 Workflows')
+    $exclusions = $Excluded
     foreach ($key in $Source.Keys) {
         if ($Source[$key].Kind -eq 'Subweb') { continue }
         $hasRead = @((Get-SPPermissionEffectiveScope $Source $key).Acl | Where-Object {
-            $_.PrincipalType -eq 8 -and $_.Title -ieq 'Team Site Members' -and $_.Roles -icontains 'Read'
+            $_.PrincipalType -eq 8 -and $_.Title -ieq $ReadGroup -and $_.Roles -icontains 'Read'
         }).Count -gt 0
         if (-not $hasRead) { continue }
         $state = 'Unmatched - skipped'
@@ -76,10 +86,10 @@ function Invoke-CSVisitorsReadReport {
 }
 
 function Assert-CSVisitorsGroup {
-    param($Visitors)
+    param($Visitors, [string]$ExpectedTitle = 'Clinical & Patient Services Visitors')
     if (-not $Visitors.Id -or -not $Visitors.LoginName -or
-        $Visitors.Title -ine 'Clinical & Patient Services Visitors') {
-        throw "Expected associated group 'Clinical & Patient Services Visitors'; received '$($Visitors.Title)' (ID $($Visitors.Id)). No changes permitted."
+        $Visitors.Title -ine $ExpectedTitle) {
+        throw "Expected associated group '$ExpectedTitle'; received '$($Visitors.Title)' (ID $($Visitors.Id)). No changes permitted."
     }
     if (Test-SPMigrationPrincipal $Visitors.LoginName $Visitors.Title) {
         throw 'The selected Visitors principal is a protected migration group. No changes permitted.'
@@ -89,8 +99,9 @@ function Assert-CSVisitorsGroup {
 function Invoke-CSVisitorsRead {
     $ErrorActionPreference = 'Stop'
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
-    $sourceUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/CS'
-    $targetUrl = 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices'
+    Assert-SPPermissionUrls $SourceUrl $TargetUrl
+    $sourceUrl = $SourceUrl.TrimEnd('/')
+    $targetUrl = $TargetUrl.TrimEnd('/')
     $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $folder = Join-Path $root ('rd-' + (Get-Date -Format 'yyMMddHHmmssfff'))
     [void][IO.Directory]::CreateDirectory($folder)
@@ -100,11 +111,14 @@ function Invoke-CSVisitorsRead {
     try {
         $sourceConnection = Connect-SPPermissionSite $sourceUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup
         $targetConnection = Connect-SPPermissionSite $targetUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup
+        Write-Host "[Inventory source] $sourceUrl"
         $source = Get-SPPermissionInventory $sourceConnection $sourceUrl
+        Write-Host "[Inventory target] $targetUrl"
         $target = Get-SPPermissionInventory $targetConnection $targetUrl
         foreach ($side in @('Source', 'Target')) {
             $inventory = if ($side -eq 'Source') { $source } else { $target }
             $connection = if ($side -eq 'Source') { $sourceConnection } else { $targetConnection }
+            Write-Host "[Snapshot $side] Reading unique-scope role assignments."
             foreach ($scope in $inventory.Values | Where-Object { $_.Unique -or -not $_.Key }) {
                 $api = $scope.Api
                 if (-not $scope.Unique) { $api += '/FirstUniqueAncestorSecurableObject' }
@@ -114,7 +128,7 @@ function Invoke-CSVisitorsRead {
                 ConvertTo-Json -Depth 50 | Set-Content -LiteralPath (Join-Path $folder "$side.json") -Encoding utf8
         }
         $visitors = Invoke-SPPermissionRest $targetConnection ($targetUrl + '/_api/web/AssociatedVisitorGroup?$select=Id,Title,LoginName')
-        Assert-CSVisitorsGroup $visitors
+        Assert-CSVisitorsGroup $visitors $ExpectedVisitorsTitle
         $protection = Get-SPMigrationProtection $targetConnection $targetUrl
         foreach ($membership in $protection.Memberships | Where-Object { $_.GroupId -eq $visitors.Id }) {
             $log.Add([pscustomobject]@{
@@ -133,7 +147,7 @@ function Invoke-CSVisitorsRead {
             throw 'Read permission levels are missing or have different/unknown masks.'
         }
         $pairs = Get-SPPermissionMatches $source $target $MatchFile $sourceUrl $targetUrl
-        $plan = New-CSVisitorsReadPlan $source $target $pairs $visitors $read[0].Id
+        $plan = New-CSVisitorsReadPlan $source $target $pairs $visitors $read[0].Id $SourceReadGroup $ExcludePaths
         $plan | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath (Join-Path $folder 'Plan.json') -Encoding utf8
         Export-SPPermissionCsv $plan.Coverage @('SourcePath','SourceUnique','TargetPath','Status') (Join-Path $folder 'Coverage.csv')
         $tenantId = [guid](Get-PnPTenantId -Connection $targetConnection -ErrorAction Stop)
@@ -142,10 +156,18 @@ function Invoke-CSVisitorsRead {
         $membershipUrl = "$targetUrl/_api/web/sitegroups/getbyid($($visitors.Id))/users?`$select=Id,Title,LoginName"
         $members = @(Get-SPPermissionCollection $targetConnection $membershipUrl)
         $hasEEEU = @($members | Where-Object LoginName -IEQ $eeeu).Count -gt 0
-        $log.Add([pscustomobject]@{ Path = ''; Action = 'EEEU in Visitors'; Result = $(if ($hasEEEU) { 'Already present' } else { 'Planned' }); Detail = $eeeu })
+        $membershipAllowed = -not $NoMembershipWithoutSourceRead -or $plan.Coverage.Count -gt 0
+        Write-Host "[Plan] Source Read scopes: $($plan.Coverage.Count); permission operations: $($plan.Steps.Count); EEEU membership changes allowed: $membershipAllowed"
+        $status['SourceReadScopes'] = $plan.Coverage.Count
+        $status['PlannedOperations'] = $plan.Steps.Count
+        $log.Add([pscustomobject]@{
+            Path = ''; Action = 'EEEU in Visitors'
+            Result = $(if ($hasEEEU) { 'Already present' } elseif (-not $membershipAllowed) { 'Report only - zero source Read scopes' } else { 'Planned' })
+            Detail = $eeeu
+        })
         Export-SPPermissionCsv $log.ToArray() @('Path','Action','Result','Detail') $logPath
         if ($Apply) {
-            if (-not $hasEEEU) {
+            if (-not $hasEEEU -and $membershipAllowed) {
                 $log.Add([pscustomobject]@{ Path = ''; Action = 'Add EEEU to Visitors'; Result = 'Write starting - outcome not yet verified'; Detail = $eeeu })
                 Export-SPPermissionCsv $log.ToArray() @('Path','Action','Result','Detail') $logPath
                 Add-PnPGroupMember -Group $visitors.Id -LoginName $eeeu -Connection $targetConnection -ErrorAction Stop
@@ -164,9 +186,9 @@ function Invoke-CSVisitorsRead {
     } finally {
         Export-SPPermissionCsv $log.ToArray() @('Path','Action','Result','Detail') $logPath
         $status | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $folder 'Status.json') -Encoding utf8
-        Write-Host "Additive CS evidence: $folder"
+        Write-Host "Additive Read evidence: $folder"
     }
-    if ($Apply) {
+    if ($Apply -and -not $SkipFinalReport) {
         Invoke-CSVisitorsReadReport @{
             TargetUrl = $targetUrl; OutputFolder = (Join-Path $folder 'Report')
             ClientId = $ClientId; Tenant = $Tenant; SkipPersistLoginSetup = $SkipPersistLoginSetup
