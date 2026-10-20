@@ -13,6 +13,9 @@ param(
     [string]$SourceSiteUrl = 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/PFS',
     [string]$TargetSiteUrl = 'https://whallc.sharepoint.com/sites/PatientFinancialServices',
     [string]$VisitorsTitle = 'Patient Financial Services Visitors',
+    [switch]$DiscoverVisitorsTitle,
+    [string[]]$ReservedSourceUrls = @(),
+    [string[]]$ReservedTargetUrls = @(),
     [string[]]$ExcludedPaths = @('Access Requests', '2021 EM Coding Changes'),
     [string]$SiteLabel = 'PFS',
     [ValidateSet('Scout', 'Match', 'DryRun', 'Apply', 'Report')][string]$Mode = 'DryRun',
@@ -63,8 +66,10 @@ function Invoke-PFSVisitorsRead {
             foreach ($child in $sourceChildren | Sort-Object Url) {
                 if (-not $child.Url -or -not (Test-SPPermissionPathWithin $child.Url $pair.SourceUrl) -or
                     $child.Url.TrimEnd('/') -ieq $pair.SourceUrl) { throw 'Invalid PFS source child web URL.' }
+                if ($child.Url.TrimEnd('/') -iin $ReservedSourceUrls) { continue }
                 $relative = $child.Url.TrimEnd('/').Substring($pair.SourceUrl.Length)
                 $counterpart = @($targetChildren | Where-Object { $_.Url.TrimEnd('/') -ieq ($pair.TargetUrl + $relative) })
+                if (($pair.TargetUrl + $relative) -iin $ReservedTargetUrls) { continue }
                 if ($counterpart.Count -gt 1) { throw 'Duplicate target child URL.' }
                 $webRows.Add([pscustomobject]@{
                     SourceUrl = $child.Url; TargetUrl = ($pair.TargetUrl + $relative)
@@ -80,6 +85,7 @@ function Invoke-PFSVisitorsRead {
             foreach ($child in $targetChildren) {
                 if (-not $child.Url -or -not (Test-SPPermissionPathWithin $child.Url $pair.TargetUrl) -or
                     $child.Url.TrimEnd('/') -ieq $pair.TargetUrl) { throw 'Invalid PFS target child web URL.' }
+                if ($child.Url.TrimEnd('/') -iin $ReservedTargetUrls) { continue }
                 if ($child.Url.TrimEnd('/') -inotin $queue.TargetUrl) {
                     $webRows.Add([pscustomobject]@{ SourceUrl = ''; TargetUrl = $child.Url; Status = 'Target-only web - report only' })
                 }
@@ -106,9 +112,20 @@ function Invoke-PFSVisitorsRead {
                     } $PSScriptRoot $reviewFile
                 }
                 default {
+                    $expectedTitle = $VisitorsTitle
+                    if ($DiscoverVisitorsTitle) {
+                        $associated = Invoke-SPPermissionRest $targetConnection (
+                            $pair.TargetUrl + '/_api/web/AssociatedVisitorGroup?$select=Id,Title,LoginName')
+                        if (-not $associated.Id -or -not $associated.Title -or -not $associated.LoginName -or
+                            (Test-SPMigrationPrincipal $associated.LoginName $associated.Title)) {
+                            throw "No valid normal associated Visitors group at '$($pair.TargetUrl)'."
+                        }
+                        $expectedTitle = $associated.Title
+                        Write-Host "[Visitors] $expectedTitle (ID $($associated.Id))"
+                    }
                     if (Test-Path -LiteralPath $reviewFile) { $options.MatchFile = $reviewFile }
                     & (Join-Path $PSScriptRoot 'Add-CSVisitorsRead.ps1') @options @auth `
-                        -ExpectedVisitorsTitle $VisitorsTitle `
+                        -ExpectedVisitorsTitle $expectedTitle `
                         -ExcludePaths $ExcludedPaths `
                         -NoMembershipWithoutSourceRead -SkipFinalReport -Apply:($Mode -eq 'Apply')
                 }

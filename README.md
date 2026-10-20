@@ -20,6 +20,65 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### Remaining checklist sites: unattended additive pipeline
+
+[Invoke-SPVisitorsReadChecklist.ps1](Scripts/Invoke-SPVisitorsReadChecklist.ps1)
+runs **one checklist site at a time** through Match, checked DryRun, and (with
+`-Apply`) verified Apply plus a complete recursive target report before moving to
+the next checklist site. It does not run Scout or the full permission mirror.
+It reuses the successful additive CS/PFS/Accounting engine.
+
+```powershell
+# Match and checked DryRun only; no permission or membership writes.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadChecklist.ps1'
+
+# Unattended remaining sites: Match -> checked DryRun -> verified Apply -> report.
+# This command also runs Match and DryRun; the preview command is not a prerequisite.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadChecklist.ps1' -Apply
+```
+
+- Only mappings in `ReferenceFiles\NewSiteChecklist.csv` are processed. CS,
+  Accounting and PFS are skipped by default because their individual Applies
+  completed. `-TargetSites` can narrow the checklist; unknown targets are rejected.
+  To deliberately revisit a completed site, also pass `-CompletedTargetSites @()`.
+- Each site's root and exact-path matching descendants are processed sequentially.
+  Explicit checklist source/target mappings are reserved, so a parent does not
+  process them a second time or guess a different pairing. Other site collections
+  are never discovered via tenant enumeration. Unmatched/target-only child webs
+  are reported rather than guessed or created.
+- Uses each web's **associated Visitors group**, discovered live (not a group name
+  guessed from the URL). A missing group or a protected migration principal stops
+  that site. Individual PFS/Accounting runners retain their exact-title defaults.
+- Fresh run-specific reviews auto-approve scores >= 0.80 under the existing policy.
+  Lower scores and children of unapproved renamed parents remain manual. Exact
+  paths are matched directly. Similarity scores are not identity probabilities.
+- DryRun must produce complete successful per-web status and a consistent
+  additive-only plan before Apply starts. Apply verifies its writes and final
+  modified scopes, and its final report must finish successfully. Apply re-reads
+  live state and replans; it does not replay the saved DryRun plan verbatim.
+- Adds Visitors Read only where corresponding source Team Site Members has
+  effective Read. EEEU membership is ensured only for webs with qualifying source
+  scopes. Adding EEEU gives those users **all existing permissions held by that
+  Visitors group**, not just this run's new Read grants.
+- Existing grants and direct migration-group assignments/memberships remain
+  unchanged. Unmatched/excluded inherited target objects may have inheritance
+  broken with permissions copied to prevent new ancestor access spreading there.
+  Access Requests is excluded everywhere; CS/PFS-specific exclusions apply only
+  when those sites are deliberately selected again.
+- A failure stops the current site's pipeline and continues the next checklist
+  site. A failed write is never blindly retried or rolled back. Inspect live state
+  and evidence before retrying a failed/partially applied site. Authentication may
+  still require interaction if the persistent login cache is unavailable/expired.
+
+Compact evidence is under `Reports\VisitorsRuns\v-*\<site-hash>`. The batch writes
+`Summary.csv` and `Stragglers.csv` after each site, including failed stages/errors,
+unapproved matches, unmatched source Read coverage and unmatched/target-only webs.
+Each stage retains per-web evidence, source/target snapshots, plans, coverage and
+write logs. Final summaries distinguish failure from verified matched additions;
+successful Apply does not mean skipped objects were completed. Any failed sites
+also cause a final terminating error **after** other checklist sites are attempted.
+Keep the PowerShell window open and do not run overlapping permission jobs.
+
 ### Accounting individual additive runner
 
 [Invoke-AccountingVisitorsRead.ps1](Scripts/Invoke-AccountingVisitorsRead.ps1)

@@ -1182,6 +1182,160 @@ try {
             Assert-Equal $result.SourceReadScopes 0
             Assert-Equal $result.PlannedOperations 0
         }
+        $reservedOutput = Join-Path $temp 'reserved-dryrun'
+        & (Join-Path $PSScriptRoot 'Invoke-PFSVisitorsRead.ps1') -Mode DryRun `
+            -OutputFolder $reservedOutput -ReviewRoot (Join-Path $temp 'reserved-reviews') `
+            -DiscoverVisitorsTitle -ReservedSourceUrls @(
+                'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/PFS/Private'
+            ) -ReservedTargetUrls @(
+                'https://whallc.sharepoint.com/sites/PatientFinancialServices/Private'
+            )
+        $reservedSummary = Get-ChildItem -LiteralPath $reservedOutput -Recurse -Filter Summary.csv
+        Assert-Equal @(Import-Csv -LiteralPath $reservedSummary.FullName).Count 1
+        $individualVisitors = 'SharePoint.Migration.Team.Visitors'
+        Assert-Throws {
+            & (Join-Path $PSScriptRoot 'Invoke-PFSVisitorsRead.ps1') -Mode DryRun `
+                -OutputFolder (Join-Path $temp 'bad-associated') `
+                -ReviewRoot (Join-Path $temp 'bad-associated-reviews') -DiscoverVisitorsTitle
+        } 'No valid normal associated Visitors group'
+    }
+    Test-Case 'Additive checklist gates each stage, skips completed sites and continues after failures' {
+        $batchChecklist = Join-Path $temp 'batch.csv'
+        @(
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/one'; 'New Site URL' = 'https://target.test/one' }
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/two'; 'New Site URL' = 'https://target.test/two' }
+            [pscustomobject]@{ 'Old Site URL' = 'https://source.test/three'; 'New Site URL' = 'https://target.test/three' }
+        ) | Export-Csv -LiteralPath $batchChecklist -NoTypeInformation
+        . (Join-Path $PSScriptRoot 'Invoke-SPVisitorsReadChecklist.ps1') -ChecklistFile $batchChecklist `
+            -OutputFolder (Join-Path $temp 'batch') -CompletedTargetSites @('https://target.test/three') -Apply
+        $calls = [Collections.Generic.List[string]]::new()
+        $failureStage = 'DryRun'
+        function Invoke-SPVisitorsChecklistStage {
+            param([hashtable]$Options)
+            $calls.Add("$($Options.TargetSiteUrl):$($Options.Mode)")
+            Assert-Equal $Options.ReservedSourceUrls.Count 3
+            Assert-Equal $Options.ReservedTargetUrls.Count 3
+            Assert-Equal $Options.DiscoverVisitorsTitle $true
+            Assert-Equal ($Options.ExcludedPaths -join ',') 'Access Requests'
+            $run = Join-Path $Options.OutputFolder 'p-test'
+            $web = Join-Path $run 'web'
+            [void][IO.Directory]::CreateDirectory($web)
+            Export-SPPermissionCsv @([pscustomobject]@{
+                SourceUrl = $Options.SourceSiteUrl; TargetUrl = $Options.TargetSiteUrl
+                Mode = $Options.Mode; Status = 'Completed - inspect coverage'; Error = ''; EvidenceFolder = $web
+            }) @('SourceUrl','TargetUrl','Mode','Status','Error','EvidenceFolder') (Join-Path $run 'Summary.csv')
+            Export-SPPermissionCsv @() @('SourceUrl','TargetUrl','Status') (Join-Path $run 'Webs.csv')
+            if ($Options.Mode -eq 'Match') {
+                [void][IO.Directory]::CreateDirectory($Options.ReviewRoot)
+                $review = @([pscustomobject]@{ SourcePath = 'old'; TargetPath = 'new'; Score = '0.7'; Approved = 'No' })
+                $review | Export-Csv -LiteralPath (Join-Path $web 'PermMatch_Review_test.csv') -NoTypeInformation
+                $review | Export-Csv -LiteralPath (Join-Path $Options.ReviewRoot 'MatchReview.csv') -NoTypeInformation
+                return
+            }
+            $rd = Join-Path $web 'rd-test'
+            [void][IO.Directory]::CreateDirectory($rd)
+            $state = if ($Options.Mode -eq 'Apply') {
+                'Applied - matched additions verified; inspect coverage for skipped content'
+            } else { 'DryRun complete - no writes' }
+            if ($Options.TargetSiteUrl -eq 'https://target.test/one' -and $Options.Mode -eq $failureStage) { $state = 'Failed' }
+            @{ Mode = $Options.Mode; Status = $state; Error = ''; SourceReadScopes = 1; PlannedOperations = 0 } |
+                ConvertTo-Json | Set-Content -LiteralPath (Join-Path $rd 'Status.json')
+            $coverage = @([pscustomobject]@{ SourcePath = 'missing'; TargetPath = ''; Status = 'Unmatched - skipped' })
+            @{ Steps = @(); Notes = @(); Coverage = $coverage } | ConvertTo-Json -Depth 10 |
+                Set-Content -LiteralPath (Join-Path $rd 'Plan.json')
+            $coverage | Export-Csv -LiteralPath (Join-Path $rd 'Coverage.csv') -NoTypeInformation
+            if ($Options.Mode -eq 'Apply') {
+                $report = Join-Path $run 'Report'
+                [void][IO.Directory]::CreateDirectory($report)
+                @{ Status = 'Complete'; Error = '' } | ConvertTo-Json |
+                    Set-Content -LiteralPath (Join-Path $report 'ReportStatus.json')
+            }
+        }
+        Assert-Throws { Invoke-SPVisitorsReadChecklist } 'Some checklist sites failed'
+        Assert-Equal ($calls -join ',') (
+            'https://target.test/one:Match,https://target.test/one:DryRun,' +
+            'https://target.test/two:Match,https://target.test/two:DryRun,https://target.test/two:Apply')
+        $batchSummary = Get-ChildItem -LiteralPath $OutputFolder -Recurse -Filter Summary.csv |
+            Where-Object { $_.Directory.Name -like 'v-*' }
+        $rows = @(Import-Csv -LiteralPath $batchSummary.FullName)
+        Assert-Equal $rows.Count 3
+        Assert-Equal $rows[0].Stage 'DryRun'
+        Assert-Equal $rows[1].Status 'Applied and verified - inspect stragglers'
+        Assert-Equal $rows[2].Status 'Skipped - completed or not selected'
+        $stragglers = @(Import-Csv -LiteralPath (Join-Path $batchSummary.Directory.FullName 'Stragglers.csv'))
+        Assert-Equal @($stragglers | Where-Object Kind -eq 'Failure').Count 1
+        Assert-Equal @($stragglers | Where-Object Kind -eq 'Source Read coverage').Count 2
+        Assert-Equal @($stragglers | Where-Object Kind -eq 'Unapproved match').Count 2
+        $calls.Clear()
+        $failureStage = 'None'
+        $Apply = $false
+        $OutputFolder = Join-Path $temp 'batch-readonly'
+        Invoke-SPVisitorsReadChecklist
+        Assert-Equal ($calls -join ',') (
+            'https://target.test/one:Match,https://target.test/one:DryRun,' +
+            'https://target.test/two:Match,https://target.test/two:DryRun')
+        $calls.Clear()
+        $failureStage = 'Apply'
+        $Apply = $true
+        $OutputFolder = Join-Path $temp 'batch-apply-failure'
+        Assert-Throws { Invoke-SPVisitorsReadChecklist } 'Some checklist sites failed'
+        Assert-Equal ($calls -join ',') (
+            'https://target.test/one:Match,https://target.test/one:DryRun,https://target.test/one:Apply,' +
+            'https://target.test/two:Match,https://target.test/two:DryRun,https://target.test/two:Apply')
+        $calls.Clear()
+        $failureStage = 'Match'
+        $OutputFolder = Join-Path $temp 'batch-match-failure'
+        function Invoke-SPVisitorsChecklistStage {
+            param([hashtable]$Options)
+            $calls.Add("$($Options.TargetSiteUrl):$($Options.Mode)")
+            throw 'Mock Match failure'
+        }
+        Assert-Throws { Invoke-SPVisitorsReadChecklist } 'Some checklist sites failed'
+        Assert-Equal ($calls -join ',') 'https://target.test/one:Match,https://target.test/two:Match'
+    }
+    Test-Case 'Additive stage gate rejects dangerous plans and incomplete verification' {
+        . (Join-Path $PSScriptRoot 'Invoke-SPVisitorsReadChecklist.ps1')
+        $run = Join-Path $temp 'gate'
+        $rd = Join-Path $run 'web\rd-test'
+        [void][IO.Directory]::CreateDirectory($rd)
+        Export-SPPermissionCsv @([pscustomobject]@{
+            Mode = 'DryRun'; Status = 'Completed - inspect coverage'; Error = ''
+            EvidenceFolder = (Join-Path $run 'web')
+        }) @('Mode','Status','Error','EvidenceFolder') (Join-Path $run 'Summary.csv')
+        $state = @{ Mode = 'DryRun'; Status = 'DryRun complete - no writes'; Error = ''; SourceReadScopes = 0; PlannedOperations = 1 }
+        $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $rd 'Status.json')
+        foreach ($step in @(
+            @{ Action = 'Remove'; Key = 'bad' },
+            @{ Action = 'Freeze'; Key = 'bad'; BeforeSignature = 'old'; AfterSignature = 'changed' },
+            @{ Action = 'Add'; Key = 'bad'; Operation = @{ Type = 'Add'; Role = 'Edit'; MemberId = 4; Login = 'Visitors' } },
+            @{ Action = 'Add'; Key = 'bad'; Operation = @{ Type = 'Add'; Role = 'Read'; MemberId = 4; Login = 'SharePoint.Migration.Team.Visitors' } }
+        )) {
+            @{ Steps = @($step); Notes = @(); Coverage = @() } | ConvertTo-Json -Depth 10 |
+                Set-Content -LiteralPath (Join-Path $rd 'Plan.json')
+            Assert-Throws { Assert-SPVisitorsStage $run 'DryRun' } 'Unexpected non-additive'
+        }
+        @{ Steps = @(); Notes = @(); Coverage = @() } | ConvertTo-Json |
+            Set-Content -LiteralPath (Join-Path $rd 'Plan.json')
+        Assert-Throws { Assert-SPVisitorsStage $run 'DryRun' } 'Inconsistent'
+        $state.PlannedOperations = 0
+        $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $rd 'Status.json')
+        Assert-SPVisitorsStage $run 'DryRun'
+        $state.Mode = 'Apply'; $state.Status = 'Applied - matched additions verified; inspect coverage for skipped content'
+        $state | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $rd 'Status.json')
+        Export-SPPermissionCsv @([pscustomobject]@{
+            Mode = 'Apply'; Status = 'Completed - inspect coverage'; Error = ''; EvidenceFolder = (Join-Path $run 'web')
+        }) @('Mode','Status','Error','EvidenceFolder') (Join-Path $run 'Summary.csv')
+        Assert-Throws { Assert-SPVisitorsStage $run 'Apply' } 'does not exist|Cannot find'
+        $report = Join-Path $run 'Report'
+        [void][IO.Directory]::CreateDirectory($report)
+        @{ Status = 'Failed'; Error = 'mock report failure' } | ConvertTo-Json |
+            Set-Content -LiteralPath (Join-Path $report 'ReportStatus.json')
+        Assert-Throws { Assert-SPVisitorsStage $run 'Apply' } 'Final report incomplete'
+    }
+    Test-Case 'Additive batch rejects non-checklist targets before work starts' {
+        . (Join-Path $PSScriptRoot 'Invoke-SPVisitorsReadChecklist.ps1') `
+            -ChecklistFile (Join-Path $temp 'batch.csv') -TargetSites @('https://target.test/unlisted')
+        Assert-Throws { Invoke-SPVisitorsReadChecklist } 'not in the checklist'
     }
     Write-Host "All $script:passed offline tests passed. No PnP authentication or live SharePoint requests were made."
 } finally {
