@@ -65,6 +65,7 @@ param(
     [ValidateRange(1, 100000)]
     [int]$MaxFuzzyHitsPerPhrase = 25
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'

@@ -42,6 +42,7 @@ param(
     [Parameter(Mandatory = $false)]
     [string]$LogsOutputFolder = "C:\Users\!bposey\OneDrive - Womens Healthcare Associates LLC\Gary Henderson's files - Project Files_bposey\SharePoint-Migration-Scripts\FixItList-OutputFiles\Logs"
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 $ErrorActionPreference = "Stop"
 

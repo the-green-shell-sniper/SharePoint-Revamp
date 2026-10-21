@@ -34,9 +34,85 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ### Keeping server reports below GitHub file limits
 
-Generated report JSON under `Reports` and legacy permission run directories is
-ignored by Git. It remains on the server; application/source JSON is not ignored.
-Ignore rules do not untrack existing files or remove earlier committed versions.
+Report JSON and CSV files are eligible for Git tracking; no report folders or
+JSON files are excluded by `.gitignore`. Every generated file must stay strictly
+below 99 MiB and every full path below 256 characters; see the
+[repository-wide Copilot instructions](.github/copilot-instructions.md). These
+limits keep a margin under GitHub's 100 MiB hard file limit. GitHub warns for
+files over 50 MiB. GitHub checks files in the commits being pushed, so deleting
+an oversized file in a later commit does not remove it from earlier commits in
+the same push.
+
+Permission workflows keep JSON for compact status/summary metadata. Large
+permission inventories and plans use readable CSV records instead: snapshots
+have one scope per row with a `ScopeJson` field preserving its full ACL, and
+plans have one step or note per row with `StepJson`/`NoteJson` preserving the
+complete record. These CSVs can be inspected directly and do not need manual
+reassembly. Do not emit oversized JSON or opaque byte chunks; redesign large
+collections as record-based outputs or fail before writing.
+
+PowerShell scripts under `Scripts` load `Scripts\SPOutputLimits.Common.ps1`.
+CSV writers keep the first part at the requested path and create numbered
+`<name>.csv.partNNNN.csv` siblings when needed; `Import-Csv` reads the base file
+and all numbered parts as one ordered stream. PowerShell and Python JSON writers
+reject documents at or above 90 MiB before writing. Append-only text files
+rotate to numbered sibling parts, which `Get-Content` also reads in order when
+the base path is requested.
+Direct binary writes and copies reject files at or above the 90 MiB output
+threshold. Paths are validated against the 256-character maximum.
+
+Session transcripts are disabled in the queue worker and URL-fixer v4 because
+PowerShell transcripts do not support bounded rotation; those scripts report
+progress and failures through their structured evidence and console output.
+
+#### Converting existing oversized reports on the server
+
+Stop report/permission writers first and copy the updated `Scripts` folder to
+the server clone (including both common output/record helpers and the updated
+checklist/verification scripts). Run in PowerShell 7.4.6+ from the clone root:
+
+```powershell
+# Preview only: nothing is changed.
+.\Scripts\Convert-SPServerReports.ps1 -Folder '.\Reports'
+# Convert and verify; no backups, Git changes, or SharePoint writes.
+.\Scripts\Convert-SPServerReports.ps1 -Folder '.\Reports' -Apply
+# Final filesystem check: should produce no results.
+Get-ChildItem -LiteralPath '.\Reports' -Recurse -File |
+    Where-Object Length -ge 99MB |
+    Select-Object FullName, Length
+```
+
+[Convert-SPServerReports.ps1](Scripts/Convert-SPServerReports.ps1) selects files
+**at or above 99 MiB**, not just files already over GitHub's 100 MiB limit.
+Smaller JSON files remain unchanged. CSVs keep the original path as their first
+part and gain `.part0002.csv`, `.part0003.csv`, etc. Every part stays below
+90 MiB, safely below the 99 MiB hard repository ceiling. Headers and complete
+multiline records are preserved. Existing multipart CSV sets are refused rather
+than overwritten; inspect those separately.
+
+For existing JSON of unknown schema, each readable CSV row records a JSON
+`Token`, `JsonPath`, and `Json` scalar value, including explicit container
+boundaries. Files are named `j-<12-character-path-hash>.csv` with numbered CSV
+siblings in the same directory. The original JSON path becomes a small
+`SPReportRecordsV1` index with the CSV name, row count, and SHA-256 record
+checksum. Updated `Scripts` readers automatically validate and interpret these
+records **in memory**; no oversized JSON file is recreated on disk and no user
+reassembly or LFS is needed. Keep the index and all its CSV parts together.
+Direct `Get-Content` from a plain shell, older script copies, and applications
+without the common reader will see the index rather than the original object.
+Use the updated root `Scripts` workflows for existing runs, not older copies in
+`CS-PermissionSuite`. New report producers still use domain-specific scope,
+step, and note CSV rows rather than this legacy compatibility representation.
+
+Conversion verifies ordered records and on-disk sizes before replacing each
+original. A failure retains that original and reports any partial output for
+inspection; completed earlier conversions remain. A single oversized scalar
+or CSV row, invalid JSON, or an overlong output path fails explicitly.
+Other oversized file types are retained and reported as blockers, never
+arbitrarily byte-split. This operation only repairs working-tree files:
+oversized blobs in **existing unpushed commits** still require rewriting those
+local commits before GitHub Desktop can push. Do not reset or discard local
+commits without checking the branch divergence and preserving working changes.
 
 After a permission run finishes, use
 [Split-SPVisitorReports.ps1](Scripts/Split-SPVisitorReports.ps1) in PowerShell
@@ -61,13 +137,14 @@ permission runs, never during Match/DryRun/Apply or verification. Splitting
 changes evidence paths; existing manifests and automatic consumers still refer
 to the originals. Use the parts for manual report inspection, not pipeline replay.
 
-For already tracked JSON, `git rm --cached` on the relevant paths stops future
-tracking without deleting server copies. **Neither untracking JSON nor splitting
-CSV removes oversized blobs from the unpushed commit history.** Clean that history
-before pushing. One option, if preserving individual unpushed commits is not
-required, is to soft-reset to the fetched upstream and recommit the cleaned final
-tree; this must be done on the server, on the correct branch, with no unrelated
-uncommitted work. Do not force-push or rewrite already shared commits.
+The GitHub per-file limit is enforced by GitHub, not by `.gitignore`; a local file
+size check before committing can catch oversized files earlier. **Deleting or
+splitting a file in a new commit does not remove oversized blobs from earlier
+unpushed commits.** Clean that history before pushing. One option, if preserving
+individual unpushed commits is not required, is to soft-reset to the fetched
+upstream and recommit the cleaned final tree; do this on the server, on the
+correct branch, with no unrelated uncommitted work. Do not force-push or rewrite
+already shared commits.
 
 ### All checklist sites: permanent unattended additive pipeline
 
@@ -238,8 +315,8 @@ continuing:
 
 Evidence is under compact `Reports\PFS\p-*\<web-hash>` folders and stable approvals
 under `Reports\PFSReview\<web-hash>`. Every mode records `Summary.csv` and `Webs.csv`.
-Per-web additive evidence includes `Coverage.csv`, `Plan.json`, `Changes.csv`,
-`Status.json`, and before snapshots. Inspect `SourceReadScopes` and
+Per-web additive evidence includes `Coverage.csv`, readable plan CSV records,
+`Changes.csv`, `Status.json`, and before-snapshot CSV records. Inspect `SourceReadScopes` and
 `PlannedOperations` for the expected zero-additions case. Apply performs the existing
 per-write/final state checks and then generates one combined recursive target report.
 Report mode can be used without Apply; reports include unmatched target-only content.
@@ -283,8 +360,9 @@ absent and rechecks membership. This intentionally makes **all existing Visitors
 grants** available through EEEU, not just new Read assignments; review existing
 Visitors access before applying. No other group membership is changed.
 
-Evidence uses compact `Reports\PermRead\rd-*` folders: before snapshots, `Plan.json`,
-`Coverage.csv`, `Changes.csv`, `Status.json` and a post-Apply recursive `Report`.
+Evidence uses compact `Reports\PermRead\rd-*` folders: before-snapshot CSV
+records, `PlanSteps.csv`, `PlanNotes.csv`, `Coverage.csv`, `Changes.csv`,
+`Status.json` and a post-Apply recursive `Report`.
 Verified additions are not a full permission mirror. A later report failure does
 not roll back additions; inspect application status/log separately. Old-user
 unavailability does not block this narrow pass because those users are not processed.

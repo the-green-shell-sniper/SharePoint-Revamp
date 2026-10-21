@@ -1,5 +1,7 @@
 #requires -Version 7.4.6
 
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
+
 function Connect-SPPermissionSite {
     param([string]$Url, [string]$ClientId, [string]$Tenant, [switch]$SkipPersistLoginSetup)
     $options = @{ Url = $Url; Interactive = $true; ReturnConnection = $true; ErrorAction = 'Stop' }

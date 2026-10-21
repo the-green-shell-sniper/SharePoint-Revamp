@@ -31,7 +31,7 @@
     Apply pre-resolves principals (which may add entries to target Site Users),
     then rechecks and verifies every permission write. A failed/ambiguous write stops
     the run BEFORE any later removals. Earlier writes remain: this is not a transaction.
-    JSON snapshots are rollback REFERENCES, not an automatic restore script.
+    CSV scope snapshots are rollback REFERENCES, not an automatic restore script.
 .EXAMPLE
     .\Sync-SPPermissionsFromSource.ps1 -Tenant '<tenant-guid-or-domain>' -MatchFile .\review.csv
 .EXAMPLE
@@ -53,6 +53,7 @@ param(
     [switch]$RequireCompletePlan,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Get-SPDesiredAcl {
@@ -447,6 +448,7 @@ function Invoke-SyncSPPermissionsFromSource {
     $SourceUrl = $SourceUrl.TrimEnd('/')
     $TargetUrl = $TargetUrl.TrimEnd('/')
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
+    [void](Assert-SPOutputPath $OutputFolder)
     [void][IO.Directory]::CreateDirectory($OutputFolder)
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
     $mode = if ($Apply) { 'APPLY' } else { 'DRYRUN' }
@@ -512,13 +514,21 @@ function Invoke-SyncSPPermissionsFromSource {
                 }
             }
             # Include every scope's inheritance state, not only the unique ACLs.
-            [pscustomobject]@{
-                WebUrl = $(if ($side -eq 'Source') { $SourceUrl } else { $TargetUrl })
-                CapturedUtc = [datetime]::UtcNow.ToString('o')
-                Scopes = @($inventory.Values | Sort-Object Key)
-            } | ConvertTo-Json -Depth 50 | Set-Content -LiteralPath (
-                Join-Path $OutputFolder "PermSync_${side}Snapshot_$stamp.json"
-            ) -Encoding utf8
+            $snapshotRows = @(
+                foreach ($scope in $inventory.Values | Sort-Object Key) {
+                    [pscustomobject]@{
+                        WebUrl = if ($side -eq 'Source') { $SourceUrl } else { $TargetUrl }
+                        CapturedUtc = [datetime]::UtcNow.ToString('o')
+                        ScopePath = $scope.Key
+                        Kind = $scope.Kind
+                        Unique = $scope.Unique
+                        ScopeJson = ConvertTo-Json -InputObject $scope -Depth 50 -Compress
+                    }
+                }
+            )
+            Export-SPPermissionCsv $snapshotRows @('WebUrl','CapturedUtc','ScopePath','Kind','Unique','ScopeJson') (
+                Join-Path $OutputFolder "PermSync_${side}Snapshot_${stamp}_Scopes.csv"
+            )
         }
         $groups = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
         foreach ($group in @(Get-SPPermissionCollection $targetConnection ($TargetUrl + '/_api/web/sitegroups?$select=Id,Title,LoginName'))) {
@@ -633,11 +643,37 @@ function Invoke-SyncSPPermissionsFromSource {
         # Planning mutates the in-memory target; the saved snapshots retain the read state.
         $plan = New-SPPermissionPlan $source $target $scopeMatches $desiredBySource $unavailable $roleIds $protectedAtRoot $ExcludePaths -NoFreeze:$NoFreeze -PreservedLogins @($targetProtection.Logins)
         foreach ($note in $plan.Notes) { $log.Add($note) }
-        $planPath = Join-Path $OutputFolder "PermSync_Plan_${mode}_$stamp.json"
-        [pscustomobject]@{
+        $stepRows = @(
+            for ($index = 0; $index -lt $plan.Steps.Count; $index++) {
+                $step = $plan.Steps[$index]
+                [pscustomobject]@{
+                    Sequence = $index + 1; Key = $step.Key; Action = $step.Action
+                    OperationLogin = $step.Operation.Login; OperationRole = $step.Operation.Role
+                    StepJson = ConvertTo-Json -InputObject $step -Depth 30 -Compress
+                }
+            }
+        )
+        $noteRows = @(
+            for ($index = 0; $index -lt $plan.Notes.Count; $index++) {
+                $note = $plan.Notes[$index]
+                [pscustomobject]@{
+                    Sequence = $index + 1; Result = $note.Result
+                    NoteJson = ConvertTo-Json -InputObject $note -Depth 30 -Compress
+                }
+            }
+        )
+        $stepPath = Join-Path $OutputFolder "PermSync_Plan_${mode}_${stamp}_Steps.csv"
+        Export-SPPermissionCsv $stepRows @('Sequence','Key','Action','OperationLogin','OperationRole','StepJson') $stepPath
+        Export-SPPermissionCsv $noteRows @('Sequence','Result','NoteJson') (
+            Join-Path $OutputFolder "PermSync_Plan_${mode}_${stamp}_Notes.csv"
+        )
+        $summaryPath = Join-Path $OutputFolder "PermSync_Plan_${mode}_${stamp}_Summary.json"
+        Write-SPBoundedJson -InputObject @{
             SourceUrl = $SourceUrl; TargetUrl = $TargetUrl; Mode = $mode
-            CreatedUtc = [datetime]::UtcNow.ToString('o'); Steps = @($plan.Steps); Notes = @($plan.Notes)
-        } | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $planPath -Encoding utf8
+            CreatedUtc = [datetime]::UtcNow.ToString('o')
+            StepCount = $plan.Steps.Count; NoteCount = $plan.Notes.Count
+            BlockedNoteCount = @($plan.Notes | Where-Object Result -eq 'Blocked').Count
+        } -Path $summaryPath -Depth 10
         foreach ($step in $plan.Steps) {
             $log.Add([pscustomobject]@{
                 Path = $step.Key; Action = $step.Action; Result = 'Planned'
@@ -653,7 +689,7 @@ function Invoke-SyncSPPermissionsFromSource {
         if ($Apply) { Invoke-SPPermissionPlan $targetConnection $plan $log $logPath }
         $blockedCount = @($plan.Notes | Where-Object Result -eq 'Blocked').Count
         Write-Host "[$mode] Permission actions: $($plan.Steps.Count); blocked scopes: $blockedCount; unavailable principals: $($unavailable.Count)"
-        Write-Host "Plan: $planPath"
+        Write-Host "Plan steps: $stepPath"
         if ($blockedCount -or $unavailable.Count) { Write-Warning 'This run is NOT an exact mirror. Review the blocked scopes and unavailable-principals report.' }
     } catch {
         $log.Add([pscustomobject]@{ Path = ''; Action = 'Run stopped'; Result = 'Error'; Detail = $_.Exception.Message })

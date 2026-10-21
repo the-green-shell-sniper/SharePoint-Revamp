@@ -33,6 +33,7 @@ param(
     [switch]$Preflight,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -722,6 +723,7 @@ function Invoke-PublishFixedDocuments {
             $state = $snapshot.State
             $bytes = $snapshot.Bytes
             $backup = Join-Path (Join-Path $output 'remote-backups') $entry.RelativeFile
+            Assert-SPOutputSize -Path $backup -Bytes $bytes.LongLength
             New-Item -ItemType Directory -Path (Split-Path -Parent $backup) -Force | Out-Null
             [IO.File]::WriteAllBytes($backup, $bytes)
             $hash = Get-BytesSHA256 $bytes

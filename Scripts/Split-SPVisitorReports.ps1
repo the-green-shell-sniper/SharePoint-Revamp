@@ -14,6 +14,7 @@ param(
     [ValidateRange(1, 90)][int]$MaxPartMiB = 90,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 function Split-SPVisitorReports {
     $ErrorActionPreference = 'Stop'
@@ -34,6 +35,7 @@ function Split-SPVisitorReports {
             continue
         }
         $partsFolder = $file.FullName + '.parts'
+        [void](Assert-SPOutputPath $partsFolder)
         if (Test-Path -LiteralPath $partsFolder) {
             throw "Output already exists: '$partsFolder'. Inspect/remove it before retrying; original retained."
         }
@@ -46,7 +48,7 @@ function Split-SPVisitorReports {
         $rows = 0L
         $parts = [Collections.Generic.List[string]]::new()
         try {
-            Import-Csv -LiteralPath $file.FullName -Encoding utf8 | ForEach-Object {
+            Microsoft.PowerShell.Utility\Import-Csv -LiteralPath $file.FullName -Encoding utf8 | ForEach-Object {
                 # Convert one logical record, not one physical line: fields can contain newlines.
                 $csv = @(ConvertTo-Csv -InputObject $_ -NoTypeInformation)
                 if ($null -eq $header) {
@@ -61,6 +63,7 @@ function Split-SPVisitorReports {
                 if ($null -eq $writer -or $partBytes + $recordBytes -ge $limit) {
                     if ($null -ne $writer) { $writer.Dispose(); $writer = $null }
                     $path = Join-Path $partsFolder ('{0}.part{1:D4}.csv' -f $file.BaseName, ($parts.Count + 1))
+                    [void](Assert-SPOutputPath $path)
                     $writer = [IO.StreamWriter]::new($path, $false, $encoding)
                     $writer.NewLine = "`r`n"
                     $parts.Add($path)

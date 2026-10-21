@@ -16,6 +16,7 @@ param(
     [string]$Tenant,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Invoke-PFSVisitorsRead.ps1') `
     -SourceSiteUrl 'https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/Accounting' `

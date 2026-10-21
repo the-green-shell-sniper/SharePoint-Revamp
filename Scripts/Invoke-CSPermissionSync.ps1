@@ -28,6 +28,7 @@ param(
     [switch]$NoContent,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 function Invoke-CSPermissionSync {
     $ErrorActionPreference = 'Stop'
@@ -36,8 +37,10 @@ function Invoke-CSPermissionSync {
     foreach ($name in @('SPPermission.Common.ps1', 'New-SPPermissionMatchMap.ps1', 'Sync-SPPermissionsFromSource.ps1', 'Invoke-SPPermissionChecklist.ps1')) {
         if (-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot $name))) { throw "Missing companion script: $name" }
     }
+    [void](Assert-SPOutputPath $OutputFolder)
     [void][IO.Directory]::CreateDirectory($OutputFolder)
     $runFolder = Join-Path $OutputFolder ("cs-" + (Get-Date -Format 'yyMMddHHmmssfff'))
+    [void](Assert-SPOutputPath $runFolder)
     [void][IO.Directory]::CreateDirectory($runFolder)
     $checklistPath = Join-Path $runFolder 'CS-SitePair.csv'
     [pscustomobject]@{
@@ -57,18 +60,32 @@ function Invoke-CSPermissionSync {
         Write-Host 'All fuzzy rows start Approved=No. Approve only confirmed identities. Run Match again after approving a renamed subsite to inventory its content.'
     }
     if ($Mode -eq 'Verify') {
-        $plans = @(Get-ChildItem -LiteralPath $runFolder -Recurse -Filter 'PermSync_Plan_DRYRUN_*.json')
+        $plans = @(Get-ChildItem -LiteralPath $runFolder -Recurse -Filter 'PermSync_Plan_DRYRUN_*_Steps.csv')
+        $legacyPlans = @(Get-ChildItem -LiteralPath $runFolder -Recurse -Filter 'PermSync_Plan_DRYRUN_*.json' |
+            Where-Object Name -NotLike '*_Summary.json')
         $summaries = @(Get-ChildItem -LiteralPath $runFolder -Recurse -Filter 'ChecklistSummary.csv')
-        if (-not $plans.Count -or $summaries.Count -ne 1) { throw 'CS verification incomplete: expected live dry-run plans and a checklist summary.' }
+        if ((-not $plans.Count -and -not $legacyPlans.Count) -or $summaries.Count -ne 1) {
+            throw 'CS verification incomplete: expected live dry-run plans and a checklist summary.'
+        }
         $summary = @(Import-Csv -LiteralPath $summaries[0].FullName)
         if (@($summary | Where-Object { $_.Status -notlike 'DryRun completed*' }).Count) {
             throw 'CS verification incomplete: one or more web pairs were skipped or failed. Inspect ChecklistSummary.csv.'
         }
         $remaining = 0; $blocked = 0; $unavailable = 0
-        foreach ($path in $plans) {
-            $plan = Get-Content -LiteralPath $path.FullName -Raw | ConvertFrom-Json -Depth 100 -AsHashtable
+        foreach ($path in $legacyPlans) {
+            $plan = Get-Content -LiteralPath $path.FullName -Raw -ErrorAction Stop |
+                ConvertFrom-Json -Depth 100 -ErrorAction Stop
             $remaining += @($plan.Steps).Count
             $blocked += @($plan.Notes | Where-Object Result -eq 'Blocked').Count
+        }
+        foreach ($path in $plans) {
+            $remaining += @(Import-Csv -LiteralPath $path.FullName).Count
+            $notesPath = $path.FullName -replace '_Steps\.csv$', '_Notes.csv'
+            if (-not (Test-Path -LiteralPath $notesPath -PathType Leaf) -and
+                -not @(Get-SPCsvSiblingParts $notesPath).Count) {
+                throw "CS verification incomplete: missing plan notes beside '$($path.FullName)'."
+            }
+            $blocked += @(Import-Csv -LiteralPath $notesPath | Where-Object Result -eq 'Blocked').Count
         }
         foreach ($path in @(Get-ChildItem -LiteralPath $runFolder -Recurse -Filter 'PermSync_UnavailablePrincipals_DRYRUN_*.csv')) {
             $unavailable += @(Import-Csv -LiteralPath $path.FullName).Count

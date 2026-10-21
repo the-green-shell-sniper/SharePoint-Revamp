@@ -13,6 +13,7 @@ param(
     [string]$OutputPath,
     [string]$ReplacementsJson
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 $ErrorActionPreference = 'Stop'
 
 function Get-LinkSnapshot {
@@ -101,7 +102,16 @@ try {
         if ($changed -ne $replacements.Count) { throw 'Not all replacements were applied.' }
         $after = Get-LinkSnapshot -Document $document
         if ($before.TextSHA256 -cne $after.TextSHA256) { throw 'Visible Word text changed.' }
+        [void](Assert-SPOutputPath $working)
+        if ((Get-Item -LiteralPath $working).Length -ge $script:SPOutputPartLimit) {
+            throw "Refusing to save a legacy Word document at or above 90 MiB: $working"
+        }
         $document.Save()
+        if ((Get-Item -LiteralPath $working).Length -ge $script:SPOutputPartLimit) {
+            $document.Close(0)
+            Remove-Item -LiteralPath $working -Force -ErrorAction Stop
+            throw "Saved legacy Word document reached the 90 MiB output limit: $working"
+        }
         $document.Close(0)
         $document = $word.Documents.Open($working, $false, $true, $false)
         $after = Get-LinkSnapshot -Document $document
@@ -122,6 +132,10 @@ try {
 }
 finally {
     if ($null -ne $document) { $document.Close(0) }
+    if ($OutputPath -and (Test-Path -LiteralPath $OutputPath -PathType Leaf) -and
+        (Get-Item -LiteralPath $OutputPath).Length -ge $script:SPOutputPartLimit) {
+        Remove-Item -LiteralPath $OutputPath -Force -ErrorAction Stop
+    }
     if ($null -ne $word) {
         if ($null -ne $oldUpdateLinks) { $word.Options.UpdateLinksAtOpen = $oldUpdateLinks }
         if ($null -ne $oldSecurity) { $word.AutomationSecurity = $oldSecurity }

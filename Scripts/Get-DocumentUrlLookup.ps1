@@ -181,6 +181,7 @@ param(
     [Parameter(Mandatory = $false)]
     [switch]$EnableDeepPdfOcr
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 $ErrorActionPreference = "Stop"
 
@@ -1110,11 +1111,18 @@ function Get-PdfOcrUrlOccurrence {
     try {
         $pdfPath = Join-Path $workFolder 'source.pdf'
         $pagePattern = Join-Path $workFolder 'page-%06d.png'
+        Assert-SPOutputSize -Path $pdfPath -Bytes $Bytes.LongLength
+        [void](Assert-SPOutputPath $pagePattern)
         [System.IO.File]::WriteAllBytes($pdfPath, $Bytes)
         $null = Invoke-PdfExtractionProcess -FilePath $script:ResolvedGhostscriptPath -ArgumentList @(
-            '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox', '-sDEVICE=pnggray', '-r300',
+            '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dUseCropBox', '-dFIXEDMEDIA',
+            '-dDEVICEWIDTHPOINTS=612', '-dDEVICEHEIGHTPOINTS=792', '-dPDFFitPage',
+            '-sDEVICE=pnggray', '-r300',
             '-dTextAlphaBits=4', '-dGraphicsAlphaBits=4', "-sOutputFile=$pagePattern", $pdfPath
         ) -TimeoutSeconds 1800
+        foreach ($page in Get-ChildItem -LiteralPath $workFolder -File -Filter 'page-*.png') {
+            Assert-SPOutputSize -Path $page.FullName -Bytes $page.Length
+        }
 
         $pageImages = @(Get-ChildItem -Path $workFolder -Filter 'page-*.png' -File | Sort-Object Name)
         if ($pageImages.Count -eq 0) { throw 'Ghostscript did not render any PDF pages.' }
@@ -1251,6 +1259,7 @@ function Get-TikaDocumentHyperlink {
     New-Item -ItemType Directory -Path $workFolder -Force | Out-Null
     try {
         $sourcePath = Join-Path $workFolder ("source{0}" -f $Extension)
+        Assert-SPOutputSize -Path $sourcePath -Bytes $Bytes.LongLength
         [System.IO.File]::WriteAllBytes($sourcePath, $Bytes)
 
         $startInfo = [System.Diagnostics.ProcessStartInfo]::new()

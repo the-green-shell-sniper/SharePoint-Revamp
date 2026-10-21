@@ -14,6 +14,7 @@ param(
     [string]$ArchiveRoot = (Join-Path $PSScriptRoot '..\Reports\PermArchive'),
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 $ErrorActionPreference = 'Stop'
 $source = (Resolve-Path -LiteralPath $SourceFolder -ErrorAction Stop).ProviderPath.TrimEnd('\')
 $archive = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ArchiveRoot).TrimEnd('\')
@@ -50,6 +51,7 @@ if (-not $Apply) {
     Write-Host "Preview: $($rows.Count) files. Use -Apply only after all workers using this report folder have stopped."
     return
 }
+[void](Assert-SPOutputPath $destination)
 [void][IO.Directory]::CreateDirectory($destination)
 $rows | Export-Csv -LiteralPath "$manifestPath.tmp" -NoTypeInformation -Encoding utf8
 Move-Item -LiteralPath "$manifestPath.tmp" -Destination $manifestPath -Force

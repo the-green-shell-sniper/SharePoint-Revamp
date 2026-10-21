@@ -28,6 +28,7 @@ param(
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\SystemEditorPlans'),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8'
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 function ConvertTo-SystemEditorWebUrl {
     param([string]$Url)
@@ -88,6 +89,7 @@ function Invoke-SystemEditorRemediationPlan {
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $cutoff = [datetime]::new(2024, 4, 1, 7, 0, 0, [DateTimeKind]::Utc)
     $run = Join-Path $OutputFolder ((Get-Date -Format 'yyyyMMdd-HHmmss-fff') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    [void](Assert-SPOutputPath $run)
     [void][IO.Directory]::CreateDirectory($run)
     $run = (Resolve-Path -LiteralPath $run).Path
     $files = @{

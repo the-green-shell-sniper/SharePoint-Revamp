@@ -26,6 +26,7 @@ param(
     [switch]$SkipPersistLoginSetup,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'Sync-SPPermissionsFromSource.ps1') `
     -SourceUrl $SourceUrl -TargetUrl $TargetUrl -ExcludePaths $ExcludePaths `
     -OutputFolder $OutputFolder -MatchFile $MatchFile -ClientId $ClientId -Tenant $Tenant `
@@ -104,6 +105,7 @@ function Invoke-CSVisitorsRead {
     $targetUrl = $TargetUrl.TrimEnd('/')
     $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $folder = Join-Path $root ('rd-' + (Get-Date -Format 'yyMMddHHmmssfff'))
+    [void](Assert-SPOutputPath $folder)
     [void][IO.Directory]::CreateDirectory($folder)
     $log = [Collections.Generic.List[object]]::new()
     $logPath = Join-Path $folder 'Changes.csv'
@@ -124,8 +126,21 @@ function Invoke-CSVisitorsRead {
                 if (-not $scope.Unique) { $api += '/FirstUniqueAncestorSecurableObject' }
                 $scope.Acl = @(Get-SPPermissionAcl $connection $api)
             }
-            [pscustomobject]@{ WebUrl = $(if ($side -eq 'Source') { $sourceUrl } else { $targetUrl }); Scopes = @($inventory.Values) } |
-                ConvertTo-Json -Depth 50 | Set-Content -LiteralPath (Join-Path $folder "$side.json") -Encoding utf8
+            $snapshotRows = @(
+                foreach ($scope in $inventory.Values | Sort-Object Key) {
+                    [pscustomobject]@{
+                        WebUrl = if ($side -eq 'Source') { $sourceUrl } else { $targetUrl }
+                        CapturedUtc = [datetime]::UtcNow.ToString('o')
+                        ScopePath = $scope.Key
+                        Kind = $scope.Kind
+                        Unique = $scope.Unique
+                        ScopeJson = ConvertTo-Json -InputObject $scope -Depth 50 -Compress
+                    }
+                }
+            )
+            Export-SPPermissionCsv $snapshotRows @('WebUrl','CapturedUtc','ScopePath','Kind','Unique','ScopeJson') (
+                Join-Path $folder "${side}Scopes.csv"
+            )
         }
         $visitors = Invoke-SPPermissionRest $targetConnection ($targetUrl + '/_api/web/AssociatedVisitorGroup?$select=Id,Title,LoginName')
         Assert-CSVisitorsGroup $visitors $ExpectedVisitorsTitle
@@ -148,7 +163,29 @@ function Invoke-CSVisitorsRead {
         }
         $pairs = Get-SPPermissionMatches $source $target $MatchFile $sourceUrl $targetUrl
         $plan = New-CSVisitorsReadPlan $source $target $pairs $visitors $read[0].Id $SourceReadGroup $ExcludePaths
-        $plan | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath (Join-Path $folder 'Plan.json') -Encoding utf8
+        $stepRows = @(
+            for ($index = 0; $index -lt $plan.Steps.Count; $index++) {
+                $step = $plan.Steps[$index]
+                [pscustomobject]@{
+                    Sequence = $index + 1; Key = $step.Key; Action = $step.Action
+                    OperationLogin = $step.Operation.Login; OperationRole = $step.Operation.Role
+                    StepJson = ConvertTo-Json -InputObject $step -Depth 40 -Compress
+                }
+            }
+        )
+        $noteRows = @(
+            for ($index = 0; $index -lt $plan.Notes.Count; $index++) {
+                $note = $plan.Notes[$index]
+                [pscustomobject]@{
+                    Sequence = $index + 1; Result = $note.Result
+                    NoteJson = ConvertTo-Json -InputObject $note -Depth 40 -Compress
+                }
+            }
+        )
+        Export-SPPermissionCsv $stepRows @('Sequence','Key','Action','OperationLogin','OperationRole','StepJson') (
+            Join-Path $folder 'PlanSteps.csv'
+        )
+        Export-SPPermissionCsv $noteRows @('Sequence','Result','NoteJson') (Join-Path $folder 'PlanNotes.csv')
         Export-SPPermissionCsv $plan.Coverage @('SourcePath','SourceUnique','TargetPath','Status') (Join-Path $folder 'Coverage.csv')
         $tenantId = [guid](Get-PnPTenantId -Connection $targetConnection -ErrorAction Stop)
         if ($tenantId -eq [guid]::Empty) { throw 'Tenant ID unavailable for EEEU claim.' }

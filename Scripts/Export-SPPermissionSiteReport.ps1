@@ -19,6 +19,7 @@ param(
     [ValidateRange(1, 5000)][int]$PageSize = 500,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Get-SPPermissionReportRows {
@@ -116,6 +117,7 @@ function Invoke-SPPermissionSiteReport {
     $ErrorActionPreference = 'Stop'
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $folder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
+    [void](Assert-SPOutputPath $folder)
     [void][IO.Directory]::CreateDirectory($folder)
     $manifest = [ordered]@{
         SiteUrl = $TargetUrl; StartedUtc = [datetime]::UtcNow.ToString('o')

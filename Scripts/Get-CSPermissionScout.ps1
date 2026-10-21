@@ -23,6 +23,7 @@ param(
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Get-CSScoutQuery {
@@ -42,6 +43,7 @@ function Invoke-CSPermissionScout {
     $TargetUrl = $TargetUrl.TrimEnd('/')
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $folder = Join-Path $OutputFolder (Get-Date -Format 'yyyyMMdd-HHmmss-fff')
+    [void](Assert-SPOutputPath $folder)
     [void][IO.Directory]::CreateDirectory($folder)
     $summary = [Collections.Generic.List[object]]::new()
     $fieldsReport = [Collections.Generic.List[object]]::new()

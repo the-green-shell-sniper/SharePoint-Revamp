@@ -17,6 +17,7 @@ param(
     [switch]$SkipPersistLoginSetup,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 $ErrorActionPreference = 'Stop'
 $options = @{
     ChecklistFile = $ChecklistFile

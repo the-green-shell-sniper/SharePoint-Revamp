@@ -63,6 +63,7 @@ param(
     [ValidateRange(0, 10000)]
     [int]$ThrottleEveryNItems = 100
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 $ErrorActionPreference = "Stop"
 
@@ -2772,23 +2773,13 @@ New-DirectoryIfMissing -Path $DocumentsOutputFolder
 New-DirectoryIfMissing -Path $OtherOutputFolder
 New-DirectoryIfMissing -Path $LogsOutputFolder
 
-$scriptSessionTranscriptPath = ''
-try {
-    $scriptSessionTranscriptPath = Join-Path -Path $LogsOutputFolder -ChildPath ((Get-Date -Format 'yyyy-MM-dd_HHmmss') + '_Get-FixItListURLsv4_SessionOutput.txt')
-    Start-Transcript -Path $scriptSessionTranscriptPath -Force | Out-Null
-
-    $invokedScriptPath = if (-not [string]::IsNullOrWhiteSpace($PSCommandPath)) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
-    if (-not [string]::IsNullOrWhiteSpace($invokedScriptPath) -and (Test-Path -Path $invokedScriptPath)) {
-        $invokedScriptHash = (Get-FileHash -Algorithm SHA256 -Path $invokedScriptPath).Hash.ToLowerInvariant()
-        Write-Host ("Script file: {0}" -f $invokedScriptPath)
-        Write-Host ("Script SHA256: {0}" -f $invokedScriptHash)
-    }
-
-    Write-Host ("Session transcript: {0}" -f $scriptSessionTranscriptPath)
+$invokedScriptPath = if (-not [string]::IsNullOrWhiteSpace($PSCommandPath)) { $PSCommandPath } else { $MyInvocation.MyCommand.Path }
+if (-not [string]::IsNullOrWhiteSpace($invokedScriptPath) -and (Test-Path -Path $invokedScriptPath)) {
+    $invokedScriptHash = (Get-FileHash -Algorithm SHA256 -Path $invokedScriptPath).Hash.ToLowerInvariant()
+    Write-Host ("Script file: {0}" -f $invokedScriptPath)
+    Write-Host ("Script SHA256: {0}" -f $invokedScriptHash)
 }
-catch {
-    Write-Verbose ("Could not start session transcript in {0}: {1}" -f $LogsOutputFolder, $_.Exception.Message)
-}
+Write-Host 'Session transcript disabled to keep generated files below the repository size limit; progress and results are reported in the console and output files.'
 
 $RootUrl = $RootUrl.TrimEnd('/')
 $AdminUrl = $AdminUrl.TrimEnd('/')
@@ -4625,13 +4616,3 @@ foreach ($entry in $siteOutputSummaries) {
         Write-Host ("    Other Overview CSV: {0}" -f $entry.OtherOverviewPath)
     }
 }
-
-if (-not [string]::IsNullOrWhiteSpace($scriptSessionTranscriptPath)) {
-    try {
-        Stop-Transcript | Out-Null
-    }
-    catch {
-        Write-Verbose "Could not stop session transcript cleanly."
-    }
-}
-

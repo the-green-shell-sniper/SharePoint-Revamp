@@ -41,6 +41,7 @@ param(
     [switch]$NoContent,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Set-SPChecklistAutoApprovals {
@@ -79,11 +80,26 @@ function Set-SPChecklistAutoApprovals {
 
 function Assert-SPChecklistDryRun {
     param([string]$Folder)
-    $plans = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_Plan_DRYRUN_*.json')
+    $steps = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_Plan_DRYRUN_*_Steps.csv')
+    $notes = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_Plan_DRYRUN_*_Notes.csv')
     $principals = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_UnavailablePrincipals_DRYRUN_*.csv')
-    if ($plans.Count -ne 1 -or $principals.Count -ne 1) { throw "Incomplete automatic preflight in '$Folder'." }
-    $plan = Get-Content -LiteralPath $plans[0].FullName -Raw | ConvertFrom-Json -Depth 100
-    if (@($plan.Notes | Where-Object Result -eq 'Blocked').Count -or
+    if (-not $steps.Count -and -not $notes.Count) {
+        $legacy = @(Get-ChildItem -LiteralPath $Folder -Filter 'PermSync_Plan_DRYRUN_*.json' |
+            Where-Object Name -NotLike '*_Summary.json')
+        if ($legacy.Count -ne 1 -or $principals.Count -ne 1) { throw "Incomplete automatic preflight in '$Folder'." }
+        $plan = Get-Content -LiteralPath $legacy[0].FullName -Raw -ErrorAction Stop |
+            ConvertFrom-Json -Depth 100 -ErrorAction Stop
+        if (@($plan.Notes | Where-Object Result -eq 'Blocked').Count -or
+            @(Import-Csv -LiteralPath $principals[0].FullName -ErrorAction Stop).Count) {
+            throw "Automatic Apply stopped: blocked scopes or unavailable principals in '$Folder'."
+        }
+        return
+    }
+    if ($steps.Count -ne 1 -or $notes.Count -ne 1 -or $principals.Count -ne 1) {
+        throw "Incomplete automatic preflight in '$Folder'."
+    }
+    $planNotes = @(Import-Csv -LiteralPath $notes[0].FullName)
+    if (@($planNotes | Where-Object Result -eq 'Blocked').Count -or
         @(Import-Csv -LiteralPath $principals[0].FullName).Count) {
         throw "Automatic Apply stopped: blocked scopes or unavailable principals in '$Folder'."
     }
@@ -198,6 +214,7 @@ function Invoke-SPChecklistWeb {
     if ($RunMode -eq 'Auto') {
         foreach ($stage in @('Match', 'DryRun', 'Apply')) {
             $stageFolder = Join-Path $RunFolder $stage
+            [void](Assert-SPOutputPath $stageFolder)
             [void][IO.Directory]::CreateDirectory($stageFolder)
             $stageOptions = $Options.Clone()
             if ($stage -eq 'Apply') { $stageOptions.RequireCompletePlan = $true }
@@ -208,12 +225,19 @@ function Invoke-SPChecklistWeb {
                 Assert-SPChecklistDryRun $stageFolder
             } elseif ($stage -eq 'Apply') {
                 $verifyFolder = Join-Path $RunFolder 'Verify'
+                [void](Assert-SPOutputPath $verifyFolder)
                 [void][IO.Directory]::CreateDirectory($verifyFolder)
                 Invoke-SPChecklistWeb $Pair $verifyFolder $SiteReviewFolder $Options 'DryRun'
                 Assert-SPChecklistDryRun $verifyFolder
-                $verifyPlan = Get-ChildItem -LiteralPath $verifyFolder -Filter 'PermSync_Plan_DRYRUN_*.json'
-                $remaining = Get-Content -LiteralPath $verifyPlan.FullName -Raw | ConvertFrom-Json -Depth 100
-                if (@($remaining.Steps).Count) { throw "Post-Apply verification found remaining actions in '$verifyFolder'." }
+                $verifySteps = Get-ChildItem -LiteralPath $verifyFolder -Filter 'PermSync_Plan_DRYRUN_*_Steps.csv'
+                $remaining = if ($verifySteps) { @(Import-Csv -LiteralPath $verifySteps.FullName) } else {
+                    $legacy = Get-ChildItem -LiteralPath $verifyFolder -Filter 'PermSync_Plan_DRYRUN_*.json' |
+                        Where-Object Name -NotLike '*_Summary.json'
+                    $plan = Get-Content -LiteralPath $legacy.FullName -Raw -ErrorAction Stop |
+                        ConvertFrom-Json -Depth 100 -ErrorAction Stop
+                    @($plan.Steps)
+                }
+                if (@($remaining).Count) { throw "Post-Apply verification found remaining actions in '$verifyFolder'." }
             }
         }
         return
@@ -254,6 +278,7 @@ function Invoke-SPPermissionChecklist {
     $batchFolder = if ($Mode -eq 'Auto') { $OutputFolder } else {
         Join-Path $OutputFolder ("b-" + (Get-Date -Format 'yyMMddHHmmssfff'))
     }
+    [void](Assert-SPOutputPath $batchFolder)
     [void][IO.Directory]::CreateDirectory($batchFolder)
     $summary = [Collections.Generic.List[object]]::new()
     $visitedSources = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -273,6 +298,8 @@ function Invoke-SPPermissionChecklist {
             $siteKey = Get-SPChecklistSiteKey $pair.TargetUrl
             $runFolder = Join-Path $batchFolder ("w-" + $siteKey.Split('-')[-1])
             $siteReviewFolder = Join-Path $ReviewRoot $siteKey
+            [void](Assert-SPOutputPath $runFolder)
+            [void](Assert-SPOutputPath $siteReviewFolder)
             [void][IO.Directory]::CreateDirectory($runFolder)
             [void][IO.Directory]::CreateDirectory($siteReviewFolder)
             Write-Host "[$Mode] $($pair.SourceUrl) -> $($pair.TargetUrl)"
@@ -352,6 +379,7 @@ function Invoke-SPPermissionChecklist {
             $reportFailures = [Collections.Generic.List[string]]::new()
             foreach ($job in $jobs) {
                 $reportFolder = Join-Path $batchFolder ("r-" + (Get-SPChecklistSiteKey $job.TargetUrl).Split('-')[-1])
+                [void](Assert-SPOutputPath $reportFolder)
                 [void][IO.Directory]::CreateDirectory($reportFolder)
                 $reportOptions = @{
                     TargetUrl = $job.TargetUrl; OutputFolder = $reportFolder; ClientId = $ClientId

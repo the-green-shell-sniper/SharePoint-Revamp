@@ -18,6 +18,7 @@ param(
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 function Copy-CurrentDocumentMetadata {
     [CmdletBinding()]

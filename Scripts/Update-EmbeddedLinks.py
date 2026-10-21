@@ -25,6 +25,57 @@ REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 S_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 SUPPORTED = {".docx", ".docm", ".xlsx", ".xlsm", ".pptx", ".pptm", ".pdf"}
+MAX_OUTPUT_BYTES = 90 * 1024 * 1024
+MAX_OUTPUT_PATH_CHARS = 255
+
+
+def validate_output_path(path):
+    path = path.resolve()
+    if len(str(path)) > MAX_OUTPUT_PATH_CHARS:
+        raise ValueError(f"Output path exceeds 255 characters: {path}")
+    return path
+
+
+def write_text_bounded(path, text):
+    path = validate_output_path(path)
+    data = text.encode("utf-8")
+    if len(data) >= MAX_OUTPUT_BYTES:
+        raise ValueError(
+            f"JSON output would reach 90 MiB; write large datasets as readable CSV records: {path}"
+        )
+    path.write_bytes(data)
+
+
+def read_text_bounded(path):
+    path = validate_output_path(path)
+    manifest_path = path.with_name(path.name + ".parts.json")
+    if manifest_path.is_file():
+        raise ValueError(f"Opaque byte-chunked JSON is not supported: {manifest_path}")
+    if path.stat().st_size >= MAX_OUTPUT_BYTES:
+        raise ValueError(f"JSON input is at or above the 90 MiB processing limit: {path}")
+    return path.read_text(encoding="utf-8-sig")
+
+
+def copy_file_bounded(source, destination):
+    destination = validate_output_path(destination)
+    if source.stat().st_size >= MAX_OUTPUT_BYTES:
+        raise ValueError(f"Backup source is at or above 90 MiB: {source}")
+    written = 0
+    try:
+        with source.open("rb") as source_stream, destination.open("xb") as output_stream:
+            while True:
+                chunk = source_stream.read(1024 * 1024)
+                if not chunk:
+                    break
+                if written + len(chunk) >= MAX_OUTPUT_BYTES:
+                    raise ValueError(f"Backup would reach 90 MiB: {destination}")
+                output_stream.write(chunk)
+                written += len(chunk)
+        shutil.copystat(source, destination)
+    except Exception:
+        if destination.exists():
+            destination.unlink()
+        raise
 
 
 def tenant_url(value):
@@ -575,17 +626,19 @@ class Editor:
 
     def legacy_word(self, path):
         helper = Path(__file__).with_name("Edit-LegacyWordLinks.ps1")
+        validate_output_path(Path(tempfile.gettempdir()) / ("legacy-linkfix-" + "x" * 16))
         with tempfile.TemporaryDirectory(prefix="legacy-linkfix-") as folder:
             folder = Path(folder)
             inspection = folder / "inspection.json"
             command = ["pwsh", "-NoProfile", "-NonInteractive", "-STA", "-File", str(helper),
                        "-InputPath", str(path.resolve())]
             try:
+                validate_output_path(inspection)
                 subprocess.run(command + ["-OutputJson", str(inspection)], check=True, timeout=120,
                                capture_output=True, text=True, encoding="utf-8")
             except subprocess.CalledProcessError as exc:
                 raise RuntimeError(f"Word inspection failed: {exc.stderr}") from exc
-            snapshot = json.loads(inspection.read_text(encoding="utf-8-sig"))
+            snapshot = json.loads(read_text_bounded(inspection))
             replacements = []
             for link in snapshot["Links"]:
                 new = self.target(link["Address"], link["Location"])
@@ -594,7 +647,7 @@ class Editor:
             if not replacements:
                 return None
             mapping = folder / "replacements.json"
-            mapping.write_text(json.dumps(replacements), encoding="utf-8")
+            write_text_bounded(mapping, json.dumps(replacements))
             output = folder / "edited.doc"
             try:
                 subprocess.run(command + ["-OutputJson", str(folder / "verified.json"),
@@ -610,10 +663,54 @@ def digest(path):
 
 
 def write_csv(path, rows, columns):
-    with path.open("w", encoding="utf-8-sig", newline="") as stream:
+    path = validate_output_path(path)
+    stale_parts = list(path.parent.glob(path.name + ".part*.csv"))
+    for stale_part in stale_parts:
+        stale_part.unlink()
+    encoding = "utf-8-sig"
+    header_stream = io.StringIO(newline="")
+    csv.DictWriter(header_stream, fieldnames=columns).writeheader()
+    header = header_stream.getvalue()
+    header_bytes = len(header.encode(encoding))
+    current_path = path
+    current_size = 0
+    part_number = 1
+    output_paths = []
+    stream = None
+    writer = None
+
+    def start_part(number):
+        nonlocal current_path, current_size, stream, writer
+        if stream:
+            stream.close()
+        current_path = path if number == 1 else path.with_name(f"{path.name}.part{number:04}.csv")
+        validate_output_path(current_path)
+        stream = current_path.open("w", encoding=encoding, newline="")
         writer = csv.DictWriter(stream, fieldnames=columns)
         writer.writeheader()
-        writer.writerows(rows)
+        current_size = header_bytes
+        output_paths.append(current_path)
+
+    try:
+        start_part(part_number)
+        for row in rows:
+            row_stream = io.StringIO(newline="")
+            csv.DictWriter(row_stream, fieldnames=columns).writerow(row)
+            record = row_stream.getvalue()
+            record_bytes = len(record.encode("utf-8"))
+            if header_bytes + record_bytes >= MAX_OUTPUT_BYTES:
+                raise ValueError(f"A single CSV record cannot fit below 90 MiB: {path}")
+            if current_size + record_bytes >= MAX_OUTPUT_BYTES:
+                part_number += 1
+                start_part(part_number)
+            writer.writerow(row)
+            current_size += record_bytes
+    finally:
+        if stream:
+            stream.close()
+    for output_path in output_paths:
+        if output_path.stat().st_size >= MAX_OUTPUT_BYTES:
+            raise ValueError(f"CSV output reached the 90 MiB limit: {output_path}")
 
 
 def main():
@@ -630,6 +727,7 @@ def main():
                         help="CSV of explicitly confirmed OldURL, NewURL, Evidence, DropFragment (Yes/No).")
     args = parser.parse_args()
     root, input_dir, run_dir = args.root.resolve(), args.input.resolve(), args.run_dir.resolve()
+    validate_output_path(run_dir)
     if not input_dir.is_dir():
         parser.error("Input must be an existing directory.")
     if run_dir == input_dir or input_dir in run_dir.parents:
@@ -652,6 +750,8 @@ def main():
         temp = None
         try:
             row["SHA256Before"] = digest(path)
+            if path.stat().st_size >= MAX_OUTPUT_BYTES:
+                raise ValueError(f"Input/output file is at or above 90 MiB: {path}")
             if path.suffix.lower() == ".doc" and args.legacy_word:
                 result = editor.legacy_word(path)
             elif path.suffix.lower() not in SUPPORTED:
@@ -664,13 +764,19 @@ def main():
                 row["ChangedLinks"] = count
                 row["Status"] = ("updated" if args.apply else "would-update") if result else "unchanged"
                 if result and args.apply:
-                    backup = run_dir / "backups" / relative
+                    if len(result) >= MAX_OUTPUT_BYTES:
+                        raise ValueError(f"Updated file would reach 90 MiB: {path}")
+                    validate_output_path(path.parent / ".linkfix-temporary-file")
+                    backup = validate_output_path(run_dir / "backups" / relative)
                     backup.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(path, backup)
+                    if path.stat().st_size >= MAX_OUTPUT_BYTES:
+                        raise ValueError(f"Backup would reach 90 MiB: {path}")
+                    copy_file_bounded(path, backup)
                     if digest(backup) != row["SHA256Before"] or digest(path) != row["SHA256Before"]:
                         raise ValueError("Source or backup changed before write.")
                     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".linkfix-", delete=False) as stream:
                         temp = Path(stream.name)
+                        validate_output_path(temp)
                         stream.write(result)
                     os.replace(temp, path)
                     temp = None
@@ -703,6 +809,8 @@ def main():
                     LinkStatuses=dict_count(links, "Status"),
                     LookupSources=[dict(Path=os.path.relpath(p, root), SHA256=digest(p))
                                    for p in resolver.sources])
+    lookup_sources = manifest.pop("LookupSources")
+    manifest["LookupSourceCount"] = len(lookup_sources)
     review = {}
     for link in links:
         if link["Status"] not in {"unresolved", "ambiguous", "new-structure-unverified", "not-applied-error"}:
@@ -714,7 +822,8 @@ def main():
         record["Files"].add(link["File"])
     review_rows = [dict(record, Files="; ".join(sorted(record["Files"]))) for record in review.values()]
     write_csv(run_dir / "review.csv", review_rows, ["OldURL", "Status", "Occurrences", "Files", "Evidence"])
-    (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    write_csv(run_dir / "lookup-sources.csv", lookup_sources, ["Path", "SHA256"])
+    write_text_bounded(run_dir / "manifest.json", json.dumps(manifest, indent=2))
     print(json.dumps({k: v for k, v in manifest.items() if k != "LookupSources"}, indent=2))
     return 1 if any(r["Status"] == "error" for r in files) else 0
 

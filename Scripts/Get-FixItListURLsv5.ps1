@@ -51,6 +51,7 @@ param(
     [Parameter(Mandatory = $false)]
     [bool]$UsePersistedInventoryCache = $true
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 $ErrorActionPreference = "Stop"
 

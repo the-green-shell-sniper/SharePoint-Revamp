@@ -25,6 +25,7 @@ param(
     [string]$Tenant,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 function Invoke-PFSVisitorsRead {
     $ErrorActionPreference = 'Stop'
@@ -36,6 +37,7 @@ function Invoke-PFSVisitorsRead {
     Assert-SPPermissionUrls $sourceRoot $targetRoot
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $folder = Join-Path $root ('p-' + (Get-Date -Format 'yyMMddHHmmssfff'))
+    [void](Assert-SPOutputPath $folder)
     [void][IO.Directory]::CreateDirectory($folder)
     $auth = @{ ClientId = $ClientId; Tenant = $Tenant; SkipPersistLoginSetup = $SkipPersistLoginSetup }
     if ($Mode -eq 'Report') {
@@ -55,6 +57,8 @@ function Invoke-PFSVisitorsRead {
                 [Text.Encoding]::UTF8.GetBytes($pair.TargetUrl.ToLowerInvariant()))).Substring(0, 12)
             $webFolder = Join-Path $folder $key
             $reviewFolder = Join-Path $reviews $key
+            [void](Assert-SPOutputPath $webFolder)
+            [void](Assert-SPOutputPath $reviewFolder)
             [void][IO.Directory]::CreateDirectory($webFolder)
             [void][IO.Directory]::CreateDirectory($reviewFolder)
             Write-Host "[$Mode $SiteLabel] $($pair.SourceUrl) -> $($pair.TargetUrl)"

@@ -25,6 +25,7 @@ param(
     [switch]$Apply,
     [string]$WorkerJobFile
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'Invoke-SPPermissionChecklist.ps1') -ChecklistFile $ChecklistFile `
     -OutputFolder $OutputFolder -ReviewRoot $ReviewRoot -TargetSites $TargetSites `
     -ClientId $ClientId -Tenant $Tenant -NoContent:$NoContent -SkipPersistLoginSetup:$SkipPersistLoginSetup
@@ -51,15 +52,16 @@ function Invoke-SPPermissionQueueWorker {
     param([string]$Path)
     $job = Import-Clixml -LiteralPath $Path -ErrorAction Stop
     $statusPath = Join-Path $job.OutputFolder 'WorkerStatus.json'
-    $status = [ordered]@{ TargetUrl = $job.TargetUrl; Status = 'Running'; Error = ''; StartedUtc = [datetime]::UtcNow.ToString('o') }
+    $status = [ordered]@{
+        TargetUrl = $job.TargetUrl; Status = 'Running'; Error = ''; StartedUtc = [datetime]::UtcNow.ToString('o')
+        Transcript = 'Disabled to keep generated files below the repository size limit; inspect structured evidence and console output.'
+    }
     $status | ConvertTo-Json | Set-Content -LiteralPath "$statusPath.tmp" -Encoding utf8
     Move-Item -LiteralPath "$statusPath.tmp" -Destination $statusPath -Force
     $transcribing = $false
     $slots = $null; $collectionLock = $null
     $hasSlot = $false; $hasCollectionLock = $false
     try {
-        Start-Transcript -LiteralPath (Join-Path $job.OutputFolder 'WorkerTranscript.txt') -ErrorAction Stop | Out-Null
-        $transcribing = $true
         $collectionKey = Get-SPQueueCollectionKey $job.TargetUrl
         $collectionHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData(
             [Text.Encoding]::UTF8.GetBytes($collectionKey)))
@@ -105,15 +107,13 @@ function Invoke-SPPermissionQueueWorker {
         if ($slots) { $slots.Dispose() }
         if ($hasCollectionLock) { $collectionLock.ReleaseMutex() }
         if ($collectionLock) { $collectionLock.Dispose() }
-        try { if ($transcribing) { Stop-Transcript -ErrorAction Stop | Out-Null } }
-        catch { $status.Status = 'Failed'; $status.Error += "; Transcript close failed: $($_.Exception.Message)" }
-        finally {
+        try {
             $status['FinishedUtc'] = [datetime]::UtcNow.ToString('o')
             # Publish completion atomically; the scheduler must not consume partial JSON.
             $temporary = "$statusPath.tmp"
             $status | ConvertTo-Json | Set-Content -LiteralPath $temporary -Encoding utf8
             Move-Item -LiteralPath $temporary -Destination $statusPath -Force
-        }
+        } catch { $status.Status = 'Failed'; $status.Error += "; Could not publish worker status: $($_.Exception.Message)"; throw }
         Write-Host "[$($status.Status)] $($job.TargetUrl) - reports: $($job.OutputFolder)"
         Write-Host 'This window is retained for inspection. The queue may now start another site.'
     }
@@ -144,6 +144,7 @@ function Invoke-SPPermissionQueue {
         $reviews = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReviewRoot)
         $checklistPath = (Resolve-Path -LiteralPath $ChecklistFile -ErrorAction Stop).ProviderPath
         $batch = Join-Path $root ('q-' + (Get-Date -Format 'yyMMddHHmmssfff'))
+        [void](Assert-SPOutputPath $batch)
         [void][IO.Directory]::CreateDirectory($batch)
         $pending = [Collections.Generic.List[object]]::new()
         foreach ($pair in $pairs) { $pending.Add($pair) }
@@ -168,6 +169,7 @@ function Invoke-SPPermissionQueue {
                 if (Test-SPQueueConflict $pair $active.ToArray()) { $index++; continue }
                 $key = (Get-SPChecklistSiteKey $pair.TargetUrl).Split('-')[-1]
                 $folder = Join-Path $batch $key
+                [void](Assert-SPOutputPath $folder)
                 [void][IO.Directory]::CreateDirectory($folder)
                 $jobPath = Join-Path $folder 'WorkerJob.clixml'
                 @{

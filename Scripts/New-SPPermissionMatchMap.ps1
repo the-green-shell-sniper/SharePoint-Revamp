@@ -30,6 +30,7 @@ param(
     [switch]$NoContent,
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Get-SPContentFingerprint {
@@ -124,6 +125,7 @@ function Invoke-NewSPPermissionMatchMap {
     $TargetUrl = $TargetUrl.TrimEnd('/')
     if ($ReviewThreshold -gt $HighThreshold) { throw 'ReviewThreshold must not exceed HighThreshold.' }
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
+    [void](Assert-SPOutputPath $OutputFolder)
     [void][IO.Directory]::CreateDirectory($OutputFolder)
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
     $sourceConnection = Connect-SPPermissionSite $SourceUrl $ClientId $Tenant -SkipPersistLoginSetup:$SkipPersistLoginSetup

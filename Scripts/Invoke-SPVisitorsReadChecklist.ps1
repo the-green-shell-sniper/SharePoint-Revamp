@@ -17,6 +17,7 @@ param(
     [switch]$SkipPersistLoginSetup,
     [switch]$Apply
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
@@ -52,14 +53,26 @@ function Assert-SPVisitorsStage {
         if ($status.Mode -ne $Stage -or $status.Status -cne $expected -or $status.Error) {
             throw "$Stage did not verify successfully at '$($runs[0].FullName)'."
         }
-        $plan = Get-Content -LiteralPath (Join-Path $runs[0].FullName 'Plan.json') -Raw |
-            ConvertFrom-Json -Depth 100 -ErrorAction Stop
-        if (@($plan.Steps).Count -ne $status.PlannedOperations -or
-            @($plan.Coverage).Count -ne $status.SourceReadScopes -or
-            @($plan.Notes | Where-Object Result -eq 'Blocked').Count) {
+        $stepPath = Join-Path $runs[0].FullName 'PlanSteps.csv'
+        if (Test-Path -LiteralPath $stepPath) {
+            $steps = @(Import-Csv -LiteralPath $stepPath -ErrorAction Stop | ForEach-Object {
+                $_.StepJson | ConvertFrom-Json -Depth 100 -ErrorAction Stop
+            })
+            $noteRows = @(Import-Csv -LiteralPath (Join-Path $runs[0].FullName 'PlanNotes.csv') -ErrorAction Stop)
+            $coverageRows = @(Import-Csv -LiteralPath (Join-Path $runs[0].FullName 'Coverage.csv') -ErrorAction Stop)
+        } else {
+            $legacyPlan = Get-Content -LiteralPath (Join-Path $runs[0].FullName 'Plan.json') -Raw -ErrorAction Stop |
+                ConvertFrom-Json -Depth 100 -ErrorAction Stop
+            $steps = @($legacyPlan.Steps)
+            $noteRows = @($legacyPlan.Notes)
+            $coverageRows = @($legacyPlan.Coverage)
+        }
+        if ($steps.Count -ne $status.PlannedOperations -or
+            $coverageRows.Count -ne $status.SourceReadScopes -or
+            @($noteRows | Where-Object Result -eq 'Blocked').Count) {
             throw "Inconsistent or blocked $Stage plan at '$($runs[0].FullName)'."
         }
-        foreach ($step in $plan.Steps) {
+        foreach ($step in $steps) {
             if ($step.Action -notin @('Add','Break','Freeze') -or
                 ($step.Action -in @('Break','Freeze') -and $step.BeforeSignature -cne $step.AfterSignature) -or
                 ($step.Action -eq 'Add' -and ($step.Operation.Type -ne 'Add' -or
@@ -90,6 +103,7 @@ function Invoke-SPVisitorsReadChecklist {
     }
     $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $folder = Join-Path $root ('v-' + (Get-Date -Format 'yyMMddHHmmssfff'))
+    [void](Assert-SPOutputPath $folder)
     [void][IO.Directory]::CreateDirectory($folder)
     $summary = [Collections.Generic.List[object]]::new()
     $issues = [Collections.Generic.List[object]]::new()

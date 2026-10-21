@@ -109,6 +109,7 @@ param(
     [Parameter(Mandatory = $false)]
     [string]$LinksOutputPath
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 
 $ErrorActionPreference = "Stop"
 $RootUrl = $RootUrl.TrimEnd('/')

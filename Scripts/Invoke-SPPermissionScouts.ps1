@@ -26,6 +26,7 @@ param(
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$SkipPersistLoginSetup
 )
+. (Join-Path $PSScriptRoot 'SPOutputLimits.Common.ps1')
 . (Join-Path $PSScriptRoot 'SPPermission.Common.ps1')
 
 function Invoke-SPPermissionScouts {
@@ -58,6 +59,7 @@ function Invoke-SPPermissionScouts {
     }
     if (-not $pairs.Count) { throw 'No site pairs selected.' }
     $batchFolder = Join-Path $OutputFolder ('Scouts_' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
+    [void](Assert-SPOutputPath $batchFolder)
     [void][IO.Directory]::CreateDirectory($batchFolder)
     $summaryPath = Join-Path $batchFolder 'ScoutSummary.csv'
     $summary = [Collections.Generic.List[object]]::new()
