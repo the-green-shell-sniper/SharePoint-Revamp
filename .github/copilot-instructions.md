@@ -1,5 +1,56 @@
 # Repository-wide instructions
 
+## Local development and server execution
+
+- VS Code and the assistant work in the operator's local clone. The server has
+  a separate clone at `C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp`.
+  The operator handles transferring changes through Git and running scripts
+  on that server. Do not confuse the local OneDrive workspace with that clone.
+- This environment has no access to the server or Microsoft tenant services.
+  An exception is an explicitly requested built-in browser session where the
+  operator signs in interactively. That session does not imply general server,
+  PowerShell, or API access. Never capture or persist credentials in the repo
+  or local development environment.
+- Provide copy/paste operator commands for the server clone, with an explicit
+  `Set-Location` when needed. Do not use the local workspace path in server
+  commands or hardcode either clone path into portable script defaults.
+- Base script-relative defaults on `$PSScriptRoot`. Resolve operator-supplied
+  relative paths with
+  `$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath()`
+  before using .NET path/file APIs or shared report helpers. PowerShell's
+  location may differ from `[Environment]::CurrentDirectory`, especially in an
+  elevated shell whose process directory is `C:\Windows\system32`. Validate
+  that case locally when changing path handling.
+- Server paths embedded in copied reports describe where the server wrote
+  them; they are provenance, not local paths to open. Inspect the corresponding
+  files in the local clone. Read report evidence before asserting completion.
+
+## Authentication and operational safety
+
+- Microsoft Graph, Exchange, SharePoint, and other service authentication is
+  cached on the server, never stored in this repo. Prefer existing supported
+  server authentication; if it is unavailable or expired, prompt for an
+  interactive login. Never add embedded credentials, tokens, or client secrets.
+- Active Directory operations use the currently logged-on Windows user's
+  identity, not an interactive AD credential prompt.
+- Limit local validation to offline syntax, schema, cmdlet/API availability,
+  and focused logic checks that establish whether the script works as written.
+  Do not validate against a live environment. The operator runs scripts on the
+  server and reports runtime errors; do not demand repeated live scans when
+  existing valid evidence suffices.
+- Remove temporary diagnostic/test scripts after use. Do not retain or add
+  test files, tooling probes, or helpers the operator and production scripts
+  do not need. Use session/temp storage for disposable validation and clean up
+  the specific temporary files created.
+- Never run commit, push, or build commands. The operator decides when changes
+  are ready to commit, push, or build; do not perform these after each fix.
+- Keep operator output succinct: updating progress, concise results, and
+  actionable warnings. Put detailed diagnostics in reports, with optional
+  verbose output for troubleshooting. Do not repeatedly state that no tenant
+  updates were performed merely because this environment has no tenant access.
+- Preserve the requested scope and all unrelated data/metadata. State actual
+  limitations clearly; do not confuse offline validation with live verification.
+
 ## Generated files and paths
 
 - Any script or tool that creates repository output files must keep **every
