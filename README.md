@@ -32,7 +32,7 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
-### Remaining checklist sites: unattended additive pipeline
+### All checklist sites: permanent unattended additive pipeline
 
 [Invoke-SPVisitorsReadChecklist.ps1](Scripts/Invoke-SPVisitorsReadChecklist.ps1)
 runs **one checklist site at a time** through Match, checked DryRun, and (with
@@ -44,15 +44,17 @@ It reuses the successful additive CS/PFS/Accounting engine.
 # Match and checked DryRun only; no permission or membership writes.
 & 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadChecklist.ps1'
 
-# Unattended remaining sites: Match -> checked DryRun -> verified Apply -> report.
+# All checklist sites: Match -> checked DryRun -> verified Apply -> report.
 # This command also runs Match and DryRun; the preview command is not a prerequisite.
 & 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadChecklist.ps1' -Apply
 ```
 
-- Only mappings in `ReferenceFiles\NewSiteChecklist.csv` are processed. CS,
-  Accounting and PFS are skipped by default because their individual Applies
-  completed. `-TargetSites` can narrow the checklist; unknown targets are rejected.
-  To deliberately revisit a completed site, also pass `-CompletedTargetSites @()`.
+- Every mapping in `ReferenceFiles\NewSiteChecklist.csv` is processed by default,
+  including CS, Accounting and PFS. There is no completed-site exclusion list or
+  automatic skipping based on previous runs. This is the single permanent entry
+  point for future all-site Visitors Read passes. `-TargetSites` is an optional
+  explicit selection used by the temporary catch-up runner; unknown targets are
+  rejected. Without it, no checklist sites are excluded.
 - Each site's root and exact-path matching descendants are processed sequentially.
   Explicit checklist source/target mappings are reserved, so a parent does not
   process them a second time or guess a different pairing. Other site collections
@@ -75,8 +77,9 @@ It reuses the successful additive CS/PFS/Accounting engine.
 - Existing grants and direct migration-group assignments/memberships remain
   unchanged. Unmatched/excluded inherited target objects may have inheritance
   broken with permissions copied to prevent new ancestor access spreading there.
-  Access Requests is excluded everywhere; CS/PFS-specific exclusions apply only
-  when those sites are deliberately selected again.
+  Access Requests is excluded everywhere; CS/PFS-specific content exclusions
+  apply when those sites are processed. These protect content within a site;
+  they do not exclude checklist sites.
 - A failure stops the current site's pipeline and continues the next checklist
   site. A failed write is never blindly retried or rolled back. Inspect live state
   and evidence before retrying a failed/partially applied site. Authentication may
@@ -90,6 +93,30 @@ write logs. Final summaries distinguish failure from verified matched additions;
 successful Apply does not mean skipped objects were completed. Any failed sites
 also cause a final terminating error **after** other checklist sites are attempted.
 Keep the PowerShell window open and do not run overlapping permission jobs.
+
+### Temporary CS, Accounting and PFS catch-up
+
+[Invoke-SPVisitorsReadSecondPass.ps1](Scripts/Invoke-SPVisitorsReadSecondPass.ps1)
+runs **only CS, Accounting and PFS**, including their exact-path matching
+descendants, through the same checked checklist pipeline using an explicit
+three-site selection and the current list-template matching behavior.
+This is a temporary catch-up for sites incorrectly skipped in the prior pass,
+not a second permanent all-site workflow. Once caught up, it is no longer needed;
+use `Invoke-SPVisitorsReadChecklist.ps1` for future all-site runs.
+Site-specific content exclusions and all additive/verification
+safeguards remain unchanged. Keep it beside the other permission-suite scripts.
+
+```powershell
+# Match + checked DryRun only.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadSecondPass.ps1'
+
+# Match -> checked DryRun -> verified Apply -> final reports for just these sites.
+& 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\CS-PermissionSuite\Invoke-SPVisitorsReadSecondPass.ps1' -Apply
+```
+
+Evidence defaults to `Reports\VisitorsSecondPassRuns`. The runner also accepts
+`-ChecklistFile`, `-OutputFolder`, `-ClientId`, `-Tenant`, and
+`-SkipPersistLoginSetup`. Do not run it alongside another permission job.
 
 ### Accounting individual additive runner
 
@@ -397,13 +424,6 @@ use the manifest to locate their archived evidence. Empty old directories are le
 alone. Include both relocated files and old-path deletions in the next commit.
 No Git long-path setting is required for the compact layout.
 
-Offline validation:
-
-```powershell
-.\Scripts\Test-SPPermissionScripts.ps1
-.\Scripts\Test-SPPermissionQueue.ps1
-```
-
 ### CS only: do this first
 
 If inventory counts/fields fail on the server, run the read-only
@@ -430,7 +450,6 @@ snapshots and sync log Review rows, not silently skipped. It does not handle
 authorization errors or resume a partially read REST list. Without a size field,
 file content comparison is unavailable for that list. REST errors include the
 failed URL to identify the exact list/query.
-Offline tests: `.\Scripts\Test-CSPermissionScout.ps1`.
 
 #### Scouting the remaining checklist sites
 
@@ -672,13 +691,6 @@ are historical report counts, **not hard-coded expected live changes**. New targ
 libraries such as COVID19 Resources/Workflows are not inferred to be old CS content.
 The scripts always inventory the selected live webs when run on your server.
 
-Run the mock-only regression suite locally or on the server, without PnP installed
-or a SharePoint connection:
-
-```powershell
-.\Scripts\Test-SPPermissionScripts.ps1
-```
-
 ## Uploading corrected documents
 
 [Publish-FixedEmbeddedDocuments.ps1](Scripts/Publish-FixedEmbeddedDocuments.ps1) selects
@@ -856,12 +868,6 @@ lock/identity/concurrency checks. Metadata-only differences can be applied again
 a subsequent upload; only exact-byte matches are automatically skipped. Keep the
 original failed apply snapshot for recovery before starting a fresh apply run.
 
-Offline tests (no SharePoint connection):
-
-```powershell
-.\Scripts\Test-PublishFixedEmbeddedDocuments.ps1
-```
-
 ## Offline embedded hyperlink updates
 
 [Update-EmbeddedLinks.py](Scripts/Update-EmbeddedLinks.py) recursively processes a local
@@ -894,7 +900,6 @@ python .\Scripts\Update-EmbeddedLinks.py `
   --run-dir .\LinkRemediationRuns\apply-unique-name `
   --legacy-word --apply
 
-python -m unittest discover -s .\Scripts -p test_update_embedded_links.py -v
 ```
 
 Omit `--legacy-word` if Word is unavailable; legacy DOC files will be explicitly

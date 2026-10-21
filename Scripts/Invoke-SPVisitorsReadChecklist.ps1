@@ -1,22 +1,17 @@
 #requires -Version 7.4.6
 <#
 .SYNOPSIS
-    Sequential additive Match -> DryRun -> verified Apply for remaining checklist sites.
+    Sequential additive Match -> DryRun -> verified Apply for all checklist sites.
 .DESCRIPTION
     No Scout or full permission mirror. Default mode is read-only. -Apply authorizes
     the complete pipeline. Failures stop that site's pipeline, not unrelated sites.
-    Previously completed CS, Accounting and PFS are excluded by default.
+    Every checklist site is included by default, regardless of previous runs.
 #>
 [CmdletBinding()]
 param(
     [string]$ChecklistFile = (Join-Path $PSScriptRoot '..\ReferenceFiles\NewSiteChecklist.csv'),
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\VisitorsRuns'),
     [string[]]$TargetSites,
-    [string[]]$CompletedTargetSites = @(
-        'https://whallc.sharepoint.com/sites/ClinicalandPatientServices',
-        'https://whallc.sharepoint.com/sites/Accounting',
-        'https://whallc.sharepoint.com/sites/PatientFinancialServices'
-    ),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [string]$Tenant,
     [switch]$SkipPersistLoginSetup,
@@ -90,7 +85,6 @@ function Invoke-SPVisitorsReadChecklist {
     $ErrorActionPreference = 'Stop'
     $pairs = @(Get-SPVisitorsChecklistPairs $ChecklistFile)
     $targets = @($TargetSites | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('/') })
-    $completed = @($CompletedTargetSites | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('/') })
     foreach ($target in $targets) {
         if ($target -inotin $pairs.TargetUrl) { throw "Target is not in the checklist: $target" }
     }
@@ -100,10 +94,10 @@ function Invoke-SPVisitorsReadChecklist {
     $summary = [Collections.Generic.List[object]]::new()
     $issues = [Collections.Generic.List[object]]::new()
     foreach ($pair in $pairs) {
-        if (($targets.Count -and $pair.TargetUrl -inotin $targets) -or $pair.TargetUrl -iin $completed) {
+        if ($targets.Count -and $pair.TargetUrl -inotin $targets) {
             $summary.Add([pscustomobject]@{
                 SourceUrl = $pair.SourceUrl; TargetUrl = $pair.TargetUrl; Stage = ''
-                Status = 'Skipped - completed or not selected'; Error = ''; EvidenceFolder = ''
+                Status = 'Skipped - not selected'; Error = ''; EvidenceFolder = ''
             })
             continue
         }
