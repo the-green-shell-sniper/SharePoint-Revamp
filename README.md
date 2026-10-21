@@ -32,6 +32,43 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Synchronizing migrated site permissions
 
+### Keeping server reports below GitHub file limits
+
+Generated report JSON under `Reports` and legacy permission run directories is
+ignored by Git. It remains on the server; application/source JSON is not ignored.
+Ignore rules do not untrack existing files or remove earlier committed versions.
+
+After a permission run finishes, use
+[Split-SPVisitorReports.ps1](Scripts/Split-SPVisitorReports.ps1) in PowerShell
+7.4.6+ to preview oversized CSVs recursively, then split them:
+
+```powershell
+.\Scripts\Split-SPVisitorReports.ps1 -Folder '.\Reports\VisitorsRuns'
+.\Scripts\Split-SPVisitorReports.ps1 -Folder '.\Reports\VisitorsRuns' -Apply
+```
+
+Use the server's actual folder name (`VisitorRuns` if singular). Every CSV at
+least 90 MiB is replaced with a `<filename>.csv.parts` directory of UTF-8 CSVs
+strictly below 90 MiB, each with its header. Quoted commas, Unicode and multiline
+fields are preserved as CSV values; formatting/encoding may be normalized.
+No backups are created. JSON is untouched. A single record too large for a part,
+an existing output directory, or a write error stops processing and retains that
+original; inspect partial output before retrying. Previously completed splits
+remain completed. Smaller files are untouched.
+
+This is post-run maintenance, not a live-writer cap: run it again after future
+permission runs, never during Match/DryRun/Apply or verification. Splitting
+changes evidence paths; existing manifests and automatic consumers still refer
+to the originals. Use the parts for manual report inspection, not pipeline replay.
+
+For already tracked JSON, `git rm --cached` on the relevant paths stops future
+tracking without deleting server copies. **Neither untracking JSON nor splitting
+CSV removes oversized blobs from the unpushed commit history.** Clean that history
+before pushing. One option, if preserving individual unpushed commits is not
+required, is to soft-reset to the fetched upstream and recommit the cleaned final
+tree; this must be done on the server, on the correct branch, with no unrelated
+uncommitted work. Do not force-push or rewrite already shared commits.
+
 ### All checklist sites: permanent unattended additive pipeline
 
 [Invoke-SPVisitorsReadChecklist.ps1](Scripts/Invoke-SPVisitorsReadChecklist.ps1)

@@ -1,0 +1,7 @@
+# Generated server reports, not application/source configuration.
+/Reports/**/*.json
+**/VisitorRuns/**/*.json
+**/VisitorsRuns/**/*.json
+**/VisitorsSecondPassRuns/**/*.json
+**/PermissionRuns/**/*.json
+**/CS-PermissionRuns/**/*.json
