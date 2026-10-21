@@ -1,0 +1,4095 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV",
+  "Scopes": [
+    {
+      "Key": "",
+      "Kind": "Web",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 104,
+          "LoginName": "i:0#.f|membership|pcolburn@whallc.com",
+          "Title": "Pamela Colburn",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 518,
+          "LoginName": "i:0#.f|membership|creams@whallc.com",
+          "Title": "Carissa Reams",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 569,
+          "LoginName": "SharePointHome OrgLinks Admins",
+          "Title": "SharePointHome OrgLinks Admins",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 570,
+          "LoginName": "SharePointHome OrgLinks Editors",
+          "Title": "SharePointHome OrgLinks Editors",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 571,
+          "LoginName": "SharePointHome OrgLinks Viewers",
+          "Title": "SharePointHome OrgLinks Viewers",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 1139,
+          "LoginName": "WHA Sites Owners",
+          "Title": "WHA Sites Owners",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2286,
+          "LoginName": "c:0o.c|federateddirectoryclaimprovider|7b8c4a04-4540-42cd-bb4c-e1548d6c20b3",
+          "Title": "Team Members",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2287,
+          "LoginName": "c:0t.c|tenant|4119c220-0bc2-4aff-bdf9-8b52d310fa62",
+          "Title": "CentralPark.Sites.HV.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2288,
+          "LoginName": "c:0t.c|tenant|4188b143-4835-4359-b2f8-f43a6b1379ce",
+          "Title": "CentralPark.Sites.HV.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "8edc9914-1e84-4546-ae6e-54c69de336de",
+      "Title": "",
+      "ListKey": "",
+      "Depth": 0
+    },
+    {
+      "Key": "Access Requests",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 1139,
+          "LoginName": "WHA Sites Owners",
+          "Title": "WHA Sites Owners",
+          "PrincipalType": 8,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "ce14bdbf-64a8-4c11-8390-1b55d3c4ca52",
+      "Title": "Access Requests",
+      "ListKey": "Access Requests",
+      "Depth": 0,
+      "BaseTemplate": 160,
+      "ItemCount": 6,
+      "Leaf": "Access Requests"
+    },
+    {
+      "Key": "Access Requests/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "By Sara Birtell for Sara Birtell.",
+      "ListKey": "Access Requests",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/1_.000",
+      "Ext": ".000",
+      "Created": "12/09/2019 18:04:46",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "Access Requests/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "By Jucel Erroba for Jucel Erroba.",
+      "ListKey": "Access Requests",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/2_.000",
+      "Ext": ".000",
+      "Created": "12/10/2019 00:23:08",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "Access Requests/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "By LErin Waterstreet for LErin Waterstreet.",
+      "ListKey": "Access Requests",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/3_.000",
+      "Ext": ".000",
+      "Created": "12/11/2019 21:30:23",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "Access Requests/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "By Exam Kiosk for Exam Kiosk.",
+      "ListKey": "Access Requests",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/4_.000",
+      "Ext": ".000",
+      "Created": "12/19/2019 22:37:46",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "Access Requests/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "By Kayla Quinn for Kayla Quinn.",
+      "ListKey": "Access Requests",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/5_.000",
+      "Ext": ".000",
+      "Created": "03/13/2020 23:19:31",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "Access Requests/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'ce14bdbf-64a8-4c11-8390-1b55d3c4ca52')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "By Jessica Sanders for Jessica Sanders.",
+      "ListKey": "Access Requests",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Access Requests/6_.000",
+      "Ext": ".000",
+      "Created": "03/24/2021 17:26:28",
+      "Author": "",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "b2550418-87d1-4954-ad5e-b9c036eae050",
+      "Title": "Composed Looks",
+      "ListKey": "_catalogs/design",
+      "Depth": 0,
+      "BaseTemplate": 124,
+      "ItemCount": 18,
+      "Leaf": "design"
+    },
+    {
+      "Key": "_catalogs/design/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Current",
+      "ListKey": "_catalogs/design",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/1_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:23",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Orange",
+      "ListKey": "_catalogs/design",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/2_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:23",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "Sea Monster",
+      "ListKey": "_catalogs/design",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/3_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "Green",
+      "ListKey": "_catalogs/design",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/4_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "Lime",
+      "ListKey": "_catalogs/design",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/5_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "Nature",
+      "ListKey": "_catalogs/design",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/6_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "Blossom",
+      "ListKey": "_catalogs/design",
+      "Rel": "7_.000",
+      "Depth": 1,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/7_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "Sketch",
+      "ListKey": "_catalogs/design",
+      "Rel": "8_.000",
+      "Depth": 1,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/8_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "City",
+      "ListKey": "_catalogs/design",
+      "Rel": "9_.000",
+      "Depth": 1,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/9_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "Orbit",
+      "ListKey": "_catalogs/design",
+      "Rel": "10_.000",
+      "Depth": 1,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/10_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "Grey",
+      "ListKey": "_catalogs/design",
+      "Rel": "11_.000",
+      "Depth": 1,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/11_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "Characters",
+      "ListKey": "_catalogs/design",
+      "Rel": "12_.000",
+      "Depth": 1,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/12_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:24",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "Office",
+      "ListKey": "_catalogs/design",
+      "Rel": "13_.000",
+      "Depth": 1,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/13_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "Breeze",
+      "ListKey": "_catalogs/design",
+      "Rel": "14_.000",
+      "Depth": 1,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/14_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Immerse",
+      "ListKey": "_catalogs/design",
+      "Rel": "15_.000",
+      "Depth": 1,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/15_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "Red",
+      "ListKey": "_catalogs/design",
+      "Rel": "16_.000",
+      "Depth": 1,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/16_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "Purple",
+      "ListKey": "_catalogs/design",
+      "Rel": "17_.000",
+      "Depth": 1,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/17_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'b2550418-87d1-4954-ad5e-b9c036eae050')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "Wood",
+      "ListKey": "_catalogs/design",
+      "Rel": "18_.000",
+      "Depth": 1,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/design/18_.000",
+      "Ext": ".000",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "f0ca0687-b722-4866-b3a7-100483127a09",
+      "Title": "Documents",
+      "ListKey": "Shared Documents",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 49,
+      "Leaf": "Shared Documents"
+    },
+    {
+      "Key": "Shared Documents/RN Calendars",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(1)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 569,
+          "LoginName": "SharePointHome OrgLinks Admins",
+          "Title": "SharePointHome OrgLinks Admins",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 570,
+          "LoginName": "SharePointHome OrgLinks Editors",
+          "Title": "SharePointHome OrgLinks Editors",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 571,
+          "LoginName": "SharePointHome OrgLinks Viewers",
+          "Title": "SharePointHome OrgLinks Viewers",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2187,
+          "LoginName": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "Title": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2189,
+          "LoginName": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "Title": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "1",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars",
+      "Depth": 1,
+      "Leaf": "RN Calendars",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars",
+      "Ext": "",
+      "Created": "10/09/2019 18:56:54",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019",
+      "Depth": 2,
+      "Leaf": "2019",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019",
+      "Ext": "",
+      "Created": "10/09/2019 18:57:20",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/April 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/April 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "April 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/April 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:52",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 36716.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/August 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/August 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "August 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/August 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:55",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 38080.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/Dec 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(6)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2187,
+          "LoginName": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "Title": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2189,
+          "LoginName": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "Title": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2301,
+          "LoginName": "SharingLinks.bef692c5-00c0-4c33-b160-9361cca36467.AnonymousEdit.c3dbf733-23ee-49b0-87e4-a0093ed6f64e",
+          "Title": "SharingLinks.bef692c5-00c0-4c33-b160-9361cca36467.AnonymousEdit.c3dbf733-23ee-49b0-87e4-a0093ed6f64e",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2303,
+          "LoginName": "c:0u.c|tenant|4849c3da209488b636ce7cd8ce51055cf07348089cb9bc63ea983f1a404337a3",
+          "Title": "c:0u.c|tenant|4849c3da209488b636ce7cd8ce51055cf07348089cb9bc63ea983f1a404337a3",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "6",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/Dec 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "Dec 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/Dec 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:57",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 40804.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/Feb 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/Feb 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "Feb 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/Feb 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:59",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 35692.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/Jan 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/Jan 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "Jan 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/Jan 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:59",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 35825.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/July 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/July 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "July 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/July 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:57:59",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 38451.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/March 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/March 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "March 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/March 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:02",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 35921.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/June 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/June 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "June 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/June 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:02",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 37416.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/November 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/November 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "November 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/November 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:04",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 41618.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/May 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/May 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "May 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/May 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:04",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 36782.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/October 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/October 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "October 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/October 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:05",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 42362.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2019/September 2019 RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2019/September 2019 RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "September 2019 RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2019/September 2019 RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:58:06",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 39530.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2018",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2018",
+      "Depth": 2,
+      "Leaf": "2018",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2018",
+      "Ext": "",
+      "Created": "10/09/2019 18:59:19",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2018/2018 RN schedule PTO.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2018/2018 RN schedule PTO.docx",
+      "Depth": 3,
+      "Leaf": "2018 RN schedule PTO.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2018/2018 RN schedule PTO.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 18:59:30",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 28197.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(18)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 104,
+          "LoginName": "i:0#.f|membership|pcolburn@whallc.com",
+          "Title": "Pamela Colburn",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 518,
+          "LoginName": "i:0#.f|membership|creams@whallc.com",
+          "Title": "Carissa Reams",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 569,
+          "LoginName": "SharePointHome OrgLinks Admins",
+          "Title": "SharePointHome OrgLinks Admins",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 570,
+          "LoginName": "SharePointHome OrgLinks Editors",
+          "Title": "SharePointHome OrgLinks Editors",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 571,
+          "LoginName": "SharePointHome OrgLinks Viewers",
+          "Title": "SharePointHome OrgLinks Viewers",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2184,
+          "LoginName": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "Title": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2186,
+          "LoginName": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "Title": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "18",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars",
+      "Depth": 1,
+      "Leaf": "MA Float Calendars",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars",
+      "Ext": "",
+      "Created": "10/09/2019 19:00:33",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/December 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(19)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "19",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/December 2019.docx",
+      "Depth": 3,
+      "Leaf": "December 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/December 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:43",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 37834.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/July 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(20)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/July 2019.docx",
+      "Depth": 3,
+      "Leaf": "July 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/July 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:43",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 37038.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/August 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(21)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "21",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/August 2019.docx",
+      "Depth": 3,
+      "Leaf": "August 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/August 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:44",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 36948.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/June 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(22)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "22",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/June 2019.docx",
+      "Depth": 3,
+      "Leaf": "June 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/June 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:45",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 41799.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/May 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(23)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "23",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/May 2019.docx",
+      "Depth": 3,
+      "Leaf": "May 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/May 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:48",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 36678.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/November 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(24)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "24",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/November 2019.docx",
+      "Depth": 3,
+      "Leaf": "November 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/November 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:48",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 38056.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/October 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(25)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "25",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/October 2019.docx",
+      "Depth": 3,
+      "Leaf": "October 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/October 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:50",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 37839.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/April 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(26)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "26",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/April 2019.docx",
+      "Depth": 3,
+      "Leaf": "April 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/April 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:51",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 38561.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019/September 2019.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(27)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "27",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019/September 2019.docx",
+      "Depth": 3,
+      "Leaf": "September 2019.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019/September 2019.docx",
+      "Ext": ".docx",
+      "Created": "10/09/2019 19:00:54",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 36992.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2019",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(28)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "28",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2019",
+      "Depth": 2,
+      "Leaf": "2019",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2019",
+      "Ext": "",
+      "Created": "10/09/2019 19:01:59",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(30)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 569,
+          "LoginName": "SharePointHome OrgLinks Admins",
+          "Title": "SharePointHome OrgLinks Admins",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 570,
+          "LoginName": "SharePointHome OrgLinks Editors",
+          "Title": "SharePointHome OrgLinks Editors",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 571,
+          "LoginName": "SharePointHome OrgLinks Viewers",
+          "Title": "SharePointHome OrgLinks Viewers",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2187,
+          "LoginName": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "Title": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2189,
+          "LoginName": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "Title": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2427,
+          "LoginName": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "Title": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2429,
+          "LoginName": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "Title": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "30",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020",
+      "Depth": 2,
+      "Leaf": "2020",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020",
+      "Ext": "",
+      "Created": "11/20/2019 18:15:19",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/January RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(32)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2187,
+          "LoginName": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "Title": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2189,
+          "LoginName": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "Title": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2304,
+          "LoginName": "SharingLinks.8a6c1b10-6241-402b-822d-73bfc3e42d46.AnonymousEdit.2193d3c9-06c3-4878-8abc-dfbd235086ae",
+          "Title": "SharingLinks.8a6c1b10-6241-402b-822d-73bfc3e42d46.AnonymousEdit.2193d3c9-06c3-4878-8abc-dfbd235086ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2306,
+          "LoginName": "c:0u.c|tenant|a3ad2fca4e8cf10a4ca4a307a81dac5047127e8f115d23ab58e076817b0c7b29",
+          "Title": "c:0u.c|tenant|a3ad2fca4e8cf10a4ca4a307a81dac5047127e8f115d23ab58e076817b0c7b29",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2427,
+          "LoginName": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "Title": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2429,
+          "LoginName": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "Title": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "32",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/January RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "January RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/January RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "11/20/2019 19:30:02",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 44342.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/February RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(33)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "33",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/February RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "February RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/February RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "11/20/2019 19:30:21",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 45823.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(34)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 104,
+          "LoginName": "i:0#.f|membership|pcolburn@whallc.com",
+          "Title": "Pamela Colburn",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 518,
+          "LoginName": "i:0#.f|membership|creams@whallc.com",
+          "Title": "Carissa Reams",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 569,
+          "LoginName": "SharePointHome OrgLinks Admins",
+          "Title": "SharePointHome OrgLinks Admins",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 570,
+          "LoginName": "SharePointHome OrgLinks Editors",
+          "Title": "SharePointHome OrgLinks Editors",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 571,
+          "LoginName": "SharePointHome OrgLinks Viewers",
+          "Title": "SharePointHome OrgLinks Viewers",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2184,
+          "LoginName": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "Title": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2186,
+          "LoginName": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "Title": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2379,
+          "LoginName": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "Title": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2381,
+          "LoginName": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "Title": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418465"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741934,
+              "Name": "System.LimitedView",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "34",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020",
+      "Depth": 2,
+      "Leaf": "2020",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020",
+      "Ext": "",
+      "Created": "12/11/2019 18:44:19",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/January.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(35)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 104,
+          "LoginName": "i:0#.f|membership|pcolburn@whallc.com",
+          "Title": "Pamela Colburn",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 518,
+          "LoginName": "i:0#.f|membership|creams@whallc.com",
+          "Title": "Carissa Reams",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2184,
+          "LoginName": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "Title": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2186,
+          "LoginName": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "Title": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2339,
+          "LoginName": "SharingLinks.4e85a83e-b11c-4b74-a41b-32462af677da.AnonymousEdit.84fb9ee1-f5e5-4697-9a0a-11c5c9a77fb1",
+          "Title": "SharingLinks.4e85a83e-b11c-4b74-a41b-32462af677da.AnonymousEdit.84fb9ee1-f5e5-4697-9a0a-11c5c9a77fb1",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2341,
+          "LoginName": "c:0u.c|tenant|5cb5dbe96ab1745890646271f2205cbc7d12d3c582d9458c9a23b1b93d3b3297",
+          "Title": "c:0u.c|tenant|5cb5dbe96ab1745890646271f2205cbc7d12d3c582d9458c9a23b1b93d3b3297",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2379,
+          "LoginName": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "Title": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2381,
+          "LoginName": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "Title": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418465"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741934,
+              "Name": "System.LimitedView",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "35",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/January.docx",
+      "Depth": 3,
+      "Leaf": "January.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/January.docx",
+      "Ext": ".docx",
+      "Created": "12/11/2019 21:36:53",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 38282.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/February.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(36)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 104,
+          "LoginName": "i:0#.f|membership|pcolburn@whallc.com",
+          "Title": "Pamela Colburn",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 518,
+          "LoginName": "i:0#.f|membership|creams@whallc.com",
+          "Title": "Carissa Reams",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2184,
+          "LoginName": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "Title": "SharingLinks.079a2c65-f9ac-4a5b-ae68-70c2c36955e8.AnonymousEdit.385f580e-09f3-4c01-a77d-4eccdb5478be",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2186,
+          "LoginName": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "Title": "c:0u.c|tenant|5cfd51f443fb2c5d43af64f7f52bc83d6c189aa5452f5c59c66fc5f7933edb43",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2342,
+          "LoginName": "SharingLinks.b2a98e87-5b17-44fd-b69e-0792e905c421.AnonymousEdit.dba507f5-d79e-4d5c-abb7-bf7bd5b158e7",
+          "Title": "SharingLinks.b2a98e87-5b17-44fd-b69e-0792e905c421.AnonymousEdit.dba507f5-d79e-4d5c-abb7-bf7bd5b158e7",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2344,
+          "LoginName": "c:0u.c|tenant|c34cda82c5991155c9af7fb940679e072755b5ada3eee6dfbe15ed319ebbca0d",
+          "Title": "c:0u.c|tenant|c34cda82c5991155c9af7fb940679e072755b5ada3eee6dfbe15ed319ebbca0d",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2379,
+          "LoginName": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "Title": "SharingLinks.829fd330-74ab-4456-8d4a-520f09dd4d51.AnonymousView.b2858849-cf53-4c05-9e6b-5fe3d9eba384",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2381,
+          "LoginName": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "Title": "c:0u.c|tenant|6ba6fb31e6587c674a183e8bfbe12793ce060fb7c21722fb6259593f419f027f",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418465"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741934,
+              "Name": "System.LimitedView",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "36",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/February.docx",
+      "Depth": 3,
+      "Leaf": "February.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/February.docx",
+      "Ext": ".docx",
+      "Created": "12/11/2019 21:37:02",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 38411.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/March RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(38)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 118,
+          "LoginName": "i:0#.f|membership|ndonaldson@whallc.com",
+          "Title": "Novella Donaldson",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 139,
+          "LoginName": "i:0#.f|membership|clegaye@whallc.com",
+          "Title": "Chanelle LeGaye",
+          "PrincipalType": 1,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2187,
+          "LoginName": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "Title": "SharingLinks.d79a8007-3866-4035-9ada-71834f4faaf0.AnonymousEdit.7570bb2f-a537-491c-bb80-50a2f2bb30ae",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2189,
+          "LoginName": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "Title": "c:0u.c|tenant|224633ce5aae334a87aba12f762696e50b0c9ec277b7fdda08f9f17f5a4c54a9",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2289,
+          "LoginName": "c:0t.c|tenant|02ded441-5bf9-4851-af64-e5abca74c976",
+          "Title": "CentralPark.Sites.HV.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 2427,
+          "LoginName": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "Title": "SharingLinks.dee1ade6-a128-4694-aca3-2fe55ad12271.AnonymousEdit.f9f31334-d163-4d7c-9e4f-8c02605e8ad7",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2429,
+          "LoginName": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "Title": "c:0u.c|tenant|98749cd47dcd94ff62ff18a8ad41bb68f95726b0686a0291b4f9b32e7878b313",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2496,
+          "LoginName": "SharingLinks.80853bf5-bda5-460a-8209-d082c2645f19.AnonymousEdit.50810247-e60c-4608-bb6f-b6d64d54026d",
+          "Title": "SharingLinks.80853bf5-bda5-460a-8209-d082c2645f19.AnonymousEdit.50810247-e60c-4608-bb6f-b6d64d54026d",
+          "PrincipalType": 8,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2498,
+          "LoginName": "c:0u.c|tenant|1ca4e39a117bcb9075d655d0105fcc65dd9cdb8ac4cb7b9220e053dacbb06236",
+          "Title": "c:0u.c|tenant|1ca4e39a117bcb9075d655d0105fcc65dd9cdb8ac4cb7b9220e053dacbb06236",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134418471"
+              },
+              "Description": null,
+              "Hidden": true,
+              "Id": 1073741935,
+              "Name": "System.LimitedEdit",
+              "Order": 2147483647,
+              "RoleTypeKind": 255
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "38",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/March RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "March RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/March RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "01/09/2020 17:54:08",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 48045.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/March Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(40)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "40",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/March Calendar.docx",
+      "Depth": 3,
+      "Leaf": "March Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/March Calendar.docx",
+      "Ext": ".docx",
+      "Created": "01/09/2020 18:33:04",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39764.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/April RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(41)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "41",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/April RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "April RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/April RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "01/09/2020 18:40:37",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 44557.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/April Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(42)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "42",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/April Calendar.docx",
+      "Depth": 3,
+      "Leaf": "April Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/April Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:48:08",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39217.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/May Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(43)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "43",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/May Calendar.docx",
+      "Depth": 3,
+      "Leaf": "May Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/May Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:48:29",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39670.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/June.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(45)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "45",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/June.docx",
+      "Depth": 3,
+      "Leaf": "June.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/June.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:55:50",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39628.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/July.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(46)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "46",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/July.docx",
+      "Depth": 3,
+      "Leaf": "July.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/July.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:56:03",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39453.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/August.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(47)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "47",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/August.docx",
+      "Depth": 3,
+      "Leaf": "August.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/August.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:56:13",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39545.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/September.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(48)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "48",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/September.docx",
+      "Depth": 3,
+      "Leaf": "September.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/September.docx",
+      "Ext": ".docx",
+      "Created": "02/06/2020 17:56:25",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 39170.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/May RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(49)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "49",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/May RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "May RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/May RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/07/2020 00:48:49",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 43867.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/June RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(50)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "50",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/June RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "June RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/June RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/07/2020 00:54:07",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 44090.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/July RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(51)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "51",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/July RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "July RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/July RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/13/2020 22:32:15",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 44657.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/August RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(52)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "52",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/August RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "August RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/August RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/13/2020 22:32:27",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 43728.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/September RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(53)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "53",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/September RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "September RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/September RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/13/2020 22:32:37",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 43348.0
+    },
+    {
+      "Key": "Shared Documents/RN Calendars/2020/October RN Calendar.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(54)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "54",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "RN Calendars/2020/October RN Calendar.docx",
+      "Depth": 3,
+      "Leaf": "October RN Calendar.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/RN Calendars/2020/October RN Calendar.docx",
+      "Ext": ".docx",
+      "Created": "02/13/2020 22:32:50",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 40005.0
+    },
+    {
+      "Key": "Shared Documents/MA Float Calendars/2020/October.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'f0ca0687-b722-4866-b3a7-100483127a09')/items(55)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "55",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MA Float Calendars/2020/October.docx",
+      "Depth": 3,
+      "Leaf": "October.docx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/Shared Documents/MA Float Calendars/2020/October.docx",
+      "Ext": ".docx",
+      "Created": "02/13/2020 22:35:14",
+      "Author": "ndonaldson@whallc.onmicrosoft.com",
+      "Size": 37578.0
+    },
+    {
+      "Key": "_catalogs/masterpage",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "a7034994-ba86-4b20-9af6-9d03bdeb60ba",
+      "Title": "Master Page Gallery",
+      "ListKey": "_catalogs/masterpage",
+      "Depth": 0,
+      "BaseTemplate": 116,
+      "ItemCount": 6,
+      "Leaf": "masterpage"
+    },
+    {
+      "Key": "_catalogs/masterpage/v4.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "v4.master",
+      "Depth": 1,
+      "Leaf": "v4.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/v4.master",
+      "Ext": ".master",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 27244.0
+    },
+    {
+      "Key": "_catalogs/masterpage/minimal.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "minimal.master",
+      "Depth": 1,
+      "Leaf": "minimal.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/minimal.master",
+      "Ext": ".master",
+      "Created": "10/09/2019 18:26:25",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 8825.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.master",
+      "Depth": 1,
+      "Leaf": "seattle.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/seattle.master",
+      "Ext": ".master",
+      "Created": "10/09/2019 18:26:26",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 31341.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.master",
+      "Depth": 1,
+      "Leaf": "oslo.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/oslo.master",
+      "Ext": ".master",
+      "Created": "10/09/2019 18:26:26",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 30049.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.preview",
+      "Depth": 1,
+      "Leaf": "seattle.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/seattle.preview",
+      "Ext": ".preview",
+      "Created": "10/09/2019 18:26:26",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 10725.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'a7034994-ba86-4b20-9af6-9d03bdeb60ba')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.preview",
+      "Depth": 1,
+      "Leaf": "oslo.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/_catalogs/masterpage/oslo.preview",
+      "Ext": ".preview",
+      "Created": "10/09/2019 18:26:26",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 10159.0
+    },
+    {
+      "Key": "SiteAssets",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'52e18f22-3b27-4a83-9367-3d9f74af3e61')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "52e18f22-3b27-4a83-9367-3d9f74af3e61",
+      "Title": "Site Assets",
+      "ListKey": "SiteAssets",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 3,
+      "Leaf": "SiteAssets"
+    },
+    {
+      "Key": "SiteAssets/Happy Valley Notebook",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'52e18f22-3b27-4a83-9367-3d9f74af3e61')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Happy Valley Notebook",
+      "ListKey": "SiteAssets",
+      "Rel": "Happy Valley Notebook",
+      "Depth": 1,
+      "Leaf": "Happy Valley Notebook",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/SiteAssets/Happy Valley Notebook",
+      "Ext": "",
+      "Created": "10/09/2019 18:26:28",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/Happy Valley Notebook/Untitled Section.one",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'52e18f22-3b27-4a83-9367-3d9f74af3e61')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "Happy Valley Notebook/Untitled Section.one",
+      "Depth": 2,
+      "Leaf": "Untitled Section.one",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/SiteAssets/Happy Valley Notebook/Untitled Section.one",
+      "Ext": ".one",
+      "Created": "10/09/2019 18:32:04",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 10638.0
+    },
+    {
+      "Key": "SiteAssets/Happy Valley Notebook/Open Notebook.onetoc2",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'52e18f22-3b27-4a83-9367-3d9f74af3e61')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "Happy Valley Notebook/Open Notebook.onetoc2",
+      "Depth": 2,
+      "Leaf": "Open Notebook.onetoc2",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/SiteAssets/Happy Valley Notebook/Open Notebook.onetoc2",
+      "Ext": ".onetoc2",
+      "Created": "10/09/2019 18:32:08",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 4158.0
+    },
+    {
+      "Key": "SitePages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'da56dec1-5e0c-4436-b784-ce32e3ae7962')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "da56dec1-5e0c-4436-b784-ce32e3ae7962",
+      "Title": "Site Pages",
+      "ListKey": "SitePages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 1,
+      "Leaf": "SitePages"
+    },
+    {
+      "Key": "SitePages/Home.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/HV/_api/web/lists(guid'da56dec1-5e0c-4436-b784-ce32e3ae7962')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Home",
+      "ListKey": "SitePages",
+      "Rel": "Home.aspx",
+      "Depth": 1,
+      "Leaf": "Home.aspx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/whasites/HV/SitePages/Home.aspx",
+      "Ext": ".aspx",
+      "Created": "10/09/2019 18:26:30",
+      "Author": "_MMonzon@whallc.onmicrosoft.com",
+      "Size": 805.0
+    }
+  ]
+}

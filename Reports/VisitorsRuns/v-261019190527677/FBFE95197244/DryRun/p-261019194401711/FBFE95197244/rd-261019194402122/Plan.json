@@ -1,0 +1,2370 @@
+{
+  "Steps": [
+    {
+      "Key": "ClinicalDocuments",
+      "Api": "https://whallc.sharepoint.com/sites/Forms/_api/web/lists(guid'8de8a488-9d42-470d-b2d8-22150f9fabf0')",
+      "Kind": "Library",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nforms members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nforms members\tread\nforms visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Forms Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "ClinicalDocuments",
+      "SourceUnique": true,
+      "TargetPath": "ClinicalDocuments",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Forms Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Forms Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Centricity-Handouts-and-Letters.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Centricity-Handouts-and-Letters.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Business letter template.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Business letter template.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/eLetterhead BL - email or efax ONLY.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/eLetterhead BL - email or efax ONLY.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/eLetterhead BL - email or efax ONLY - ACCTS REC TEMPLATE.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/eLetterhead BL - email or efax ONLY - ACCTS REC TEMPLATE.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/NWG Fax Cover Sheet.doc",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/NWG Fax Cover Sheet.doc",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Margin guides for printing on letterhead.pdf",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Margin guides for printing on letterhead.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Email Etiquette.pdf",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Email Etiquette.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/NWP Fax Cover Sheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/NWP Fax Cover Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/NWP Document Template.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/NWP Document Template.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Project Charter Template 2014-03.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Project Charter Template 2014-03.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.doc",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.doc",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/WHA Document Template.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/WHA Document Template.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.pdf",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/WHA Fax Cover Sheet.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/WHA Memo Template.doc",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/WHA Memo Template.doc",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/3846733.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/3846733.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1001409116.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1001409116.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1019427928.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1019427928.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1024806304.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1024806304.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1029018206.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1029018206.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/WHA Presentation Template.pptx",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/WHA Presentation Template.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1030866366.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1030866366.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1036354066.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1036354066.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1042985066.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1042985066.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1049357940.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1049357940.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1048576968.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1048576968.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1053240734.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1053240734.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1057767656.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1057767656.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1056996116.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1056996116.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1055885114.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1055885114.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1060042860.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1060042860.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1068006592.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1068006592.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1068433514.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1068433514.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1070162236.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1070162236.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1070518120.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1070518120.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1072330168.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1072330168.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1071393536.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1071393536.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1072792764.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1072792764.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1073307614.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1073307614.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1082467986.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1082467986.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1091819736.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1091819736.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1092606746.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1092606746.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1094338146.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1094338146.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1092691488.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1092691488.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1124856617.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1124856617.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1095960614.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1095960614.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1125875140.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1125875140.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1126888691.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1126888691.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1129851801.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1129851801.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1130678211.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1130678211.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1132754833.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1132754833.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1132433736.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1132433736.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1131960080.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1131960080.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1133832427.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1133832427.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1133428350.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1133428350.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1137111682.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1137111682.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1134371124.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1134371124.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1134051660.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1134051660.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1138322715.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1138322715.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1138849033.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1138849033.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1137409767.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1137409767.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1139074955.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1139074955.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1140134244.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1140134244.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1143944561.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1143944561.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1145457577.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1145457577.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1147876705.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1147876705.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1146712619.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1146712619.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148023065.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148023065.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148047598.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148047598.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149030738.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149030738.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148176144.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1148176144.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149128714.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149128714.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149662172.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1149662172.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1153956084.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1153956084.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1152397599.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1152397599.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1155041400.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1155041400.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1158481725.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1158481725.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1157243989.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1157243989.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1159643127.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1159643127.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1162184637.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1162184637.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1163448827.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1163448827.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1164033653.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1164033653.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1165779046.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1165779046.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1173619383.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1173619383.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1175473342.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1175473342.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1176440377.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1176440377.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1179938842.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1179938842.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1181146124.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1181146124.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1181636604.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1181636604.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1185673631.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1185673631.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1182464826.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1182464826.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1187579522.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1187579522.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1188947264.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1188947264.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1188487425.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1188487425.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1189088293.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1189088293.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1191574601.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1191574601.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1191574624.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1191574624.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1192085987.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1192085987.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1194825217.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1194825217.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1196719614.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1196719614.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197693392.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197693392.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197856169.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197856169.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197693674.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1197693674.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1198037854.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1198037854.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819945.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819945.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1199650353.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1199650353.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1199648129.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1199648129.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819949.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819949.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1211946883.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1211946883.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819951.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1209819951.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1215650513.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1215650513.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1212050823.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1212050823.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1215034449.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1215034449.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1217583191.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1217583191.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1223451874.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1223451874.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1223033281.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1223033281.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1226358329.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1226358329.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1224852804.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1224852804.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1226737564.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1226737564.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1237708914.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1237708914.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1227410089.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1227410089.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1263955957.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1263955957.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1245099874.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1245099874.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1267325170.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1267325170.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1268467574.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1268467574.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1271562921.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1271562921.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1287087591.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1287087591.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1302499450.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1302499450.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1291474675.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1291474675.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1304581885.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1304581885.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1305630454.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1305630454.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1307187929.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1307187929.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1309835992.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1309835992.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1307458782.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1307458782.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1314354037.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1314354037.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1309925644.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1309925644.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1314833672.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1314833672.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1323815148.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1323815148.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1340561120.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1340561120.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1342090348.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1342090348.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1343874705.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1343874705.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1342253411.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1342253411.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1345219485.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1345219485.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1344837084.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1344837084.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1349343776.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1349343776.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1351935707.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1351935707.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1354178522.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1354178522.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1356430957.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1356430957.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1355656390.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1355656390.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1361756868.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1361756868.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1370641643.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1370641643.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1368004438.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1368004438.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1371363128.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1371363128.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1372092371.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1372092371.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1388504321.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1388504321.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1384357158.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1384357158.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1388504900.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1388504900.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389573599.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389573599.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389017549.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389017549.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389957289.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1389957289.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1393784451.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1393784451.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1393066656.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1393066656.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1394017833.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1394017833.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1397594257.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1397594257.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1399001151.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1399001151.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1398067639.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1398067639.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1406385873.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1406385873.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1406896488.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1406896488.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1411629032.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1411629032.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1407833173.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1407833173.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1412567961.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1412567961.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1419932308.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1419932308.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1415168484.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1415168484.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1421965854.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1421965854.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1425649099.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1425649099.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1433432507.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1433432507.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1442028426.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1442028426.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1442374257.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1442374257.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1444986997.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1444986997.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1447707011.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1447707011.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1448500573.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1448500573.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1452471497.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1452471497.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1448500581.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1448500581.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1452739952.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1452739952.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1453983271.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1453983271.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1459102203.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1459102203.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1469188484.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1469188484.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470494021.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470494021.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470588651.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470588651.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470922966.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1470922966.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1471886591.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1471886591.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1474982990.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1474982990.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1474614930.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1474614930.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1495030722.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1495030722.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1504041385.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1504041385.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1519474041.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1519474041.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1543352647.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1543352647.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-152128009.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-152128009.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-157606897.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-157606897.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1704590314.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1704590314.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-155368855.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-155368855.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-174823044.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-174823044.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1756614766.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1756614766.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1734158906.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1734158906.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1768527319.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1768527319.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1810079587.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1810079587.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-181888845.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-181888845.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1854512912.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1854512912.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1953024007.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1953024007.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1831051142.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-1831051142.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2000356114.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2000356114.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2042657835.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2042657835.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2098679654.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2098679654.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2123094168.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2123094168.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2161407898.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2161407898.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2151962135.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2151962135.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2161459588.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2161459588.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2163190287.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2163190287.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969224.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969224.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969365.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969365.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2192748400.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2192748400.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969403.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2177969403.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2211440303.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2211440303.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2205518091.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2205518091.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2229931887.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2229931887.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2217960220.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-2217960220.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-459385901.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-459385901.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-472366966.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-472366966.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-472708024.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-472708024.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-471254432.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-471254432.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-492356674.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-492356674.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-476408810.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-476408810.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-492653040.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-492653040.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-494284792.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-494284792.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-497635752.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-497635752.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-509255790.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-509255790.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-512634010.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-512634010.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-518562712.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-518562712.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-545458942.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-545458942.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-518699942.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-518699942.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-610005560.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-610005560.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-625903892.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-625903892.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-625903104-(1).jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-625903104-(1).jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639084052.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639084052.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-637239878.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-637239878.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639668490.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639668490.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-664548058.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-664548058.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639762286.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-639762286.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-670930578.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-670930578.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-667015656.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-667015656.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-670930682.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-670930682.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-689936812.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-689936812.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-672419708.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-672419708.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-678589480.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-678589480.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-693961956.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-693961956.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-699213002.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-699213002.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-699826868.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-699826868.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-815610386.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-815610386.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-825154808.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-825154808.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-819530240.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-819530240.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-826211118.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-826211118.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-843530304.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-843530304.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-837446356.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-837446356.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-846351574.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-846351574.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-863348696.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-863348696.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-868425088.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-868425088.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-869573702.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-869573702.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-869574306.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-869574306.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-870773960.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-870773960.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-872866650.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-872866650.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-890294300.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-890294300.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-898666598.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-898666598.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-903399006.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-903399006.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-923028856.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-923028856.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-905726948.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-905726948.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-925145070.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-925145070.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-936148370.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-936148370.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-959585506.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-959585506.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-958886634.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-958886634.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-962240394.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-962240394.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-967022602.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-967022602.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-971891870.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-971891870.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-978614662.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-978614662.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-981468200.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-981468200.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-993589172.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock-993589172.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000014515580Large.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000014515580Large.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000018548463_Large.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000018548463_Large.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000019304439_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000019304439_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000018601565XLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000018601565XLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000019788922XXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000019788922XXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021237002Medium.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021237002Medium.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000020871585XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000020871585XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021428971_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021428971_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021490173_Double.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021490173_Double.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021899385_Double.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000021899385_Double.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000022719470_Double.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000022719470_Double.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000023632574_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000023632574_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000022926782_Double.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000022926782_Double.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000035643878_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000035643878_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000039422684XXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000039422684XXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000054353988_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000054353988_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000036576582XXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000036576582XXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000068086471_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000068086471_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000076030861_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000076030861_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000080347361_XXXLarge.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/iStock_000080347361_XXXLarge.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Kissing-a-newborn-1134293499_5699x3799.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Kissing-a-newborn-1134293499_5699x3799.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Loving-parents-feeding-cute-newborn-daughter-at-home-1215034449_6720x4480.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Loving-parents-feeding-cute-newborn-daughter-at-home-1215034449_6720x4480.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Mental-health.-Physical-health.-Health.-YES..jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Mental-health.-Physical-health.-Health.-YES..jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Mom-and-Newborn-Baby-in-a-Home-1032166478_7785x5839.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Mom-and-Newborn-Baby-in-a-Home-1032166478_7785x5839.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/occupational---woman-working-from-home-on-zoom-call.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/occupational---woman-working-from-home-on-zoom-call.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/PortlandPride1.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/PortlandPride1.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/physical---woman-in-exercise-clothes-preparing-healthy-meal.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/physical---woman-in-exercise-clothes-preparing-healthy-meal.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Portrait-of-young-happy-pregnant-woman-standing-by-the-window-and-drinking-coffee-1309623363_6720x4480.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Portrait-of-young-happy-pregnant-woman-standing-by-the-window-and-drinking-coffee-1309623363_6720x4480.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_194901965.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_194901965.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Relaxing-for-two-927741214_7360x4912.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Relaxing-for-two-927741214_7360x4912.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_1099482950.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_1099482950.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_68367865.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_68367865.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/social---mother-and-daughter-talking-and-laughing.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/social---mother-and-daughter-talking-and-laughing.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_279053561.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/shutterstock_279053561.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/spiritual---woman-walking-through-park.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/spiritual---woman-walking-through-park.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_comp_3838727.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_comp_3838727.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Large_199260.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Large_199260.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Large_240969.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Large_240969.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Original_525756.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp1ca7ba4c5tw000_Original_525756.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp3c9b3468YTK100_Large_197982.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp3c9b3468YTK100_Large_197982.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4023fc4012o200_Large_1271441.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4023fc4012o200_Large_1271441.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_1116033.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_1116033.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_1939691.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_1939691.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_2047016.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4dad2206Ol4200_Medium_2047016.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4e132528aL4100_Large_837943.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4e132528aL4100_Large_837943.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4e132528aL4100_Medium_47953.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp4e132528aL4100_Medium_47953.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp5ac69a83Xhr000_Large_547175.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp5ac69a83Xhr000_Large_547175.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp5ac69a83Xhr000_Large_142269.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txp5ac69a83Xhr000_Large_142269.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpacbe80733Ga100_Original_43298.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpacbe80733Ga100_Original_43298.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpc51630f4mPB100_Medium_41873_F.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpc51630f4mPB100_Medium_41873_F.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpb9773a3aR3n200_Medium_182838.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpb9773a3aR3n200_Medium_182838.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpb9773a3aR3n200_Medium_2720967.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpb9773a3aR3n200_Medium_2720967.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpc51630f4mPB100_Medium_43298_F.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpc51630f4mPB100_Medium_43298_F.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Large_719098.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Large_719098.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Original_593606.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Original_593606.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Unrecognizable-parents-giving-a-newborn-baby-a-bath-at-home.-1147134568_5568x3712.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Unrecognizable-parents-giving-a-newborn-baby-a-bath-at-home.-1147134568_5568x3712.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Large_797593.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Stocksy_txpfa064d30Cfr000_Large_797593.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/We're-going-through-this-pregnancy-together-993589172_7132x4330.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/We're-going-through-this-pregnancy-together-993589172_7132x4330.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Unrecognizable-Pregnant-Lady-Receiving-Injection-Sitting-On-Bed,-Cropped-1187579522_5760x3840.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Unrecognizable-Pregnant-Lady-Receiving-Injection-Sitting-On-Bed,-Cropped-1187579522_5760x3840.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Women-holding-and-looking-at-her-godson-at-hospital-1189550810_7952x5304.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Women-holding-and-looking-at-her-godson-at-hospital-1189550810_7952x5304.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/websitebanner.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/websitebanner.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Work.-Kids.-You..jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Work.-Kids.-You..jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Young-adult-couple-in-love-joking-together-1138849033_6572x4384.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Young-adult-couple-in-love-joking-together-1138849033_6572x4384.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Young-pregnant-woman-suffering-from-backache-1197693674_6720x4480.jpg",
+      "SourceUnique": false,
+      "TargetPath": "WHA Document and Presentation Templates/Presentations and graphics/Stock Imagery/Young-pregnant-woman-suffering-from-backache-1197693674_6720x4480.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

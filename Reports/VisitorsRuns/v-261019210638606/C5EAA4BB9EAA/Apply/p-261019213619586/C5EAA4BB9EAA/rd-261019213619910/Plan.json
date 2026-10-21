@@ -1,0 +1,2964 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Provider FAQs 4.19.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Provider FAQs 4.19.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Clinical Services FAQ 4.18.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Clinical Services FAQ 4.18.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Provider FAQs 5.10.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Provider FAQs 5.10.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "FormsandConsents",
+      "SourceUnique": false,
+      "TargetPath": "FormsandConsents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "FormsandConsents/Back Office Forms",
+      "SourceUnique": false,
+      "TargetPath": "FormsandConsents/Back Office Forms",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "FormsandConsents/Front Office Forms",
+      "SourceUnique": false,
+      "TargetPath": "FormsandConsents/Front Office Forms",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/19_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/19_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/20_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/20_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/22_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/22_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/23_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/23_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/24_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/24_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/25_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/25_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/26_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/26_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/27_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/27_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/28_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/28_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/29_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/29_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/30_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/30_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/31_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/31_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/32_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/32_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/33_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/33_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/34_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/34_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/36_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/36_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/37_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/37_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/38_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/38_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/39_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/39_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/40_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/40_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/41_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/41_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/42_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/42_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/43_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/43_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/44_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/44_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/45_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/45_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/46_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/46_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/47_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/47_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/49_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/49_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/50_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/50_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/51_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/51_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/52_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/52_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/53_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/53_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/54_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/54_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/55_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/55_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/56_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/56_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/57_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/57_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/58_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/58_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/59_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/59_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/60_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/60_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/61_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/61_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/62_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/62_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/63_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/63_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/64_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/64_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/65_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/65_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/66_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/66_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/67_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/67_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/68_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/68_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/69_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/69_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/70_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/70_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/71_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/71_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/72_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/72_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/73_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/73_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/74_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/74_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/75_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/75_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/76_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/76_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/77_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/77_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/78_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/78_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/79_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/79_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/80_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/80_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/81_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/81_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/82_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/82_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/83_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/83_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/84_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/84_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/85_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/85_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/86_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/86_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/87_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/87_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/89_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/89_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/90_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/90_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/92_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/92_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/93_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/93_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/94_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/94_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/95_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/95_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/96_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/96_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/97_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/97_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/98_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/98_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/99_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/99_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/100_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/100_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/101_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/101_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/102_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/102_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/103_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/103_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/105_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/105_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/106_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/106_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/107_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/107_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/108_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/108_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/109_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/109_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/110_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/110_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/111_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/111_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/112_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/112_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/113_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/113_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/114_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/114_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/115_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/115_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/116_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/117_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/117_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/118_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/118_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/119_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/119_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/120_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/121_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/121_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/122_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/122_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/123_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/123_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/124_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/124_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/125_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/125_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/126_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/126_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/127_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/127_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/128_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/128_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/129_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/129_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/130_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/130_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/131_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/131_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/133_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/133_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/134_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/135_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/135_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/136_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/136_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/137_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/137_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/138_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/138_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/139_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/139_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/140_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/140_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/141_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/141_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/142_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/142_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/143_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/144_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/144_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/145_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/145_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/146_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/146_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/147_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/148_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/148_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/149_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/OptimizationsTracker/149_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/150_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/151_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/152_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/OptimizationsTracker/153_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents1",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents1",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents1/Mega List.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents1/Mega List.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/67613-12992389_10208696787475330_985953965_n.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/67613-12992389_10208696787475330_985953965_n.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/60205-simons-cat-1.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/60205-simons-cat-1.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/19499-simons-cat-1.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/19499-simons-cat-1.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/15611-simons-cat-1.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/15611-simons-cat-1.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/1",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/1",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/1/69264-Color_symbol-only.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/1/69264-Color_symbol-only.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/60246-Color_symbol-and-type.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/60246-Color_symbol-and-type.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Epic-News/24881-Black_symbol-only.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Epic-News/24881-Black_symbol-only.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Lists",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Lists",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Lists/OptimizationsTracker",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Lists/OptimizationsTracker",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Lists/OptimizationsTracker/NewForm",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Lists/OptimizationsTracker/NewForm",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Lists/OptimizationsTracker/NewForm/Exam Detail v.081718.pptx",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Lists/OptimizationsTracker/NewForm/Exam Detail v.081718.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Lists/OptimizationsTracker/NewForm/COB letters.docx",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Lists/OptimizationsTracker/NewForm/COB letters.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/2390465773-Epic.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/2390465773-Epic.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Epic-News.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Epic-News.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Electronic Prescription of Controlled Substances.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Electronic Prescription of Controlled Substances.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Top Efficiency Tips for Outpatient Providers.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Top Efficiency Tips for Outpatient Providers.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/OB Admission H&P for Legacy.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/OB Admission H&P for Legacy.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/OB Admission H&P for Providence & Adventist.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/OB Admission H&P for Providence & Adventist.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Routing - Using the PasteBoard.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Routing - Using the PasteBoard.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Routing - Fax Confirmation with RightFax.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Routing - Fax Confirmation with RightFax.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NWP Patient Summary.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/NWP Patient Summary.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/OLD - How to create an GYN IOS H&P.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/OLD - How to create an GYN IOS H&P.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Report - OB Work Up Appointment.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Report - OB Work Up Appointment.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Report - EDD.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Report - EDD.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Report - Births By Procedure Code.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Report - Births By Procedure Code.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Offsite Care InBasket Message QuickAction.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Offsite Care InBasket Message QuickAction.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Display Imaging Verify Orders Report.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to Display Imaging Verify Orders Report.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Guarantor Account Tips.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Guarantor Account Tips.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Medicare High Risk Questionnaire Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Medicare High Risk Questionnaire Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Assigning Patient Questionnaires.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Assigning Patient Questionnaires.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to place internal referrals for pmhnp and bh.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to place internal referrals for pmhnp and bh.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Patient Photos at Check-In.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Patient Photos at Check-In.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Claim Information Record.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Claim Information Record.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/MyHealth Proxy Access Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/MyHealth Proxy Access Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/MyHealth Reports.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/MyHealth Reports.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Out of Office InBasket Activity.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Out of Office InBasket Activity.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Registration – Third Party Liability.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Registration – Third Party Liability.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Third Party Liability2.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Third Party Liability2.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Routing Records and Tracking Faxes.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Routing Records and Tracking Faxes.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Entering Paper WBA Qtr..pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Entering Paper WBA Qtr..pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Adding external pap smears.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Adding external pap smears.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/IUD Benefits.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/IUD Benefits.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Attaching In Baskets.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Attaching In Baskets.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Route a Letter to Referring Office.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to Route a Letter to Referring Office.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Hold time vs. Unavailable time.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Hold time vs. Unavailable time.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Entering Care Team Members.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Entering Care Team Members.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/HaikuCantoClinicalPhotoCapture.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/HaikuCantoClinicalPhotoCapture.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Surgery Case Requests.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Surgery Case Requests.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Entering a PCP.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Entering a PCP.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/My Open Encounters In Basket Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/My Open Encounters In Basket Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Methotrexate MD Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Methotrexate MD Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/'Save as Quick Action' button.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/'Save as Quick Action' button.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Closing Erroneous Telephone Encounters.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Closing Erroneous Telephone Encounters.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Printing User Batch Report.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Printing User Batch Report.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NWP- My Open Encounters In Basket Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/NWP- My Open Encounters In Basket Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Linking Historical Visits.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Linking Historical Visits.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/IOS Sedation Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/IOS Sedation Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/GYN IOS Order and H & P.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/GYN IOS Order and H & P.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/No Future OB Appointments Report.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/No Future OB Appointments Report.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Providence Imaging Results using Care Everywhere - Quick Guide.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Providence Imaging Results using Care Everywhere - Quick Guide.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Providence Care Everywhere Imaging Result Management.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Providence Care Everywhere Imaging Result Management.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Results Phone Scripting.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Results Phone Scripting.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Expiring Guarantors.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Expiring Guarantors.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to add a WC or MVA Guarantor Account.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to add a WC or MVA Guarantor Account.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Expiring Registration Documents.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Expiring Registration Documents.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Co-sign orders.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Co-sign orders.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/SIS Scheduling Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/SIS Scheduling Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Notifying Patients via MyHealth in a Result Note – If you don’t have a Quick Action created.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Notifying Patients via MyHealth in a Result Note – If you don’t have a Quick Action created.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Erroneous Encounter Tipsheet.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Erroneous Encounter Tipsheet.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Guarantor Account Status Differences.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Guarantor Account Status Differences.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Patient Message Standardization.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Patient Message Standardization.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Obtaining OB Delivery Information Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Obtaining OB Delivery Information Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating a Patient List to obtain deliveries for Legacy facilities.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Creating a Patient List to obtain deliveries for Legacy facilities.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Clinic Pod Routing Map.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Clinic Pod Routing Map.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Reasons to Cancel an Appt.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Reasons to Cancel an Appt.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/ER Follow-up Visits.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/ER Follow-up Visits.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Urogyn Waitlist - Scheduler.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Urogyn Waitlist - Scheduler.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Wait List Guide.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Wait List Guide.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Quick Release.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Quick Release.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Pessary Tracking – Patient Services.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Pessary Tracking – Patient Services.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Complimentary Interpreter Services.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Complimentary Interpreter Services.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WHA & NWP Standard Ultrasound Scheduling Guide.xlsx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WHA & NWP Standard Ultrasound Scheduling Guide.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Collecting Payment.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Collecting Payment.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Ultrasound Scheduling Flexibility.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Ultrasound Scheduling Flexibility.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Ultrasound Scheduling Flexibility Guidelines (cheat sheet).pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Ultrasound Scheduling Flexibility Guidelines (cheat sheet).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Finding the Health Maintenance (HM) activity.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Finding the Health Maintenance (HM) activity.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Place External Referral Orders.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to Place External Referral Orders.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Mirena IUD Replacement Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Mirena IUD Replacement Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/e-Check In or ‘Get Ready’ Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/e-Check In or ‘Get Ready’ Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Telehealth visits marked as No Show that were seen.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Telehealth visits marked as No Show that were seen.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Resulting an elevated 1hr GTT & scheduling of a 3hr GTT Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Resulting an elevated 1hr GTT & scheduling of a 3hr GTT Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/SmartSet User Guide for Ectopic Pregnancy (treatment & monitoring).pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/SmartSet User Guide for Ectopic Pregnancy (treatment & monitoring).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/PS 2 Hour GTT Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/PS 2 Hour GTT Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Accessing AMB Facesheet - For Legacy employees.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Accessing AMB Facesheet - For Legacy employees.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/2 Hour GTT Workflow for Patient Services.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/2 Hour GTT Workflow for Patient Services.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Scheduling Orders - Appt Requests Workqueue.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Scheduling Orders - Appt Requests Workqueue.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to take ownership of a signed note.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to take ownership of a signed note.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Scheduling Post Ops During Global Period.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Scheduling Post Ops During Global Period.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Accessing the AMB Facesheet.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Accessing the AMB Facesheet.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Appt Request Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Appt Request Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Linguava Interpreter and AMB Facesheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Linguava Interpreter and AMB Facesheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Common Acronyms.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Common Acronyms.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/LOS Speed Buttons.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/LOS Speed Buttons.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Schedule Visual Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Schedule Visual Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Attach to other user's inbaskets tip sheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Attach to other user's inbaskets tip sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Cervical Cancer Screening CCS-Pap Tracker.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Cervical Cancer Screening CCS-Pap Tracker.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting sample medications.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Documenting sample medications.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Rx Refills.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Rx Refills.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Prescription Refill Workflow.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Prescription Refill Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Xpert Covid+ Sample Collection Procedure Tip Sheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Xpert Covid+ Sample Collection Procedure Tip Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WHA Wiki Guide.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WHA Wiki Guide.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Viewing the Patient US Scheduling Summary.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Viewing the Patient US Scheduling Summary.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/In Basket - Best Practices.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/In Basket - Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Outside provider calling in requesting WHA clinician.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Outside provider calling in requesting WHA clinician.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Scheduling WHA’s Internal Spanish Interpreter.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Scheduling WHA’s Internal Spanish Interpreter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Internal WHA Referrals for Fetal Echocardiogram Ordering and Ultrasound Scheduling.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Internal WHA Referrals for Fetal Echocardiogram Ordering and Ultrasound Scheduling.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/OHP Sterilization Consent.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/OHP Sterilization Consent.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Pre-op & Post-op Scheduling.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Pre-op & Post-op Scheduling.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/adjusting ultrasound orders 7.20.22.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/adjusting ultrasound orders 7.20.22.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Scheduling with Subgroups.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Scheduling with Subgroups.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Tabor Procedures and Labs.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Tabor Procedures and Labs.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Ultrasound Flash Drive Requests.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Ultrasound Flash Drive Requests.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Patient Financial Services Course.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Patient Financial Services Course.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Fix a MAR Error.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to Fix a MAR Error.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Patient Scheduling Preferences.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Patient Scheduling Preferences.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/User Dictionary.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/User Dictionary.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to change imaging orders.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to change imaging orders.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Using the New Level of Service Calculator.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Using the New Level of Service Calculator.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Postpartum Calls Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Postpartum Calls Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Postpartum Care Call.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Postpartum Care Call.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/2022.12.15 Coding Hospital Charges Update.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/2022.12.15 Coding Hospital Charges Update.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/BH Appts and Workflows.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/BH Appts and Workflows.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/External Organization Imaging Results Management Workflow-CareEverywhere.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/External Organization Imaging Results Management Workflow-CareEverywhere.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/In Basket QuickActions.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/In Basket QuickActions.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting Procedures not seen in SmartBlock.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Documenting Procedures not seen in SmartBlock.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Providence Imaging Results using Care Everywhere - Quick Guide.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Providence Imaging Results using Care Everywhere - Quick Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting External Results.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Documenting External Results.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Staff Message Quick Actions.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Staff Message Quick Actions.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/User Dictionary (1).docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/User Dictionary (1).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Attaching to other user's inbaskets tip sheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Attaching to other user's inbaskets tip sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WHA Order of draw.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WHA Order of draw.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Results Follow-up Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Results Follow-up Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/MSPQ.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/MSPQ.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Lupron Depot Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Lupron Depot Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Term of Care.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Term of Care.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Depo Calendar.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Depo Calendar.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/AIDET.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/AIDET.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Linguava for a Phone Interp.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Linguava for a Phone Interp.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Outside Screening Mammo Order Requests.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Outside Screening Mammo Order Requests.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Mammogram Workflows - Patient Services.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Mammogram Workflows - Patient Services.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to add eCheck-In column to schedule.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to add eCheck-In column to schedule.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Myhealth Release of Information Form.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Myhealth Release of Information Form.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/SmartPhrases.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/SmartPhrases.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting Interpreters in Epic.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Documenting Interpreters in Epic.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Haiku and Canto Provider Access Request Instructions.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Haiku and Canto Provider Access Request Instructions.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Haiku Site Installations.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Haiku Site Installations.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/View Schedules - Saving Lists.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/View Schedules - Saving Lists.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Chaperone Information and Training.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Chaperone Information and Training.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WBA Wellness Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WBA Wellness Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Schedule a Basic Appt.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Schedule a Basic Appt.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Manage Immunization Lots.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Manage Immunization Lots.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Temporary Patient Addresses.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Temporary Patient Addresses.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Find User Settings from the User Identifier.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Find User Settings from the User Identifier.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Bedside OB Ultrasound Scheduling.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Bedside OB Ultrasound Scheduling.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Unverified Patient Identity.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Unverified Patient Identity.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Preference List Composer Tip Sheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Preference List Composer Tip Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Ultrasound Scheduling at WHA.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Ultrasound Scheduling at WHA.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/External Imaging Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/External Imaging Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Labels - Printing & Placement.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Labels - Printing & Placement.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Secondary Insurance.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Secondary Insurance.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Subgroups.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Subgroups.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Requesting New Patient Records Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Requesting New Patient Records Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NST Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/NST Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NST Workflow - Clinician.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/NST Workflow - Clinician.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Weekly Resulted Pap Notifications tipsheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Weekly Resulted Pap Notifications tipsheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Behavioral Health FMLA Workflow.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Behavioral Health FMLA Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Create and Send a MyHealth Message.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to Create and Send a MyHealth Message.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Create and Use Telephone Encounters.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to Create and Use Telephone Encounters.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Insurance look up.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Insurance look up.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating Cover my meds account.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Creating Cover my meds account.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/HIM  Patient Services - Best Practices.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/HIM  Patient Services - Best Practices.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Access or Create Local Checklists Updated 1.10.24.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to Access or Create Local Checklists Updated 1.10.24.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Prior Authorization Tip Sheet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Prior Authorization Tip Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NST Scheduling.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/NST Scheduling.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Send FMLA to Patient.png",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Send FMLA to Patient.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/FMLA Standard Workflow.png",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/FMLA Standard Workflow.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Epic Hyperspace Practice Logins.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Epic Hyperspace Practice Logins.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Naloxone-Fact-Sheet-508.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Naloxone-Fact-Sheet-508.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/LaSpecimen Recollection Staff Messages from Central Lab.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/LaSpecimen Recollection Staff Messages from Central Lab.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Depo Provera Injection Visit Documentation.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Depo Provera Injection Visit Documentation.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Changing Passwords in Epic.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Changing Passwords in Epic.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Visit Types vs Forms.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Visit Types vs Forms.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Same Day Lab and Injection Scheduling Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Same Day Lab and Injection Scheduling Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Non-Specified Sex . Gender (X) Registration.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Non-Specified Sex . Gender (X) Registration.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Create In-Patient Note Speed Buttons.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to Create In-Patient Note Speed Buttons.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Circumcision Workflow.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Circumcision Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Swabs & Orders.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Swabs & Orders.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating a Result Management QuickAction.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Creating a Result Management QuickAction.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating an Encounter.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Creating an Encounter.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Changing Login Department.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Changing Login Department.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to track pessary cleaning and fitting.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/How to track pessary cleaning and fitting.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Flowsheet Activity.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Flowsheet Activity.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Change Authorizing Provider on Procedure SmartBlock.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Change Authorizing Provider on Procedure SmartBlock.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Interpreter Report Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Interpreter Report Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Episode of Care - Reports, Linking Visits, Problems and More.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Episode of Care - Reports, Linking Visits, Problems and More.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/RN - Logging into Practice 2 Environment.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/RN - Logging into Practice 2 Environment.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/RN Methotrexate Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/RN Methotrexate Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Entering OB Model of Care and Finding Delivery Location.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Entering OB Model of Care and Finding Delivery Location.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to add in OB Forms into a Non-OB Appt Type.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to add in OB Forms into a Non-OB Appt Type.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Billing in Haiku.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Billing in Haiku.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Breast Pump Ordering.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Breast Pump Ordering.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Blood Pressure Cuff Ordering.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Blood Pressure Cuff Ordering.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/How to Manage Orders and Referrals - Internal and External.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/How to Manage Orders and Referrals - Internal and External.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Ventrogluteal Training.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Ventrogluteal Training.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Hello World - Text Notifications.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Hello World - Text Notifications.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Changing Patient Names.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Changing Patient Names.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Deltoid Injection Training.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Deltoid Injection Training.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Provider Finder Listings - Add or Update Info.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Provider Finder Listings - Add or Update Info.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Edit more Medication Details from Mobile Device.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Edit more Medication Details from Mobile Device.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Generate Draft Replies on Mobile Device.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Generate Draft Replies on Mobile Device.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Place Inpatient Orders in Rover and Haiku on Android.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Place Inpatient Orders in Rover and Haiku on Android.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Sign Consent Documents on iOS Devices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Sign Consent Documents on iOS Devices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Medicare Preventive Care Scripting.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Medicare Preventive Care Scripting.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/CC Guidelines.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/CC Guidelines.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Speed Button Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Speed Button Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/LabCorp LHS PSC Locations.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/LabCorp LHS PSC Locations.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/LabCorp PSC Locations.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/LabCorp PSC Locations.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting Historical Immunizations.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Documenting Historical Immunizations.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Change Status and Visit Type after Check-Out.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Change Status and Visit Type after Check-Out.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/No Show Guide (for WHA clinics).pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/No Show Guide (for WHA clinics).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Patient Service Center Guide (Labcorp and Quest).docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Patient Service Center Guide (Labcorp and Quest).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Transferring Urine Preservative Tubes for Transport.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Transferring Urine Preservative Tubes for Transport.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Chief Complaint Best Practice.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Chief Complaint Best Practice.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/OB Care Clinical Staff Rooming SmartSet.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/OB Care Clinical Staff Rooming SmartSet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Quest PSC Locations (Slim Jim).pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Quest PSC Locations (Slim Jim).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Quest Urine Collection Containers and Orders.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Quest Urine Collection Containers and Orders.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Multi-Provider tip sheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Multi-Provider tip sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating and Sending Letters to Patients in Epic.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Creating and Sending Letters to Patients in Epic.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Litmos Training Documentation - Updated 3.3.25.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Litmos Training Documentation - Updated 3.3.25.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/New Hire Lab Draw Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/New Hire Lab Draw Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Addressing WBA Triggers.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Addressing WBA Triggers.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/GC Self Collection.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/GC Self Collection.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/MyChart Exam Room Activation.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/MyChart Exam Room Activation.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Pain Management Options for Patients.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Pain Management Options for Patients.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Schedule Workspace Visual Guide Updated 8.15.24.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Schedule Workspace Visual Guide Updated 8.15.24.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/MVA D&C Set-up.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/MVA D&C Set-up.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Login to Practice Environment.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Login to Practice Environment.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting Procedures not seen in a SmartBlock.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Documenting Procedures not seen in a SmartBlock.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/EMR Standards for Clinical Staff.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/EMR Standards for Clinical Staff.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Erroneous Encounters- How to Manage.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Erroneous Encounters- How to Manage.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Extern Guidelines.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Extern Guidelines.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/FMLA PLO Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/FMLA PLO Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Future Appointment Viewing.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Future Appointment Viewing.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Injection Documentation.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Injection Documentation.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WHA SmartSets.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WHA SmartSets.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/24 Hour Urine Collection Patient Instructions.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/24 Hour Urine Collection Patient Instructions.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Draw Stations Outside of Quest.LabCorp.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Draw Stations Outside of Quest.LabCorp.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Paging a Provider.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Paging a Provider.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Emergency Contact.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Emergency Contact.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Quest Draw Station Order Choices.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Quest Draw Station Order Choices.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Notifications on Patient SAB or TAB.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Notifications on Patient SAB or TAB.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Surgery Scheduling Documentation.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Surgery Scheduling Documentation.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Injection Sign Off.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Injection Sign Off.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/GE Swift Informational Guide.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/GE Swift Informational Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/NWP No Show Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/NWP No Show Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Creating an Order Panel.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Creating an Order Panel.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Abnormal Glucose Tolerance Test (GTT) Results Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Abnormal Glucose Tolerance Test (GTT) Results Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Glucose Tolerance Test Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Glucose Tolerance Test Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/GBS PCR to CULTURE Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/GBS PCR to CULTURE Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Management of Patients with Respiratory Symptoms.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Management of Patients with Respiratory Symptoms.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/FMLA.PLO Full Sheet.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/FMLA.PLO Full Sheet.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/No-Reply Email.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/No-Reply Email.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Imaging Orders Overview.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Imaging Orders Overview.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Methotrexate Guide MD.RN.MA.LPN.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Methotrexate Guide MD.RN.MA.LPN.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Overdue Results Scheduled Orders and No Show Management Guide.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Overdue Results Scheduled Orders and No Show Management Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/WHA Culture Tests.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/WHA Culture Tests.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Reprinting Lab Requisitions & Patient Labels.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Reprinting Lab Requisitions & Patient Labels.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Lab Assistant Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Lab Assistant Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/VIP Ultrasound Image Portal How-to.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/VIP Ultrasound Image Portal How-to.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Nursing Care Coordination Referral Workqueue Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Nursing Care Coordination Referral Workqueue Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/CDC Vaccine Toolkit.url",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/CDC Vaccine Toolkit.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/www.cdc.gov.url",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/www.cdc.gov.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Documenting an Adverse Reaction.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Documenting an Adverse Reaction.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Pessary-Diaphragm Guide.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Pessary-Diaphragm Guide.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/PP Blood Pressure Nurse Visit Tipsheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/PP Blood Pressure Nurse Visit Tipsheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Postpartum Blood Pressure Nurse Visit Workflow.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Postpartum Blood Pressure Nurse Visit Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Specimen Tracking Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Tip Sheets/Specimen Tracking Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Additional Resources - PowerPoints",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Additional Resources - PowerPoints",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/InBasket -Cosign Task Folder.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/InBasket -Cosign Task Folder.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/HIM Services at WHA.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/HIM Services at WHA.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Wet Prep Tipsheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Wet Prep Tipsheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Pessary-Diaphragm Pick-up Info Sheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Pessary-Diaphragm Pick-up Info Sheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/Chart Insights Tipsheet.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/Chart Insights Tipsheet.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/2 & 3 hour Glucose Tolerance Test Laminate.docx",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/2 & 3 hour Glucose Tolerance Test Laminate.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Tip Sheets/In Office Hysteroscopy Scheduling.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Tip Sheets/In Office Hysteroscopy Scheduling.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals",
+      "SourceUnique": true,
+      "TargetPath": "Training Manuals",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals/CAD 100 Training Manual.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Training Manuals/CAD 100 Training Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals/CAD 100 Check In Training Manual.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Training Manuals/CAD 100 Check In Training Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals/Referral Navigator Manual.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Training Manuals/Referral Navigator Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals/NWP Patient Services Manual.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Training Manuals/NWP Patient Services Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Training Manuals/Patient Services OB Manual.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Training Manuals/Patient Services OB Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

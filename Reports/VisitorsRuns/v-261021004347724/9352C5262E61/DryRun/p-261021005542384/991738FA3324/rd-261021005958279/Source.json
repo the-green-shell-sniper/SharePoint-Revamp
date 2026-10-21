@@ -1,0 +1,1862 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC",
+  "Scopes": [
+    {
+      "Key": "",
+      "Kind": "Web",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web",
+      "Unique": false,
+      "Acl": [
+        {
+          "MemberId": 9,
+          "LoginName": "Team Site Members",
+          "Title": "Team Site Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 129,
+          "LoginName": "i:0#.f|membership|mnees@whallc.com",
+          "Title": "Michelle Nees",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 200,
+          "LoginName": "i:0#.f|membership|hboehm@whallc.com",
+          "Title": "Holly Boehm",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 244,
+          "LoginName": "i:0#.f|membership|agrasmickblack@whallc.com",
+          "Title": "Amber Grasmick-Black",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 305,
+          "LoginName": "i:0#.f|membership|cmackenzie@whallc.com",
+          "Title": "Caitlin MacKenzie",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 914,
+          "LoginName": "c:0t.c|tenant|dada6c76-bbb6-4ccb-b7fc-97c53fe33cdd",
+          "Title": "CentralPark.Train.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 915,
+          "LoginName": "c:0t.c|tenant|21a18707-9e37-41e8-9c9a-1b9b8f73374e",
+          "Title": "CentralPark.Train.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 916,
+          "LoginName": "c:0t.c|tenant|d02db8d2-c556-4806-9131-cf076585905d",
+          "Title": "CentralPark.Train.FullControl",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 917,
+          "LoginName": "c:0t.c|tenant|cecb774f-60f8-4695-a4a5-e70ee36aff97",
+          "Title": "CentralPark.Train.LaptopCheck.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 918,
+          "LoginName": "c:0t.c|tenant|59a4fe26-f61c-402e-aacb-f754ec10bf05",
+          "Title": "CentralPark.Train.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1061,
+          "LoginName": "Limited Access System Group",
+          "Title": "Limited Access System Group",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 1147,
+          "LoginName": "i:0#.f|membership|bgoode@whallc.com",
+          "Title": "Brittany Goode",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 1431,
+          "LoginName": "i:0#.f|membership|nsnyder@whallc.com",
+          "Title": "Natalie Snyder",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 1709,
+          "LoginName": "i:0#.f|membership|mmisho@whallc.com",
+          "Title": "Monica Misho-Grems",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 1980,
+          "LoginName": "i:0#.f|membership|dtjarks@whallc.com",
+          "Title": "Denise Tjarks",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2108,
+          "LoginName": "SharingLinks.72a0bac8-0834-4fbb-954d-9533d1c36761.AnonymousEdit.d074e31b-3685-40f8-a53d-3c2d5b657c6e",
+          "Title": "SharingLinks.72a0bac8-0834-4fbb-954d-9533d1c36761.AnonymousEdit.d074e31b-3685-40f8-a53d-3c2d5b657c6e",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2110,
+          "LoginName": "c:0u.c|tenant|4b0de7924c875a08f204f6310ab451a8c824d5eb5a5ce6d6d0f76e0686a2302c",
+          "Title": "c:0u.c|tenant|4b0de7924c875a08f204f6310ab451a8c824d5eb5a5ce6d6d0f76e0686a2302c",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2111,
+          "LoginName": "SharingLinks.98d7b851-3ace-47d3-9ad9-00f3e54c9f4b.AnonymousEdit.003015ec-50f0-41cb-b69b-db918b687fdf",
+          "Title": "SharingLinks.98d7b851-3ace-47d3-9ad9-00f3e54c9f4b.AnonymousEdit.003015ec-50f0-41cb-b69b-db918b687fdf",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2113,
+          "LoginName": "c:0u.c|tenant|179033c5ca40fda43fef458082dccf2578075c23c1058d293d8a1356fd3e1d13",
+          "Title": "c:0u.c|tenant|179033c5ca40fda43fef458082dccf2578075c23c1058d293d8a1356fd3e1d13",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 2253,
+          "LoginName": "c:0t.c|tenant|f2598ae3-b69c-478b-8ac5-8fe9a02d832b",
+          "Title": "CentralPark.Train.Supervisors.Contributor",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 3167,
+          "LoginName": "i:0#.f|membership|mkaiser@whallc.com",
+          "Title": "Melissa Kaiser",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 3255,
+          "LoginName": "Limited Access System Group For Web 412f321a-42a7-475b-8d0a-efce80ef4d17",
+          "Title": "Limited Access System Group For Web 412f321a-42a7-475b-8d0a-efce80ef4d17",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 3276,
+          "LoginName": "c:0o.c|federateddirectoryclaimprovider|f09bfc6d-62c7-4e83-9ec1-b183ff60689e",
+          "Title": "Training - Department Members",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4180,
+          "LoginName": "SharingLinks.1438bc2e-5e82-4271-af65-5d9a103e1842.OrganizationEdit.bf9b294a-f498-4275-a491-3d1714691d82",
+          "Title": "SharingLinks.1438bc2e-5e82-4271-af65-5d9a103e1842.OrganizationEdit.bf9b294a-f498-4275-a491-3d1714691d82",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4190,
+          "LoginName": "SharingLinks.055bf872-62a0-482d-8e9d-7d48fa354ada.OrganizationEdit.f66e21f8-8aae-4b27-9d41-9950a9353786",
+          "Title": "SharingLinks.055bf872-62a0-482d-8e9d-7d48fa354ada.OrganizationEdit.f66e21f8-8aae-4b27-9d41-9950a9353786",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4218,
+          "LoginName": "SharingLinks.446d8f1d-4c46-4d10-991a-af17db83870d.OrganizationEdit.58f957cf-d6fa-4e79-b0d2-094344ab0dea",
+          "Title": "SharingLinks.446d8f1d-4c46-4d10-991a-af17db83870d.OrganizationEdit.58f957cf-d6fa-4e79-b0d2-094344ab0dea",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4392,
+          "LoginName": "i:0#.f|membership|mturnermoreno@whallc.com",
+          "Title": "Maddie Turner-Moreno",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4692,
+          "LoginName": "SharingLinks.ce1d5a5e-1cdc-4ac4-ac75-96e99874765c.Flexible.18e5dcb2-d434-4bdf-a735-278d9b2861e5",
+          "Title": "SharingLinks.ce1d5a5e-1cdc-4ac4-ac75-96e99874765c.Flexible.18e5dcb2-d434-4bdf-a735-278d9b2861e5",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4720,
+          "LoginName": "SharingLinks.a25c7511-9750-4428-bbd4-345009683178.OrganizationView.933e55c4-d872-44ee-95a4-b314e6d2466a",
+          "Title": "SharingLinks.a25c7511-9750-4428-bbd4-345009683178.OrganizationView.933e55c4-d872-44ee-95a4-b314e6d2466a",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4721,
+          "LoginName": "Limited Access System Group For List e16acca2-23d4-4f2b-8908-57304e972d80",
+          "Title": "Limited Access System Group For List e16acca2-23d4-4f2b-8908-57304e972d80",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4803,
+          "LoginName": "c:0t.c|tenant|6dadd129-8dff-4362-9b62-d97488e99618",
+          "Title": "All Providers",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4804,
+          "LoginName": "c:0t.c|tenant|891842ae-2a0e-482c-ac6a-f1659f83c372",
+          "Title": "CentralPark.Train.Paycom.Designer",
+          "PrincipalType": 4,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4805,
+          "LoginName": "SharingLinks.7eb235d0-fd98-4a50-80f1-a80a76b6229a.OrganizationEdit.33d422af-ced0-4b3b-a310-9822425a2b25",
+          "Title": "SharingLinks.7eb235d0-fd98-4a50-80f1-a80a76b6229a.OrganizationEdit.33d422af-ced0-4b3b-a310-9822425a2b25",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4806,
+          "LoginName": "SharingLinks.7eb235d0-fd98-4a50-80f1-a80a76b6229a.OrganizationView.cf4675fb-748a-499c-b6db-e9f7deee9948",
+          "Title": "SharingLinks.7eb235d0-fd98-4a50-80f1-a80a76b6229a.OrganizationView.cf4675fb-748a-499c-b6db-e9f7deee9948",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4824,
+          "LoginName": "SharingLinks.33e4938d-3770-4f1f-a1ec-90e1c56052dd.OrganizationEdit.ca21b390-9966-4827-8d7a-6c13c1dd0eb6",
+          "Title": "SharingLinks.33e4938d-3770-4f1f-a1ec-90e1c56052dd.OrganizationEdit.ca21b390-9966-4827-8d7a-6c13c1dd0eb6",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4834,
+          "LoginName": "SharingLinks.33e4938d-3770-4f1f-a1ec-90e1c56052dd.Flexible.2555b53d-9131-4e5c-9c11-4cc8dff7410b",
+          "Title": "SharingLinks.33e4938d-3770-4f1f-a1ec-90e1c56052dd.Flexible.2555b53d-9131-4e5c-9c11-4cc8dff7410b",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4932,
+          "LoginName": "Limited Access System Group For List 6222921a-1645-4826-9c20-263dc170f5cf",
+          "Title": "Limited Access System Group For List 6222921a-1645-4826-9c20-263dc170f5cf",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4933,
+          "LoginName": "SharingLinks.6fdc1468-d87e-4114-96af-01d874f3f35e.Flexible.b071d9b1-4b83-4f3a-822f-d6745fa2632e",
+          "Title": "SharingLinks.6fdc1468-d87e-4114-96af-01d874f3f35e.Flexible.b071d9b1-4b83-4f3a-822f-d6745fa2632e",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5005,
+          "LoginName": "Limited Access System Group For List d55ae556-5bdf-4df4-9a97-58e43176a91c",
+          "Title": "Limited Access System Group For List d55ae556-5bdf-4df4-9a97-58e43176a91c",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5017,
+          "LoginName": "SharingLinks.d348a305-2315-4648-8540-fc58b85d82c7.OrganizationView.858e1c00-a306-49f0-89a0-31466f948224",
+          "Title": "SharingLinks.d348a305-2315-4648-8540-fc58b85d82c7.OrganizationView.858e1c00-a306-49f0-89a0-31466f948224",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5061,
+          "LoginName": "SharingLinks.744cd0b6-48f8-42a3-ba12-b018c99d4293.OrganizationEdit.d922e59b-ccab-4de3-bc63-e657be54929f",
+          "Title": "SharingLinks.744cd0b6-48f8-42a3-ba12-b018c99d4293.OrganizationEdit.d922e59b-ccab-4de3-bc63-e657be54929f",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5063,
+          "LoginName": "SharingLinks.7f2772fd-f032-4471-8aa7-776104131dbb.OrganizationEdit.cba8c9ee-c10b-4970-9c6d-3d76ef6cba6a",
+          "Title": "SharingLinks.7f2772fd-f032-4471-8aa7-776104131dbb.OrganizationEdit.cba8c9ee-c10b-4970-9c6d-3d76ef6cba6a",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5087,
+          "LoginName": "SharingLinks.356b95c2-7161-4010-8db2-5f58736172d4.Flexible.1cd88e0e-d306-492a-84db-12cb272c92d9",
+          "Title": "SharingLinks.356b95c2-7161-4010-8db2-5f58736172d4.Flexible.1cd88e0e-d306-492a-84db-12cb272c92d9",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 5135,
+          "LoginName": "SharingLinks.dbf32f38-f849-44a9-92d2-d7b6a1adcf78.OrganizationView.ce5ff7cf-bdd1-4b5c-85ba-0f882a1aeb26",
+          "Title": "SharingLinks.dbf32f38-f849-44a9-92d2-d7b6a1adcf78.OrganizationView.ce5ff7cf-bdd1-4b5c-85ba-0f882a1aeb26",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "350a344b-5d91-484c-8318-801a9c5b612b",
+      "Title": "",
+      "ListKey": "",
+      "Depth": 0
+    },
+    {
+      "Key": "Lists/Agenda",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'a0bfe3f1-7d2b-4eff-a2f3-02f0c450c611')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "a0bfe3f1-7d2b-4eff-a2f3-02f0c450c611",
+      "Title": "Agenda",
+      "ListKey": "Lists/Agenda",
+      "Depth": 0,
+      "BaseTemplate": 201,
+      "ItemCount": 0,
+      "Leaf": "Agenda"
+    },
+    {
+      "Key": "Lists/Attendees",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'9fde76df-d665-4a8e-af7a-dc5d147d9a02')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9fde76df-d665-4a8e-af7a-dc5d147d9a02",
+      "Title": "Attendees",
+      "ListKey": "Lists/Attendees",
+      "Depth": 0,
+      "BaseTemplate": 202,
+      "ItemCount": 1,
+      "Leaf": "Attendees"
+    },
+    {
+      "Key": "Lists/Attendees/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'9fde76df-d665-4a8e-af7a-dc5d147d9a02')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "sbrandon@whallc.com",
+      "ListKey": "Lists/Attendees",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/Lists/Attendees/1_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:29",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20108ad9-466c-48f4-b650-16ca385fa103",
+      "Title": "Composed Looks",
+      "ListKey": "_catalogs/design",
+      "Depth": 0,
+      "BaseTemplate": 124,
+      "ItemCount": 18,
+      "Leaf": "design"
+    },
+    {
+      "Key": "_catalogs/design/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Current",
+      "ListKey": "_catalogs/design",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/1_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:09",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Orange",
+      "ListKey": "_catalogs/design",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/2_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:09",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "Sea Monster",
+      "ListKey": "_catalogs/design",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/3_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:09",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "Green",
+      "ListKey": "_catalogs/design",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/4_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:10",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "Lime",
+      "ListKey": "_catalogs/design",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/5_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:10",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "Nature",
+      "ListKey": "_catalogs/design",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/6_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:10",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "Blossom",
+      "ListKey": "_catalogs/design",
+      "Rel": "7_.000",
+      "Depth": 1,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/7_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:10",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "Sketch",
+      "ListKey": "_catalogs/design",
+      "Rel": "8_.000",
+      "Depth": 1,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/8_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:10",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "City",
+      "ListKey": "_catalogs/design",
+      "Rel": "9_.000",
+      "Depth": 1,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/9_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:11",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "Orbit",
+      "ListKey": "_catalogs/design",
+      "Rel": "10_.000",
+      "Depth": 1,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/10_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:11",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "Grey",
+      "ListKey": "_catalogs/design",
+      "Rel": "11_.000",
+      "Depth": 1,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/11_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:11",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "Characters",
+      "ListKey": "_catalogs/design",
+      "Rel": "12_.000",
+      "Depth": 1,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/12_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:11",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "Office",
+      "ListKey": "_catalogs/design",
+      "Rel": "13_.000",
+      "Depth": 1,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/13_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:13",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "Breeze",
+      "ListKey": "_catalogs/design",
+      "Rel": "14_.000",
+      "Depth": 1,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/14_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:13",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Immerse",
+      "ListKey": "_catalogs/design",
+      "Rel": "15_.000",
+      "Depth": 1,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/15_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:13",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "Red",
+      "ListKey": "_catalogs/design",
+      "Rel": "16_.000",
+      "Depth": 1,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/16_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:14",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "Purple",
+      "ListKey": "_catalogs/design",
+      "Rel": "17_.000",
+      "Depth": 1,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/17_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:14",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'20108ad9-466c-48f4-b650-16ca385fa103')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "Wood",
+      "ListKey": "_catalogs/design",
+      "Rel": "18_.000",
+      "Depth": 1,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/design/18_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 19:40:14",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": null
+    },
+    {
+      "Key": "Document Library",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'2bd95bd9-60e3-4781-ae2f-f90e8b556f76')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2bd95bd9-60e3-4781-ae2f-f90e8b556f76",
+      "Title": "Document Library",
+      "ListKey": "Document Library",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 1,
+      "Leaf": "Document Library",
+      "InventoryCountReview": "Reported count 1; REST and recursive PnP agree on all 0 item IDs. Visibility is limited to the signed-in account."
+    },
+    {
+      "Key": "DropOffLibrary",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'f4452d34-1041-4416-80b4-d968c5cee234')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "f4452d34-1041-4416-80b4-d968c5cee234",
+      "Title": "Drop Off Library",
+      "ListKey": "DropOffLibrary",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 1,
+      "Leaf": "DropOffLibrary",
+      "InventoryCountReview": "Reported count 1; REST and recursive PnP agree on all 0 item IDs. Visibility is limited to the signed-in account."
+    },
+    {
+      "Key": "_catalogs/masterpage",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3",
+      "Title": "Master Page Gallery",
+      "ListKey": "_catalogs/masterpage",
+      "Depth": 0,
+      "BaseTemplate": 116,
+      "ItemCount": 7,
+      "Leaf": "masterpage"
+    },
+    {
+      "Key": "_catalogs/masterpage/v4.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "v4.master",
+      "Depth": 1,
+      "Leaf": "v4.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/v4.master",
+      "Ext": ".master",
+      "Created": "02/28/2018 19:40:14",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 27244.0
+    },
+    {
+      "Key": "_catalogs/masterpage/minimal.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "minimal.master",
+      "Depth": 1,
+      "Leaf": "minimal.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/minimal.master",
+      "Ext": ".master",
+      "Created": "02/28/2018 19:40:14",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 8825.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.master",
+      "Depth": 1,
+      "Leaf": "seattle.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/seattle.master",
+      "Ext": ".master",
+      "Created": "02/28/2018 19:40:15",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 30796.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.master",
+      "Depth": 1,
+      "Leaf": "oslo.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/oslo.master",
+      "Ext": ".master",
+      "Created": "02/28/2018 19:40:15",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 29510.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.preview",
+      "Depth": 1,
+      "Leaf": "seattle.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/seattle.preview",
+      "Ext": ".preview",
+      "Created": "02/28/2018 19:40:15",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 10725.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.preview",
+      "Depth": 1,
+      "Leaf": "oslo.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/oslo.preview",
+      "Ext": ".preview",
+      "Created": "02/28/2018 19:40:15",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 10159.0
+    },
+    {
+      "Key": "_catalogs/masterpage/MWSDefaultv15.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'6dabdbf7-4f1c-4f88-be9c-82c2068bd2b3')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "MWSDefaultv15.master",
+      "Depth": 1,
+      "Leaf": "MWSDefaultv15.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/train/PSC/_catalogs/masterpage/MWSDefaultv15.master",
+      "Ext": ".master",
+      "Created": "02/28/2018 19:40:16",
+      "Author": "osadmindave@whallc.onmicrosoft.com",
+      "Size": 31451.0
+    },
+    {
+      "Key": "Lists/Meeting Series",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'ba001df7-e8e5-4079-9988-4cf7200d6d70')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "ba001df7-e8e5-4079-9988-4cf7200d6d70",
+      "Title": "Meeting Series",
+      "ListKey": "Lists/Meeting Series",
+      "Depth": 0,
+      "BaseTemplate": 200,
+      "ItemCount": 0,
+      "Leaf": "Meeting Series"
+    },
+    {
+      "Key": "Lists/Objectives",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'be332acd-b671-41bd-a2af-31619e36ea4d')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "be332acd-b671-41bd-a2af-31619e36ea4d",
+      "Title": "Objectives",
+      "ListKey": "Lists/Objectives",
+      "Depth": 0,
+      "BaseTemplate": 207,
+      "ItemCount": 0,
+      "Leaf": "Objectives"
+    },
+    {
+      "Key": "SitePages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'1aea701c-dbcb-42a3-81f8-55163afc42f3')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1aea701c-dbcb-42a3-81f8-55163afc42f3",
+      "Title": "Site Pages",
+      "ListKey": "SitePages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 1,
+      "Leaf": "SitePages",
+      "InventoryCountReview": "Reported count 1; REST and recursive PnP agree on all 0 item IDs. Visibility is limited to the signed-in account."
+    },
+    {
+      "Key": "WorkflowTasks",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'd470c9eb-33b7-41af-8f7d-3fd5efcbebe6')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "d470c9eb-33b7-41af-8f7d-3fd5efcbebe6",
+      "Title": "Workflow Tasks",
+      "ListKey": "WorkflowTasks",
+      "Depth": 0,
+      "BaseTemplate": 107,
+      "ItemCount": 0,
+      "Leaf": "WorkflowTasks"
+    },
+    {
+      "Key": "pages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC/_api/web/lists(guid'2118a815-c336-4fe6-a517-ed066c6ae820')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2118a815-c336-4fe6-a517-ed066c6ae820",
+      "Title": "Workspace Pages",
+      "ListKey": "pages",
+      "Depth": 0,
+      "BaseTemplate": 212,
+      "ItemCount": 0,
+      "Leaf": "pages"
+    }
+  ]
+}

@@ -1,0 +1,2028 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal",
+  "Scopes": [
+    {
+      "Key": "",
+      "Kind": "Web",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 3,
+          "LoginName": "Excel Services Viewers",
+          "Title": "Excel Services Viewers",
+          "PrincipalType": 8,
+          "Roles": [
+            "View Only"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            },
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612801"
+              },
+              "Description": "Can view pages, list items, and documents. Document types with server-side file handlers can be viewed in the browser but not downloaded.",
+              "Hidden": false,
+              "Id": 1073741925,
+              "Name": "View Only",
+              "Order": 2147483647,
+              "RoleTypeKind": 0
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 7,
+          "LoginName": "Team Site Owners",
+          "Title": "Team Site Owners",
+          "PrincipalType": 8,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 8,
+          "LoginName": "Team Site Visitors",
+          "Title": "Team Site Visitors",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 9,
+          "LoginName": "Team Site Members",
+          "Title": "Team Site Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Edit",
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011030767"
+              },
+              "Description": "Can add, edit and delete lists; can view, add, update and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741830,
+              "Name": "Edit",
+              "Order": 48,
+              "RoleTypeKind": 6
+            },
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 725,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 786,
+          "LoginName": "c:0t.c|tenant|60377920-12b0-4367-b0be-17919308ee6d",
+          "Title": "CentralPark.Home.Announcements.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 787,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 788,
+          "LoginName": "c:0t.c|tenant|495d51e1-4478-48a5-9a8a-991e200c8663",
+          "Title": "CentralPark.Home.MHH.Contribute",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 789,
+          "LoginName": "c:0t.c|tenant|c330d8c4-54d6-496e-b8f3-7988969bab29",
+          "Title": "CentralPark.Home.PictureLibrary.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 790,
+          "LoginName": "c:0t.c|tenant|ea859ee9-3031-4970-a41f-05893edc1503",
+          "Title": "CentralPark.Home.SharedDocs.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 791,
+          "LoginName": "c:0t.c|tenant|5b50c144-cdc4-4486-977a-c2b0d4aebd96",
+          "Title": "CentralPark.Home.SharedDocs.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 792,
+          "LoginName": "c:0t.c|tenant|15fa5cc8-e8be-4dcd-956c-1056856a67d6",
+          "Title": "CentralPark.Home.Templates.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 793,
+          "LoginName": "c:0t.c|tenant|6e6ae16a-dace-4221-820a-ce55fccbb1a2",
+          "Title": "CentralPark.Home.WellnessProgram.Contribute",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 794,
+          "LoginName": "c:0t.c|tenant|33ba5fd0-e7a3-4d3e-824f-342542cef68d",
+          "Title": "CentralPark.Home.WHAEvents.Contribute",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 845,
+          "LoginName": "c:0t.c|tenant|b90b9090-6d39-48ea-993d-5f6074fc25cf",
+          "Title": "CentralPark.SitePages.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 846,
+          "LoginName": "c:0t.c|tenant|b5aec919-432f-4cf0-a4b5-1a0c1619119e",
+          "Title": "CentralPark.SitePages.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 919,
+          "LoginName": "c:0t.c|tenant|d4b5fba9-2a6a-4bf5-80bc-be6997da07b6",
+          "Title": "CentralPark.ViewWebAnalyticsData",
+          "PrincipalType": 4,
+          "Roles": [
+            "View Web Analytics Data"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            },
+            {
+              "BasePermissions": {
+                "High": "1073741824",
+                "Low": "203624545"
+              },
+              "Description": "",
+              "Hidden": false,
+              "Id": 1073741931,
+              "Name": "View Web Analytics Data",
+              "Order": 2147483647,
+              "RoleTypeKind": 0
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1035,
+          "LoginName": "c:0t.c|tenant|0201f9a5-e855-4422-bed3-c8e5ccb71b45",
+          "Title": "CentralPark.Home.ABOG.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1036,
+          "LoginName": "c:0t.c|tenant|5e3497be-8797-40ca-a9ea-9188e2cde950",
+          "Title": "CentralPark.Home.Calendar.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1037,
+          "LoginName": "c:0t.c|tenant|8c62baa0-35d3-4166-9fb2-986482bb247d",
+          "Title": "CentralPark.Home.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1038,
+          "LoginName": "c:0t.c|tenant|62165276-0402-40ba-90d4-4c685e15c972",
+          "Title": "CentralPark.Home.FamilyAlbum.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 1054,
+          "LoginName": "WHA Sharepoint - Central Park Moderators",
+          "Title": "WHA Sharepoint - Central Park Moderators",
+          "PrincipalType": 8,
+          "Roles": [
+            "Moderate"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011031023"
+              },
+              "Description": "Can view, add, update, delete and moderate list items and documents",
+              "Hidden": false,
+              "Id": 1073741933,
+              "Name": "Moderate",
+              "Order": 2147483647,
+              "RoleTypeKind": 0
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 3118,
+          "LoginName": "Limited Access System Group For Web 9fd28cc5-e812-4417-87f6-524a116859f5",
+          "Title": "Limited Access System Group For Web 9fd28cc5-e812-4417-87f6-524a116859f5",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "560",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": true,
+              "Id": 1073741833,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 9
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 4667,
+          "LoginName": "Records Center Web Service Submitters for HelpDeskSelfServicePortal",
+          "Title": "Records Center Web Service Submitters for HelpDeskSelfServicePortal",
+          "PrincipalType": 8,
+          "Roles": [
+            "Records Center Web Service Submitters"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "32",
+                "Low": "65536"
+              },
+              "Description": "Submit content to this site using Web Services.",
+              "Hidden": false,
+              "Id": 1073741930,
+              "Name": "Records Center Web Service Submitters",
+              "Order": 2147483647,
+              "RoleTypeKind": 0
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "90570e39-f135-4cb9-b420-766e6565d1d0",
+      "Title": "",
+      "ListKey": "",
+      "Depth": 0
+    },
+    {
+      "Key": "_catalogs/design",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "fd004523-ece4-46ae-841a-9ce4772badc1",
+      "Title": "Composed Looks",
+      "ListKey": "_catalogs/design",
+      "Depth": 0,
+      "BaseTemplate": 124,
+      "ItemCount": 18,
+      "Leaf": "design"
+    },
+    {
+      "Key": "_catalogs/design/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Current",
+      "ListKey": "_catalogs/design",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/1_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Orange",
+      "ListKey": "_catalogs/design",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/2_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "Sea Monster",
+      "ListKey": "_catalogs/design",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/3_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "Green",
+      "ListKey": "_catalogs/design",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/4_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "Lime",
+      "ListKey": "_catalogs/design",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/5_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "Nature",
+      "ListKey": "_catalogs/design",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/6_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "Blossom",
+      "ListKey": "_catalogs/design",
+      "Rel": "7_.000",
+      "Depth": 1,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/7_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "Sketch",
+      "ListKey": "_catalogs/design",
+      "Rel": "8_.000",
+      "Depth": 1,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/8_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:19",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "City",
+      "ListKey": "_catalogs/design",
+      "Rel": "9_.000",
+      "Depth": 1,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/9_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "Orbit",
+      "ListKey": "_catalogs/design",
+      "Rel": "10_.000",
+      "Depth": 1,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/10_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "Grey",
+      "ListKey": "_catalogs/design",
+      "Rel": "11_.000",
+      "Depth": 1,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/11_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "Characters",
+      "ListKey": "_catalogs/design",
+      "Rel": "12_.000",
+      "Depth": 1,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/12_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "Office",
+      "ListKey": "_catalogs/design",
+      "Rel": "13_.000",
+      "Depth": 1,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/13_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "Breeze",
+      "ListKey": "_catalogs/design",
+      "Rel": "14_.000",
+      "Depth": 1,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/14_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Immerse",
+      "ListKey": "_catalogs/design",
+      "Rel": "15_.000",
+      "Depth": 1,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/15_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "Red",
+      "ListKey": "_catalogs/design",
+      "Rel": "16_.000",
+      "Depth": 1,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/16_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "Purple",
+      "ListKey": "_catalogs/design",
+      "Rel": "17_.000",
+      "Depth": 1,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/17_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'fd004523-ece4-46ae-841a-9ce4772badc1')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "Wood",
+      "ListKey": "_catalogs/design",
+      "Rel": "18_.000",
+      "Depth": 1,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/design/18_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'406e5fc6-306d-423b-82fc-7c9533d6aa3c')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "406e5fc6-306d-423b-82fc-7c9533d6aa3c",
+      "Title": "Documents",
+      "ListKey": "Shared Documents",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 3,
+      "Leaf": "Shared Documents"
+    },
+    {
+      "Key": "Shared Documents/Katie Test 2",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'406e5fc6-306d-423b-82fc-7c9533d6aa3c')/items(33)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "33",
+      "Title": "Katie Test 2",
+      "ListKey": "Shared Documents",
+      "Rel": "Katie Test 2",
+      "Depth": 1,
+      "Leaf": "Katie Test 2",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/Shared Documents/Katie Test 2",
+      "Ext": "",
+      "Created": "11/19/2024 21:15:01",
+      "Author": "kbontempi@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents/Katie Test 2/Untitled Section.one",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'406e5fc6-306d-423b-82fc-7c9533d6aa3c')/items(34)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "34",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Katie Test 2/Untitled Section.one",
+      "Depth": 2,
+      "Leaf": "Untitled Section.one",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/Shared Documents/Katie Test 2/Untitled Section.one",
+      "Ext": ".one",
+      "Created": "11/19/2024 21:15:04",
+      "Author": "kbontempi@whallc.com",
+      "Size": 14548.0
+    },
+    {
+      "Key": "Shared Documents/Katie Test 2/Open Notebook.onetoc2",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'406e5fc6-306d-423b-82fc-7c9533d6aa3c')/items(35)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "35",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Katie Test 2/Open Notebook.onetoc2",
+      "Depth": 2,
+      "Leaf": "Open Notebook.onetoc2",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/Shared Documents/Katie Test 2/Open Notebook.onetoc2",
+      "Ext": ".onetoc2",
+      "Created": "11/19/2024 21:15:08",
+      "Author": "kbontempi@whallc.com",
+      "Size": 4158.0
+    },
+    {
+      "Key": "Lists/IT Store Room Inventory Sheet",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'593b1109-efa6-4164-9a89-16f38ae4b30e')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "593b1109-efa6-4164-9a89-16f38ae4b30e",
+      "Title": "IT Store Room Inventory Sheet",
+      "ListKey": "Lists/IT Store Room Inventory Sheet",
+      "Depth": 0,
+      "BaseTemplate": 100,
+      "ItemCount": 0,
+      "Leaf": "IT Store Room Inventory Sheet"
+    },
+    {
+      "Key": "_catalogs/masterpage",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "417f4fe0-5baf-415d-aa1f-4881f8021b0d",
+      "Title": "Master Page Gallery",
+      "ListKey": "_catalogs/masterpage",
+      "Depth": 0,
+      "BaseTemplate": 116,
+      "ItemCount": 6,
+      "Leaf": "masterpage"
+    },
+    {
+      "Key": "_catalogs/masterpage/v4.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "v4.master",
+      "Depth": 1,
+      "Leaf": "v4.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/v4.master",
+      "Ext": ".master",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 27319.0
+    },
+    {
+      "Key": "_catalogs/masterpage/minimal.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "minimal.master",
+      "Depth": 1,
+      "Leaf": "minimal.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/minimal.master",
+      "Ext": ".master",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 8825.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.master",
+      "Depth": 1,
+      "Leaf": "seattle.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/seattle.master",
+      "Ext": ".master",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 31721.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.master",
+      "Depth": 1,
+      "Leaf": "oslo.master",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/oslo.master",
+      "Ext": ".master",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 30454.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.preview",
+      "Depth": 1,
+      "Leaf": "seattle.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/seattle.preview",
+      "Ext": ".preview",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 10725.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'417f4fe0-5baf-415d-aa1f-4881f8021b0d')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.preview",
+      "Depth": 1,
+      "Leaf": "oslo.preview",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/masterpage/oslo.preview",
+      "Ext": ".preview",
+      "Created": "07/09/2024 01:42:20",
+      "Author": "bposey@whallc.com",
+      "Size": 10159.0
+    },
+    {
+      "Key": "SiteAssets",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "d804aa38-f007-49e6-82b6-9ed466d8c882",
+      "Title": "Site Assets",
+      "ListKey": "SiteAssets",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 5,
+      "Leaf": "SiteAssets"
+    },
+    {
+      "Key": "SiteAssets/IT Internal Notebook",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "IT Internal Notebook",
+      "ListKey": "SiteAssets",
+      "Rel": "IT Internal Notebook",
+      "Depth": 1,
+      "Leaf": "IT Internal Notebook",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SiteAssets/IT Internal Notebook",
+      "Ext": "",
+      "Created": "07/09/2024 01:42:22",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages",
+      "Depth": 1,
+      "Leaf": "SitePages",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SiteAssets/SitePages",
+      "Ext": "",
+      "Created": "07/09/2024 01:46:28",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages/IT-Store-Room-Inventory",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages/IT-Store-Room-Inventory",
+      "Depth": 2,
+      "Leaf": "IT-Store-Room-Inventory",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SiteAssets/SitePages/IT-Store-Room-Inventory",
+      "Ext": "",
+      "Created": "07/09/2024 01:46:28",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages/IT-Store-Room-Inventory/79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages/IT-Store-Room-Inventory/79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "Depth": 3,
+      "Leaf": "79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SiteAssets/SitePages/IT-Store-Room-Inventory/79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "Ext": ".jpeg",
+      "Created": "07/09/2024 01:46:29",
+      "Author": "bposey@whallc.com",
+      "Size": 6013399.0
+    },
+    {
+      "Key": "SiteAssets/IT Internal Notebook/Untitled Section.one",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'd804aa38-f007-49e6-82b6-9ed466d8c882')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "IT Internal Notebook/Untitled Section.one",
+      "Depth": 2,
+      "Leaf": "Untitled Section.one",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SiteAssets/IT Internal Notebook/Untitled Section.one",
+      "Ext": ".one",
+      "Created": "11/19/2024 21:10:24",
+      "Author": "kbontempi@whallc.com",
+      "Size": 5964.0
+    },
+    {
+      "Key": "SitePages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'3d3594e4-dad8-437b-900a-f34a64bdae11')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3d3594e4-dad8-437b-900a-f34a64bdae11",
+      "Title": "Site Pages",
+      "ListKey": "SitePages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 2,
+      "Leaf": "SitePages"
+    },
+    {
+      "Key": "SitePages/Home.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'3d3594e4-dad8-437b-900a-f34a64bdae11')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Home",
+      "ListKey": "SitePages",
+      "Rel": "Home.aspx",
+      "Depth": 1,
+      "Leaf": "Home.aspx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SitePages/Home.aspx",
+      "Ext": ".aspx",
+      "Created": "07/09/2024 01:42:22",
+      "Author": "bposey@whallc.com",
+      "Size": 805.0
+    },
+    {
+      "Key": "SitePages/IT-Store-Room-Inventory.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'3d3594e4-dad8-437b-900a-f34a64bdae11')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "IT Store Room Inventory",
+      "ListKey": "SitePages",
+      "Rel": "IT-Store-Room-Inventory.aspx",
+      "Depth": 1,
+      "Leaf": "IT-Store-Room-Inventory.aspx",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/SitePages/IT-Store-Room-Inventory.aspx",
+      "Ext": ".aspx",
+      "Created": "07/09/2024 01:43:56",
+      "Author": "bposey@whallc.com",
+      "Size": 8277.0
+    },
+    {
+      "Key": "_catalogs/wte",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "ded78aac-009b-4375-9960-066a40c00455",
+      "Title": "Web Template Extensions",
+      "ListKey": "_catalogs/wte",
+      "Depth": 0,
+      "BaseTemplate": 3415,
+      "ItemCount": 25,
+      "Leaf": "wte"
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b",
+      "Depth": 1,
+      "Leaf": "ad0612fa-93db-4516-ba00-be55ca5c259b",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b",
+      "Ext": "",
+      "Created": "07/09/2024 01:52:39",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/2_.000",
+      "Depth": 2,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/2_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:39",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/3_.000",
+      "Depth": 2,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/3_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/4_.000",
+      "Depth": 2,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/4_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/5_.000",
+      "Depth": 2,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/5_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/6_.000",
+      "Depth": 2,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/6_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/7_.000",
+      "Depth": 2,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/7_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/8_.000",
+      "Depth": 2,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/8_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/9_.000",
+      "Depth": 2,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/9_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/10_.000",
+      "Depth": 2,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/10_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/11_.000",
+      "Depth": 2,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/11_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/12_.000",
+      "Depth": 2,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/12_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/13_.000",
+      "Depth": 2,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/13_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/14_.000",
+      "Depth": 2,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/14_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/15_.000",
+      "Depth": 2,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/15_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/16_.000",
+      "Depth": 2,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/16_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/17_.000",
+      "Depth": 2,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/17_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/18_.000",
+      "Depth": 2,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/18_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/19_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(19)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "19",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/19_.000",
+      "Depth": 2,
+      "Leaf": "19_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/19_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/20_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(20)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/20_.000",
+      "Depth": 2,
+      "Leaf": "20_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/20_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/21_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(21)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "21",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/21_.000",
+      "Depth": 2,
+      "Leaf": "21_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/21_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/22_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(22)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "22",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/22_.000",
+      "Depth": 2,
+      "Leaf": "22_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/22_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/23_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(23)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "23",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/23_.000",
+      "Depth": 2,
+      "Leaf": "23_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/23_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/24_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(24)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "24",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/24_.000",
+      "Depth": 2,
+      "Leaf": "24_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/24_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/25_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/IT-Internal/_api/web/lists(guid'ded78aac-009b-4375-9960-066a40c00455')/items(25)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "25",
+      "Title": "",
+      "ListKey": "_catalogs/wte",
+      "Rel": "ad0612fa-93db-4516-ba00-be55ca5c259b/25_.000",
+      "Depth": 2,
+      "Leaf": "25_.000",
+      "FileRef": "/sites/archive-2026-10-18T115436Z/IT-Internal/_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/25_.000",
+      "Ext": ".000",
+      "Created": "07/09/2024 01:52:40",
+      "Author": "bposey@whallc.com",
+      "Size": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "TargetUrl": "https://whallc.sharepoint.com/sites/ClinicalandPatientServices",
+  "Status": "Failed",
+  "Error": "Automatic Apply stopped: blocked scopes or unavailable principals in 'C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\PermRuns\\q-261019144219489\\E86E6768733F\\w-E86E6768733F\\DryRun'.",
+  "StartedUtc": "2026-10-19T21:42:21.6120634Z",
+  "FinishedUtc": "2026-10-19T21:57:12.2973746Z"
+}

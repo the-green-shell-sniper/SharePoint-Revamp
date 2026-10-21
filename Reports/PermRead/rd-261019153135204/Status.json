@@ -1,0 +1,5 @@
+{
+  "Mode": "Apply",
+  "Status": "Failed",
+  "Error": "Visitors is a protected migration group or contains one; refusing to alter its roles or membership."
+}

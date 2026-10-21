@@ -1,0 +1,348 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Document Transfer ('Handing') to Patients Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Document Transfer ('Handing') to Patients Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Faxing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Faxing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Shredding Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Shredding Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/ComplyLine.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/ComplyLine.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Mailing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Mailing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Care Facility Release of PHI Decision Tree.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Care Facility Release of PHI Decision Tree.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Emailing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Emailing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms",
+      "SourceUnique": false,
+      "TargetPath": "Forms",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Confidentiality Acknowledgement Form.aspx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Confidentiality Acknowledgement Form.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/External User Access Agreement.doc",
+      "SourceUnique": false,
+      "TargetPath": "Forms/External User Access Agreement.doc",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/HIPAA at WHA.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/HIPAA at WHA.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Minor Patient Privacy.docx",
+      "SourceUnique": true,
+      "TargetPath": "Forms/Minor Patient Privacy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Notice of Privacy Practices.aspx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Notice of Privacy Practices.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/PHI Authorization Matrix.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/PHI Authorization Matrix.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Request Accounting of Certain Disclosures of PHI for Non-TPO Purposes.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Request Accounting of Certain Disclosures of PHI for Non-TPO Purposes.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Request for Restriction on Use-Disclosure of PHI and-or Confidential Communication.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Request for Restriction on Use-Disclosure of PHI and-or Confidential Communication.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/WHA Outside ROI Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/WHA Outside ROI Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/WHA Subpoena Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/WHA Subpoena Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Attestation Reproductive Health.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Attestation Reproductive Health.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/HIPAA Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/HIPAA Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

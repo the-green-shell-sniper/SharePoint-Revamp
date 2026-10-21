@@ -1,0 +1,368 @@
+{
+  "Steps": [
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/HB/_api/web/lists(guid'33a05c15-7d6c-40d8-a1d9-a81b9c3b6302')/items(5)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/HB/_api/web/lists(guid'33a05c15-7d6c-40d8-a1d9-a81b9c3b6302')/items(4)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/HB/_api/web/lists(guid'33a05c15-7d6c-40d8-a1d9-a81b9c3b6302')/items(2)",
+      "Kind": "Folder",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "Lists/Extended Hours Calendar/2_.000",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/HB/_api/web/lists(guid'5f2c66d4-46d9-4c49-b077-fb629c97ae7f')/items(2)",
+      "Kind": "Item",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/HB/_api/web",
+      "Kind": "Web",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|2bcf5d1c-1862-4dd8-b0de-e3a8d1f3976d\tcontribute\nc:0t.c|tenant|53c2826b-2378-4d57-a91d-6a79002ff58c\tcontribute\nc:0t.c|tenant|64e63fe8-a890-431e-b5af-2acc5d964f4a\tcontribute\nc:0t.c|tenant|8f4b6392-142c-4a22-bd10-e8cdcd66e8e3\tdesign\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Calendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Calendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Extended Hours Calendar/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Extended Hours Calendar/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/Links",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Links",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/PathwaysCalendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/PathwaysCalendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Hillsboro Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Hillsboro Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Tasks",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Tasks",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Team Discussion",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Team Discussion",
+      "Status": "Eligible"
+    }
+  ]
+}

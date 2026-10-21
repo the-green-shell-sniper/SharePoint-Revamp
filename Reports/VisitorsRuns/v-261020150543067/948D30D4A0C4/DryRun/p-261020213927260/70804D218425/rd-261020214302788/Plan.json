@@ -1,0 +1,995 @@
+{
+  "Steps": [
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(5)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(4)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(2)",
+      "Kind": "Folder",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web",
+      "Kind": "Web",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')",
+      "Kind": "Library",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW Policies",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')",
+      "Kind": "Library",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBC Birth Book/Glossary.docx",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'eeac4fcb-8466-4ba9-96d7-2a5cad1d3d78')/items(1)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBC Clinical Protocols/Birth Set Up.docx",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(3)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBC Clinical Protocols/Tub Cleaning Protocol.docx",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(42)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/MBC-East Precinct Demonstration Plan.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(2)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/Security Manual.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(3)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW Policies/MBC-East Precinct Demonstration Plan.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(6)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW Policies/Symptomatic Admissions MBC.docx",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(7)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "MBCGW Policies/WHA MBC - Emergency Response Plan.docx",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(8)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tcontribute\nc:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299\tdesign\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tcontribute\nc:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3\tdesign\nc:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024\tcontribute\nwha sites members\tread\nwha sites visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "WHA Sites Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Administrative Files",
+      "SourceUnique": false,
+      "TargetPath": "Administrative Files",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Administrative Files/Member address list.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Administrative Files/Member address list.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/After Birth Cleaning Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/After Birth Cleaning Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Birth Assistant Job Description.aspx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Birth Assistant Job Description.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Blood Specimen Collection (Appendix A).docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Blood Specimen Collection (Appendix A).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Clinitek Training Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Clinitek Training Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/LAB ASSISTANT PREREQUISITES.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/LAB ASSISTANT PREREQUISITES.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/MBC Birth Assistant Training Checklist.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/MBC Birth Assistant Training Checklist.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Orchard Training Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Orchard Training Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Specimen processing checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Specimen processing checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Terminal Cleaning Log.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Terminal Cleaning Log.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Links",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Links",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Anemia in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Anemia in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Asthma in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Asthma in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Birth Set Up.docx",
+      "SourceUnique": true,
+      "TargetPath": "MBC Clinical Protocols/Birth Set Up.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Erythromycin Ophthalmic Ointment.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Erythromycin Ophthalmic Ointment.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Facility and Equipment.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Facility and Equipment.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Fetal Demise.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Fetal Demise.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Final Room Cleaning.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Final Room Cleaning.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Food Handling.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Food Handling.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Gestational Diabetes Mellitus.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Gestational Diabetes Mellitus.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Group B Strep.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Group B Strep.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Herpes Simplex Virus.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Herpes Simplex Virus.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Home Visit Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Home Visit Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Hydrotherapy in Laborv.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Hydrotherapy in Laborv.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Hyperbilirubinemia Screening.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Hyperbilirubinemia Screening.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Hypertension in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Hypertension in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Intrahepatic Cholestasis of Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Intrahepatic Cholestasis of Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Intramuscular Injections for Neonates.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Intramuscular Injections for Neonates.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Intrapartum Fetal Monitoring.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Intrapartum Fetal Monitoring.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Intrapartum Fever.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Intrapartum Fever.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Intrapartum Labor Management.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Intrapartum Labor Management.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Meconium.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Meconium.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Newborn Care.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Newborn Care.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Newborn Hearing Screen.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Newborn Hearing Screen.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Newborn Hepatitis B Vaccine.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Newborn Hepatitis B Vaccine.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Non-Cephalic Presentation.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Non-Cephalic Presentation.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Nutrition and Hydration during Labor.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Nutrition and Hydration during Labor.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Obstetrical Lacerations.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Obstetrical Lacerations.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Oligohydramnios.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Oligohydramnios.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Placenta.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Placenta.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Polyhydramnios.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Polyhydramnios.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Premature Rupture of Membranes (PROM).docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Premature Rupture of Membranes (PROM).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Prolonged Labor.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Prolonged Labor.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Shoulder Dystocia.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Shoulder Dystocia.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Soiled Linen.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Soiled Linen.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Thyroid Disease.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Thyroid Disease.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Transport.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Transport.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Tub Cleaning Protocol.docx",
+      "SourceUnique": true,
+      "TargetPath": "MBC Clinical Protocols/Tub Cleaning Protocol.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Vitamin K Administration.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Vitamin K Administration.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Nutrition and BMI Protocol.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Nutrition and BMI Protocol.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Clinical Protocols/Postpartum Hemorrhage.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Clinical Protocols/Postpartum Hemorrhage.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Diet Diary.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Diet Diary.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - CCHD Screening.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - CCHD Screening.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - GBS.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - GBS.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Hepatitis B Vaccine.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Hepatitis B Vaccine.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Jaundice Screening.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Jaundice Screening.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Newborn Eye Prophylaxis.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Newborn Eye Prophylaxis.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Newborn Hearing Screening.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Newborn Hearing Screening.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Newborn Screening.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Newborn Screening.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - Vitamin K.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - Vitamin K.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC Infomed Consent.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC Infomed Consent.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC Meet and Greet Form.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC Meet and Greet Form.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC Transport Plan .docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC Transport Plan .docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC Placenta Release Request.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC Placenta Release Request.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/Informed Consent - MBC Risk Criteria.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/Informed Consent - MBC Risk Criteria.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Forms  Consents/MBC CABC CHART REVIEW FORM.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Forms  Consents/MBC CABC CHART REVIEW FORM.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Birth Book",
+      "SourceUnique": false,
+      "TargetPath": "MBC Birth Book",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Birth Book/Glossary.docx",
+      "SourceUnique": true,
+      "TargetPath": "MBC Birth Book/Glossary.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBC Birth Book/MBC Birth Book.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBC Birth Book/MBC Birth Book.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Checklists",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Checklists",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW CNM Protocols  Workflows",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW CNM Protocols  Workflows",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW CNM Protocols  Workflows/JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW CNM Protocols  Workflows/JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW CNM Protocols  Workflows/MBC-East Precinct Demonstration Plan.pdf",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW CNM Protocols  Workflows/MBC-East Precinct Demonstration Plan.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW CNM Protocols  Workflows/Security Manual.pdf",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW CNM Protocols  Workflows/Security Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW CNM Protocols  Workflows/STAT lab pickup for MBC - Legacy .docx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW CNM Protocols  Workflows/STAT lab pickup for MBC - Legacy .docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW Policies",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Decontamination and Sterilization .aspx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Policies/Decontamination and Sterilization .aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Hand Hygiene.aspx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Policies/Hand Hygiene.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Infection Control for Birth Centers.docx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Policies/Infection Control for Birth Centers.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Policies/Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Infection Control for Ultrasound.aspx",
+      "SourceUnique": false,
+      "TargetPath": "MBCGW Policies/Infection Control for Ultrasound.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/WHA MBC - Emergency Response Plan.docx",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW Policies/WHA MBC - Emergency Response Plan.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/MBC-East Precinct Demonstration Plan.pdf",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW Policies/MBC-East Precinct Demonstration Plan.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "MBCGW Policies/Symptomatic Admissions MBC.docx",
+      "SourceUnique": true,
+      "TargetPath": "MBCGW Policies/Symptomatic Admissions MBC.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Midwives Vacation Calendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Midwives Vacation Calendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Midwifery Birth Center - Gateway Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Midwifery Birth Center - Gateway Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Team Discussion",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Team Discussion",
+      "Status": "Eligible"
+    }
+  ]
+}

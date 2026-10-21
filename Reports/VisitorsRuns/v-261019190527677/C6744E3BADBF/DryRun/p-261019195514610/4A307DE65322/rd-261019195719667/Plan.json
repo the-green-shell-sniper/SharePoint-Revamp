@@ -1,0 +1,1639 @@
+{
+  "Steps": [
+    {
+      "Key": "Shared Documents",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')",
+      "Kind": "Library",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Shared Documents/2021 DEI Initiatives.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')/items(1)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Shared Documents/Compiled DEI Workgroup Initiative Brainstorms.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')/items(2)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Shared Documents/DEI Glossary.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')/items(3)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Shared Documents/WHA Current Workforce Diversity Breakdown - All.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')/items(4)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Shared Documents/WHA DEI Strategy and Framework.pdf",
+      "Api": "https://whallc.sharepoint.com/sites/HR/DEIB/_api/web/lists(guid'8fd69cd5-22b7-4756-86da-78bb992a79d0')/items(5)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b59bfa2-6f6b-478a-8ee2-75bc0f5c8ce0\tcontribute\nc:0t.c|tenant|185db1c4-5c33-4900-8be9-568cdc9ff002\tread\nc:0t.c|tenant|3341a5ca-6602-4fce-aea9-e595bb468f0f\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tcontribute\nc:0t.c|tenant|5a578201-4d02-437a-a634-316e2979a70d\tdesign\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tcontribute\nc:0t.c|tenant|73c97d7a-1f5d-410c-9189-37af2107ba95\tdesign\nc:0t.c|tenant|80e68f3c-44ac-4630-9376-35b0c20b887c\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tcontribute\nc:0t.c|tenant|84c1a775-c5a1-458b-81a7-ce69d2ef7c5f\tdesign\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tcontribute\nc:0t.c|tenant|a19e4aa0-3ebd-4b2d-bdc0-ba6588fc5b7b\tdesign\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tcontribute\nc:0t.c|tenant|c55f25f7-3ace-4cb3-b1e1-72e12ee35823\tdesign\nhuman resources members\tread\nhuman resources visitors\tread\nsharepoint.hr.helpdesk\tcontribute\nsharepoint.hr.helpdesk\tdesign",
+      "Operation": {
+        "Type": "Add",
+        "Login": "Human Resources Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/19_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/19_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/20_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/20_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/21_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/21_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/22_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/22_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/23_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/23_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/24_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/24_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/25_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/25_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/26_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/26_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/27_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/27_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/28_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/28_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/29_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/29_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/30_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/30_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/31_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/31_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/32_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/32_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/33_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/33_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/34_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/34_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/35_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/35_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/36_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/36_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/37_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/37_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/38_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/38_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/39_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/39_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/40_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/40_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/41_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/41_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/42_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/42_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/43_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/43_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/44_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/44_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/45_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/45_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/46_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/46_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/47_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/47_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/48_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/48_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/49_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/49_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/50_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/50_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/51_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/51_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/52_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/52_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/53_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/53_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/54_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/54_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/55_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/55_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/56_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/56_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/57_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/57_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/58_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/58_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/59_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/59_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/60_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/60_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/61_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/61_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/62_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/62_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/63_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/63_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/64_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/64_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/65_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/65_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/66_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/66_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/67_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/67_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/68_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/68_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/69_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/69_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/70_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/70_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/71_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/71_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/72_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/72_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/73_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/73_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/74_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/74_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/75_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/75_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/76_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/76_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/77_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/77_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/78_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/78_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/79_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/79_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/80_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/80_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/81_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/81_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/82_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/82_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/83_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/83_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/DEICalendar/84_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/DEICalendar/84_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Awake to Woke - Building a Race Equity Culture.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Awake to Woke - Building a Race Equity Culture.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Race Equity and Inclusion Action Guide.pdf",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Race Equity and Inclusion Action Guide.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/www.antiracismdaily.com.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/www.antiracismdaily.com.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/10 Takeaways - How to Build a Racially Diverse Workforce .url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/10 Takeaways - How to Build a Racially Diverse Workforce .url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Seeing White Podcast.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Seeing White Podcast.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The Characteristics of a White Supremacy Culture.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The Characteristics of a White Supremacy Culture.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Natal Stories.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Natal Stories.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Is Everyone Really Equal - An Introduction to Key Concepts in Social Justice Education.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Is Everyone Really Equal - An Introduction to Key Concepts in Social Justice Education.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Do Your Employees Know Why You Believe in Diversity.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Do Your Employees Know Why You Believe in Diversity.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Code Switch Podcast.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Code Switch Podcast.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Bodies Podcast.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Bodies Podcast.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/How To Be An Anti-racist.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/How To Be An Anti-racist.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Hood Feminism - Notes from the Women That a Movement Forgot.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Hood Feminism - Notes from the Women That a Movement Forgot.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Between the World and Me.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Between the World and Me.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Toward a Racially Just Workplace.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Toward a Racially Just Workplace.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Implicit Bias and Racial Disparities in Health Care.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Implicit Bias and Racial Disparities in Health Care.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The Importance of Black Doctors.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The Importance of Black Doctors.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Fertility for Colored Girls.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Fertility for Colored Girls.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Doctors Don’t Always Believe You When You’re a Black Woman.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Doctors Don’t Always Believe You When You’re a Black Woman.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The Black Women's Health Imperative.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The Black Women's Health Imperative.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/A Preventable Cancer is on the Rise in Alabama.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/A Preventable Cancer is on the Rise in Alabama.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Fighting for Health and Justice.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Fighting for Health and Justice.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/White Fragility.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/White Fragility.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Biased - Uncovering the Hidden Prejudice That Shapes What We See, Think, and Do.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Biased - Uncovering the Hidden Prejudice That Shapes What We See, Think, and Do.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Portland Is Not Immune to Racial Disparities in Pregnancy-Related Complications and Deaths.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Portland Is Not Immune to Racial Disparities in Pregnancy-Related Complications and Deaths.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Dear Companies, Your BLM Posts Are Cute But We Want To See Policy Change.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Dear Companies, Your BLM Posts Are Cute But We Want To See Policy Change.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The 10 Commitments Companies Must Make to Advance Racial Justice.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The 10 Commitments Companies Must Make to Advance Racial Justice.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The Black Parent Initiative.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The Black Parent Initiative.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/How to get serious about diversity and inclusion in the workplace .url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/How to get serious about diversity and inclusion in the workplace .url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Get Comfortable With Being Uncomfortable.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Get Comfortable With Being Uncomfortable.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/3 Ways to Be a Better Ally in the Workplace.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/3 Ways to Be a Better Ally in the Workplace.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Achieving Health Equity.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Achieving Health Equity.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Why Aren't There More Black People in Oregon - A Hidden History.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Why Aren't There More Black People in Oregon - A Hidden History.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/ACOG Antiracism Webinar.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/ACOG Antiracism Webinar.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Figure Out How to Help, Portland.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Figure Out How to Help, Portland.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/The Inner Work of Racial Justice.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/The Inner Work of Racial Justice.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/When Words Become Actions - Diversity Pledges vs. Cultural Truths.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/When Words Become Actions - Diversity Pledges vs. Cultural Truths.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Who We Are - A Chronicle of Racism in America.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Who We Are - A Chronicle of Racism in America.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/31-Day Antiracism Challenge.url",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/31-Day Antiracism Challenge.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DI Learning Resources/Organizational Strategic Plan to Embed Racial Justice and Advance Health Equity.pdf",
+      "SourceUnique": false,
+      "TargetPath": "DI Learning Resources/Organizational Strategic Plan to Embed Racial Justice and Advance Health Equity.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.01.23 DEIB Commitee Mtg Agenda & Minutes.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.01.23 DEIB Commitee Mtg Agenda & Minutes.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.02.27 DEIB Commitee Mtg Agenda & Minutes.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.02.27 DEIB Commitee Mtg Agenda & Minutes.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.03.26 DEIB Commitee Mtg Minutes.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.03.26 DEIB Commitee Mtg Minutes.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.04.23 DEIB Commitee Mtg Minutes.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.04.23 DEIB Commitee Mtg Minutes.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.03.24 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.03.24 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.06.17 DEIB Commitee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.06.17 DEIB Commitee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.10.21 DEIB Commitee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.10.21 DEIB Commitee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.12.16 DEIB Commitee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.12.16 DEIB Commitee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.05.20 DEIB Commitee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.05.20 DEIB Commitee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2024.11.18 DEIB Commitee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2024.11.18 DEIB Commitee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.01.13 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.01.13 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.04.21 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.04.21 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.05.19 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.05.19 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.06.16 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.06.16 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.07.21 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.07.21 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.08.18 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.08.18 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.09.15 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.09.15 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.10.20 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.10.20 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.11.17 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.11.17 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2025.12.15 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2025.12.15 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.01.26 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.01.26 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.02.16 DEIB Committee Mtg Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.02.16 DEIB Committee Mtg Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.03.16 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.03.16 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.04.20 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.04.20 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.05.18 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.05.18 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.06.15 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.06.15 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.07.20 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.07.20 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DEIB Committee Minutes/2026.08.17 DEIB Committee Mins.docx",
+      "SourceUnique": false,
+      "TargetPath": "DEIB Committee Minutes/2026.08.17 DEIB Committee Mins.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Compiled DEI Workgroup Initiative Brainstorms.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents/Compiled DEI Workgroup Initiative Brainstorms.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/DEI Glossary.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents/DEI Glossary.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/WHA DEI Strategy and Framework.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents/WHA DEI Strategy and Framework.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/WHA Current Workforce Diversity Breakdown - All.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents/WHA Current Workforce Diversity Breakdown - All.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/2021 DEI Initiatives.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Shared Documents/2021 DEI Initiatives.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/DEI Resources Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/DEI Resources Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/17079-banner.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/17079-banner.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/20360-read.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/20360-read.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/97564-listen2.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/97564-listen2.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/88149-watch.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/88149-watch.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/82980-banner.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/82980-banner.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/86603-header.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/86603-header.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/ve5ib2l7",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/ve5ib2l7",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis/27066-BHM-1920-x-1080--1920-x-540-px-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis/27066-BHM-1920-x-1080--1920-x-540-px-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis/28142-BHM-Central-Park--1-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis/28142-BHM-Central-Park--1-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis/451951772-Maude_E._Callen.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis/451951772-Maude_E._Callen.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis/1727469443-9780814207000.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis/1727469443-9780814207000.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/dizmrvis/751260179-Jennie-Joseph.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/dizmrvis/751260179-Jennie-Joseph.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Q4-DEI-Update",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Q4-DEI-Update",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/t1qij6vg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/t1qij6vg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Test",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Test",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/8u18oae2",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/8u18oae2",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/ctsw3jkp",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/ctsw3jkp",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/rgkx4fbb",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/rgkx4fbb",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1198853622-DEIB-Site-Banner.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1198853622-DEIB-Site-Banner.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/3891130163-A0012419.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/3891130163-A0012419.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/afpum4ah",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/afpum4ah",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/afpum4ah/3385209192-DEIB-Site-Banner.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/afpum4ah/3385209192-DEIB-Site-Banner.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/afpum4ah/3379755953-DEIB-Site-Banner.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/afpum4ah/3379755953-DEIB-Site-Banner.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1557359016-A0012447.jpg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1557359016-A0012447.jpg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1198853622-DEIB-Site-Banner_1782925379001.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1198853622-DEIB-Site-Banner_1782925379001.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/3391960868-Untitled---June-30--2026-at-15.05.32-6.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/3391960868-Untitled---June-30--2026-at-15.05.32-6.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1909957762-Banner-Ideas-5.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1909957762-Banner-Ideas-5.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926179068.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926179068.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926183146.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926183146.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926184384.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926184384.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926257325.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/shape-1557359016-A0012447-1782926257325.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1082183987-Untitled.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1082183987-Untitled.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/2573573953-Untitled---July-01--2026-at-10.00.08--1-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/2573573953-Untitled---July-01--2026-at-10.00.08--1-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/2233036182-Untitled---July-01--2026-at-10.00.08.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/2233036182-Untitled---July-01--2026-at-10.00.08.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1899158406-Untitled---July-01--2026-at-10.00.08--2-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1899158406-Untitled---July-01--2026-at-10.00.08--2-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1980765141-Untitled---July-01--2026-at-10.00.08--1-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1980765141-Untitled---July-01--2026-at-10.00.08--1-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/3844397762-Untitled---July-02--2026-at-09.01.18.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/3844397762-Untitled---July-02--2026-at-09.01.18.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/354633399-Untitled---July-02--2026-at-09.01.18--3-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/354633399-Untitled---July-02--2026-at-09.01.18--3-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/2462109237-Untitled---July-02--2026-at-09.01.18--2-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/2462109237-Untitled---July-02--2026-at-09.01.18--2-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1761289218-Untitled---July-02--2026-at-09.01.18--1-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1761289218-Untitled---July-02--2026-at-09.01.18--1-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1096289245-Untitled---July-01--2026-at-10.00.08--2-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1096289245-Untitled---July-01--2026-at-10.00.08--2-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/1313716904-Untitled.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/1313716904-Untitled.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/3934224162-Untitled---July-01--2026-at-10.00.08.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/3934224162-Untitled---July-01--2026-at-10.00.08.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/2675093782-Untitled---July-02--2026-at-09.01.18--1-.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/2675093782-Untitled---July-02--2026-at-09.01.18--1-.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/565459981-Untitled---July-01--2026-at-10.00.08.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/565459981-Untitled---July-01--2026-at-10.00.08.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/2021-Q2-DEI-Update.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/2021-Q2-DEI-Update.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/2021-Q1-DEI-Update.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/2021-Q1-DEI-Update.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/2021-Q3-DEI-Update.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/2021-Q3-DEI-Update.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Q4-Updat.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Q4-Updat.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Q4-DEI-Update.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Q4-DEI-Update.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/DEIB-Committee-Minutes.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/DEIB-Committee-Minutes.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/ve5ib2l7.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/ve5ib2l7.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/ctsw3jkp.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/ctsw3jkp.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/rgkx4fbb.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/rgkx4fbb.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/What-the-DEIB-Committee-is-working-on-right-now---June-2026.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/What-the-DEIB-Committee-is-working-on-right-now---June-2026.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/wte",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/b0dac36b-0667-45c2-af55-27888be05085",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/b0dac36b-0667-45c2-af55-27888be05085/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/b0dac36b-0667-45c2-af55-27888be05085/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/b0dac36b-0667-45c2-af55-27888be05085/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    }
+  ]
+}

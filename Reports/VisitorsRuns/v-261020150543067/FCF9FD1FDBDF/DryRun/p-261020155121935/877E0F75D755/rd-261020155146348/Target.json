@@ -1,0 +1,1911 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/hipaa/Private",
+  "Scopes": [
+    {
+      "Key": "",
+      "Kind": "Web",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 4,
+          "LoginName": "HIPAA Visitors",
+          "Title": "HIPAA Visitors",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 5,
+          "LoginName": "HIPAA Members",
+          "Title": "HIPAA Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 10,
+          "LoginName": "c:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9",
+          "Title": "CentralPark.HIPAA.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199",
+          "Title": "CentralPark.HIPAA.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 26,
+          "LoginName": "c:0t.c|tenant|98e896fb-50cb-4d1b-b3cd-0383957c8efc",
+          "Title": "CentralPark.HIPAA.Private.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "3e3d7992-cea4-48c3-93e5-56e87525d150",
+      "Title": "",
+      "ListKey": "",
+      "Depth": 0
+    },
+    {
+      "Key": "_catalogs/design",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "a42a3056-6955-4a24-8874-409bff4b130a",
+      "Title": "Composed Looks",
+      "ListKey": "_catalogs/design",
+      "Depth": 0,
+      "BaseTemplate": 124,
+      "ItemCount": 18,
+      "Leaf": "design"
+    },
+    {
+      "Key": "_catalogs/design/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Current",
+      "ListKey": "_catalogs/design",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/1_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Orange",
+      "ListKey": "_catalogs/design",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/2_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "Sea Monster",
+      "ListKey": "_catalogs/design",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/3_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "Green",
+      "ListKey": "_catalogs/design",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/4_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "Lime",
+      "ListKey": "_catalogs/design",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/5_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "Nature",
+      "ListKey": "_catalogs/design",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/6_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "Blossom",
+      "ListKey": "_catalogs/design",
+      "Rel": "7_.000",
+      "Depth": 1,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/7_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "Sketch",
+      "ListKey": "_catalogs/design",
+      "Rel": "8_.000",
+      "Depth": 1,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/8_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "City",
+      "ListKey": "_catalogs/design",
+      "Rel": "9_.000",
+      "Depth": 1,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/9_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "Orbit",
+      "ListKey": "_catalogs/design",
+      "Rel": "10_.000",
+      "Depth": 1,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/10_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "Grey",
+      "ListKey": "_catalogs/design",
+      "Rel": "11_.000",
+      "Depth": 1,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/11_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "Characters",
+      "ListKey": "_catalogs/design",
+      "Rel": "12_.000",
+      "Depth": 1,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/12_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "Office",
+      "ListKey": "_catalogs/design",
+      "Rel": "13_.000",
+      "Depth": 1,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/13_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "Breeze",
+      "ListKey": "_catalogs/design",
+      "Rel": "14_.000",
+      "Depth": 1,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/14_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Immerse",
+      "ListKey": "_catalogs/design",
+      "Rel": "15_.000",
+      "Depth": 1,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/15_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "Red",
+      "ListKey": "_catalogs/design",
+      "Rel": "16_.000",
+      "Depth": 1,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/16_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "Purple",
+      "ListKey": "_catalogs/design",
+      "Rel": "17_.000",
+      "Depth": 1,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/17_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'a42a3056-6955-4a24-8874-409bff4b130a')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "Wood",
+      "ListKey": "_catalogs/design",
+      "Rel": "18_.000",
+      "Depth": 1,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/hipaa/Private/_catalogs/design/18_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'0ab05c63-9b7c-4b83-b383-6e22e8272599')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "0ab05c63-9b7c-4b83-b383-6e22e8272599",
+      "Title": "Documents",
+      "ListKey": "Shared Documents",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 0,
+      "Leaf": "Shared Documents"
+    },
+    {
+      "Key": "DropOffLibrary",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'5bf3d1e6-73bb-4677-aab7-a2859985d4e2')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5bf3d1e6-73bb-4677-aab7-a2859985d4e2",
+      "Title": "Drop Off Library",
+      "ListKey": "DropOffLibrary",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 0,
+      "Leaf": "DropOffLibrary"
+    },
+    {
+      "Key": "PublishingImages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'87d6ebfc-c48f-432c-8f41-838dfa534759')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "87d6ebfc-c48f-432c-8f41-838dfa534759",
+      "Title": "Images",
+      "ListKey": "PublishingImages",
+      "Depth": 0,
+      "BaseTemplate": 109,
+      "ItemCount": 0,
+      "Leaf": "PublishingImages"
+    },
+    {
+      "Key": "_catalogs/masterpage",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "784350fb-6587-4548-877b-f6bd66167ac8",
+      "Title": "Master Page Gallery",
+      "ListKey": "_catalogs/masterpage",
+      "Depth": 0,
+      "BaseTemplate": 116,
+      "ItemCount": 6,
+      "Leaf": "masterpage"
+    },
+    {
+      "Key": "_catalogs/masterpage/v4.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "v4.master",
+      "Depth": 1,
+      "Leaf": "v4.master",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/v4.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 27319.0
+    },
+    {
+      "Key": "_catalogs/masterpage/minimal.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "minimal.master",
+      "Depth": 1,
+      "Leaf": "minimal.master",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/minimal.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 8825.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.master",
+      "Depth": 1,
+      "Leaf": "seattle.master",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/seattle.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31721.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.master",
+      "Depth": 1,
+      "Leaf": "oslo.master",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/oslo.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 30454.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.preview",
+      "Depth": 1,
+      "Leaf": "seattle.preview",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/seattle.preview",
+      "Ext": ".preview",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 10725.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'784350fb-6587-4548-877b-f6bd66167ac8')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.preview",
+      "Depth": 1,
+      "Leaf": "oslo.preview",
+      "FileRef": "/sites/hipaa/Private/_catalogs/masterpage/oslo.preview",
+      "Ext": ".preview",
+      "Created": "09/08/2026 17:53:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 10159.0
+    },
+    {
+      "Key": "Pages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'7e088f25-ff16-42f9-8e67-4c06d903873c')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7e088f25-ff16-42f9-8e67-4c06d903873c",
+      "Title": "Pages",
+      "ListKey": "Pages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 0,
+      "Leaf": "Pages"
+    },
+    {
+      "Key": "Policy",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'10abfcd6-b503-4edc-80cb-acb242f2f435')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10abfcd6-b503-4edc-80cb-acb242f2f435",
+      "Title": "Policy",
+      "ListKey": "Policy",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 0,
+      "Leaf": "Policy"
+    },
+    {
+      "Key": "Policies",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8ada71b1-af2e-4102-9a9c-4c53959e5d39",
+      "Title": "Recommendations",
+      "ListKey": "Policies",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 29,
+      "Leaf": "Policies"
+    },
+    {
+      "Key": "Policies/Asset Management Reccomendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Asset Management Reccomendations.docx",
+      "Depth": 1,
+      "Leaf": "Asset Management Reccomendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Asset Management Reccomendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:25",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 29256.0
+    },
+    {
+      "Key": "Policies/Breach_Notification_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Breach_Notification_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Breach_Notification_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Breach_Notification_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:26",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 21919.0
+    },
+    {
+      "Key": "Policies/Data_Integrity_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Data_Integrity_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Data_Integrity_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Data_Integrity_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:27",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22192.0
+    },
+    {
+      "Key": "Policies/Electronic Communication Policy Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Electronic Communication Policy Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Electronic Communication Policy Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Electronic Communication Policy Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:28",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28896.0
+    },
+    {
+      "Key": "Policies/E-mail Retention Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "E-mail Retention Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "E-mail Retention Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/E-mail Retention Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:29",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28068.0
+    },
+    {
+      "Key": "Policies/Emergency_Access_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Emergency_Access_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Emergency_Access_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Emergency_Access_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:30",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22073.0
+    },
+    {
+      "Key": "Policies/Facilities_Maintenance_Records_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Facilities_Maintenance_Records_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Facilities_Maintenance_Records_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Facilities_Maintenance_Records_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:30",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22139.0
+    },
+    {
+      "Key": "Policies/Facilties_Access_Security_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Facilties_Access_Security_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Facilties_Access_Security_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Facilties_Access_Security_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:31",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 23119.0
+    },
+    {
+      "Key": "Policies/General_Security_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "General_Security_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "General_Security_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/General_Security_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:32",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22188.0
+    },
+    {
+      "Key": "Policies/Network_Systems_Administrator_Security_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Network_Systems_Administrator_Security_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Network_Systems_Administrator_Security_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Network_Systems_Administrator_Security_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:33",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 20660.0
+    },
+    {
+      "Key": "Policies/Password_Management_Reccommendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Password_Management_Reccommendation.docx",
+      "Depth": 1,
+      "Leaf": "Password_Management_Reccommendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Password_Management_Reccommendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:35",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 21761.0
+    },
+    {
+      "Key": "Policies/Periodic_Audit_Log_Review_and_Retention_Recommedations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Periodic_Audit_Log_Review_and_Retention_Recommedations.docx",
+      "Depth": 1,
+      "Leaf": "Periodic_Audit_Log_Review_and_Retention_Recommedations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Periodic_Audit_Log_Review_and_Retention_Recommedations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:34",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22346.0
+    },
+    {
+      "Key": "Policies/Policy Categories.xls",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Policy Categories.xls",
+      "Depth": 1,
+      "Leaf": "Policy Categories.xls",
+      "FileRef": "/sites/hipaa/Private/Policies/Policy Categories.xls",
+      "Ext": ".xls",
+      "Created": "02/28/2018 00:10:35",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43520.0
+    },
+    {
+      "Key": "Policies/Policy_and_Procedure_Development_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Policy_and_Procedure_Development_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Policy_and_Procedure_Development_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Policy_and_Procedure_Development_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22528.0
+    },
+    {
+      "Key": "Policies/Privacy_and_Security_Incident_Response_and_Mitigation_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Privacy and Security Incident Response and Mitigation Recommendations",
+      "ListKey": "Policies",
+      "Rel": "Privacy_and_Security_Incident_Response_and_Mitigation_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Privacy_and_Security_Incident_Response_and_Mitigation_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Privacy_and_Security_Incident_Response_and_Mitigation_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22681.0
+    },
+    {
+      "Key": "Policies/Red_Flag_Rule_Program_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Red_Flag_Rule_Program_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Red_Flag_Rule_Program_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Red_Flag_Rule_Program_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22055.0
+    },
+    {
+      "Key": "Policies/Remote_Server_Access_and_Control_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Remote_Server_Access_and_Control_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Remote_Server_Access_and_Control_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Remote_Server_Access_and_Control_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:38",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22309.0
+    },
+    {
+      "Key": "Policies/Risk_Management_Policy_Recommendations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "Risk_Management_Policy_Recommendations.docx",
+      "Depth": 1,
+      "Leaf": "Risk_Management_Policy_Recommendations.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/Risk_Management_Policy_Recommendations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:40",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 22309.0
+    },
+    {
+      "Key": "Policies/WHA_Equipment Disposition_Policy_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(19)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "19",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Equipment Disposition_Policy_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Equipment Disposition_Policy_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Equipment Disposition_Policy_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:39",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28316.0
+    },
+    {
+      "Key": "Policies/WHA_Information_System_Activity_Review_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(20)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Information_System_Activity_Review_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Information_System_Activity_Review_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Information_System_Activity_Review_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:40",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28422.0
+    },
+    {
+      "Key": "Policies/WHA_Inventory and Accountability_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(21)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "21",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Inventory and Accountability_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Inventory and Accountability_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Inventory and Accountability_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:41",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 29572.0
+    },
+    {
+      "Key": "Policies/WHA_Laptop and Portable Device Use Policy_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(22)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "22",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Laptop and Portable Device Use Policy_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Laptop and Portable Device Use Policy_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Laptop and Portable Device Use Policy_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 29668.0
+    },
+    {
+      "Key": "Policies/WHA_Login_Monitoring_Policy_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(23)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "23",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Login_Monitoring_Policy_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Login_Monitoring_Policy_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Login_Monitoring_Policy_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:42",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28073.0
+    },
+    {
+      "Key": "Policies/WHA_Media_Reuse_and_Disposal_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(24)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "24",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Media_Reuse_and_Disposal_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Media_Reuse_and_Disposal_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Media_Reuse_and_Disposal_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28282.0
+    },
+    {
+      "Key": "Policies/WHA_PersonandEntity Authentication_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(25)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "25",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_PersonandEntity Authentication_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_PersonandEntity Authentication_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_PersonandEntity Authentication_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28396.0
+    },
+    {
+      "Key": "Policies/WHA_Record_Retention_and_Destruction_Policy_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(26)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "26",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Record_Retention_and_Destruction_Policy_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Record_Retention_and_Destruction_Policy_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Record_Retention_and_Destruction_Policy_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28121.0
+    },
+    {
+      "Key": "Policies/WHA_Security_Officer_Designation_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(27)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "27",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Security_Officer_Designation_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Security_Officer_Designation_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Security_Officer_Designation_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:45",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 27964.0
+    },
+    {
+      "Key": "Policies/WHA_Workforce_Member_Termination_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(28)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "28",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Workforce_Member_Termination_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Workforce_Member_Termination_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Workforce_Member_Termination_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:46",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28467.0
+    },
+    {
+      "Key": "Policies/WHA_Workstation_Use_Reccomendation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'8ada71b1-af2e-4102-9a9c-4c53959e5d39')/items(29)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "29",
+      "Title": "",
+      "ListKey": "Policies",
+      "Rel": "WHA_Workstation_Use_Reccomendation.docx",
+      "Depth": 1,
+      "Leaf": "WHA_Workstation_Use_Reccomendation.docx",
+      "FileRef": "/sites/hipaa/Private/Policies/WHA_Workstation_Use_Reccomendation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 00:10:46",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28382.0
+    },
+    {
+      "Key": "Shared Documents1",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'78026c4e-393b-4120-8fc5-581300bcd4ff')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "78026c4e-393b-4120-8fc5-581300bcd4ff",
+      "Title": "Shared Documents",
+      "ListKey": "Shared Documents1",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 1,
+      "Leaf": "Shared Documents1"
+    },
+    {
+      "Key": "Shared Documents1/hipaa_cartoon.gif",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'78026c4e-393b-4120-8fc5-581300bcd4ff')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "Shared Documents1",
+      "Rel": "hipaa_cartoon.gif",
+      "Depth": 1,
+      "Leaf": "hipaa_cartoon.gif",
+      "FileRef": "/sites/hipaa/Private/Shared Documents1/hipaa_cartoon.gif",
+      "Ext": ".gif",
+      "Created": "02/28/2018 00:10:48",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 14589.0
+    },
+    {
+      "Key": "SiteAssets",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5",
+      "Title": "Site Assets",
+      "ListKey": "SiteAssets",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 6,
+      "Leaf": "SiteAssets"
+    },
+    {
+      "Key": "SiteAssets/HIPPA Private Notebook",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(1)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "HIPAA Members",
+          "Title": "HIPAA Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 10,
+          "LoginName": "c:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9",
+          "Title": "CentralPark.HIPAA.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199",
+          "Title": "CentralPark.HIPAA.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 26,
+          "LoginName": "c:0t.c|tenant|98e896fb-50cb-4d1b-b3cd-0383957c8efc",
+          "Title": "CentralPark.HIPAA.Private.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "1",
+      "Title": "HIPPA Private Notebook",
+      "ListKey": "SiteAssets",
+      "Rel": "HIPPA Private Notebook",
+      "Depth": 1,
+      "Leaf": "HIPPA Private Notebook",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/HIPPA Private Notebook",
+      "Ext": "",
+      "Created": "09/08/2026 17:53:39",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/Private Notebook",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Private Notebook",
+      "ListKey": "SiteAssets",
+      "Rel": "Private Notebook",
+      "Depth": 1,
+      "Leaf": "Private Notebook",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/Private Notebook",
+      "Ext": "",
+      "Created": "02/28/2018 00:07:33",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(3)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "HIPAA Members",
+          "Title": "HIPAA Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 10,
+          "LoginName": "c:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9",
+          "Title": "CentralPark.HIPAA.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199",
+          "Title": "CentralPark.HIPAA.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 26,
+          "LoginName": "c:0t.c|tenant|98e896fb-50cb-4d1b-b3cd-0383957c8efc",
+          "Title": "CentralPark.HIPAA.Private.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "3",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages",
+      "Depth": 1,
+      "Leaf": "SitePages",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/SitePages",
+      "Ext": "",
+      "Created": "09/21/2026 21:34:37",
+      "Author": "swilson@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages/Home",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages/Home",
+      "Depth": 2,
+      "Leaf": "Home",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/SitePages/Home",
+      "Ext": "",
+      "Created": "09/21/2026 21:34:37",
+      "Author": "swilson@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(5)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "HIPAA Members",
+          "Title": "HIPAA Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 10,
+          "LoginName": "c:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9",
+          "Title": "CentralPark.HIPAA.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199",
+          "Title": "CentralPark.HIPAA.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 26,
+          "LoginName": "c:0t.c|tenant|98e896fb-50cb-4d1b-b3cd-0383957c8efc",
+          "Title": "CentralPark.HIPAA.Private.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "5",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "__sitelogo__CentralPark_Logo.png",
+      "Depth": 1,
+      "Leaf": "__sitelogo__CentralPark_Logo.png",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Ext": ".png",
+      "Created": "09/21/2026 21:34:56",
+      "Author": "swilson@whallc.com",
+      "Size": 3935.0
+    },
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'6fe4e8ff-b8c0-4bf7-8b9e-528ec7b9a5f5')/items(6)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "HIPAA Members",
+          "Title": "HIPAA Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 10,
+          "LoginName": "c:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9",
+          "Title": "CentralPark.HIPAA.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199",
+          "Title": "CentralPark.HIPAA.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 26,
+          "LoginName": "c:0t.c|tenant|98e896fb-50cb-4d1b-b3cd-0383957c8efc",
+          "Title": "CentralPark.HIPAA.Private.Reader",
+          "PrincipalType": 4,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "6",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "__rectSitelogo__CentralPark_Logo.png",
+      "Depth": 1,
+      "Leaf": "__rectSitelogo__CentralPark_Logo.png",
+      "FileRef": "/sites/hipaa/Private/SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Ext": ".png",
+      "Created": "09/21/2026 21:34:57",
+      "Author": "swilson@whallc.com",
+      "Size": 3935.0
+    },
+    {
+      "Key": "SitePages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'287cb9eb-b610-49da-8de0-4ae200f990bb')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "287cb9eb-b610-49da-8de0-4ae200f990bb",
+      "Title": "Site Pages",
+      "ListKey": "SitePages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 1,
+      "Leaf": "SitePages"
+    },
+    {
+      "Key": "SitePages/Home.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'287cb9eb-b610-49da-8de0-4ae200f990bb')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Home",
+      "ListKey": "SitePages",
+      "Rel": "Home.aspx",
+      "Depth": 1,
+      "Leaf": "Home.aspx",
+      "FileRef": "/sites/hipaa/Private/SitePages/Home.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 00:07:35",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2746.0
+    },
+    {
+      "Key": "WorkflowTasks",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/Private/_api/web/lists(guid'84d30245-430e-4ab3-9195-aa214c0af96a')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "84d30245-430e-4ab3-9195-aa214c0af96a",
+      "Title": "Workflow Tasks",
+      "ListKey": "WorkflowTasks",
+      "Depth": 0,
+      "BaseTemplate": 107,
+      "ItemCount": 0,
+      "Leaf": "WorkflowTasks"
+    }
+  ]
+}

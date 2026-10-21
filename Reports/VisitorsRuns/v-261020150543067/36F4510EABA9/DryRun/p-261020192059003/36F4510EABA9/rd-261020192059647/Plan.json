@@ -1,0 +1,408 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Katie Test 2",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Katie Test 2",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Katie Test 2/Untitled Section.one",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Katie Test 2/Untitled Section.one",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Katie Test 2/Open Notebook.onetoc2",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Katie Test 2/Open Notebook.onetoc2",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/IT Store Room Inventory Sheet",
+      "SourceUnique": false,
+      "TargetPath": "Lists/IT Store Room Inventory Sheet",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/IT Internal Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/IT Internal Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/IT-Store-Room-Inventory",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/IT-Store-Room-Inventory",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/IT-Store-Room-Inventory/79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/IT-Store-Room-Inventory/79340-무료-이미지---색깔--장난감--미술--스크린-샷--목록-3936x2624-----1401000---무료-이미지---PxHere.jpeg",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/IT Internal Notebook/Untitled Section.one",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/IT Internal Notebook/Untitled Section.one",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/IT-Store-Room-Inventory.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/IT-Store-Room-Inventory.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/wte",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/19_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/20_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/21_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/22_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/23_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/24_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "_catalogs/wte/ad0612fa-93db-4516-ba00-be55ca5c259b/25_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    }
+  ]
+}

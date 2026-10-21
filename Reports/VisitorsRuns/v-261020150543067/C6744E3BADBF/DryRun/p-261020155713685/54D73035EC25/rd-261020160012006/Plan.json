@@ -1,0 +1,252 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/20_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Documents",
+      "SourceUnique": false,
+      "TargetPath": "Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Learning Resources",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Learning Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Meeting Notes",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Meeting Notes",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Hispanic Heritage Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Hispanic Heritage Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Native American Heritage Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Native American Heritage Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Black History Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Black History Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Women's History Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Women's History Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Asian Pacific Islander American Heritage Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Asian Pacific Islander American Heritage Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Documents/Heritage Celebration Awareness/Arab American Heritage Month",
+      "SourceUnique": false,
+      "TargetPath": "Documents/Heritage Celebration Awareness/Arab American Heritage Month",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Tasks",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Tasks",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Tasks/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Tasks/1_.000",
+      "Status": "Eligible"
+    }
+  ]
+}

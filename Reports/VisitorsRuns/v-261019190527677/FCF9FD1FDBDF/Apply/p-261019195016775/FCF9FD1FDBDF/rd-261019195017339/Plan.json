@@ -1,0 +1,537 @@
+{
+  "Steps": [
+    {
+      "Key": "FormServerTemplates",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'de382ab1-a4f6-4da3-b9f9-d5b30bf05112')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "Style Library",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'7d27fb31-bbcd-438c-a89b-f7a388372fc0')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/appdata",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'2e1fe4a8-c1fc-48fe-abce-ec1ae8092583')",
+      "Kind": "List",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/appfiles",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'f5f1a8ed-7941-44f5-b88b-a36aacf9606c')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/hubsite",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'b1386307-4b03-4cd2-b183-a87b07268100')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/lt",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'7650c77e-ac64-4739-b4ec-13066dd0bbc4')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/solutions",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'f9e9d44c-0eea-46d9-b9a7-4fdd58eb9b87')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/theme",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'2df2b1f8-7cf5-4338-9f62-84e6dae772c7')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/wp",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'3204f6d4-ae0c-4f1e-912a-864b831f7b67')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "Lists/Events",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'ebfa16d9-e4ad-4615-9eb5-dd17e0835129')",
+      "Kind": "List",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'e4f46747-5ff2-4d5f-9102-46abbec6fc19')/items(5)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'e4f46747-5ff2-4d5f-9102-46abbec6fc19')/items(4)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'e4f46747-5ff2-4d5f-9102-46abbec6fc19')/items(2)",
+      "Kind": "Folder",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/masterpage/Display Templates",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'37d0bc8a-433f-4f57-93a2-4c6dfee9954d')/items(7)",
+      "Kind": "Folder",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web",
+      "Kind": "Web",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread\nhipaa visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "HIPAA Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    },
+    {
+      "Key": "Forms/Minor Patient Privacy.docx",
+      "Api": "https://whallc.sharepoint.com/sites/hipaa/_api/web/lists(guid'cb433ee0-967a-4be8-85ca-ab36d6b4bf77')/items(5)",
+      "Kind": "File",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tcontribute\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tcontribute\nc:0t.c|tenant|34ed30f0-c5f3-4d85-a977-3e83db1ed199\tdesign\nc:0t.c|tenant|68d93781-0fa9-4b43-a6e9-2017e1876da9\tcontribute\nhipaa members\tread\nhipaa visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "HIPAA Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Document Transfer ('Handing') to Patients Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Document Transfer ('Handing') to Patients Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Faxing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Faxing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Shredding Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Shredding Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/ComplyLine.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/ComplyLine.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Mailing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Mailing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Care Facility Release of PHI Decision Tree.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Care Facility Release of PHI Decision Tree.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Best Practices/WHA Emailing Best Practices.docx",
+      "SourceUnique": false,
+      "TargetPath": "Best Practices/WHA Emailing Best Practices.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms",
+      "SourceUnique": false,
+      "TargetPath": "Forms",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Confidentiality Acknowledgement Form.aspx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Confidentiality Acknowledgement Form.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/External User Access Agreement.doc",
+      "SourceUnique": false,
+      "TargetPath": "Forms/External User Access Agreement.doc",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/HIPAA at WHA.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/HIPAA at WHA.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Minor Patient Privacy.docx",
+      "SourceUnique": true,
+      "TargetPath": "Forms/Minor Patient Privacy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Notice of Privacy Practices.aspx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Notice of Privacy Practices.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/PHI Authorization Matrix.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/PHI Authorization Matrix.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Request Accounting of Certain Disclosures of PHI for Non-TPO Purposes.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Request Accounting of Certain Disclosures of PHI for Non-TPO Purposes.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Request for Restriction on Use-Disclosure of PHI and-or Confidential Communication.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Request for Restriction on Use-Disclosure of PHI and-or Confidential Communication.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/WHA Outside ROI Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/WHA Outside ROI Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/WHA Subpoena Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/WHA Subpoena Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Forms/Attestation Reproductive Health.docx",
+      "SourceUnique": false,
+      "TargetPath": "Forms/Attestation Reproductive Health.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/HIPAA Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/HIPAA Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

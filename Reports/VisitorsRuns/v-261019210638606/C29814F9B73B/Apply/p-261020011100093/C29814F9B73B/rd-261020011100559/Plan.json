@@ -1,0 +1,587 @@
+{
+  "Steps": [
+    {
+      "Key": "FormServerTemplates",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'34991f2f-abdc-4f78-b8e6-0c5cee75509b')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "Style Library",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'7d27fb31-bbcd-438c-a89b-f7a388372fc0')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/appdata",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'2e1fe4a8-c1fc-48fe-abce-ec1ae8092583')",
+      "Kind": "List",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/appfiles",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'f5f1a8ed-7941-44f5-b88b-a36aacf9606c')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/hubsite",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'd6b2da52-89fc-41ee-ac95-6d6eb7fe4145')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/lt",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'7650c77e-ac64-4739-b4ec-13066dd0bbc4')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/solutions",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'f9e9d44c-0eea-46d9-b9a7-4fdd58eb9b87')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/theme",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'2df2b1f8-7cf5-4338-9f62-84e6dae772c7')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/wp",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'3204f6d4-ae0c-4f1e-912a-864b831f7b67')",
+      "Kind": "Library",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "Lists/Events",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'ebfa16d9-e4ad-4615-9eb5-dd17e0835129')",
+      "Kind": "List",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'c7cc2e78-1d93-4731-bc03-221e3a650549')/items(3)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'c7cc2e78-1d93-4731-bc03-221e3a650549')/items(2)",
+      "Kind": "File",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "_catalogs/masterpage/Display Templates",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web/lists(guid'37d0bc8a-433f-4f57-93a2-4c6dfee9954d')/items(7)",
+      "Kind": "Folder",
+      "Action": "Freeze",
+      "BeforeUnique": false,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "Operation": null
+    },
+    {
+      "Key": "",
+      "Api": "https://whallc.sharepoint.com/sites/ThePatientExperience/_api/web",
+      "Kind": "Web",
+      "Action": "Add",
+      "BeforeUnique": true,
+      "BeforeSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread",
+      "AfterUnique": true,
+      "AfterSignature": "c:0t.c|tenant|0b0882aa-6ccc-49a8-8c32-c8892dba222d\tcontribute\nc:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5\tfull control\nc:0t.c|tenant|47435c1d-9392-4be4-bbbe-05b88ae40226\tcontribute\nc:0t.c|tenant|b80efaea-4b39-4e72-8292-41d0cd132a76\tdesign\nc:0t.c|tenant|cba3f310-dd1a-4a5a-8d6a-9bfc1ec9c5ea\tread\nthe patient experience members\tread\nthe patient experience visitors\tread",
+      "Operation": {
+        "Type": "Add",
+        "Login": "The Patient Experience Visitors",
+        "Role": "Read",
+        "RoleId": 1073741826,
+        "MemberId": 4
+      }
+    }
+  ],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Calendar",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Calendar",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Links",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Links",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-01-20.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-01-20.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2015-12-16.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2015-12-16.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-03-17.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-03-17.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-07-20.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-07-20.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-06-15.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-06-15.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-08-17.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-08-17.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-10-18.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-10-18.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-09-21.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-09-21.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2016-11-16.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2016-11-16.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-01-17_discussion support.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-01-17_discussion support.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-01-17.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-01-17.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-02-15.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-02-15.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-04-19.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-04-19.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-05-17.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-05-17.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-08-16.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-08-16.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-06-21.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-06-21.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-08-16_discussion support.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-08-16_discussion support.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-09-20.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-09-20.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-09-20_discussion support.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-09-20_discussion support.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-10-11.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-10-11.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2017-10-11_discussion support.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2017-10-11_discussion support.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/DRAFT 2018-04-18.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/DRAFT 2018-04-18.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Minutes/2018-01-16.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Minutes/2018-01-16.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Resources",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Resources/Provider Visit Communications Discussion Template.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Resources/Provider Visit Communications Discussion Template.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Resources/WHInterest Activity Template.docx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Resources/WHInterest Activity Template.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Resources/Month-by-Month Guide to AIDET Reinforcement - Resource for Mgrs, Chairs and Site Committees.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Resources/Month-by-Month Guide to AIDET Reinforcement - Resource for Mgrs, Chairs and Site Committees.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Patient Experience Committee Resources/Duration and Thank You Emphasis Training Tool (2015).pptx",
+      "SourceUnique": false,
+      "TargetPath": "Patient Experience Committee Resources/Duration and Thank You Emphasis Training Tool (2015).pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/The Patient Experience Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/The Patient Experience Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Tasks",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Tasks",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

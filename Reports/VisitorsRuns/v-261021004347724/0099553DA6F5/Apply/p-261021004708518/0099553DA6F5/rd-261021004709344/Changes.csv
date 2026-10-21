@@ -1,0 +1,5 @@
+"Path","Action","Result","Detail"
+"","Authorized site Visitors container","By design","Documents & Forms Visitors contains SharePoint.Migration.Team.Visitors. Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+"","EEEU in Visitors","Already present","c:0-.f|rolemanager|spo-grid-all-users/d7ae5462-f399-44a0-ba44-7063189ec1dd"
+"_catalogs/users/10_.000","Freeze","Write starting - outcome not yet verified","2026-10-21T07:48:49.8991418Z   (PnP item fallback)"
+"_catalogs/users/10_.000","Freeze","Failed - inspect live state","SharePoint Get failed at 'https://whallc.sharepoint.com/sites/DocumentsandForms/_api/web/lists(guid'a97bb88d-9ce9-4647-9f70-90bb37f38d93')/items(10)/roleassignments?$expand=Member,RoleDefinitionBindings': {""odata.error"":{""code"":""-2147024891, System.UnauthorizedAccessException"",""message"":{""lang"":""en-US"",""value"":""Attempted to perform an unauthorized operation.""}}}"

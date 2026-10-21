@@ -1,0 +1,4001 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/whasites/mbc-gw",
+  "Scopes": [
+    {
+      "Key": "",
+      "Kind": "Web",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 6,
+          "LoginName": "i:0#.f|membership|!bposey@whallc.com",
+          "Title": "Brittany !. Posey",
+          "PrincipalType": 1,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": true
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 148,
+          "LoginName": "Limited Access System Group For Web 1c852116-0f74-459b-81e5-d7f78aad5469",
+          "Title": "Limited Access System Group For Web 1c852116-0f74-459b-81e5-d7f78aad5469",
+          "PrincipalType": 8,
+          "Roles": [],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134221824"
+              },
+              "Description": "Can only view the web when given permissions.",
+              "Hidden": false,
+              "Id": 1073741928,
+              "Name": "Web-Only Limited Access",
+              "Order": 176,
+              "RoleTypeKind": 0
+            }
+          ],
+          "Skip": true
+        }
+      ],
+      "Id": "0dcdb835-a1e5-454f-8a63-b5d5d46da1f4",
+      "Title": "",
+      "ListKey": "",
+      "Depth": 0
+    },
+    {
+      "Key": "Administrative Files",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f84d247b-8ff4-4b38-8adc-307008cab11c')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "f84d247b-8ff4-4b38-8adc-307008cab11c",
+      "Title": "Administrative Files",
+      "ListKey": "Administrative Files",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 1,
+      "Leaf": "Administrative Files"
+    },
+    {
+      "Key": "Administrative Files/Member address list.pdf",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f84d247b-8ff4-4b38-8adc-307008cab11c')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "Administrative Files",
+      "Rel": "Member address list.pdf",
+      "Depth": 1,
+      "Leaf": "Member address list.pdf",
+      "FileRef": "/sites/whasites/mbc-gw/Administrative Files/Member address list.pdf",
+      "Ext": ".pdf",
+      "Created": "02/28/2018 20:08:58",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 49451.0
+    },
+    {
+      "Key": "Lists/Announcements",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'cc1f7f6e-740a-4a6c-8729-45af47373059')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "cc1f7f6e-740a-4a6c-8729-45af47373059",
+      "Title": "Announcements",
+      "ListKey": "Lists/Announcements",
+      "Depth": 0,
+      "BaseTemplate": 104,
+      "ItemCount": 1,
+      "Leaf": "Announcements"
+    },
+    {
+      "Key": "Lists/Announcements/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'cc1f7f6e-740a-4a6c-8729-45af47373059')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Get Started with Microsoft SharePoint Foundation!",
+      "ListKey": "Lists/Announcements",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/whasites/mbc-gw/Lists/Announcements/1_.000",
+      "Ext": ".000",
+      "Created": "02/28/2018 20:08:59",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "0fd6d216-9be0-4a38-b305-7dfcae234d56",
+      "Title": "Composed Looks",
+      "ListKey": "_catalogs/design",
+      "Depth": 0,
+      "BaseTemplate": 124,
+      "ItemCount": 18,
+      "Leaf": "design"
+    },
+    {
+      "Key": "_catalogs/design/1_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Current",
+      "ListKey": "_catalogs/design",
+      "Rel": "1_.000",
+      "Depth": 1,
+      "Leaf": "1_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/1_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/2_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Orange",
+      "ListKey": "_catalogs/design",
+      "Rel": "2_.000",
+      "Depth": 1,
+      "Leaf": "2_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/2_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/3_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "Sea Monster",
+      "ListKey": "_catalogs/design",
+      "Rel": "3_.000",
+      "Depth": 1,
+      "Leaf": "3_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/3_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/4_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "Green",
+      "ListKey": "_catalogs/design",
+      "Rel": "4_.000",
+      "Depth": 1,
+      "Leaf": "4_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/4_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/5_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "Lime",
+      "ListKey": "_catalogs/design",
+      "Rel": "5_.000",
+      "Depth": 1,
+      "Leaf": "5_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/5_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/6_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "Nature",
+      "ListKey": "_catalogs/design",
+      "Rel": "6_.000",
+      "Depth": 1,
+      "Leaf": "6_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/6_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/7_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "Blossom",
+      "ListKey": "_catalogs/design",
+      "Rel": "7_.000",
+      "Depth": 1,
+      "Leaf": "7_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/7_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/8_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "Sketch",
+      "ListKey": "_catalogs/design",
+      "Rel": "8_.000",
+      "Depth": 1,
+      "Leaf": "8_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/8_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/9_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "City",
+      "ListKey": "_catalogs/design",
+      "Rel": "9_.000",
+      "Depth": 1,
+      "Leaf": "9_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/9_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/10_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "Orbit",
+      "ListKey": "_catalogs/design",
+      "Rel": "10_.000",
+      "Depth": 1,
+      "Leaf": "10_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/10_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/11_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "Grey",
+      "ListKey": "_catalogs/design",
+      "Rel": "11_.000",
+      "Depth": 1,
+      "Leaf": "11_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/11_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/12_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "Characters",
+      "ListKey": "_catalogs/design",
+      "Rel": "12_.000",
+      "Depth": 1,
+      "Leaf": "12_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/12_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/13_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "Office",
+      "ListKey": "_catalogs/design",
+      "Rel": "13_.000",
+      "Depth": 1,
+      "Leaf": "13_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/13_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/14_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "Breeze",
+      "ListKey": "_catalogs/design",
+      "Rel": "14_.000",
+      "Depth": 1,
+      "Leaf": "14_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/14_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/15_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "Immerse",
+      "ListKey": "_catalogs/design",
+      "Rel": "15_.000",
+      "Depth": 1,
+      "Leaf": "15_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/15_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/16_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "Red",
+      "ListKey": "_catalogs/design",
+      "Rel": "16_.000",
+      "Depth": 1,
+      "Leaf": "16_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/16_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/17_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "Purple",
+      "ListKey": "_catalogs/design",
+      "Rel": "17_.000",
+      "Depth": 1,
+      "Leaf": "17_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/17_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "_catalogs/design/18_.000",
+      "Kind": "Item",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'0fd6d216-9be0-4a38-b305-7dfcae234d56')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "Wood",
+      "ListKey": "_catalogs/design",
+      "Rel": "18_.000",
+      "Depth": 1,
+      "Leaf": "18_.000",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/design/18_.000",
+      "Ext": ".000",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "Shared Documents",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "c2781c22-d079-4043-b3ad-c4e88a7e2cd0",
+      "Title": "Documents",
+      "ListKey": "Shared Documents",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 9,
+      "Leaf": "Shared Documents"
+    },
+    {
+      "Key": "Shared Documents/After Birth Cleaning Checklist.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "WHA Document Template",
+      "ListKey": "Shared Documents",
+      "Rel": "After Birth Cleaning Checklist.docx",
+      "Depth": 1,
+      "Leaf": "After Birth Cleaning Checklist.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/After Birth Cleaning Checklist.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:39",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 53244.0
+    },
+    {
+      "Key": "Shared Documents/Blood Specimen Collection (Appendix A).docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Blood Specimen Collection (Appendix A)",
+      "ListKey": "Shared Documents",
+      "Rel": "Blood Specimen Collection (Appendix A).docx",
+      "Depth": 1,
+      "Leaf": "Blood Specimen Collection (Appendix A).docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Blood Specimen Collection (Appendix A).docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:41",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28339.0
+    },
+    {
+      "Key": "Shared Documents/Birth Assistant Job Description.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Birth Assistant Job Description.aspx",
+      "Depth": 1,
+      "Leaf": "Birth Assistant Job Description.aspx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Birth Assistant Job Description.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:09:40",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2331.0
+    },
+    {
+      "Key": "Shared Documents/Clinitek Training Checklist.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Clinitek Training Checklist.docx",
+      "Depth": 1,
+      "Leaf": "Clinitek Training Checklist.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Clinitek Training Checklist.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:41",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25933.0
+    },
+    {
+      "Key": "Shared Documents/LAB ASSISTANT PREREQUISITES.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "LAB ASSISTANT PREREQUISITES.docx",
+      "Depth": 1,
+      "Leaf": "LAB ASSISTANT PREREQUISITES.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/LAB ASSISTANT PREREQUISITES.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:42",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25520.0
+    },
+    {
+      "Key": "Shared Documents/MBC Birth Assistant Training Checklist.xlsx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "MBC Birth Assistant Training Checklist.xlsx",
+      "Depth": 1,
+      "Leaf": "MBC Birth Assistant Training Checklist.xlsx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/MBC Birth Assistant Training Checklist.xlsx",
+      "Ext": ".xlsx",
+      "Created": "02/28/2018 20:09:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 57824.0
+    },
+    {
+      "Key": "Shared Documents/Orchard Training Checklist.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Orchard Training Checklist.docx",
+      "Depth": 1,
+      "Leaf": "Orchard Training Checklist.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Orchard Training Checklist.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25782.0
+    },
+    {
+      "Key": "Shared Documents/Specimen processing checklist.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "",
+      "ListKey": "Shared Documents",
+      "Rel": "Specimen processing checklist.docx",
+      "Depth": 1,
+      "Leaf": "Specimen processing checklist.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Specimen processing checklist.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25666.0
+    },
+    {
+      "Key": "Shared Documents/Terminal Cleaning Log.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'c2781c22-d079-4043-b3ad-c4e88a7e2cd0')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "WHA Document Template",
+      "ListKey": "Shared Documents",
+      "Rel": "Terminal Cleaning Log.docx",
+      "Depth": 1,
+      "Leaf": "Terminal Cleaning Log.docx",
+      "FileRef": "/sites/whasites/mbc-gw/Shared Documents/Terminal Cleaning Log.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:45",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 54717.0
+    },
+    {
+      "Key": "Lists/Links",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f0ca33ed-2cce-4fad-ac65-ccda492426b0')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "f0ca33ed-2cce-4fad-ac65-ccda492426b0",
+      "Title": "Links",
+      "ListKey": "Lists/Links",
+      "Depth": 0,
+      "BaseTemplate": 103,
+      "ItemCount": 0,
+      "Leaf": "Links"
+    },
+    {
+      "Key": "_catalogs/masterpage",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab",
+      "Title": "Master Page Gallery",
+      "ListKey": "_catalogs/masterpage",
+      "Depth": 0,
+      "BaseTemplate": 116,
+      "ItemCount": 6,
+      "Leaf": "masterpage"
+    },
+    {
+      "Key": "_catalogs/masterpage/v4.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "v4.master",
+      "Depth": 1,
+      "Leaf": "v4.master",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/v4.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 04:56:43",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 27319.0
+    },
+    {
+      "Key": "_catalogs/masterpage/minimal.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "minimal.master",
+      "Depth": 1,
+      "Leaf": "minimal.master",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/minimal.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 04:56:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 8825.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.master",
+      "Depth": 1,
+      "Leaf": "seattle.master",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/seattle.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 04:56:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31721.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.master",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.master",
+      "Depth": 1,
+      "Leaf": "oslo.master",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/oslo.master",
+      "Ext": ".master",
+      "Created": "09/08/2026 04:56:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 30454.0
+    },
+    {
+      "Key": "_catalogs/masterpage/seattle.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "seattle.preview",
+      "Depth": 1,
+      "Leaf": "seattle.preview",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/seattle.preview",
+      "Ext": ".preview",
+      "Created": "09/08/2026 04:56:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 10725.0
+    },
+    {
+      "Key": "_catalogs/masterpage/oslo.preview",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3dc85e3c-603d-4dd9-9a9e-5e9db3afdbab')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "",
+      "ListKey": "_catalogs/masterpage",
+      "Rel": "oslo.preview",
+      "Depth": 1,
+      "Leaf": "oslo.preview",
+      "FileRef": "/sites/whasites/mbc-gw/_catalogs/masterpage/oslo.preview",
+      "Ext": ".preview",
+      "Created": "09/08/2026 04:56:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 10159.0
+    },
+    {
+      "Key": "MBC Clinical Protocols",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "b6dd4c6a-f281-4463-82a6-4a99a395f1b9",
+      "Title": "MBC Clinical Protocols",
+      "ListKey": "MBC Clinical Protocols",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 43,
+      "Leaf": "MBC Clinical Protocols"
+    },
+    {
+      "Key": "MBC Clinical Protocols/Anemia in Pregnancy.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Anemia in Pregnancy.docx",
+      "Depth": 1,
+      "Leaf": "Anemia in Pregnancy.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Anemia in Pregnancy.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:00",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45149.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Asthma in Pregnancy.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Asthma in Pregnancy.docx",
+      "Depth": 1,
+      "Leaf": "Asthma in Pregnancy.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Asthma in Pregnancy.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:01",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 48200.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Birth Set Up.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(3)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "3",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Birth Set Up.docx",
+      "Depth": 1,
+      "Leaf": "Birth Set Up.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Birth Set Up.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:02",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45740.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Erythromycin Ophthalmic Ointment.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Erythromycin Ophthalmic Ointment.docx",
+      "Depth": 1,
+      "Leaf": "Erythromycin Ophthalmic Ointment.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Erythromycin Ophthalmic Ointment.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:03",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 44825.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Facility and Equipment.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Facility and Equipment.docx",
+      "Depth": 1,
+      "Leaf": "Facility and Equipment.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Facility and Equipment.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:04",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46885.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Fetal Demise.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Fetal Demise.docx",
+      "Depth": 1,
+      "Leaf": "Fetal Demise.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Fetal Demise.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:05",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45478.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Final Room Cleaning.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Final Room Cleaning.docx",
+      "Depth": 1,
+      "Leaf": "Final Room Cleaning.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Final Room Cleaning.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:06",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45798.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Food Handling.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Food Handling.docx",
+      "Depth": 1,
+      "Leaf": "Food Handling.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Food Handling.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:07",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43957.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Gestational Diabetes Mellitus.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Gestational Diabetes Mellitus.docx",
+      "Depth": 1,
+      "Leaf": "Gestational Diabetes Mellitus.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Gestational Diabetes Mellitus.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:07",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 49641.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Group B Strep.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Group B Strep.docx",
+      "Depth": 1,
+      "Leaf": "Group B Strep.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Group B Strep.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:08",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 75346.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Herpes Simplex Virus.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Herpes Simplex Virus.docx",
+      "Depth": 1,
+      "Leaf": "Herpes Simplex Virus.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Herpes Simplex Virus.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:09",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43888.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Home Visit Checklist.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Home Visit Checklist.docx",
+      "Depth": 1,
+      "Leaf": "Home Visit Checklist.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Home Visit Checklist.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:10",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 41830.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Hydrotherapy in Laborv.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Hydrotherapy in Laborv.docx",
+      "Depth": 1,
+      "Leaf": "Hydrotherapy in Laborv.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Hydrotherapy in Laborv.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:10",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 50951.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Hyperbilirubinemia Screening.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Hyperbilirubinemia Screening.docx",
+      "Depth": 1,
+      "Leaf": "Hyperbilirubinemia Screening.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Hyperbilirubinemia Screening.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:11",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 42420.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Hypertension in Pregnancy.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Hypertension in Pregnancy.docx",
+      "Depth": 1,
+      "Leaf": "Hypertension in Pregnancy.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Hypertension in Pregnancy.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:12",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 44330.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Intrahepatic Cholestasis of Pregnancy.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Intrahepatic Cholestasis of Pregnancy.docx",
+      "Depth": 1,
+      "Leaf": "Intrahepatic Cholestasis of Pregnancy.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Intrahepatic Cholestasis of Pregnancy.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:13",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43714.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Intramuscular Injections for Neonates.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Intramuscular Injections for Neonates.docx",
+      "Depth": 1,
+      "Leaf": "Intramuscular Injections for Neonates.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Intramuscular Injections for Neonates.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:13",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 66123.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Intrapartum Fetal Monitoring.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(18)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "18",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Intrapartum Fetal Monitoring.docx",
+      "Depth": 1,
+      "Leaf": "Intrapartum Fetal Monitoring.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Intrapartum Fetal Monitoring.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:14",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 49431.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Intrapartum Fever.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(19)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "19",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Intrapartum Fever.docx",
+      "Depth": 1,
+      "Leaf": "Intrapartum Fever.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Intrapartum Fever.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:15",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43295.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Intrapartum Labor Management.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(20)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Intrapartum Labor Management.docx",
+      "Depth": 1,
+      "Leaf": "Intrapartum Labor Management.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Intrapartum Labor Management.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:15",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45009.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Meconium.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(21)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "21",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Meconium.docx",
+      "Depth": 1,
+      "Leaf": "Meconium.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Meconium.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:16",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46071.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Newborn Care.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(22)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "22",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Newborn Care.docx",
+      "Depth": 1,
+      "Leaf": "Newborn Care.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Newborn Care.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:17",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 47346.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Newborn Hearing Screen.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(23)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "23",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Newborn Hearing Screen.docx",
+      "Depth": 1,
+      "Leaf": "Newborn Hearing Screen.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Newborn Hearing Screen.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:18",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 47261.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Newborn Hepatitis B Vaccine.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(24)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "24",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Newborn Hepatitis B Vaccine.docx",
+      "Depth": 1,
+      "Leaf": "Newborn Hepatitis B Vaccine.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Newborn Hepatitis B Vaccine.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:18",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 41688.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Non-Cephalic Presentation.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(25)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "25",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Non-Cephalic Presentation.docx",
+      "Depth": 1,
+      "Leaf": "Non-Cephalic Presentation.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Non-Cephalic Presentation.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:19",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43631.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(26)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "26",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "Depth": 1,
+      "Leaf": "Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Non-Pharmacologic Induction-Augmentation Techniques.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:20",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46093.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Nutrition and BMI Protocol.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(27)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "27",
+      "Title": "",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Nutrition and BMI Protocol.docx",
+      "Depth": 1,
+      "Leaf": "Nutrition and BMI Protocol.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Nutrition and BMI Protocol.docx",
+      "Ext": ".docx",
+      "Created": "11/09/2018 00:14:59",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25845.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Nutrition and Hydration during Labor.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(28)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "28",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Nutrition and Hydration during Labor.docx",
+      "Depth": 1,
+      "Leaf": "Nutrition and Hydration during Labor.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Nutrition and Hydration during Labor.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:21",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43954.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Obstetrical Lacerations.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(29)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "29",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Obstetrical Lacerations.docx",
+      "Depth": 1,
+      "Leaf": "Obstetrical Lacerations.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Obstetrical Lacerations.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:21",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 41505.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Oligohydramnios.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(30)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "30",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Oligohydramnios.docx",
+      "Depth": 1,
+      "Leaf": "Oligohydramnios.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Oligohydramnios.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:22",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 44162.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(31)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "31",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "Depth": 1,
+      "Leaf": "Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Placenta Previa, Vasa Previa, and Low-Lying Placenta.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:23",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 44350.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Placenta.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(32)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "32",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Placenta.docx",
+      "Depth": 1,
+      "Leaf": "Placenta.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Placenta.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:23",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 42916.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Polyhydramnios.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(33)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "33",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Polyhydramnios.docx",
+      "Depth": 1,
+      "Leaf": "Polyhydramnios.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Polyhydramnios.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:24",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 44602.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Postpartum Hemorrhage.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(34)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "34",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Postpartum Hemorrhage.docx",
+      "Depth": 1,
+      "Leaf": "Postpartum Hemorrhage.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Postpartum Hemorrhage.docx",
+      "Ext": ".docx",
+      "Created": "05/04/2021 21:03:17",
+      "Author": "kquinn@whallc.com",
+      "Size": 47062.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Premature Rupture of Membranes (PROM).docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(35)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "35",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Premature Rupture of Membranes (PROM).docx",
+      "Depth": 1,
+      "Leaf": "Premature Rupture of Membranes (PROM).docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Premature Rupture of Membranes (PROM).docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:25",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 48754.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Prolonged Labor.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(36)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "36",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Prolonged Labor.docx",
+      "Depth": 1,
+      "Leaf": "Prolonged Labor.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Prolonged Labor.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:26",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 45236.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(37)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "37",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "Depth": 1,
+      "Leaf": "Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Pulse Oximetry Screening for Critical Congenital Heart Disease in Newborns Protocol.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:27",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 124752.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Shoulder Dystocia.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(38)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "38",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Shoulder Dystocia.docx",
+      "Depth": 1,
+      "Leaf": "Shoulder Dystocia.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Shoulder Dystocia.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:28",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46975.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Soiled Linen.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(39)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "39",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Soiled Linen.docx",
+      "Depth": 1,
+      "Leaf": "Soiled Linen.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Soiled Linen.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:29",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43530.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Thyroid Disease.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(40)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "40",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Thyroid Disease.docx",
+      "Depth": 1,
+      "Leaf": "Thyroid Disease.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Thyroid Disease.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:29",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 43764.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Transport.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(41)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "41",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Transport.docx",
+      "Depth": 1,
+      "Leaf": "Transport.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Transport.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:30",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46388.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Tub Cleaning Protocol.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(42)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "42",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Tub Cleaning Protocol.docx",
+      "Depth": 1,
+      "Leaf": "Tub Cleaning Protocol.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Tub Cleaning Protocol.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:31",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 42836.0
+    },
+    {
+      "Key": "MBC Clinical Protocols/Vitamin K Administration.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'b6dd4c6a-f281-4463-82a6-4a99a395f1b9')/items(43)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "43",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Clinical Protocols",
+      "Rel": "Vitamin K Administration.docx",
+      "Depth": 1,
+      "Leaf": "Vitamin K Administration.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Clinical Protocols/Vitamin K Administration.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:31",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 46077.0
+    },
+    {
+      "Key": "MBC Forms  Consents",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "91816c4e-3494-4e93-b044-04ca3a8daf59",
+      "Title": "MBC Forms & Consents",
+      "ListKey": "MBC Forms  Consents",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 17,
+      "Leaf": "MBC Forms  Consents"
+    },
+    {
+      "Key": "MBC Forms  Consents/Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "Depth": 1,
+      "Leaf": "Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Authorization for Use of Information and Photographs_Updated With Declination.pdf",
+      "Ext": ".pdf",
+      "Created": "05/11/2022 17:07:03",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 82083.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Diet Diary.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Diet Diary.docx",
+      "Depth": 1,
+      "Leaf": "Diet Diary.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Diet Diary.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:10:20",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 38383.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - CCHD Screening.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - CCHD Screening.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - CCHD Screening.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - CCHD Screening.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:12:06",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31189.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - GBS.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - GBS.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - GBS.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - GBS.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:13:21",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 28998.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Hepatitis B Vaccine.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Hepatitis B Vaccine.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Hepatitis B Vaccine.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Hepatitis B Vaccine.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:16:06",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 35985.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Jaundice Screening.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(6)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "6",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Jaundice Screening.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Jaundice Screening.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Jaundice Screening.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:19:07",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 30889.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - MBC Risk Criteria.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(7)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "7",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - MBC Risk Criteria.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - MBC Risk Criteria.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - MBC Risk Criteria.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:42:23",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 36463.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Newborn Eye Prophylaxis.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(8)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "8",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Newborn Eye Prophylaxis.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Newborn Eye Prophylaxis.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Newborn Eye Prophylaxis.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:21:59",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 34889.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Newborn Hearing Screening.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(9)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "9",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Newborn Hearing Screening.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Newborn Hearing Screening.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Newborn Hearing Screening.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:22:55",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 30356.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Newborn Screening.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(10)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "10",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Newborn Screening.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Newborn Screening.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Newborn Screening.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:27:38",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 37668.0
+    },
+    {
+      "Key": "MBC Forms  Consents/Informed Consent - Vitamin K.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(11)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "11",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "Informed Consent - Vitamin K.docx",
+      "Depth": 1,
+      "Leaf": "Informed Consent - Vitamin K.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/Informed Consent - Vitamin K.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:30:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 33065.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC CABC CHART REVIEW FORM.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(12)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "12",
+      "Title": "",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC CABC CHART REVIEW FORM.docx",
+      "Depth": 1,
+      "Leaf": "MBC CABC CHART REVIEW FORM.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC CABC CHART REVIEW FORM.docx",
+      "Ext": ".docx",
+      "Created": "07/07/2022 15:49:10",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 39488.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(13)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "13",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "Depth": 1,
+      "Leaf": "MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC DMAP Waiver (E-Sig Back-Up).docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:34:27",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31293.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC Infomed Consent.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(14)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "14",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC Infomed Consent.docx",
+      "Depth": 1,
+      "Leaf": "MBC Infomed Consent.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC Infomed Consent.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:33:38",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 33584.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC Meet and Greet Form.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(15)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "15",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC Meet and Greet Form.docx",
+      "Depth": 1,
+      "Leaf": "MBC Meet and Greet Form.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC Meet and Greet Form.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:36:16",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 41957.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC Placenta Release Request.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(16)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "16",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC Placenta Release Request.docx",
+      "Depth": 1,
+      "Leaf": "MBC Placenta Release Request.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC Placenta Release Request.docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:39:54",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31560.0
+    },
+    {
+      "Key": "MBC Forms  Consents/MBC Transport Plan .docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'91816c4e-3494-4e93-b044-04ca3a8daf59')/items(17)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "17",
+      "Title": "WHA Document Template",
+      "ListKey": "MBC Forms  Consents",
+      "Rel": "MBC Transport Plan .docx",
+      "Depth": 1,
+      "Leaf": "MBC Transport Plan .docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Forms  Consents/MBC Transport Plan .docx",
+      "Ext": ".docx",
+      "Created": "05/11/2022 17:36:57",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 30622.0
+    },
+    {
+      "Key": "MBC Birth Book",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'eeac4fcb-8466-4ba9-96d7-2a5cad1d3d78')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "eeac4fcb-8466-4ba9-96d7-2a5cad1d3d78",
+      "Title": "MBC Patient Education Materials",
+      "ListKey": "MBC Birth Book",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 2,
+      "Leaf": "MBC Birth Book"
+    },
+    {
+      "Key": "MBC Birth Book/Glossary.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'eeac4fcb-8466-4ba9-96d7-2a5cad1d3d78')/items(1)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "1",
+      "Title": "",
+      "ListKey": "MBC Birth Book",
+      "Rel": "Glossary.docx",
+      "Depth": 1,
+      "Leaf": "Glossary.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Birth Book/Glossary.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:32",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 27478.0
+    },
+    {
+      "Key": "MBC Birth Book/MBC Birth Book.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'eeac4fcb-8466-4ba9-96d7-2a5cad1d3d78')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "MBC Birth Book",
+      "Rel": "MBC Birth Book.docx",
+      "Depth": 1,
+      "Leaf": "MBC Birth Book.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBC Birth Book/MBC Birth Book.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:33",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 135820.0
+    },
+    {
+      "Key": "MBCGW Checklists",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'af1a1dc2-4e0d-4484-8c38-329e3705f3ef')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "af1a1dc2-4e0d-4484-8c38-329e3705f3ef",
+      "Title": "MBC-GW Checklists",
+      "ListKey": "MBCGW Checklists",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 0,
+      "Leaf": "MBCGW Checklists"
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "3d24aaf9-9d02-449f-b6ff-2b660d3d6df0",
+      "Title": "MBC-GW CNM Protocols & Workflows",
+      "ListKey": "MBCGW CNM Protocols  Workflows",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 4,
+      "Leaf": "MBCGW CNM Protocols  Workflows"
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "MBCGW CNM Protocols  Workflows",
+      "Rel": "JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "Depth": 1,
+      "Leaf": "JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW CNM Protocols  Workflows/JOB DESCRIPTION-Student Nurse Midwife.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:34",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 31107.0
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/MBC-East Precinct Demonstration Plan.pdf",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(2)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "2",
+      "Title": "",
+      "ListKey": "MBCGW CNM Protocols  Workflows",
+      "Rel": "MBC-East Precinct Demonstration Plan.pdf",
+      "Depth": 1,
+      "Leaf": "MBC-East Precinct Demonstration Plan.pdf",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW CNM Protocols  Workflows/MBC-East Precinct Demonstration Plan.pdf",
+      "Ext": ".pdf",
+      "Created": "04/21/2021 20:15:35",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 488138.0
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/Security Manual.pdf",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(3)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "3",
+      "Title": "",
+      "ListKey": "MBCGW CNM Protocols  Workflows",
+      "Rel": "Security Manual.pdf",
+      "Depth": 1,
+      "Leaf": "Security Manual.pdf",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW CNM Protocols  Workflows/Security Manual.pdf",
+      "Ext": ".pdf",
+      "Created": "12/02/2021 21:00:32",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2786821.0
+    },
+    {
+      "Key": "MBCGW CNM Protocols  Workflows/STAT lab pickup for MBC - Legacy .docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'3d24aaf9-9d02-449f-b6ff-2b660d3d6df0')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "MBCGW CNM Protocols  Workflows",
+      "Rel": "STAT lab pickup for MBC - Legacy .docx",
+      "Depth": 1,
+      "Leaf": "STAT lab pickup for MBC - Legacy .docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW CNM Protocols  Workflows/STAT lab pickup for MBC - Legacy .docx",
+      "Ext": ".docx",
+      "Created": "07/01/2022 19:14:47",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 882774.0
+    },
+    {
+      "Key": "MBCGW Policies",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "48",
+                "Low": "134287360"
+              },
+              "Description": "Can view specific lists, document libraries, list items, folders, or documents when given permissions.",
+              "Hidden": true,
+              "Id": 1073741825,
+              "Name": "Limited Access",
+              "Order": 160,
+              "RoleTypeKind": 1
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "f90c6935-092e-4465-8009-58c9c85ca98b",
+      "Title": "MBC-GW Policies",
+      "ListKey": "MBCGW Policies",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 8,
+      "Leaf": "MBCGW Policies"
+    },
+    {
+      "Key": "MBCGW Policies/Decontamination and Sterilization .aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Decontamination and Sterilization .aspx",
+      "Depth": 1,
+      "Leaf": "Decontamination and Sterilization .aspx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Decontamination and Sterilization .aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:09:35",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2405.0
+    },
+    {
+      "Key": "MBCGW Policies/Hand Hygiene.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Hand Hygiene.aspx",
+      "Depth": 1,
+      "Leaf": "Hand Hygiene.aspx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Hand Hygiene.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:09:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2344.0
+    },
+    {
+      "Key": "MBCGW Policies/Infection Control for Birth Centers.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Infection Control for Birth Centers.docx",
+      "Depth": 1,
+      "Leaf": "Infection Control for Birth Centers.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Infection Control for Birth Centers.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:36",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 33378.0
+    },
+    {
+      "Key": "MBCGW Policies/Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "Depth": 1,
+      "Leaf": "Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Infection Control for Exam, Procedure and Laboratory Areas.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:09:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2461.0
+    },
+    {
+      "Key": "MBCGW Policies/Infection Control for Ultrasound.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Infection Control for Ultrasound.aspx",
+      "Depth": 1,
+      "Leaf": "Infection Control for Ultrasound.aspx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Infection Control for Ultrasound.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:09:37",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 2407.0
+    },
+    {
+      "Key": "MBCGW Policies/MBC-East Precinct Demonstration Plan.pdf",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(6)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "6",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "MBC-East Precinct Demonstration Plan.pdf",
+      "Depth": 1,
+      "Leaf": "MBC-East Precinct Demonstration Plan.pdf",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/MBC-East Precinct Demonstration Plan.pdf",
+      "Ext": ".pdf",
+      "Created": "04/21/2021 20:17:19",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 488138.0
+    },
+    {
+      "Key": "MBCGW Policies/Symptomatic Admissions MBC.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(7)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "7",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "Symptomatic Admissions MBC.docx",
+      "Depth": 1,
+      "Leaf": "Symptomatic Admissions MBC.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/Symptomatic Admissions MBC.docx",
+      "Ext": ".docx",
+      "Created": "05/27/2022 20:21:59",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 25880.0
+    },
+    {
+      "Key": "MBCGW Policies/WHA MBC - Emergency Response Plan.docx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'f90c6935-092e-4465-8009-58c9c85ca98b')/items(8)",
+      "Unique": true,
+      "Acl": [
+        {
+          "MemberId": 5,
+          "LoginName": "WHA Sites Members",
+          "Title": "WHA Sites Members",
+          "PrincipalType": 8,
+          "Roles": [
+            "Read"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "176",
+                "Low": "138612833"
+              },
+              "Description": "Can view pages and list items and download documents.",
+              "Hidden": false,
+              "Id": 1073741826,
+              "Name": "Read",
+              "Order": 128,
+              "RoleTypeKind": 2
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 11,
+          "LoginName": "c:0t.c|tenant|24a55d0b-a1e6-4fcf-8a65-59922c5f05a5",
+          "Title": "CentralPark.Administrator",
+          "PrincipalType": 4,
+          "Roles": [
+            "Full Control"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "2147483647",
+                "Low": "4294967295"
+              },
+              "Description": "Has full control.",
+              "Hidden": false,
+              "Id": 1073741829,
+              "Name": "Full Control",
+              "Order": 1,
+              "RoleTypeKind": 5
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 12,
+          "LoginName": "c:0t.c|tenant|5d093f1f-f012-4b5d-af44-2e0397d20299",
+          "Title": "CentralPark.Home.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 146,
+          "LoginName": "c:0t.c|tenant|c493f256-f3ee-48ff-af16-b271a6265024",
+          "Title": "CentralPark.Sites.MBCGW.Contributor",
+          "PrincipalType": 4,
+          "Roles": [
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        },
+        {
+          "MemberId": 147,
+          "LoginName": "c:0t.c|tenant|6b5df3c2-e680-4c5e-ad69-19fe7bb27ec3",
+          "Title": "CentralPark.Sites.MBCGW.Designer",
+          "PrincipalType": 4,
+          "Roles": [
+            "Design",
+            "Contribute"
+          ],
+          "Bindings": [
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1012866047"
+              },
+              "Description": "Can view, add, update, delete, approve, and customize.",
+              "Hidden": false,
+              "Id": 1073741828,
+              "Name": "Design",
+              "Order": 32,
+              "RoleTypeKind": 4
+            },
+            {
+              "BasePermissions": {
+                "High": "432",
+                "Low": "1011028719"
+              },
+              "Description": "Can view, add, update, and delete list items and documents.",
+              "Hidden": false,
+              "Id": 1073741827,
+              "Name": "Contribute",
+              "Order": 64,
+              "RoleTypeKind": 3
+            }
+          ],
+          "Skip": false
+        }
+      ],
+      "Id": "8",
+      "Title": "",
+      "ListKey": "MBCGW Policies",
+      "Rel": "WHA MBC - Emergency Response Plan.docx",
+      "Depth": 1,
+      "Leaf": "WHA MBC - Emergency Response Plan.docx",
+      "FileRef": "/sites/whasites/mbc-gw/MBCGW Policies/WHA MBC - Emergency Response Plan.docx",
+      "Ext": ".docx",
+      "Created": "02/28/2018 20:09:39",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 38805.0
+    },
+    {
+      "Key": "Lists/Midwives Vacation Calendar",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'bd957cff-5a0b-4235-99a1-870bff9a9513')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "bd957cff-5a0b-4235-99a1-870bff9a9513",
+      "Title": "Midwives Vacation Calendar",
+      "ListKey": "Lists/Midwives Vacation Calendar",
+      "Depth": 0,
+      "BaseTemplate": 106,
+      "ItemCount": 0,
+      "Leaf": "Midwives Vacation Calendar"
+    },
+    {
+      "Key": "SiteAssets",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "98c849a4-08b6-44d7-ac7d-1da097748d04",
+      "Title": "Site Assets",
+      "ListKey": "SiteAssets",
+      "Depth": 0,
+      "BaseTemplate": 101,
+      "ItemCount": 5,
+      "Leaf": "SiteAssets"
+    },
+    {
+      "Key": "SiteAssets/Midwifery Birth Center - Gateway Notebook",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(1)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "1",
+      "Title": "Midwifery Birth Center - Gateway Notebook",
+      "ListKey": "SiteAssets",
+      "Rel": "Midwifery Birth Center - Gateway Notebook",
+      "Depth": 1,
+      "Leaf": "Midwifery Birth Center - Gateway Notebook",
+      "FileRef": "/sites/whasites/mbc-gw/SiteAssets/Midwifery Birth Center - Gateway Notebook",
+      "Ext": "",
+      "Created": "02/28/2018 20:08:44",
+      "Author": "bposey.admin@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages",
+      "Depth": 1,
+      "Leaf": "SitePages",
+      "FileRef": "/sites/whasites/mbc-gw/SiteAssets/SitePages",
+      "Ext": "",
+      "Created": "09/22/2026 16:05:44",
+      "Author": "swilson@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/SitePages/Home",
+      "Kind": "Folder",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(3)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "3",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "SitePages/Home",
+      "Depth": 2,
+      "Leaf": "Home",
+      "FileRef": "/sites/whasites/mbc-gw/SiteAssets/SitePages/Home",
+      "Ext": "",
+      "Created": "09/22/2026 16:05:44",
+      "Author": "swilson@whallc.com",
+      "Size": null
+    },
+    {
+      "Key": "SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(4)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "4",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "__sitelogo__CentralPark_Logo.png",
+      "Depth": 1,
+      "Leaf": "__sitelogo__CentralPark_Logo.png",
+      "FileRef": "/sites/whasites/mbc-gw/SiteAssets/__sitelogo__CentralPark_Logo.png",
+      "Ext": ".png",
+      "Created": "09/22/2026 16:06:01",
+      "Author": "swilson@whallc.com",
+      "Size": 3935.0
+    },
+    {
+      "Key": "SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'98c849a4-08b6-44d7-ac7d-1da097748d04')/items(5)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "5",
+      "Title": "",
+      "ListKey": "SiteAssets",
+      "Rel": "__rectSitelogo__CentralPark_Logo.png",
+      "Depth": 1,
+      "Leaf": "__rectSitelogo__CentralPark_Logo.png",
+      "FileRef": "/sites/whasites/mbc-gw/SiteAssets/__rectSitelogo__CentralPark_Logo.png",
+      "Ext": ".png",
+      "Created": "09/22/2026 16:06:02",
+      "Author": "swilson@whallc.com",
+      "Size": 3935.0
+    },
+    {
+      "Key": "SitePages",
+      "Kind": "Library",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'a532925f-ae8c-416a-944b-9cb9bdc31f29')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "a532925f-ae8c-416a-944b-9cb9bdc31f29",
+      "Title": "Site Pages",
+      "ListKey": "SitePages",
+      "Depth": 0,
+      "BaseTemplate": 119,
+      "ItemCount": 1,
+      "Leaf": "SitePages"
+    },
+    {
+      "Key": "SitePages/Home.aspx",
+      "Kind": "File",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'a532925f-ae8c-416a-944b-9cb9bdc31f29')/items(2)",
+      "Unique": false,
+      "Acl": null,
+      "Id": "2",
+      "Title": "Home",
+      "ListKey": "SitePages",
+      "Rel": "Home.aspx",
+      "Depth": 1,
+      "Leaf": "Home.aspx",
+      "FileRef": "/sites/whasites/mbc-gw/SitePages/Home.aspx",
+      "Ext": ".aspx",
+      "Created": "02/28/2018 20:08:46",
+      "Author": "bposey.admin@whallc.com",
+      "Size": 15427.0
+    },
+    {
+      "Key": "Lists/Team Discussion",
+      "Kind": "List",
+      "Api": "https://whallc.sharepoint.com/sites/whasites/mbc-gw/_api/web/lists(guid'20269c7c-b7c1-4aee-9d06-19d8f3d27427')",
+      "Unique": false,
+      "Acl": null,
+      "Id": "20269c7c-b7c1-4aee-9d06-19d8f3d27427",
+      "Title": "Team Discussion",
+      "ListKey": "Lists/Team Discussion",
+      "Depth": 0,
+      "BaseTemplate": 108,
+      "ItemCount": 0,
+      "Leaf": "Team Discussion"
+    }
+  ]
+}

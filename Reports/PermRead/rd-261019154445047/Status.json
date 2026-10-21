@@ -1,0 +1,5 @@
+{
+  "Mode": "Apply",
+  "Status": "Failed",
+  "Error": "SharePoint Post failed at 'https://whallc.sharepoint.com/sites/ClinicalandPatientServices/_api/web/lists(guid'47cfeb82-bc3e-4b77-af41-8bc842b831c4')/roleassignments/addroleassignment(principalid=4,roledefid=1073741826)': {\"odata.error\":{\"code\":\"-1, Microsoft.SharePoint.Client.InvalidClientQueryException\",\"message\":{\"lang\":\"en-US\",\"value\":\"Cannot handle the data at position 0.\"}}}"
+}

@@ -1,0 +1,14 @@
+{
+  "SiteUrl": "https://whallc.sharepoint.com/sites/emr",
+  "StartedUtc": "2026-10-20T22:35:21.1676570Z",
+  "Status": "Complete",
+  "Webs": 4,
+  "Objects": 498,
+  "Rows": 1172,
+  "Error": "",
+  "Coverage": "All enumerated target webs/lists/folders/items, including unmatched/excluded content; signed-in account visibility only.",
+  "Limitations": "Role-assignment reference, not expanded individual access. Only the four protected migration principals are checked for direct SharePoint-group membership; nested Entra membership, site admins, app grants, sharing-link recipients and tenant policies are not expanded. Not a transactional snapshot.",
+  "MembershipPath": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\VisitorsRuns\\v-261020150543067\\3C22F75540E3\\Apply\\p-261020153433748\\Report\\MigrationGroupMemberships.csv",
+  "RolePath": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\VisitorsRuns\\v-261020150543067\\3C22F75540E3\\Apply\\p-261020153433748\\Report\\PermissionLevels.csv",
+  "FinishedUtc": "2026-10-20T22:35:50.3072899Z"
+}

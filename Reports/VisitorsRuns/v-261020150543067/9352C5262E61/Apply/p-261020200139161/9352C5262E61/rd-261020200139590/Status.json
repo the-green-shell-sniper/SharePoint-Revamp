@@ -1,0 +1,7 @@
+{
+  "Mode": "Apply",
+  "Status": "Failed",
+  "Error": "ACL/inheritance differs from the plan at 'SiteAssets/SitePages/Annual-Development' (before write). Stop and review; no further writes will run.",
+  "SourceReadScopes": 1205,
+  "PlannedOperations": 152
+}

@@ -1,0 +1,1260 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Coding Audit Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Coding Audit Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Compensation Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Compensation Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Finance Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Finance Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 HIM Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 HIM Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Information Security Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Information Security Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Operations Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Operations Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Patient Experience Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Patient Experience Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 QI Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 QI Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Recruitment Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Recruitment Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Retirement Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Retirement Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Risk Management Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Risk Management Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011/2011 Safety Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011/2011 Safety Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Coding Audit Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Coding Audit Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Compensation Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Compensation Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Finance Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Finance Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 HIM Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 HIM Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Information Security Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Information Security Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Operations Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Operations Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 QI Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 QI Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Recruitment Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Recruitment Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Retirement Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Retirement Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Risk Management Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Risk Management Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 Safety Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 Safety Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012/2012 The Patient Experience Committee Charter.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012/2012 The Patient Experience Committee Charter.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Business Strategy Group Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Business Strategy Group Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Business Strategy Group Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Business Strategy Group Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Business Strategy Group Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Business Strategy Group Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Coding Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Coding Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Coding Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Coding Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Coding Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Coding Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Coding Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Coding Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Coding Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Coding Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Coding Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Coding Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Compensation Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Compensation Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Compensation Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Compensation Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Compensation Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Compensation Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Compensation Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Compensation Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Compensation Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Compensation Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Compensation Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Compensation Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Compensation Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Compensation Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Data and Analytics Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Data and Analytics Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Data and Analytics Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Data and Analytics Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/DRAFT Information Security Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/DRAFT Information Security Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Finance Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Finance Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Finance Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Finance Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Finance Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Finance Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Finance Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Finance Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Finance Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Finance Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Finance Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Finance Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/HIM Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/HIM Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/HIM Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/HIM Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/HIM Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/HIM Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/HIM Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/HIM Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/HIM Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/HIM Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/HIM Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/HIM Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/HIM Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/HIM Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Information Security Committee 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Information Security Committee 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Information Security Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Information Security Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Information Security Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Information Security Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Operations Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Operations Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Operations Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Operations Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Operations Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Operations Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Operations Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Operations Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Operations Commmittee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Operations Commmittee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/QI Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/QI Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/QI Committee Charter 2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/QI Committee Charter 2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/QI Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/QI Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Quality Improvement Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Quality Improvement Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Quality Improvement Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Quality Improvement Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Quality Improvement Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Quality Improvement Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Quality Improvement Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Quality Improvement Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Quality Improvement Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Quality Improvement Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Recruitment Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Recruitment Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Recruitment Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Recruitment Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Recruitment Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Recruitment Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Recruitment Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Recruitment Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Recruitment Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Recruitment Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Recruitment Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Recruitment Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Recruitment Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Recruitment Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Retirement Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Retirement Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Retirement Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Retirement Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Retirement Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Retirement Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Retirement Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Retirement Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Retirement Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Retirement Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Retirement Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Retirement Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Retirement Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Retirement Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Risk Management Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Risk Management Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Risk Management Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Risk Management Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Risk Management Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Risk Management Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Risk Management Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Risk Management Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Risk Management Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Risk Management Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Risk Management Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Risk Management Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Risk Managment Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Risk Managment Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/Safety Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/Safety Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/Safety Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/Safety Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/Safety Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/Safety Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Safety Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Safety Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Safety Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Safety Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Safety Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Safety Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/Site Management Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/Site Management Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/Site Management Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/Site Management Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/Site Management Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/Site Management Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015/Site Management Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015/Site Management Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016/The Patient Experience Committee Charter - 2016.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016/The Patient Experience Committee Charter - 2016.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010/The Patient Experience Committee Charter 2010.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010/The Patient Experience Committee Charter 2010.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013/The Patient Experience Committee Charter 2013 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013/The Patient Experience Committee Charter 2013 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014/The Patient Experience Committee Charter 2014.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014/The Patient Experience Committee Charter 2014.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017/The Patient Experience Committee Charter 2017.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017/The Patient Experience Committee Charter 2017.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/The Patient Experience Committee Charter 2018.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/The Patient Experience Committee Charter 2018.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018/The Patient Experience Committee Charter-2015.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018/The Patient Experience Committee Charter-2015.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2018",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2018",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2017",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2017",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2016",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2016",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2015",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2015",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2014",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2014",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2013",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2013",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2012",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2012",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2011",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2011",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2010",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2010",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Business Strategy Group Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Business Strategy Group Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Compensation Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Compensation Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Finance Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Finance Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/HIM Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/HIM Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/QI Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/QI Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Clinician Well Being Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Clinician Well Being Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Recruitment Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Recruitment Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Risk Management Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Risk Management Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Retirement Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Retirement Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2020/Site Management Committee Charter - 2020.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2020/Site Management Committee Charter - 2020.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Business Strategy Group Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Business Strategy Group Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Clinician Well-Being Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Clinician Well-Being Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Compensation Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Compensation Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Finance Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Finance Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/HIM Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/HIM Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/QI Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/QI Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Recruitment Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Recruitment Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Retirement Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Retirement Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Risk Management Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Risk Management Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2019/Site Management Committee Charter 2019.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2019/Site Management Committee Charter 2019.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Finance Committee Charter - 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Finance Committee Charter - 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Site Management Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Site Management Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Compensation Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Compensation Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Risk Management Committee Charter - 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Risk Management Committee Charter - 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/QI-PR Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/QI-PR Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Retirement Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Retirement Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2025/Safety Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2025/Safety Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Compensation Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Compensation Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Finance Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Finance Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/QI Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/QI Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Retirement Plan Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Retirement Plan Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Risk Management Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Risk Management Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Safety Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Safety Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/Site Management Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/Site Management Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Charters/2026/DEIB Committee Charter 2026.docx",
+      "SourceUnique": false,
+      "TargetPath": "Committee Charters/2026/DEIB Committee Charter 2026.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Committee List/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Committee List/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Committee Resources",
+      "SourceUnique": false,
+      "TargetPath": "Committee Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "DropOffLibrary",
+      "SourceUnique": false,
+      "TargetPath": "DropOffLibrary",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/Committees Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/Committees Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}

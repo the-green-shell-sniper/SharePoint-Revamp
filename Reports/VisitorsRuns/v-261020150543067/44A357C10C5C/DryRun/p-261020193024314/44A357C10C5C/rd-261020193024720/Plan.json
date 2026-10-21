@@ -1,0 +1,1314 @@
+{
+  "Steps": [],
+  "Notes": [],
+  "Coverage": [
+    {
+      "SourcePath": "",
+      "SourceUnique": true,
+      "TargetPath": "",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/Announcements/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/Announcements/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/Antenatal Testing 2014.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/Antenatal Testing 2014.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/NIPT Workflow.pdf",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/NIPT Workflow.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/Antenatal Testing 2014 - Editable.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/Antenatal Testing 2014 - Editable.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/NIPT Additional Facts Handout.docx",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/NIPT Additional Facts Handout.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/Checking Insurance for Genetic Testing.url",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/Checking Insurance for Genetic Testing.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "NIPT Materials and Resources/PA for SMA and CF workflow.url",
+      "SourceUnique": false,
+      "TargetPath": "NIPT Materials and Resources/PA for SMA and CF workflow.url",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/RM Education/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/RM Education/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/7_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/7_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/8_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/8_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/9_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/9_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/10_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/10_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/11_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/11_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/13_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/16_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/16_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/17_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/17_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/design/18_.000",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/design/18_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Consultation Coverage for Nurse Midwifery Service",
+      "SourceUnique": true,
+      "TargetPath": "Consultation Coverage for Nurse Midwifery Service",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Consultation Coverage for Nurse Midwifery Service/Executive_Summary ACNM ACOG Collaboration_in_Practice.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Consultation Coverage for Nurse Midwifery Service/Executive_Summary ACNM ACOG Collaboration_in_Practice.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Consultation Coverage for Nurse Midwifery Service/CNM-Physician Collaboration Guidelines 2025.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Consultation Coverage for Nurse Midwifery Service/CNM-Physician Collaboration Guidelines 2025.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/QI Committee Charter 2025.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/QI Committee Charter 2025.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Interpregnancy Interval after D&E.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Interpregnancy Interval after D&E.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Shared Documents/Weak ABORh D Antigen QI Summary.docx",
+      "SourceUnique": false,
+      "TargetPath": "Shared Documents/Weak ABORh D Antigen QI Summary.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Flu Season",
+      "SourceUnique": true,
+      "TargetPath": "Flu Season",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "PublishingImages",
+      "SourceUnique": false,
+      "TargetPath": "PublishingImages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery",
+      "SourceUnique": true,
+      "TargetPath": "Inoffice Surgery",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Circumcision Clinical Procedure Guidelines.docx",
+      "SourceUnique": false,
+      "TargetPath": "Inoffice Surgery/Circumcision Clinical Procedure Guidelines.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Circumcision Procedure Workflow (Flowchart).pdf",
+      "SourceUnique": false,
+      "TargetPath": "Inoffice Surgery/Circumcision Procedure Workflow (Flowchart).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Circumcision Procedure Workflow.docx",
+      "SourceUnique": true,
+      "TargetPath": "Inoffice Surgery/Circumcision Procedure Workflow.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Circumcision Workflow for Scheduling (Flowchart).pdf",
+      "SourceUnique": false,
+      "TargetPath": "Inoffice Surgery/Circumcision Workflow for Scheduling (Flowchart).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Circumcision Workflow for Scheduling.docx",
+      "SourceUnique": false,
+      "TargetPath": "Inoffice Surgery/Circumcision Workflow for Scheduling.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Inoffice Surgery/Office Circumcision MA Training Checklist.docx",
+      "SourceUnique": false,
+      "TargetPath": "Inoffice Surgery/Office Circumcision MA Training Checklist.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery",
+      "SourceUnique": true,
+      "TargetPath": "In Office Surgery",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1. IOS Program Table of Contents.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1. IOS Program Table of Contents.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1a. IOS Best Practices 2017.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1a. IOS Best Practices 2017.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1b. C-11 Policy.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1b. C-11 Policy.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1c. C-11 Policy Appendix A.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1c. C-11 Policy Appendix A.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1d. C-11 Policy Appendix B.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1d. C-11 Policy Appendix B.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1e. C-19 Policy.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1e. C-19 Policy.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/1f. C-23 Policy.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/1f. C-23 Policy.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/2. Metropolitan CRNA Manual.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/2. Metropolitan CRNA Manual.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/3. Communication Path.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/3. Communication Path.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/4. Workflows.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/4. Workflows.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/6. MA Role.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/6. MA Role.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/7. Training",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training/2011 Moderate Sedation Training Module_8.15.docx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/7. Training/2011 Moderate Sedation Training Module_8.15.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training/7. Training.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/7. Training/7. Training.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training/Basic Aseptic Technique.pptx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/7. Training/Basic Aseptic Technique.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training/Decontamination and Sterilization Overview.pptx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/7. Training/Decontamination and Sterilization Overview.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/7. Training/High Level Disinfection Overview.pptx",
+      "SourceUnique": true,
+      "TargetPath": "In Office Surgery/7. Training/High Level Disinfection Overview.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/8. Equipment",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/8. Equipment",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/8. Equipment/8. Equipment.pdf",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/8. Equipment/8. Equipment.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/8. Equipment/IOS Equipment Service Report.docx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/8. Equipment/IOS Equipment Service Report.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/8. Equipment/IOS Request For Purchase.docx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/8. Equipment/IOS Request For Purchase.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "In Office Surgery/5. RN Role.docx",
+      "SourceUnique": false,
+      "TargetPath": "In Office Surgery/5. RN Role.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Healthy Options Sample Menus.docx",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Healthy Options Sample Menus.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Healthy weight gain in pregnancy is based on your BMI Spanish.docx",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Healthy weight gain in pregnancy is based on your BMI Spanish.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Healthy weight gain in pregnancy is based on your BMI.docx",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Healthy weight gain in pregnancy is based on your BMI.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Make Half Your Plate Fruits Vegetables.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Make Half Your Plate Fruits Vegetables.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/OB Intake PowerPoint 2016.pptx",
+      "SourceUnique": true,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/OB Intake PowerPoint 2016.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Tips to Build A Healthy Meal Spanish.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Tips to Build A Healthy Meal Spanish.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Redesign Initial Prenatal Nurse Visit/Tips to Build A Healthy Meal.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Redesign Initial Prenatal Nurse Visit/Tips to Build A Healthy Meal.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/v4.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/v4.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/minimal.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/minimal.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.master",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.master",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/seattle.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/seattle.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "_catalogs/masterpage/oslo.preview",
+      "SourceUnique": false,
+      "TargetPath": "_catalogs/masterpage/oslo.preview",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "No Show Materials",
+      "SourceUnique": false,
+      "TargetPath": "No Show Materials",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "No Show Materials/Patient Contact Scripting.docx",
+      "SourceUnique": false,
+      "TargetPath": "No Show Materials/Patient Contact Scripting.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "No Show Materials/Site Rollout PowerPoint.pptx",
+      "SourceUnique": false,
+      "TargetPath": "No Show Materials/Site Rollout PowerPoint.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "No Show Materials/Workflows (by appointment type).pdf",
+      "SourceUnique": false,
+      "TargetPath": "No Show Materials/Workflows (by appointment type).pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Education/6_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Education/6_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Pages",
+      "SourceUnique": false,
+      "TargetPath": "Pages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/12_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/12_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/14_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/14_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/15_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/15_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/19_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/19_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/20_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/20_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/21_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/21_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/23_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/24_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/25_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/26_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/27_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/28_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/29_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/30_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/31_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/32_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/33_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/34_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/36_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/37_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/38_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Committee Members/13_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Committee Members/39_.000",
+      "SourceUnique": false,
+      "TargetPath": "",
+      "Status": "Unmatched - skipped"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations/1_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations/1_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations/2_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations/2_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations/3_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations/3_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations/4_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations/4_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Lists/QI Presentations/5_.000",
+      "SourceUnique": false,
+      "TargetPath": "Lists/QI Presentations/5_.000",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Quantros",
+      "SourceUnique": true,
+      "TargetPath": "Quantros",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Quantros/RLDatix Safety Event Entry.docx",
+      "SourceUnique": false,
+      "TargetPath": "Quantros/RLDatix Safety Event Entry.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Quantros/What to Report to RL Datix - C-28 Safety Event Reporting Appendix A 2025.09.10.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Quantros/What to Report to RL Datix - C-28 Safety Event Reporting Appendix A 2025.09.10.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "RN Advice Protocols",
+      "SourceUnique": true,
+      "TargetPath": "RN Advice Protocols",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/QI Notebook",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/QI Notebook",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/1",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/1",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/1/24305-Dimension-Care-Icons-words.png",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/1/24305-Dimension-Care-Icons-words.png",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI/2550095297July2018QIcommunication.docx",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI/2550095297July2018QIcommunication.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI/3364455514AbxLandD.pdf",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI/3364455514AbxLandD.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI/1359459833PrevMgmtOBlacs.pdf",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI/1359459833PrevMgmtOBlacs.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI/3032630636ACOG_Committee_Opinion_No__743_Summary___Low_Dose.52.pdf",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI/3032630636ACOG_Committee_Opinion_No__743_Summary___Low_Dose.52.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI/177509315Sept 2018 QI Communication.docx",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI/177509315Sept 2018 QI Communication.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/Home/What-is-an-Adverse-Event.pdf",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/Home/What-is-an-Adverse-Event.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SiteAssets/SitePages/QI-Committee-Members",
+      "SourceUnique": false,
+      "TargetPath": "SiteAssets/SitePages/QI-Committee-Members",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages",
+      "SourceUnique": false,
+      "TargetPath": "SitePages",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/Home.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/Home.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "SitePages/QI-Committee-Members.aspx",
+      "SourceUnique": false,
+      "TargetPath": "SitePages/QI-Committee-Members.aspx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Orientation to Wellness/Orientation to Wellness OB counseling topics Master1.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Orientation to Wellness/Orientation to Wellness OB counseling topics Master1.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/VBAC Promotion OB counseling topics Master1.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/VBAC Promotion OB counseling topics Master1.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/QI Workgroup SignUp - Improve Clinician Effectiveness.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/QI Workgroup SignUp - Improve Clinician Effectiveness.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/Mental Health BH OB counseling topics Master1.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/Mental Health BH OB counseling topics Master1.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/GA_Specific_SmartPhrases.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/GA_Specific_SmartPhrases.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Diagram 2018-03-20.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Diagram 2018-03-20.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Diagram GW_2017-05-23.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Diagram GW_2017-05-23.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/IPA Powerpoint.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/IPA Powerpoint.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Initial Nurse Visit Handouts_2017-03.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Initial Nurse Visit Handouts_2017-03.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/2016.11.17 Lifestyle Medicine Dion talk.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/2016.11.17 Lifestyle Medicine Dion talk.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways PFTC_2016-11-09.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways PFTC_2016-11-09.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways PP Doula_2017-05-30.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways PP Doula_2017-05-30.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Comfort Measures_2016-08-28.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Comfort Measures_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Visit Snapshot.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways Visit Snapshot.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Emotional Health_2016-08-28.pdf",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Emotional Health_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Genetic Screening_2016-08-28.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Genetic Screening_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Iron_2018-03-20.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Iron_2018-03-20.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Healthy Weight_2016-08-28.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/zzReferences & Pathways Materials/Pathways/Pathways_Healthy Weight_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Topics by Category FINAL (11.15 deliverable).docx",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Topics by Category FINAL (11.15 deliverable).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/211 Resources/211 Resources Ob Counseling Topics.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/211 Resources/211 Resources Ob Counseling Topics.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Birth Prep/Birth Prep Ob Counseling Topis.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Birth Prep/Birth Prep Ob Counseling Topis.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/Genetics - MEDEXMar2019.pptx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/Genetics - MEDEXMar2019.pptx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/Genetic screening chart.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/Genetic screening chart.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/Genetic education modalities by site.docx",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/Genetic education modalities by site.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/TOLAC A&P Smartpharse content.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/TOLAC A&P Smartpharse content.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/Patient Info Labor Induction in TOLAC.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/Patient Info Labor Induction in TOLAC.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/Informed Consent for Birth After Cesarean Section _Draft 1 with columns.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/Informed Consent for Birth After Cesarean Section _Draft 1 with columns.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/Patient Info Birth Options after prior CS.docx",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/Patient Info Birth Options after prior CS.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion/Patient Info CS after TOLAC.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion/Patient Info CS after TOLAC.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Orientation to Wellness",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Orientation to Wellness",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/VBAC Promotion",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/VBAC Promotion",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/211 Resources",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/211 Resources",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Birth Prep",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Birth Prep",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/PreFAQ Anticipatory Guidance (O'Neal).docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/PreFAQ Anticipatory Guidance (O'Neal).docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Anticipatory Guidance 2.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Anticipatory Guidance 2.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/Clinician Counseling Educational Resources for Behavioral and Mental Health.docx",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/Clinician Counseling Educational Resources for Behavioral and Mental Health.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/MH & BH workgroup summary.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/MH & BH workgroup summary.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics 2 Final.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics 2 Final.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics 1.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Orientation to Wellness/Wellness Topics 1.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Birth Prep/QI Vaginal Bleeding or Spotting in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Birth Prep/QI Vaginal Bleeding or Spotting in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Birth Prep/QIVaginal Discharge in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Birth Prep/QIVaginal Discharge in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Vaginal Discharge in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Vaginal Discharge in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Vaginal Bleeding or Spotting in Pregnancy.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Vaginal Bleeding or Spotting in Pregnancy.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/Genetic Screening OB counseling topics Master1.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/Genetic Screening OB counseling topics Master1.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Normal & Abnormal OB Sx counseling topics Master1.xlsx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Normal & Abnormal OB Sx counseling topics Master1.xlsx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/Pathways_Emotional Health_2016-08-28.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/Pathways_Emotional Health_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/Behavioral Health Handout for Providers.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/Behavioral Health Handout for Providers.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Mental & Behavioral Health Query/What is Behavioral Health patients.docx",
+      "SourceUnique": true,
+      "TargetPath": "Strategic Plan Documents/Mental & Behavioral Health Query/What is Behavioral Health patients.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/FAQ Pathways_Genetic Screening_2016-08-28 WORD.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/FAQ Pathways_Genetic Screening_2016-08-28 WORD.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Genetic Screening/Pathways_Genetic Screening_2016-08-28.pdf",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Genetic Screening/Pathways_Genetic Screening_2016-08-28.pdf",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Anticipatory Guidance 1.docx",
+      "SourceUnique": false,
+      "TargetPath": "Strategic Plan Documents/Normal & Abnormal Sx Pregnancy/Ready Anticipatory Guidance 1.docx",
+      "Status": "Eligible"
+    },
+    {
+      "SourcePath": "WorkflowTasks",
+      "SourceUnique": false,
+      "TargetPath": "WorkflowTasks",
+      "Status": "Eligible"
+    }
+  ]
+}
