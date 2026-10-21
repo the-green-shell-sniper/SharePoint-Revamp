@@ -170,7 +170,8 @@ function Invoke-CSVisitorsRead {
             if (-not $hasEEEU -and $membershipAllowed) {
                 $log.Add([pscustomobject]@{ Path = ''; Action = 'Add EEEU to Visitors'; Result = 'Write starting - outcome not yet verified'; Detail = $eeeu })
                 Export-SPPermissionCsv $log.ToArray() @('Path','Action','Result','Detail') $logPath
-                Add-PnPGroupMember -Group $visitors.Id -LoginName $eeeu -Connection $targetConnection -ErrorAction Stop
+                $null = Invoke-SPPermissionRest $targetConnection "$targetUrl/_api/web/sitegroups/getbyid($($visitors.Id))/users" -Method Post `
+                    -Content @{ LoginName = $eeeu }
                 if (-not @(Get-SPPermissionCollection $targetConnection $membershipUrl | Where-Object LoginName -IEQ $eeeu).Count) {
                     throw 'EEEU membership write could not be verified; inspect live group membership.'
                 }

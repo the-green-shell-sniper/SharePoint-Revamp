@@ -337,7 +337,17 @@ function Get-SPPreservedAclSignature {
 
 function Assert-SPPermissionState {
     param($Connection, $Step, [bool]$After)
-    $scope = Invoke-SPPermissionRest $Connection ($Step.Api + '?$select=HasUniqueRoleAssignments')
+    $usedPnP = $false
+    try {
+        $scope = Invoke-SPPermissionRest $Connection ($Step.Api + '?$select=HasUniqueRoleAssignments')
+    } catch {
+        if (-not (Test-SPPermissionItemRestRejected $_)) { throw }
+        $pnp = Get-SPPermissionPnPSecurable $Connection $Step.Api
+        if ($null -eq $pnp) { throw }
+        $unique = Get-PnPProperty -ClientObject $pnp.Item -Property HasUniqueRoleAssignments -Connection $Connection -ErrorAction Stop
+        $scope = @{ HasUniqueRoleAssignments = $unique }
+        $usedPnP = $true
+    }
     if ($null -eq $scope.HasUniqueRoleAssignments) { throw "Missing inheritance state: $($Step.Key)" }
     $aclApi = $Step.Api
     if (-not $scope.HasUniqueRoleAssignments) { $aclApi += '/FirstUniqueAncestorSecurableObject' }
@@ -347,37 +357,70 @@ function Assert-SPPermissionState {
     if ([bool]$scope.HasUniqueRoleAssignments -ne $expectedUnique -or $signature -cne $expectedSignature) {
         throw "ACL/inheritance differs from the plan at '$($Step.Key)' ($(if ($After) { 'after write' } else { 'before write' })). Stop and review; no further writes will run."
     }
+    return $usedPnP
+}
+
+function Invoke-SPPermissionPnPItemWrite {
+    param($Connection, $Step)
+    $pnp = Get-SPPermissionPnPSecurable $Connection $Step.Api
+    if ($null -eq $pnp) { throw "PnP write fallback is only available for list items: $($Step.Key)" }
+    $item = $pnp.Item
+    $context = $item.Context
+    switch ($Step.Action) {
+        { $_ -in @('Freeze', 'Break') } { $item.BreakRoleInheritance($true, $false) }
+        'Reset' { $item.ResetRoleInheritance() }
+        'Add' {
+            $memberId = [int]$Step.Operation.MemberId
+            if ($memberId -le 0) { throw "Unresolved target principal: $($Step.Operation.Login)" }
+            $principal = $context.Web.SiteGroups.GetById($memberId)
+            $context.Load($principal)
+            try { $context.ExecuteQuery() } catch {
+                $principal = $context.Web.SiteUsers.GetById($memberId)
+                $context.Load($principal)
+                $context.ExecuteQuery()
+            }
+            $bindings = [Microsoft.SharePoint.Client.RoleDefinitionBindingCollection]::new($context)
+            $bindings.Add($context.Web.RoleDefinitions.GetById([int]$Step.Operation.RoleId))
+            $null = $item.RoleAssignments.Add($principal, $bindings)
+        }
+        default { throw "PnP write fallback does not support '$($Step.Action)' at '$($Step.Key)'; review manually." }
+    }
+    $context.ExecuteQuery()
 }
 
 function Invoke-SPPermissionPlan {
     param($Connection, $Plan, $Log, [string]$LogPath)
     foreach ($step in $Plan.Steps) {
         try {
-            Assert-SPPermissionState $Connection $step $false
+            $usePnP = Assert-SPPermissionState $Connection $step $false
             $operation = $step.Operation
             if ($LogPath) {
                 $started = [pscustomobject]@{
                     Path = $step.Key; Action = $step.Action; Result = 'Write starting - outcome not yet verified'
-                    Detail = "$([datetime]::UtcNow.ToString('o')) $($operation.Login) $($operation.Role)"
+                    Detail = "$([datetime]::UtcNow.ToString('o')) $($operation.Login) $($operation.Role)$(if ($usePnP) { ' (PnP item fallback)' })"
                 }
                 $Log.Add($started)
                 $started | Export-Csv -LiteralPath $LogPath -Append -NoTypeInformation -Encoding utf8
             }
-            switch ($step.Action) {
-                { $_ -in @('Freeze', 'Break') } {
-                    $null = Invoke-SPPermissionRest $Connection ($step.Api + '/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)') -Method Post
+            if ($usePnP) {
+                Invoke-SPPermissionPnPItemWrite $Connection $step
+            } else {
+                switch ($step.Action) {
+                    { $_ -in @('Freeze', 'Break') } {
+                        $null = Invoke-SPPermissionRest $Connection ($step.Api + '/breakroleinheritance(copyRoleAssignments=true,clearSubscopes=false)') -Method Post
+                    }
+                    'Reset' { $null = Invoke-SPPermissionRest $Connection ($step.Api + '/resetroleinheritance') -Method Post }
+                    { $_ -in @('Add', 'Remove') } {
+                        if ($operation.MemberId -le 0) { throw "Unresolved target principal: $($operation.Login)" }
+                        $method = if ($step.Action -eq 'Add') { 'addroleassignment' } else { 'removeroleassignment' }
+                        $null = Invoke-SPPermissionRest $Connection (
+                            $step.Api + "/roleassignments/$method(principalid=$($operation.MemberId),roledefid=$($operation.RoleId))"
+                        ) -Method Post
+                    }
+                    default { throw "Unknown plan action: $($step.Action)" }
                 }
-                'Reset' { $null = Invoke-SPPermissionRest $Connection ($step.Api + '/resetroleinheritance') -Method Post }
-                { $_ -in @('Add', 'Remove') } {
-                    if ($operation.MemberId -le 0) { throw "Unresolved target principal: $($operation.Login)" }
-                    $method = if ($step.Action -eq 'Add') { 'addroleassignment' } else { 'removeroleassignment' }
-                    $null = Invoke-SPPermissionRest $Connection (
-                        $step.Api + "/roleassignments/$method(principalid=$($operation.MemberId),roledefid=$($operation.RoleId))"
-                    ) -Method Post
-                }
-                default { throw "Unknown plan action: $($step.Action)" }
             }
-            Assert-SPPermissionState $Connection $step $true
+            $null = Assert-SPPermissionState $Connection $step $true
             $Log.Add([pscustomobject]@{
                 Path = $step.Key; Action = $step.Action; Result = 'Verified'
                 Detail = "$($operation.Login) $($operation.Role)"
@@ -393,7 +436,7 @@ function Invoke-SPPermissionPlan {
     }
     # Check final states again, not just the immediate response to each individual write.
     foreach ($group in @($Plan.Steps | Group-Object Key)) {
-        Assert-SPPermissionState $Connection $group.Group[-1] $true
+        $null = Assert-SPPermissionState $Connection $group.Group[-1] $true
     }
 }
 

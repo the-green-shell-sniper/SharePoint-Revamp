@@ -314,9 +314,54 @@ function Get-SPPermissionInventoryRead {
     return ,$scopes
 }
 
+function Test-SPPermissionItemRestRejected {
+    param($ErrorRecord)
+    # Some items (for example in the User Information List) reject every REST items(N) URL while PnP/CSOM can read them.
+    $ErrorRecord.Exception.Message -match '/items\(\d+\)[^'']*'': .*Value does not fall within the expected range'
+}
+
+function Get-SPPermissionPnPSecurable {
+    param($Connection, [string]$Api)
+    if ($Api -notmatch "/lists\(guid'([0-9a-fA-F-]{36})'\)/items\((\d+)\)(/FirstUniqueAncestorSecurableObject)?$") { return $null }
+    $listId = $Matches[1]; $itemId = [int]$Matches[2]; $ancestor = [bool]$Matches[3]
+    $item = Get-PnPListItem -List $listId -Id $itemId -Connection $Connection -ErrorAction Stop
+    if ($null -eq $item -or [int]$item.Id -ne $itemId) { throw "PnP could not read item $itemId in list $listId." }
+    $securable = if ($ancestor) {
+        Get-PnPProperty -ClientObject $item -Property FirstUniqueAncestorSecurableObject -Connection $Connection -ErrorAction Stop
+    } else { $item }
+    if ($null -eq $securable) { throw "PnP returned no securable object for '$Api'." }
+    [pscustomobject]@{ Item = $item; Securable = $securable }
+}
+
+function Get-SPPermissionPnPRoleAssignments {
+    param($Connection, $Securable)
+    $assignments = Get-PnPProperty -ClientObject $Securable -Property RoleAssignments -Connection $Connection -ErrorAction Stop
+    foreach ($assignment in @($assignments)) {
+        $null = Get-PnPProperty -ClientObject $assignment -Property Member, RoleDefinitionBindings -Connection $Connection -ErrorAction Stop
+        [pscustomobject]@{
+            Member = @{
+                Id = $assignment.Member.Id; LoginName = $assignment.Member.LoginName
+                Title = $assignment.Member.Title; PrincipalType = [int]$assignment.Member.PrincipalType
+            }
+            RoleDefinitionBindings = @($assignment.RoleDefinitionBindings | ForEach-Object {
+                [pscustomobject]@{ Id = $_.Id; Name = $_.Name; Hidden = $_.Hidden; RoleTypeKind = [int]$_.RoleTypeKind }
+            })
+        }
+    }
+}
+
 function Get-SPPermissionAcl {
     param($Connection, [string]$Api)
-    foreach ($assignment in @(Get-SPPermissionCollection $Connection ($Api + '/roleassignments?$expand=Member,RoleDefinitionBindings'))) {
+    try {
+        $rawAssignments = @(Get-SPPermissionCollection $Connection ($Api + '/roleassignments?$expand=Member,RoleDefinitionBindings'))
+    } catch {
+        if (-not (Test-SPPermissionItemRestRejected $_)) { throw }
+        $pnp = Get-SPPermissionPnPSecurable $Connection $Api
+        if ($null -eq $pnp) { throw }
+        Write-Warning "REST rejected '$Api'; reading role assignments through PnP."
+        $rawAssignments = @(Get-SPPermissionPnPRoleAssignments $Connection $pnp.Securable)
+    }
+    foreach ($assignment in $rawAssignments) {
         if (-not $assignment.Member.LoginName -or $null -eq $assignment.RoleDefinitionBindings) {
             throw "Incomplete role assignment: $Api"
         }
