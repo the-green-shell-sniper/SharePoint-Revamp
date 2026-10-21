@@ -13,6 +13,7 @@ errors, not independently proven access to every item. This is a current-account
 attribution cleanup, not a comparison with the old sites; the date/account filter
 does not prove which individual edits were ShareGate substitutions.
 
+- [Invoke-SystemEditorRemediation.ps1](Scripts/Invoke-SystemEditorRemediation.ps1) - guarded write phase for a completed, reviewed System Editor preview. See [Applying the System Editor cleanup](#applying-the-system-editor-cleanup) below.
 - [Get-SystemEditorRemediationPlan.ps1](Scripts/Get-SystemEditorRemediationPlan.ps1) - **preview only**, with no Apply parameter or SharePoint writes. Reads roots exclusively from `New Site URL` in [NewSiteChecklist.csv](ReferenceFiles/NewSiteChecklist.csv), recursively includes their actual subsites, and deduplicates overlapping roots. Other site collections are not discovered; archive URLs are rejected. Scans files, folders and list items across all lists, including hidden lists. Selects only current Modified strictly before **April 1, 2024 midnight Pacific (07:00 UTC)** and Editor matching the exact login/email `!bposey@whallc.com`, not display name. Run `.\Scripts\Get-SystemEditorRemediationPlan.ps1` in PowerShell 7.4.6+ with PnP.PowerShell 3.3.0+; interactive login uses the existing app ID (override with `-ClientId`). Reports go to a unique folder under `Reports\SystemEditorPlans`: `Plan.csv` contains qualifying items and resolved native `SHAREPOINT\system` IDs; `Coverage.csv`, `Webs.csv`, `Errors.csv` and `Summary.json` disclose scope and incomplete reads. Lists without Modified/Editor fields are explicitly reported as ineligible; web/list containers and library root folders without item-level metadata are not update targets. Access/read errors and missing native accounts for matches cause an incomplete status and terminating error after remaining sites are attempted. Count differences are report-only notes. Run with sufficient access to see all items; permission trimming may still hide content, and live enumeration is not a transactionally consistent snapshot. Keep reports private. A future write phase must preserve all other metadata and account for automation/concurrent edits; this script intentionally cannot apply the plan.
 - [Set-TelephoneDirectorySystemEditor.ps1](Scripts/Set-TelephoneDirectorySystemEditor.ps1) - standalone single-document test: sets the current Modified By of WHA Telephone Directory.docx to the native `SHAREPOINT\system` account only. Requires PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+. Run `.\Scripts\Set-TelephoneDirectorySystemEditor.ps1` to preview, then add `-Apply` to write and verify. Preserves Modified, Created, Author and version number; no older versions or contents are rewritten. Stops if the native account cannot be resolved or assigned; never creates a substitute. Uses interactive login and the existing app client ID (override with `-ClientId`). This test does not apply bulk date/editor filters or scan the checklist. Avoid concurrent edits; automation/Power Automate flows may be triggered. Inspect live state after a failed write/verification before retrying.
 - [Get-DocumentAccessReport.ps1](Scripts/Get-DocumentAccessReport.ps1)
@@ -29,6 +30,64 @@ does not prove which individual edits were ShareGate substitutions.
 - [Invoke-SPPermissionChecklist.ps1](Scripts/Invoke-SPPermissionChecklist.ps1) - sequential processing of checklist pairs and their exact/approved matching descendant webs.
 
 Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
+
+## Applying the System Editor cleanup
+
+The reviewed preview completed with 14,623 candidates and zero issues. No repeat
+full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
+repository root:
+
+```powershell
+$preview = '.\Reports\SystemEditorPlans\20261020-202121-393-a73dde48'
+
+# Actual writes. First pause relevant automation and prevent concurrent edits.
+.\Scripts\Invoke-SystemEditorRemediation.ps1 -PreviewFolder $preview -Apply -MaintenanceWindowConfirmed
+```
+
+`-MaintenanceWindowConfirmed` acknowledges those operational prerequisites; it
+does not disable automation or lock the sites. `UpdateOverwriteVersion` can trigger
+Power Automate flows/event handlers. The script cannot guarantee that external
+automation or other editors will leave metadata unchanged, especially after its
+immediate verification. Do not run overlapping cleanup jobs.
+
+Without `-Apply`, the command only rechecks the reviewed candidates and writes
+local reports; this optional recheck is not another recursive item scan.
+
+The apply script:
+
+- Requires `Summary.json` with `PreviewComplete`, zero errors, matching account,
+  **April 1, 2024 midnight Pacific (07:00 UTC)** cutoff and current checklist roots.
+  Validates plan/coverage counts, identity fields, duplicate candidates and scope.
+- Discovers live subsites under checklist roots before any writes. The tenant
+  home URL is not treated as authorization for arbitrary other site collections.
+  Only reviewed candidates are processed; newly added matches need a new preview.
+- Resolves `SHAREPOINT\system` live per web and rechecks item identity, exact
+  account/date criteria, path, Created, Author and version. Changed, checked-out,
+  or no-longer-qualifying items are skipped; already-System items need no write.
+- Saves all returned field values and the object version to `Before.csv` **before**
+  each update, then re-reads the item to detect intervening changes. Uses the
+  original loaded CSOM item for a single `UpdateOverwriteVersion` request,
+  assigning only Editor and the explicitly retained Modified timestamp.
+- Immediately verifies Editor, stored editable fields and core identity/date/
+  author/version/path/content-size fields. No file content, permissions, or older
+  versions are rewritten, and no new version is requested. SharePoint-managed
+  internal counters and computed representations are not frozen or compared as
+  editable metadata. Metadata verification does not independently hash content.
+- Stops on the first read, write, or preservation-verification failure. No blind
+  retries or automatic rollback. A response failure may mean the last write did
+  succeed: inspect live state and `Journal.csv` before rerunning. Earlier verified
+  writes remain applied. On rerun they are recognized as already System Account.
+
+The script depends on `Get-SystemEditorRemediationPlan.ps1` and its shared report
+helpers alongside it. Reports are private and saved under a unique
+`Reports\SystemEditorApply\<run>` folder: `Before.csv`, `Journal.csv`, and a small
+`Summary.json`. CSVs automatically split below 90 MiB using the existing output
+helpers, and their readers include sibling parts. Backups are evidence, not an
+automatic restore plan. `CompletedWithSkips` means some candidates were left
+untouched; inspect their journal reasons rather than treating that as full apply.
+
+Offline validation: `.\Scripts\Test-SystemEditorApply.ps1`. This mocks SharePoint
+and performs no remote writes.
 
 ## Synchronizing migrated site permissions
 
