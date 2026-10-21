@@ -1,0 +1,4 @@
+"Path","Action","Result","Detail"
+"","Authorized site Visitors container","By design","Forms Visitors contains SharePoint.Migration.Team.Members. Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+"","Authorized site Visitors container","By design","Forms Visitors contains SharePoint.Migration.Team.Visitors. Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+"","EEEU in Visitors","Already present","c:0-.f|rolemanager|spo-grid-all-users/d7ae5462-f399-44a0-ba44-7063189ec1dd"

@@ -1,0 +1,3 @@
+"SourceUrl","TargetUrl","Mode","Status","EvidenceFolder","Error"
+"https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train","https://whallc.sharepoint.com/sites/Training","Match","Completed - inspect coverage","C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\VisitorsRuns\v-261019210638606\9352C5262E61\Match\p-261020011122318\9352C5262E61",""
+"https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/train/PSC","https://whallc.sharepoint.com/sites/Training/PSC","Match","Failed","C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\VisitorsRuns\v-261019210638606\9352C5262E61\Match\p-261020011122318\991738FA3324","Exact-path list template mismatch: Lists/Agenda"

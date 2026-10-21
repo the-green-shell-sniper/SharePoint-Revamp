@@ -1,0 +1,7 @@
+"WebUrl","MigrationPrincipal","MigrationLogin","SharePointGroup","GroupLogin","GroupId","Policy"
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.Members","c:0t.c|tenant|3be4d8a5-b023-416a-aa96-2d38bd300806","LLC Members Members","LLC Members Members","5","Intentionally preserved - migration group and containing SharePoint group"
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.Members","c:0t.c|tenant|3be4d8a5-b023-416a-aa96-2d38bd300806","LLC Members Owners","LLC Members Owners","3","Intentionally preserved - migration group and containing SharePoint group"
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.Members","c:0t.c|tenant|3be4d8a5-b023-416a-aa96-2d38bd300806","LLC Members Visitors","LLC Members Visitors","4","Intentionally preserved - migration group and containing SharePoint group"
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.Visitors","c:0t.c|tenant|87a3e9d7-0ede-4c58-b23d-39381bcba361","LLC Members Visitors","LLC Members Visitors","4","Intentionally preserved - migration group and containing SharePoint group"
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.Admins","","","","","Not observed in SharePoint-group membership; direct grants reported separately. Intentionally preserved if present."
+"https://whallc.sharepoint.com/sites/LLCMembers","SharePoint.Migration.Team.MSLs","","","","","Not observed in SharePoint-group membership; direct grants reported separately. Intentionally preserved if present."

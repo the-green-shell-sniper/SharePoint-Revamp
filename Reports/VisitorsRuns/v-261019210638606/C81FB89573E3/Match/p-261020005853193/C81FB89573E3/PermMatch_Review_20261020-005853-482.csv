@@ -1,0 +1,2 @@
+"Approved","Confidence","Score","Kind","PermissionRelevant","SourceUnique","TargetUnique","SourcePath","TargetPath","Method","Evidence","RunnerUp","SourceUrl","TargetUrl"
+"No","Medium","0.731","Item","No","False","False","Lists/Saftey Committee Members/72_.000","Lists/Saftey Committee Members/22_.000","Fuzzy","Name=0.5; Created+Author=True","Lists/Saftey Committee Members/62_.000 -> Lists/Saftey Committee Members/22_.000 (0.423)","https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/Safety","https://whallc.sharepoint.com/sites/Safety"

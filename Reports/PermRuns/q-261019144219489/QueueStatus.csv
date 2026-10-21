@@ -1,2 +1,2 @@
 "TargetUrl","Status","Error"
-"https://whallc.sharepoint.com/sites/ClinicalandPatientServices","Running",""
+"https://whallc.sharepoint.com/sites/ClinicalandPatientServices","Failed","Automatic Apply stopped: blocked scopes or unavailable principals in 'C:\Users\!bposey\Desktop\GitHub\SharePoint-Revamp\Reports\PermRuns\q-261019144219489\E86E6768733F\w-E86E6768733F\DryRun'."

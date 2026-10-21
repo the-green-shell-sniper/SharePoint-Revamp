@@ -1,0 +1,3 @@
+"Path","Action","Result","Detail"
+"","Authorized site Visitors container","By design","The Patient Experience Visitors contains SharePoint.Migration.Team.Visitors. Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+"","EEEU in Visitors","Report only - zero source Read scopes","c:0-.f|rolemanager|spo-grid-all-users/d7ae5462-f399-44a0-ba44-7063189ec1dd"

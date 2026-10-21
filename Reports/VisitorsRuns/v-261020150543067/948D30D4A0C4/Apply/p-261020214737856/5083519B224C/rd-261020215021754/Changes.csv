@@ -1,0 +1,7 @@
+"Path","Action","Result","Detail"
+"","Authorized site Visitors container","By design","WHA Sites Visitors contains SharePoint.Migration.Team.Visitors. Added container access is authorized; direct migration-group assignments/memberships remain unchanged."
+"","EEEU in Visitors","Already present","c:0-.f|rolemanager|spo-grid-all-users/d7ae5462-f399-44a0-ba44-7063189ec1dd"
+"Lists/GW Midwife Inductions Calendar/6_.000","Freeze","Write starting - outcome not yet verified","2026-10-21T04:50:36.9105163Z  "
+"Lists/GW Midwife Inductions Calendar/6_.000","Freeze","Verified"," "
+"Lists/GW Midwife Inductions Calendar","Add","Write starting - outcome not yet verified","2026-10-21T04:50:37.6420086Z WHA Sites Visitors Read"
+"Lists/GW Midwife Inductions Calendar","Add","Verified","WHA Sites Visitors Read"

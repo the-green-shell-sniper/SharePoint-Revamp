@@ -1,7 +1,0 @@
-{
-  "TargetUrl": "https://whallc.sharepoint.com/sites/ClinicalandPatientServices",
-  "Status": "Failed",
-  "Error": "Post-Apply reporting incomplete: https://whallc.sharepoint.com/sites/ClinicalandPatientServices: Inventory disagreement for '_catalogs/users': REST read 397 items, recursive PnP read 398; list reports 413. No permission changes may use this inventory.. Inspect ChecklistSummary.csv for the application outcome.",
-  "StartedUtc": "2026-10-19T20:59:50.2788694Z",
-  "FinishedUtc": "2026-10-19T21:13:18.6043170Z"
-}

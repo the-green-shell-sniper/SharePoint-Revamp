@@ -1,0 +1,2 @@
+"Approved","Confidence","Score","Kind","PermissionRelevant","SourceUnique","TargetUnique","SourcePath","TargetPath","Method","Evidence","RunnerUp","SourceUrl","TargetUrl","ApprovalPolicy"
+"No","Medium","0.692","Item","No","False","False","_catalogs/design/21_.000","_catalogs/design/1_.000","Fuzzy","Name=1; Created+Author=False","","https://whallc.sharepoint.com/sites/archive-2026-10-18T115436Z/whasites/DN","https://whallc.sharepoint.com/sites/whasites/DN","Manual review"
