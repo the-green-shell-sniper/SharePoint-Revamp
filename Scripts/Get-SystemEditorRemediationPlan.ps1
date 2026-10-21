@@ -13,9 +13,12 @@
     Lists without Modified/Editor cannot qualify and are reported explicitly.
     Web/list containers and library root folders without item-level metadata
     are not editable items; their children are scanned.
-    Access failures/count discrepancies are reported and cause a terminating
+    Count differences are informational notes in Coverage.csv, not scan failures.
+    Access failures and unavailable native accounts are reported and cause a terminating
     error after the remaining scope is attempted; a failed run is incomplete.
     Reports contain private paths and user metadata. Do not commit them.
+    Console output is one summary per checklist root plus updating progress.
+    Full errors remain in Errors.csv; use -Verbose for live error details.
 .EXAMPLE
     .\Get-SystemEditorRemediationPlan.ps1
 #>
@@ -95,7 +98,7 @@ function Invoke-SystemEditorRemediationPlan {
     }
     'WebUrl,ListId,ListTitle,ItemId,UniqueId,Path,Kind,ModifiedUtc,PreviousEditorId,PreviousEditorLogin,PreviousEditorEmail,SystemEditorId,SystemEditorLogin,CreatedUtc,AuthorId,Version,Status' |
         Set-Content -LiteralPath $files.Plan -Encoding utf8
-    'WebUrl,ListId,ListTitle,Hidden,ReportedBefore,ReportedAfter,Scanned,Matches,Status' |
+    'WebUrl,ListId,ListTitle,Hidden,ReportedBefore,ReportedAfter,Scanned,Matches,Status,Note' |
         Set-Content -LiteralPath $files.Coverage -Encoding utf8
     'WebUrl,SystemEditorId,SystemEditorLogin,Status' |
         Set-Content -LiteralPath $files.Webs -Encoding utf8
@@ -107,9 +110,18 @@ function Invoke-SystemEditorRemediationPlan {
         ReportFolder = $run
     }
     $visited = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    Write-Host "READ ONLY. Reports: $run"
+    Write-Host "Preview only. No changes will be made."
+    Write-Host "Reports: $run"
+    $rootIndex = 0
     try {
         foreach ($root in $roots) {
+            $rootIndex++
+            $errorsBefore = $summary.Errors
+            $matchesBefore = $summary.Matches
+            $websBefore = $summary.WebsScanned
+            $siteName = ([uri]$root).AbsolutePath.Trim('/')
+            if (-not $siteName) { $siteName = 'Tenant home' }
+            Write-Progress -Id 1 -Activity "Scanning $rootIndex of $($roots.Count): $siteName" -Status 'Finding subsites'
             # Even visited roots get discovery attempted again if earlier discovery failed.
             $stage = 'Connect/discover subsites'
             try {
@@ -132,14 +144,14 @@ function Invoke-SystemEditorRemediationPlan {
                     $summary.Errors++
                     [pscustomobject]@{ WebUrl = $root; ListId = ''; Stage = $stage; Error = $_.Exception.Message } |
                         Export-Csv -LiteralPath $files.Errors -Append -NoTypeInformation
-                    Write-Warning "Incomplete discovery for $root : $($_.Exception.Message)"
+                    Write-Verbose "Subsite discovery failed at $root : $($_.Exception.Message)"
                 }
                 foreach ($url in $webUrls) {
                     if (-not $visited.Add($url)) { continue }
                     $webRecord = [pscustomobject]@{ WebUrl = $url; SystemEditorId = ''; SystemEditorLogin = ''; Status = 'Incomplete' }
                     $stage = 'Read web/users/lists'
                     try {
-                        Write-Host "[Preview] $url"
+                        Write-Progress -Id 1 -Activity "Scanning $rootIndex of $($roots.Count): $siteName" -Status ([uri]$url).AbsolutePath
                         $webConnection = if ($url -ieq $root) { $connection } else {
                             Connect-PnPOnline -Url $url -ClientId $ClientId -Interactive -ReturnConnection -ErrorAction Stop
                         }
@@ -159,9 +171,10 @@ function Invoke-SystemEditorRemediationPlan {
                         }
                         $lists = @(Get-PnPList -Connection $webConnection -Includes Id,Title,Hidden,ItemCount,BaseType -ErrorAction Stop)
                         foreach ($list in $lists) {
+                            Write-Progress -Id 1 -Activity "Scanning $rootIndex of $($roots.Count): $siteName" -Status "$(([uri]$url).AbsolutePath) - $($list.Title)"
                             $record = [pscustomobject]@{
                                 WebUrl = $url; ListId = [string]$list.Id; ListTitle = $list.Title; Hidden = $list.Hidden
-                                ReportedBefore = $list.ItemCount; ReportedAfter = ''; Scanned = 0; Matches = 0; Status = 'Incomplete'
+                                ReportedBefore = $list.ItemCount; ReportedAfter = ''; Scanned = 0; Matches = 0; Status = 'Incomplete'; Note = ''
                             }
                             try {
                                 $fields = @(Get-PnPField -List $list.Id -Connection $webConnection -ErrorAction Stop)
@@ -206,7 +219,8 @@ function Invoke-SystemEditorRemediationPlan {
                                 $latest = Get-PnPList -Identity $list.Id -Connection $webConnection -Includes ItemCount -ErrorAction Stop
                                 $record.ReportedAfter = $latest.ItemCount
                                 if ($record.Scanned -ne $record.ReportedBefore -or $record.Scanned -ne $record.ReportedAfter) {
-                                    throw 'Item counts differ; security trimming or concurrent changes may make coverage incomplete.'
+                                    $record.Note = ("Reported counts: {0} before, {1} after; retrieved: {2}. Count difference alone does not establish missing content or complete coverage." -f
+                                        $record.ReportedBefore, $record.ReportedAfter, $record.Scanned)
                                 }
                                 if ($record.Matches -gt 0 -and -not $system) {
                                     throw 'Qualifying items found, but native SHAREPOINT\system is unavailable. No substitute permitted.'
@@ -217,7 +231,7 @@ function Invoke-SystemEditorRemediationPlan {
                                 $summary.Errors++
                                 [pscustomobject]@{ WebUrl = $url; ListId = [string]$list.Id; Stage = 'Scan list'; Error = $_.Exception.Message } |
                                     Export-Csv -LiteralPath $files.Errors -Append -NoTypeInformation
-                                Write-Warning "Incomplete list '$($list.Title)' at $url : $($_.Exception.Message)"
+                                Write-Verbose "List '$($list.Title)' at $url : $($_.Exception.Message)"
                             } finally {
                                 $record | Export-Csv -LiteralPath $files.Coverage -Append -NoTypeInformation
                             }
@@ -228,7 +242,7 @@ function Invoke-SystemEditorRemediationPlan {
                         $summary.Errors++
                         [pscustomobject]@{ WebUrl = $url; ListId = ''; Stage = $stage; Error = $_.Exception.Message } |
                             Export-Csv -LiteralPath $files.Errors -Append -NoTypeInformation
-                        Write-Warning "Incomplete web $url : $($_.Exception.Message)"
+                        Write-Verbose "Web $url : $($_.Exception.Message)"
                     } finally {
                         $webRecord | Export-Csv -LiteralPath $files.Webs -Append -NoTypeInformation
                     }
@@ -237,19 +251,30 @@ function Invoke-SystemEditorRemediationPlan {
                 $summary.Errors++
                 [pscustomobject]@{ WebUrl = $root; ListId = ''; Stage = $stage; Error = $_.Exception.Message } |
                     Export-Csv -LiteralPath $files.Errors -Append -NoTypeInformation
-                Write-Warning "Incomplete root $root : $($_.Exception.Message)"
+                Write-Verbose "Root $root : $($_.Exception.Message)"
+            } finally {
+                Write-Progress -Id 1 -Activity 'Scanning' -Completed
+                $siteErrors = $summary.Errors - $errorsBefore
+                $siteMatches = $summary.Matches - $matchesBefore
+                $siteWebs = $summary.WebsScanned - $websBefore
+                if ($siteErrors) {
+                    Write-Warning "${siteName}: $siteMatches matches; $siteErrors issues. See Errors.csv."
+                } elseif ($siteWebs) {
+                    Write-Host "${siteName}: $siteMatches matches."
+                }
             }
         }
         $summary.Status = if ($summary.Errors) { 'Incomplete' } else { 'PreviewComplete' }
     } finally {
+        Write-Progress -Id 1 -Activity 'Scanning' -Completed
         if ($summary.Status -eq 'Running') { $summary.Status = 'Incomplete' }
         $summary | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $run 'Summary.json') -Encoding utf8
-        Write-Host "Preview status: $($summary.Status). Matches: $($summary.Matches). Errors: $($summary.Errors). Reports: $run"
+        Write-Host "Preview $($summary.Status): $($summary.Matches) matches; $($summary.Errors) issues. No changes made."
     }
-    if ($summary.Errors) { throw "Preview incomplete: $($summary.Errors) errors. Review $($files.Errors). No SharePoint data was changed." }
+    if ($summary.Errors) { throw "Preview incomplete. Review Errors.csv in the report folder." }
     return [pscustomobject]$summary
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    Invoke-SystemEditorRemediationPlan -ChecklistPath $ChecklistPath -OutputFolder $OutputFolder -ClientId $ClientId
+    Invoke-SystemEditorRemediationPlan -ChecklistPath $ChecklistPath -OutputFolder $OutputFolder -ClientId $ClientId | Out-Null
 }

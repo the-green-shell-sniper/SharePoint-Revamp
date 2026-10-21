@@ -128,18 +128,44 @@ try {
     Assert-Equal (@($coverage | Where-Object Status -eq 'No Modified/Editor fields').Count) 6
     Write-Host 'PASS recursive subsites/overlaps, hidden lists, folders/files/items, strict Pacific cutoff and preview reports'
 
-    foreach ($failure in 'list', 'discovery', 'count', 'system', 'scope') {
+    $script:failure = 'count'
+    $script:webScans = [Collections.Generic.List[string]]::new()
+    $countWarnings = @()
+    $result = Invoke-SystemEditorRemediationPlan -ChecklistPath $csv -OutputFolder $temp -ClientId 'test' `
+        -WarningVariable countWarnings
+    Assert-Equal $result.Status 'PreviewComplete'
+    Assert-Equal $result.Errors 0
+    Assert-Equal $result.Matches 48
+    Assert-Equal $countWarnings.Count 0
+    $coverage = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Coverage.csv'))
+    Assert-Equal (@($coverage | Where-Object { $_.Note -like 'Reported counts:*' }).Count) 12
+    Assert-Equal (@(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Errors.csv')).Count) 0
+    Write-Host 'PASS count differences are report-only notes, with no warning, lost matches or failed preview'
+
+    foreach ($failure in 'list', 'discovery', 'system', 'scope') {
         $script:failure = $failure
         $script:webScans = [Collections.Generic.List[string]]::new()
         $output = Join-Path $temp $failure
-        Assert-Throws { Invoke-SystemEditorRemediationPlan -ChecklistPath $csv -OutputFolder $output -ClientId 'test' } 'Preview incomplete'
+        $script:operatorWarnings = @()
+        Assert-Throws {
+            Invoke-SystemEditorRemediationPlan -ChecklistPath $csv -OutputFolder $output -ClientId 'test' `
+                -WarningVariable script:operatorWarnings -WarningAction SilentlyContinue
+        } 'Preview incomplete'
+        if ($script:operatorWarnings.Count -eq 0 -or $script:operatorWarnings.Count -gt 4) {
+            throw 'Expected at most one warning per checklist root with issues.'
+        }
+        foreach ($warning in $script:operatorWarnings) {
+            if ("$warning" -notmatch '^\S.*: \d+ matches; \d+ issues\. See Errors\.csv\.$') {
+                throw "Unexpected operator warning: $warning"
+            }
+        }
         $run = @(Get-ChildItem -LiteralPath $output -Directory)[0].FullName
         $saved = Get-Content -LiteralPath (Join-Path $run 'Summary.json') -Raw | ConvertFrom-Json
         Assert-Equal $saved.Status 'Incomplete'
         if ($saved.Errors -le 0) { throw 'Failure was not recorded' }
         if (-not @(Import-Csv -LiteralPath (Join-Path $run 'Errors.csv')).Count) { throw 'Missing error evidence' }
     }
-    Write-Host 'PASS access/discovery failures, count discrepancies, unavailable System Account and out-of-scope discovery report incomplete'
+    Write-Host 'PASS failures stay explicit in reports with concise warnings grouped by checklist root'
 
     $tokens = $null
     $parseErrors = $null
