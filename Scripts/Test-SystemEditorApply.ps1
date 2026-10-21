@@ -162,6 +162,29 @@ try {
     Write-Host 'PASS maintenance gate and default read-only recheck'
 
     Reset-Fixture
+    $processDirectory = [Environment]::CurrentDirectory
+    $shellLocation = Get-Location
+    try {
+        Set-Location -LiteralPath $temp
+        [Environment]::CurrentDirectory = $env:SystemRoot
+        $relativeOptions = @{
+            PreviewFolder = '.\preview'; ChecklistPath = '.\Checklist.csv'
+            OutputFolder = '.\relative-output'; ClientId = 'test'
+        }
+        $approved = Read-SystemEditorApprovedPlan -Folder '.\preview' -Checklist '.\Checklist.csv'
+        Assert-Equal $approved.Rows.Count 1
+        $result = Invoke-SystemEditorApply @relativeOptions
+        Assert-Equal $result.Eligible 1
+        Assert-Equal $result.PreviewFolder $preview
+        Assert-Equal ([IO.Path]::GetDirectoryName($result.ReportFolder)) (Join-Path $temp 'relative-output')
+        Assert-Equal $script:writes 0
+    } finally {
+        [Environment]::CurrentDirectory = $processDirectory
+        Set-Location -LiteralPath $shellLocation.Path
+    }
+    Write-Host 'PASS relative preview/checklist/output paths use PowerShell location, not process directory'
+
+    Reset-Fixture
     $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed
     Assert-Equal $result.Verified 1
     Assert-Equal $result.Status 'Completed'

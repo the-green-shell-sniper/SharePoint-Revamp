@@ -44,6 +44,9 @@ $preview = '.\Reports\SystemEditorPlans\20261020-202121-393-a73dde48'
 .\Scripts\Invoke-SystemEditorRemediation.ps1 -PreviewFolder $preview -Apply -MaintenanceWindowConfirmed
 ```
 
+Relative preview, checklist and output paths resolve against the current
+PowerShell location, even if the process working directory differs.
+
 `-MaintenanceWindowConfirmed` acknowledges those operational prerequisites; it
 does not disable automation or lock the sites. `UpdateOverwriteVersion` can trigger
 Power Automate flows/event handlers. The script cannot guarantee that external

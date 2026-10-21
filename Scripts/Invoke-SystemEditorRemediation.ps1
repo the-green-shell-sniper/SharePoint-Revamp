@@ -36,6 +36,8 @@ param(
 function Read-SystemEditorApprovedPlan {
     param([string]$Folder, [string]$Checklist)
     $ErrorActionPreference = 'Stop'
+    $Folder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Folder)
+    $Checklist = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Checklist)
     $roots = @(Get-SystemEditorChecklistRoots $Checklist)
     $summary = Get-Content -LiteralPath (Join-Path $Folder 'Summary.json') -Raw | ConvertFrom-Json
     $cutoff = [datetimeoffset]'2024-04-01T07:00:00Z'
@@ -129,6 +131,9 @@ function Invoke-SystemEditorApply {
     if ($Apply -and -not $MaintenanceWindowConfirmed) {
         throw 'Before Apply, pause relevant automation and prevent concurrent edits; then pass -MaintenanceWindowConfirmed.'
     }
+    $PreviewFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($PreviewFolder)
+    $ChecklistPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ChecklistPath)
+    $OutputFolder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFolder)
     $approved = Read-SystemEditorApprovedPlan $PreviewFolder $ChecklistPath
     Import-Module PnP.PowerShell -MinimumVersion 3.3.0 -ErrorAction Stop
     $run = Assert-SPOutputPath (Join-Path $OutputFolder ((Get-Date -Format 'yyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8)))
@@ -139,7 +144,7 @@ function Invoke-SystemEditorApply {
     'WebUrl,ListId,ItemId,ObjectVersion,Field,ValueXml' | Set-Content -LiteralPath $backup
     $summary = [ordered]@{
         Mode = $(if ($Apply) { 'Apply' } else { 'RecheckOnly' }); Status = 'Running'
-        PreviewFolder = [IO.Path]::GetFullPath($PreviewFolder)
+        PreviewFolder = $PreviewFolder
         Candidates = $approved.Rows.Count; Verified = 0; Eligible = 0; Skipped = 0; AlreadySystem = 0
         Errors = 0; ReportFolder = $run
     }
