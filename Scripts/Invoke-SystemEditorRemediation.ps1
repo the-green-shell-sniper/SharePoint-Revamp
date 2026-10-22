@@ -250,6 +250,17 @@ function Invoke-SystemEditorApply {
                     $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
                     if ($after['Editor'].LookupId -ne $system.Id) { throw 'Editor verification failed.' }
                     $afterState = Get-SystemEditorFieldSnapshot $after
+                    $changedFields = @($verifyNames | Where-Object {
+                        $before.ContainsKey($_) -and $before[$_] -cne $afterState[$_]
+                    })
+                    if ($changedFields.Count) {
+                        $afterState.Keys | Sort-Object | ForEach-Object {
+                            [pscustomobject]@{
+                                WebUrl = $url; ListId = [string]$listId; ItemId = $row.ItemId
+                                Field = $_; ValueXml = $afterState[$_]
+                            }
+                        } | Export-Csv -LiteralPath (Join-Path $run 'FailedAfter.csv') -Append -NoTypeInformation
+                    }
                     foreach ($name in $verifyNames | Where-Object { $before.ContainsKey($_) }) {
                         if ($before[$name] -cne $afterState[$name]) { throw "Preservation verification failed: $name" }
                     }

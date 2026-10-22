@@ -33,6 +33,15 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Applying the System Editor cleanup
 
+If an apply stops with a preservation verification failure, do not immediately
+rerun: the write may have succeeded. Use
+[Compare-SystemEditorFailedItem.ps1](Scripts/Compare-SystemEditorFailedItem.ps1)
+with `-RunFolder` pointing to the failed apply report folder. This read-only
+diagnostic saves `After.csv` and `Differences.csv` in a short `check-*` subfolder,
+including individual changed `MetaInfo` entries. Return those reports for analysis
+before relaxing any preservation checks. New apply runs also save
+`FailedAfter.csv` on a stored-field preservation mismatch.
+
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
 repository root:
