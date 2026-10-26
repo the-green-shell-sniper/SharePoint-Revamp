@@ -1,0 +1,86 @@
+Growth & Resilience Check-In
+Working draft
+
+Use these as a starting point and adjust any details so they reflect your own
+experience and voice.
+
+1. Growth & Reflection
+
+Think of a recent situation when you felt you were at your best in your role.
+What were you doing, and what contributed to that experience?
+
+I feel at my best when I can take a complicated, ambiguous problem and turn it
+into a careful, usable path forward. A recent example has been my SharePoint
+migration work: tracing document-link and permission issues, building tools to
+identify and review changes, and making sure proposed fixes can be checked
+before anything is applied. I focus on details that matter in practice, like
+preserving existing metadata, making incomplete coverage visible, and verifying
+results rather than assuming a successful run means the work is done.
+
+That experience brought together problem-solving, ownership, and a clear
+connection to helping colleagues find and use the right information. I was
+particularly effective when I could work through the evidence methodically,
+keep the risks visible, and deliver something repeatable instead of a one-off
+fix.
+
+Looking back at your goals this year, what would you approach differently
+that you can apply going forward?
+
+I would make progress and decision points more visible earlier, especially on
+work that has many dependencies or edge cases. I can get deeply focused on
+making a solution reliable, which is valuable, but I can do a better job of
+sharing a small working version, open questions, and tradeoffs before all the
+details are settled. Going forward, I want to break large efforts into clearer
+milestones, ask for review at those points, and reserve time for documentation
+and handoff alongside implementation.
+
+2. Resilience & Belonging
+
+What has helped you stay motivated, adaptable, or resilient when facing
+change, setbacks, or challenges?
+
+I stay motivated by connecting the technical work to its practical impact:
+reducing friction for colleagues and helping important information remain
+accessible and trustworthy. When an issue is more complicated than it first
+appears, I try to slow down, gather evidence, separate what is known from what
+still needs validation, and work through the problem in manageable steps.
+Preview-first workflows, explicit safeguards, and verification help me adapt
+without taking unnecessary risks. I also try to treat setbacks as useful
+information about what the process or tool needs to handle better next time.
+
+What has your leader and/or team done that has helped you feel supported,
+included, and connected to your work? What else would strengthen your sense
+of belonging?
+
+I feel most supported when the team shares the context behind a request, is
+open to questions, and gives me room to take ownership while staying available
+for feedback and decisions. Knowing how the work affects colleagues helps me
+prioritize and stay connected to its purpose. I would be strengthened by
+continuing to have regular opportunities to share progress and lessons learned,
+get timely feedback when priorities change, and hear from the people who use
+the tools and processes I work on.
+
+3. Team Cohesion
+
+What helps you feel connected and engaged with your team, particularly during
+busy or challenging periods?
+
+Clear priorities, candid communication, and a shared understanding of what
+needs attention help me stay engaged when things are busy. It is also helpful
+when people can raise risks or uncertainty early without blame, and when we
+make time to document decisions so others can pick up the work. Small check-ins
+and practical feedback keep work from becoming isolated and help the team adjust
+together.
+
+Share a recent example of how you contributed to your team’s success or helped
+create a positive experience for a colleague.
+
+In the SharePoint migration work, I have contributed by turning complex
+remediation tasks into reviewable steps and tools rather than asking colleagues
+to rely on opaque, one-shot changes. For example, the System Editor cleanup was
+structured around a read-only preview, explicit scope and error reporting, and
+a separate guarded apply phase. The reviewed preview documented 14,623
+candidates with zero recorded issues, giving the team evidence to make an
+informed next-step decision. More broadly, clear reports, dry-run options, and
+verification checks make it easier for others to understand what a script will
+do, spot problems before changes are made, and trust the outcome.
