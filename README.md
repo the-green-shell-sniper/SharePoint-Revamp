@@ -59,9 +59,10 @@ targets. Every returned field difference is retained in bounded `Changes.csv`,
 including these system-managed changes. The script does not write those fields.
 Resume with the same reviewed plan; an already-System item is not rewritten.
 No new preview is needed solely for this verification correction.
-All three item reads explicitly request the list's preservation fields, including
-custom fields omitted from SharePoint's default item response. A requested field
-missing from the typed response is read through `FieldValuesAsText` instead
+All three item reads use SharePoint's default typed response. Explicitly projecting
+every editable field is avoided because legacy calendar field projections can
+reject the entire request with "Value does not fall within the expected range."
+A preservation field missing from the typed response is read through `FieldValuesAsText` instead
 (for example the legacy calendar `Facilities` field type). Its text representation
 is explicitly marked in the backup and compared on all three reads. A field
 absent from both responses stops processing before a write; it is not silently

@@ -259,12 +259,11 @@ function Invoke-SystemEditorApply {
                     'Modified', 'Created', 'Author', 'UniqueId', '_UIVersionString', '_UIVersion',
                     'ContentTypeId', 'FSObjType', 'FileRef', 'FileLeafRef', 'File_x0020_Size', '_ModerationStatus', 'MetaInfo'
                 ) | Sort-Object -Unique)
-                $readFields = @(@($verifyNames) + @('Editor', 'CheckoutUser') |
-                    Where-Object { $_ -in $fields.InternalName } | Sort-Object -Unique)
+                $readFields = @()
                 foreach ($row in $listGroup.Group) {
                     $active = [pscustomobject]@{ WebUrl = $url; ListId = [string]$listId; ItemId = $row.ItemId; Status = 'Reading'; Detail = '' }
                     Write-Progress -Id 2 -Activity "$($summary.Mode): $url" -Status "Item $($row.ItemId) - $($summary.Verified) verified; $($summary.Skipped) skipped"
-                    $item = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
+                    $item = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
                     foreach ($key in 'UniqueId', 'Modified', 'Created', 'Author', 'Editor', '_UIVersionString') {
                         if (-not $item[$key]) { throw "Required field missing: $key" }
                     }
@@ -300,7 +299,7 @@ function Invoke-SystemEditorApply {
                     } | Export-Csv -LiteralPath $backup -Append -NoTypeInformation
                     # Re-read after backup I/O; never write through the re-read object.
                     $active.Status = 'Rechecking before write'
-                    $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
+                    $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
                     $latestState = Get-SystemEditorFieldSnapshot -Item $latest -Names $preservationFields -Connection $connection
                     $different = @($before.Keys | Where-Object { $before[$_] -cne $latestState[$_] })
                     if ($item.ObjectVersion -cne $latest.ObjectVersion -or $before.Count -ne $latestState.Count -or $different.Count) {
@@ -313,7 +312,7 @@ function Invoke-SystemEditorApply {
                     $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
                     Set-SystemEditorItemValues -Item $item -SystemId $system.Id -Modified (ConvertTo-SystemEditorUtc $item['Modified'])
                     $active.Status = 'Verifying'
-                    $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
+                    $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
                     if ($after['Editor'].LookupId -ne $system.Id) { throw 'Editor verification failed.' }
                     $afterState = Get-SystemEditorFieldSnapshot -Item $after -Names $preservationFields -Connection $connection
                     $changedFields = @(Get-SystemEditorPreservationFailure -Before $before -After $afterState `
