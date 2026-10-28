@@ -268,6 +268,7 @@ function Invoke-SystemEditorApply {
                     foreach ($key in 'UniqueId', 'Modified', 'Created', 'Author', 'Editor', '_UIVersionString') {
                         if (-not $item[$key]) { throw "Required field missing: $key" }
                     }
+                    $active.Status = 'Resolving current editor'
                     $editor = Get-PnPUser -Identity $item['Editor'].LookupId -Connection $connection -ErrorAction Stop
                     $status = Get-SystemEditorCandidateStatus -Item $item -Row $row -Editor $editor -SystemId $system.Id
                     if ($status -ne 'Eligible') {
@@ -277,6 +278,7 @@ function Invoke-SystemEditorApply {
                         continue
                     }
                     $preservationFields = @($verifyNames | Where-Object { $_ -in $fields.InternalName })
+                    $active.Status = 'Reading preservation fields'
                     $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection
                     foreach ($name in $verifyNames) {
                         if ($name -in $fields.InternalName -and -not $before.ContainsKey($name)) {
@@ -297,6 +299,7 @@ function Invoke-SystemEditorApply {
                         }
                     } | Export-Csv -LiteralPath $backup -Append -NoTypeInformation
                     # Re-read after backup I/O; never write through the re-read object.
+                    $active.Status = 'Rechecking before write'
                     $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
                     $latestState = Get-SystemEditorFieldSnapshot -Item $latest -Names $preservationFields -Connection $connection
                     $different = @($before.Keys | Where-Object { $before[$_] -cne $latestState[$_] })
@@ -343,12 +346,26 @@ function Invoke-SystemEditorApply {
         }
         $summary.Status = if ($summary.Skipped) { 'CompletedWithSkips' } else { 'Completed' }
     } catch {
+        $failure = $_
         $summary.Status = 'Stopped'
         $summary.Errors++
         $active.Detail = $_.Exception.Message
         $active.Status = "Failed ($($active.Status))"
         $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
-        throw "Stopped. Inspect Journal.csv and live state before retrying. $($_.Exception.Message)"
+        Write-SPBoundedJson -Path (Join-Path $run 'Failure.json') -Depth 6 -InputObject ([ordered]@{
+            WebUrl = $active.WebUrl; ListId = $active.ListId; ItemId = $active.ItemId
+            Stage = $active.Status; Message = $failure.Exception.Message
+            ExceptionType = $failure.Exception.GetType().FullName
+            ErrorId = $failure.FullyQualifiedErrorId
+            Position = $failure.InvocationInfo.PositionMessage
+            ScriptStack = $failure.ScriptStackTrace
+            Exception = $failure.Exception.ToString()
+            RequestedFields = @($readFields)
+            MissingTypedFields = @($preservationFields | Where-Object {
+                $null -ne $item -and -not $item.FieldValues.ContainsKey($_)
+            })
+        })
+        throw "Stopped: $($active.Status). See Failure.json in the report folder. $($failure.Exception.Message)"
     } finally {
         Write-Progress -Id 2 -Activity 'System Editor remediation' -Completed
         if ($summary.Status -eq 'Running') { $summary.Status = 'Interrupted' }

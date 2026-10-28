@@ -33,6 +33,11 @@ Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
 
 ## Applying the System Editor cleanup
 
+Stopped runs save `Failure.json` with the original error location, script stack,
+item identity, read stage and requested/missing typed fields. For a read failure,
+omit `-Apply` to reproduce candidate loading without performing updates; this
+uses the existing reviewed plan, not another full content scan.
+
 If an apply stops with a preservation verification failure, do not immediately
 rerun: the write may have succeeded. Use
 [Compare-SystemEditorFailedItem.ps1](Scripts/Compare-SystemEditorFailedItem.ps1)
