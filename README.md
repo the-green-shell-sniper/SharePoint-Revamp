@@ -54,6 +54,10 @@ targets. Every returned field difference is retained in bounded `Changes.csv`,
 including these system-managed changes. The script does not write those fields.
 Resume with the same reviewed plan; an already-System item is not rewritten.
 No new preview is needed solely for this verification correction.
+All three item reads explicitly request the list's preservation fields, including
+custom fields omitted from SharePoint's default item response. A requested field
+still missing from the response stops processing before a write; it is not
+silently treated as empty.
 
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
