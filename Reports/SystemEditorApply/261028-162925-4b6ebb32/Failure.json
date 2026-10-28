@@ -1,0 +1,16 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/Accounting",
+  "ListId": "6641c06f-05f4-468f-ac15-79d21e8c55c7",
+  "ItemId": "1",
+  "Stage": "Failed (Reading preservation fields)",
+  "Message": "Field unavailable in both typed and text responses: Facilities",
+  "ExceptionType": "System.Management.Automation.RuntimeException",
+  "ErrorId": "Field unavailable in both typed and text responses: Facilities",
+  "Position": "At C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1:99 char:17\r\n+ …             throw \"Field unavailable in both typed and text responses …\r\n+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "ScriptStack": "at Get-SystemEditorFieldSnapshot, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 99\r\nat Invoke-SystemEditorApply, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 281\r\nat <ScriptBlock>, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 379\r\nat <ScriptBlock>, <No file>: line 4",
+  "Exception": "System.Management.Automation.RuntimeException: Field unavailable in both typed and text responses: Facilities",
+  "RequestedFields": [],
+  "MissingTypedFields": [
+    "Facilities"
+  ]
+}
