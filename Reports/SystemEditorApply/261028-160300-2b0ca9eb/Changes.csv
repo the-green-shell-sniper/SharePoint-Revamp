@@ -1,0 +1,117 @@
+"WebUrl","ListId","ItemId","Field","BeforeXml","AfterXml"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","_ListSchemaVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>9</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>57</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","AppEditor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">1</I32>
+      <S N=""LookupValue"">ShareGate Migrate</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">18</I32>
+      <S N=""LookupValue"">PnP PowerShell</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","DocConcurrencyNumber","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>9</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>10</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","Editor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email"">bposey.admin@whallc.com</S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">6</I32>
+      <S N=""LookupValue"">Brittany !. Posey</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email""></S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">1073741823</I32>
+      <S N=""LookupValue"">System Account</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","MetaInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>vti_mediaservicefastmetadata:SW|{""billedEvents"":[],""externalJobs"":[],""media"":{""title"":""Accounting""},""photo"":{""width"":249,""height"":231}}_x000D__x000A_vti_parserversion:SR|16.0.0.27619_x000D__x000A_vti_mediaservicegenerationtime:SW|2026-09-03T07:26:05.409_x000D__x000A_vti_modifiedby:SW|i:0#.f|membership|!bposey@whallc.com_x000D__x000A_vti_foldersubfolderitemcount:IR|0_x000D__x000A_vti_title:SW|Accounting_x000D__x000A_vti_lastheight:IW|231_x000D__x000A_vti_thumbnailexists:BW|true_x000D__x000A_vti_author:SW|i:0#.f|membership|!bposey@whallc.com_x000D__x000A_Keywords:LW|_x000D__x000A_vti_commentcount:IR|0_x000D__x000A_vti_folderitemcount:IR|0_x000D__x000A_vti_description:SW|_x000D__x000A_vti_mediaservicesearchproperties:SW|{""ows_MediaServiceMediaTitle"":""Accounting"",""ows_MediaServicePhotoHorizontalSize"":249,""ows_MediaServicePhotoVerticalSize"":231}_x000D__x000A_vti_stickycachedpluggableparserprops:VX|wic_x005F_XResolution Subject vti_lastheight vti_title vti_lastwidth wic_YResolution oisimg_imageparsedversion_x000D__x000A_vti_previewexists:BW|true_x000D__x000A_vti_accesscontrolflags:IR|0_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Author:SW|Brittany !. Posey_x000D__x000A_vti_mediaservicemetadata:SW|{""ctag"":""\\""c:{58BDFF39-02FB-4E42-8244-2223E4ED15C0},3\\"""",""generationTime"":""2026-09-03T07:26:05.4094088Z"",""buildVersion"":""2026.08.26.3"",""lastStreamUpdateTime"":""2026-09-03T07:26:05.4092102Z"",""modules"":[{""module"":""19"",""version"":1},{""module"":""52"",""version"":2},{""module"":""20"",""version"":2},{""module"":""90"",""version"":1},{""module"":""55"",""version"":1},{""module"":""56"",""version"":7},{""module"":""69"",""version"":1},{""module"":""75"",""version"":1},{""module"":""77"",""version"":1},{""module"":""89"",""version"":2}],""billedEvents"":[],""externalJobs"":[],""media"":{""title"":""Accounting"",""subject"":""Accounting"",""mediaExtensionFormat"":""JPEG""},""photo"":{""alternateDateTaken"":""filetime"",""dateTaken"":""2018-02-26T19:26:09+00:00"",""width"":249,""height"":231}}_x000D__x000A_vti_TimeOfLastCobaltVersionCreation:TW|02 Sep 2026 19:25:52 -0000_x000D__x000A_Subject:SW|Accounting_x000D__x000A_vti_timelastwnssent:TR|02 Sep 2026 19:25:52 -0000_x000D__x000A_vti_iplabelpromotionversion:IW|0_x000D__x000A_vti_mediaserviceeventhashcode:SW|-1277523972_x000D__x000A_vti_writevalidationtoken:SW|TJ0PSuSSTh8nkrLldsM/gYXvYAc=_x000D__x000A_ContentTypeId:SW|0x01010200076C70C16AABBB4693DE6E38A34AB11E_x000D__x000A_wic_x005F_XResolution:DW|96.0000000000000_x000D__x000A_vti_lastbitscommit:SW|2;#f60264bf-8ccf-4306-85c6-7bce9a973e77;#Accounting.JPG;#f1a02b4a-dda0-4f76-8ad9-718b5672e9a2;#""{58BDFF39-02FB-4E42-8244-2223E4ED15C0},1"";#""{58BDFF39-02FB-4E42-8244-2223E4ED15C0},2"";#0x024C9D0F4AE4924E1F2792B2E576C33F8185EF6007;#7297;#0_x000D__x000A_vti_lastwidth:IW|249_x000D__x000A_vti_supportsZipIt:BW|false_x000D__x000A_oisimg_imageparsedversion:IW|4_x000D__x000A_wic_YResolution:DW|96.0000000000000_x000D__x000A_vti_mediaservicedatetaken:SW|2018-02-26T19:26:09.000_x000D__x000A_vti_decryptskipreason:IW|6_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Editor:SW|Brittany !. Posey_x000D__x000A_vti_areHybridOrphanHashedBlobsCleaned:BW|false_x000D__x000A_vti_streamSyncTokenSequenceNumber:IW|226_x000D__x000A_</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>vti_mediaservicesearchproperties:SW|{""ows_MediaServiceMediaTitle"":""Accounting"",""ows_MediaServicePhotoHorizontalSize"":249,""ows_MediaServicePhotoVerticalSize"":231}_x000D__x000A_vti_mediaservicemetadata:SW|{""ctag"":""\\""c:{58BDFF39-02FB-4E42-8244-2223E4ED15C0},3\\"""",""generationTime"":""2026-09-03T07:26:05.4094088Z"",""buildVersion"":""2026.08.26.3"",""lastStreamUpdateTime"":""2026-09-03T07:26:05.4092102Z"",""modules"":[{""module"":""19"",""version"":1},{""module"":""52"",""version"":2},{""module"":""20"",""version"":2},{""module"":""90"",""version"":1},{""module"":""55"",""version"":1},{""module"":""56"",""version"":7},{""module"":""69"",""version"":1},{""module"":""75"",""version"":1},{""module"":""77"",""version"":1},{""module"":""89"",""version"":2}],""billedEvents"":[],""externalJobs"":[],""media"":{""title"":""Accounting"",""subject"":""Accounting"",""mediaExtensionFormat"":""JPEG""},""photo"":{""alternateDateTaken"":""filetime"",""dateTaken"":""2018-02-26T19:26:09+00:00"",""width"":249,""height"":231}}_x000D__x000A_vti_mediaservicedatetaken:SW|2018-02-26T19:26:09.000_x000D__x000A_vti_thumbnailexists:BW|true_x000D__x000A_vti_parserversion:SR|16.0.0.27814_x000D__x000A_vti_mediaservicegenerationtime:SW|2026-09-03T07:26:05.409_x000D__x000A_vti_TimeOfLastCobaltVersionCreation:TW|02 Sep 2026 19:25:52 -0000_x000D__x000A_vti_decryptskipreason:IW|6_x000D__x000A_vti_stickycachedpluggableparserprops:VX|wic_x005F_XResolution Subject vti_lastheight vti_title vti_lastwidth wic_YResolution oisimg_imageparsedversion_x000D__x000A_vti_commentcount:IR|0_x000D__x000A_vti_author:SW|i:0#.f|membership|!bposey@whallc.com_x000D__x000A_vti_previewexists:BW|true_x000D__x000A_vti_mediaserviceeventhashcode:SW|-1277523972_x000D__x000A_Keywords:LW|_x000D__x000A_vti_accesscontrolflags:IR|0_x000D__x000A_vti_writevalidationtoken:SW|TJ0PSuSSTh8nkrLldsM/gYXvYAc=_x000D__x000A_vti_modifiedby:SW|i:0#.f|membership|!bposey@whallc.com_x000D__x000A_ContentTypeId:SW|0x01010200076C70C16AABBB4693DE6E38A34AB11E_x000D__x000A_vti_mediaservicefastmetadata:SW|{""billedEvents"":[],""externalJobs"":[],""media"":{""title"":""Accounting""},""photo"":{""width"":249,""height"":231}}_x000D__x000A_Subject:SW|Accounting_x000D__x000A_wic_x005F_XResolution:DW|96.0000000000000_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Editor:SW|System Account_x000D__x000A_vti_folderitemcount:IR|0_x000D__x000A_vti_lastbitscommit:SW|2;#f60264bf-8ccf-4306-85c6-7bce9a973e77;#Accounting.JPG;#f1a02b4a-dda0-4f76-8ad9-718b5672e9a2;#""{58BDFF39-02FB-4E42-8244-2223E4ED15C0},1"";#""{58BDFF39-02FB-4E42-8244-2223E4ED15C0},2"";#0x024C9D0F4AE4924E1F2792B2E576C33F8185EF6007;#7297;#0_x000D__x000A_vti_lastwidth:IW|249_x000D__x000A_vti_description:SW|_x000D__x000A_vti_timelastwnssent:TR|02 Sep 2026 19:25:52 -0000_x000D__x000A_vti_foldersubfolderitemcount:IR|0_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Author:SW|Brittany !. Posey_x000D__x000A_vti_supportsZipIt:BW|false_x000D__x000A_vti_title:SW|Accounting_x000D__x000A_vti_lastheight:IW|231_x000D__x000A_vti_iplabelpromotionversion:IW|0_x000D__x000A_oisimg_imageparsedversion:IW|4_x000D__x000A_wic_YResolution:DW|96.0000000000000_x000D__x000A_vti_areHybridOrphanHashedBlobsCleaned:BW|false_x000D__x000A_vti_streamSyncTokenSequenceNumber:IW|226_x000D__x000A_</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","owshiddenversion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>9</I32>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>10</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","SMLastModifiedDate","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2026-09-03T07:26:08Z</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2026-10-28T23:03:22Z</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","4e305356-0dc3-4daf-9e4b-fa6cc73ec3a4","1","SMTotalSize","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">20133</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">20134</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
