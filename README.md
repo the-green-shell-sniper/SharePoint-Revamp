@@ -65,8 +65,13 @@ reject the entire request with "Value does not fall within the expected range."
 A preservation field missing from the typed response is read through `FieldValuesAsText` instead
 (for example the legacy calendar `Facilities` field type). Its text representation
 is explicitly marked in the backup and compared on all three reads. A field
-absent from both responses stops processing before a write; it is not silently
-treated as empty. This fallback verifies the returned text representation, not
+absent from both responses during the initial preservation read leaves that item
+untouched, records `Skipped: preservation fields unavailable` and the field names
+in `Journal.csv`, and continues with the remaining candidates. This applies to
+both RecheckOnly and Apply. Access/read exceptions still stop the run; losing a
+field during the final recheck or post-write verification still stops the run.
+`CompletedWithSkips` does not mean all candidates were remediated. No missing
+field is treated as empty. This fallback verifies the returned text representation, not
 an unavailable underlying typed value.
 
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat

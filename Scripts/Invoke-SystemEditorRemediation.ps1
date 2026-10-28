@@ -86,7 +86,7 @@ function Read-SystemEditorApprovedPlan {
 }
 
 function Get-SystemEditorFieldSnapshot {
-    param($Item, [string[]]$Names = @(), $Connection)
+    param($Item, [string[]]$Names = @(), $Connection, [switch]$AllowUnavailable)
     $values = @{}
     foreach ($key in $Item.FieldValues.Keys) {
         $values[$key] = [Management.Automation.PSSerializer]::Serialize($Item[$key], 20)
@@ -96,6 +96,7 @@ function Get-SystemEditorFieldSnapshot {
         $text = Get-PnPProperty -ClientObject $Item -Property FieldValuesAsText -Connection $Connection -ErrorAction Stop
         foreach ($name in $missing) {
             if (-not $text.FieldValues.ContainsKey($name)) {
+                if ($AllowUnavailable) { continue }
                 throw "Field unavailable in both typed and text responses: $name"
             }
             $values[$name] = [Management.Automation.PSSerializer]::Serialize(
@@ -278,11 +279,14 @@ function Invoke-SystemEditorApply {
                     }
                     $preservationFields = @($verifyNames | Where-Object { $_ -in $fields.InternalName })
                     $active.Status = 'Reading preservation fields'
-                    $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection
-                    foreach ($name in $verifyNames) {
-                        if ($name -in $fields.InternalName -and -not $before.ContainsKey($name)) {
-                            throw "Field not loaded for preservation check: $name"
-                        }
+                    $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection -AllowUnavailable
+                    $unavailable = @($preservationFields | Where-Object { -not $before.ContainsKey($_) })
+                    if ($unavailable.Count) {
+                        $summary.Skipped++
+                        $active.Status = 'Skipped: preservation fields unavailable'
+                        $active.Detail = "Not returned by typed or text response: $($unavailable -join ', ')"
+                        $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
+                        continue
                     }
                     if (-not $Apply) {
                         $summary.Eligible++
