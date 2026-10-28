@@ -42,6 +42,19 @@ including individual changed `MetaInfo` entries. Return those reports for analys
 before relaxing any preservation checks. New apply runs also save
 `FailedAfter.csv` on a stored-field preservation mismatch.
 
+The Accounting failure's returned comparison confirmed the intended Editor change
+with unchanged Modified, Created, Author, version and file size. Verification now
+compares `MetaInfo` entries instead of requiring its entire packed value to match.
+It allows the Editor display value to become the resolved System Account title,
+`vti_modifiedby` to become the native System login, and valid parser-version
+updates. Other changed, missing, added or unparseable entries still fail.
+The observed server bookkeeping fields `AppEditor`, `DocConcurrencyNumber`,
+`owshiddenversion`, `SMLastModifiedDate` and `SMTotalSize` are not preservation
+targets. Every returned field difference is retained in bounded `Changes.csv`,
+including these system-managed changes. The script does not write those fields.
+Resume with the same reviewed plan; an already-System item is not rewritten.
+No new preview is needed solely for this verification correction.
+
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
 repository root:
@@ -93,7 +106,7 @@ The apply script:
 The script depends on `Get-SystemEditorRemediationPlan.ps1` and its shared report
 helpers alongside it. Reports are private and saved under a unique
 `Reports\SystemEditorApply\<run>` folder: `Before.csv`, `Journal.csv`, and a small
-`Summary.json`. CSVs automatically split below 90 MiB using the existing output
+`Summary.json`, plus `Changes.csv` for post-write differences. CSVs automatically split below 90 MiB using the existing output
 helpers, and their readers include sibling parts. Backups are evidence, not an
 automatic restore plan. `CompletedWithSkips` means some candidates were left
 untouched; inspect their journal reasons rather than treating that as full apply.

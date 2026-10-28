@@ -11,6 +11,8 @@
     Resolves native SHAREPOINT\system live, never trusts saved user lookup IDs.
     Saves all returned field values before each write and verifies stored editable
     fields plus core identity, date, author and version fields afterwards.
+    MetaInfo is compared by entry; only the System editor representations and
+    valid SharePoint parser-version updates are allowed to differ.
     Server-managed counters/computed fields are not claimed to remain unchanged.
     No content upload, permissions changes, new version or old-version rewrites.
     Stops on the first read/write/verification error. Never retries or rolls back
@@ -90,6 +92,52 @@ function Get-SystemEditorFieldSnapshot {
         $values[$key] = [Management.Automation.PSSerializer]::Serialize($Item[$key], 20)
     }
     return $values
+}
+
+function ConvertFrom-SystemEditorMetaInfo {
+    param([string]$Text)
+    $values = [Collections.Generic.Dictionary[string, string]]::new([StringComparer]::Ordinal)
+    foreach ($line in ($Text -split '\r?\n' | Where-Object { $_ -ne '' })) {
+        if ($line -notmatch '^(.*):([A-Z]{2})\|(.*)$') {
+            throw 'Unrecognized MetaInfo entry.'
+        }
+        $key = $Matches[1]
+        if (-not $values.TryAdd($key, "$($Matches[2])|$($Matches[3])")) {
+            throw "Duplicate MetaInfo key: $key"
+        }
+    }
+    return ,$values
+}
+
+function Get-SystemEditorPreservationFailure {
+    param([hashtable]$Before, [hashtable]$After, [string[]]$Names, $System)
+    foreach ($name in $Names | Where-Object { $Before.ContainsKey($_) }) {
+        if ($Before[$name] -ceq $After[$name]) { continue }
+        if ($name -ne 'MetaInfo') { $name; continue }
+        try {
+            $old = ConvertFrom-SystemEditorMetaInfo ([Management.Automation.PSSerializer]::Deserialize($Before[$name]))
+            $new = ConvertFrom-SystemEditorMetaInfo ([Management.Automation.PSSerializer]::Deserialize($After[$name]))
+        } catch {
+            "MetaInfo (cannot compare: $($_.Exception.Message))"
+            continue
+        }
+        foreach ($key in @(@($old.Keys) + @($new.Keys) | Sort-Object -Unique -CaseSensitive)) {
+            if ($old.ContainsKey($key) -and $new.ContainsKey($key) -and $old[$key] -ceq $new[$key]) { continue }
+            $allowed = $false
+            if ($old.ContainsKey($key) -and $new.ContainsKey($key)) {
+                switch -CaseSensitive ($key) {
+                    'display_urn\:schemas-microsoft-com\:office\:office#Editor' {
+                        $allowed = -not [string]::IsNullOrWhiteSpace($System.Title) -and $new[$key] -ceq "SW|$($System.Title)"
+                    }
+                    'vti_modifiedby' { $allowed = $new[$key] -ieq "SW|$($System.LoginName)" }
+                    'vti_parserversion' {
+                        $allowed = $old[$key] -cmatch '^SR\|\d+(\.\d+){3}$' -and $new[$key] -cmatch '^SR\|\d+(\.\d+){3}$'
+                    }
+                }
+            }
+            if (-not $allowed) { "MetaInfo/$key" }
+        }
+    }
 }
 
 function Get-SystemEditorCandidateStatus {
@@ -194,10 +242,11 @@ function Invoke-SystemEditorApply {
                 $fields = @(Get-PnPField -List $listId -Connection $connection -ErrorAction Stop)
                 $verifyNames = @(@($fields | Where-Object {
                     -not $_.ReadOnlyField -and $_.TypeAsString -notin 'Computed', 'Counter' -and
-                    $_.InternalName -notin 'Editor', 'owshiddenversion'
+                    $_.InternalName -notin 'Editor', 'owshiddenversion', 'AppEditor',
+                        'DocConcurrencyNumber', 'SMLastModifiedDate', 'SMTotalSize'
                 } | ForEach-Object InternalName) + @(
                     'Modified', 'Created', 'Author', 'UniqueId', '_UIVersionString', '_UIVersion',
-                    'ContentTypeId', 'FSObjType', 'FileRef', 'FileLeafRef', 'File_x0020_Size', '_ModerationStatus'
+                    'ContentTypeId', 'FSObjType', 'FileRef', 'FileLeafRef', 'File_x0020_Size', '_ModerationStatus', 'MetaInfo'
                 ) | Sort-Object -Unique)
                 foreach ($row in $listGroup.Group) {
                     $active = [pscustomobject]@{ WebUrl = $url; ListId = [string]$listId; ItemId = $row.ItemId; Status = 'Reading'; Detail = '' }
@@ -250,9 +299,16 @@ function Invoke-SystemEditorApply {
                     $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
                     if ($after['Editor'].LookupId -ne $system.Id) { throw 'Editor verification failed.' }
                     $afterState = Get-SystemEditorFieldSnapshot $after
-                    $changedFields = @($verifyNames | Where-Object {
-                        $before.ContainsKey($_) -and $before[$_] -cne $afterState[$_]
-                    })
+                    $changedFields = @(Get-SystemEditorPreservationFailure -Before $before -After $afterState `
+                        -Names $verifyNames -System $system)
+                    @(@($before.Keys) + @($afterState.Keys) | Sort-Object -Unique) | ForEach-Object {
+                        if ($before[$_] -cne $afterState[$_]) {
+                            [pscustomobject]@{
+                                WebUrl = $url; ListId = [string]$listId; ItemId = $row.ItemId
+                                Field = $_; BeforeXml = $before[$_]; AfterXml = $afterState[$_]
+                            }
+                        }
+                    } | Export-Csv -LiteralPath (Join-Path $run 'Changes.csv') -Append -NoTypeInformation
                     if ($changedFields.Count) {
                         $afterState.Keys | Sort-Object | ForEach-Object {
                             [pscustomobject]@{
@@ -261,9 +317,7 @@ function Invoke-SystemEditorApply {
                             }
                         } | Export-Csv -LiteralPath (Join-Path $run 'FailedAfter.csv') -Append -NoTypeInformation
                     }
-                    foreach ($name in $verifyNames | Where-Object { $before.ContainsKey($_) }) {
-                        if ($before[$name] -cne $afterState[$name]) { throw "Preservation verification failed: $name" }
-                    }
+                    if ($changedFields.Count) { throw "Preservation verification failed: $($changedFields -join ', ')" }
                     $summary.Verified++
                     $active.Status = 'Updated and verified'
                     $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
