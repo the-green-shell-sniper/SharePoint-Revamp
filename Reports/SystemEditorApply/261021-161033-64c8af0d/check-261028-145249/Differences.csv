@@ -1,0 +1,109 @@
+WebUrl,ListId,ItemId,Field,Before,After
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","AppEditor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">1</I32>
+      <S N=""LookupValue"">ShareGate Migrate</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">18</I32>
+      <S N=""LookupValue"">PnP PowerShell</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","DocConcurrencyNumber","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>8</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>9</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","Editor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email"">bposey.admin@whallc.com</S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">6</I32>
+      <S N=""LookupValue"">Brittany !. Posey</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email""></S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">1073741823</I32>
+      <S N=""LookupValue"">System Account</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","MetaInfo/display_urn\:schemas-microsoft-com\:office\:office#Editor","SW|Brittany !. Posey","SW|System Account"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","MetaInfo/vti_parserversion","SR|16.0.0.27619","SR|16.0.0.27807"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","owshiddenversion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>8</I32>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>9</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","SMLastModifiedDate","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2026-09-02T19:24:13Z</S>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2026-10-21T23:10:58Z</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting","49de5598-8a28-45e1-804f-d512dbdffbc4","2","SMTotalSize","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">962216</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">962228</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
