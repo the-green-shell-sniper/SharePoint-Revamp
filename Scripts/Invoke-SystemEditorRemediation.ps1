@@ -86,10 +86,21 @@ function Read-SystemEditorApprovedPlan {
 }
 
 function Get-SystemEditorFieldSnapshot {
-    param($Item)
+    param($Item, [string[]]$Names = @(), $Connection)
     $values = @{}
     foreach ($key in $Item.FieldValues.Keys) {
         $values[$key] = [Management.Automation.PSSerializer]::Serialize($Item[$key], 20)
+    }
+    $missing = @($Names | Where-Object { -not $values.ContainsKey($_) })
+    if ($missing.Count) {
+        $text = Get-PnPProperty -ClientObject $Item -Property FieldValuesAsText -Connection $Connection -ErrorAction Stop
+        foreach ($name in $missing) {
+            if (-not $text.FieldValues.ContainsKey($name)) {
+                throw "Field unavailable in both typed and text responses: $name"
+            }
+            $values[$name] = [Management.Automation.PSSerializer]::Serialize(
+                [pscustomobject]@{ Representation = 'FieldValuesAsText'; Value = $text.FieldValues[$name] }, 20)
+        }
     }
     return $values
 }
@@ -265,7 +276,8 @@ function Invoke-SystemEditorApply {
                         $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
                         continue
                     }
-                    $before = Get-SystemEditorFieldSnapshot $item
+                    $preservationFields = @($verifyNames | Where-Object { $_ -in $fields.InternalName })
+                    $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection
                     foreach ($name in $verifyNames) {
                         if ($name -in $fields.InternalName -and -not $before.ContainsKey($name)) {
                             throw "Field not loaded for preservation check: $name"
@@ -286,7 +298,7 @@ function Invoke-SystemEditorApply {
                     } | Export-Csv -LiteralPath $backup -Append -NoTypeInformation
                     # Re-read after backup I/O; never write through the re-read object.
                     $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
-                    $latestState = Get-SystemEditorFieldSnapshot $latest
+                    $latestState = Get-SystemEditorFieldSnapshot -Item $latest -Names $preservationFields -Connection $connection
                     $different = @($before.Keys | Where-Object { $before[$_] -cne $latestState[$_] })
                     if ($item.ObjectVersion -cne $latest.ObjectVersion -or $before.Count -ne $latestState.Count -or $different.Count) {
                         $summary.Skipped++
@@ -300,7 +312,7 @@ function Invoke-SystemEditorApply {
                     $active.Status = 'Verifying'
                     $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Fields $readFields -Connection $connection -ErrorAction Stop
                     if ($after['Editor'].LookupId -ne $system.Id) { throw 'Editor verification failed.' }
-                    $afterState = Get-SystemEditorFieldSnapshot $after
+                    $afterState = Get-SystemEditorFieldSnapshot -Item $after -Names $preservationFields -Connection $connection
                     $changedFields = @(Get-SystemEditorPreservationFailure -Before $before -After $afterState `
                         -Names $verifyNames -System $system)
                     @(@($before.Keys) + @($afterState.Keys) | Sort-Object -Unique) | ForEach-Object {

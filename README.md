@@ -56,8 +56,12 @@ Resume with the same reviewed plan; an already-System item is not rewritten.
 No new preview is needed solely for this verification correction.
 All three item reads explicitly request the list's preservation fields, including
 custom fields omitted from SharePoint's default item response. A requested field
-still missing from the response stops processing before a write; it is not
-silently treated as empty.
+missing from the typed response is read through `FieldValuesAsText` instead
+(for example the legacy calendar `Facilities` field type). Its text representation
+is explicitly marked in the backup and compared on all three reads. A field
+absent from both responses stops processing before a write; it is not silently
+treated as empty. This fallback verifies the returned text representation, not
+an unavailable underlying typed value.
 
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
