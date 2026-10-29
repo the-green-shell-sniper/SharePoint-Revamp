@@ -1,0 +1,158 @@
+SharePoint-Revamp
+Project overview for later performance-review reflection
+
+Purpose
+
+This is an evidence summary of work represented in this repository, not a set
+of answers to the review prompts. Combine it with overviews of other projects
+and your own examples before drafting the final review.
+
+Project at a glance
+
+SharePoint-Revamp is a practical toolkit for analyzing and remediating issues
+from SharePoint migrations and supporting the resulting environment. It
+combines PowerShell automation, offline Python document processing, SharePoint
+Framework user tools, migration lookup data, run reports, and operational
+documentation.
+
+The work is broader than a single script or one-time cleanup. It includes
+finding old links and matching their destinations, correcting embedded links in
+documents, planning and applying reviewed permission changes, preserving
+metadata during document updates, and investigating current-site metadata
+cleanup. The README and scripts emphasize explicit scope, reviewable evidence,
+and separate discovery, planning, apply, and verification stages.
+
+Main contributions visible in the repository
+
+1. Migration analysis and link remediation
+
+- Built and maintained reports and lookup data for old-to-new SharePoint URLs.
+- Developed offline processing for embedded Office and PDF hyperlinks. It
+  limits edits to verified SharePoint link targets, preserves visible content,
+  backs up originals, checks hashes, and leaves unresolved or conflicting
+  mappings for human review rather than guessing.
+- Created both a manual SharePoint URL-fixer web part and a separate Quick Find
+  extension for users arriving from old links. The tools explain how to save a
+  replacement favorite, provide lookup feedback, and log submissions.
+- Added a plan/preflight/apply flow for publishing corrected documents, with
+  destination checks, backups, hash and identity checks, metadata preservation,
+  and post-write verification.
+
+2. Permission and metadata work
+
+- Built workflows for matching migrated sites, webs, lists, and libraries;
+  renamed scopes require explicit review and approval.
+- Permission synchronization is dry-run-first, records snapshots and plans,
+  protects selected or unmatched content, checks expected state before writes,
+  and verifies changes afterward. Its documentation is clear about exclusions
+  and limitations; the repository does not establish that every planned
+  permission change has been applied.
+- Added a read-only System Editor preview and a separate guarded apply/recheck
+  workflow. The design validates the preview, rechecks candidates, preserves
+  editable metadata, journals changes, and stops on ambiguous or failed
+  verification rather than silently continuing.
+
+3. Reusable engineering and operational discipline
+
+- Documented server-side prerequisites, authentication expectations, paths,
+  risk controls, recovery steps, and known limitations so the tools can be
+  operated and reviewed consistently.
+- Added shared report helpers and tests for bounded outputs. Large reports use
+  record-oriented CSV parts; tests cover size limits, ordering and content
+  preservation, JSON conversion, failure behavior, and overlong paths.
+- The repository includes unit-test files for the SharePoint web parts as well
+  as the PowerShell report-boundary tests. This summary does not claim that a
+  current full test suite or live tenant validation was run.
+
+Evidence and outcomes in the checked-in run records
+
+- The October 20, 2026 System Editor preview is marked PreviewComplete. It
+  reports 85 webs, 1,757 lists, 101,362 items scanned, 14,623 matches, and zero
+  preview errors. This is evidence of a completed read-only inventory and
+  reviewable candidate plan, not evidence that all 14,623 updates were applied.
+- Subsequent apply/recheck summaries through October 28 are marked Stopped
+  with one error. The latest Failure.json says the apply could not read the
+  Facilities field from either the typed or text response. The run summaries
+  do not demonstrate completion of the full cleanup. This is important context
+  when describing project status: the work shows substantial planning,
+  safeguards, and troubleshooting, while end-to-end closure remains unproven
+  by these reports.
+- In the October 19 link-remediation records, the apply run lists 101 files:
+  2 updated and 99 unchanged. Its link report has 3 resolved and 3 unresolved
+  links among 119 rows. A subsequent verification run lists all 101 files as
+  unchanged and 116 links as already current, with 3 still unresolved. These
+  are concrete examples of applying a small reviewed set and then checking it;
+  they do not mean every migration link was resolved.
+- The README contains additional reviewed workflow and result details. Run
+  records are operational evidence in the repository, not an independent
+  verification of current SharePoint state.
+
+Themes this project may support in a later reflection
+
+- Strengths: methodical problem-solving, attention to detail, practical
+  automation, learning through complex technical work, and translating
+  uncertainty into explicit evidence and safer next steps.
+- Initiative: identifying migration risks and creating reusable tools,
+  review processes, and user-facing options rather than relying only on
+  one-off manual fixes.
+- Excellence and integrity: favoring verified mappings, backups, scoped
+  approvals, explicit error reporting, preservation checks, and honest status
+  reporting over optimistic success claims.
+- Service and teamwork: making repair tools and reports understandable to
+  colleagues, documenting operational handoffs, and designing workflows that
+  invite review before changes. The repo shows those design choices; it does
+  not by itself document how particular colleagues experienced them.
+- Resilience: iterating on edge cases and treating failed reads or
+  verification as reasons to stop, inspect evidence, and improve the process.
+- Project follow-through: the dated link-remediation records show a bounded
+  apply-and-verify cycle. The System Editor records also show why milestones,
+  early escalation of blockers, and an explicit finish criterion matter for a
+  larger project. Avoid presenting a completed preview as a completed rollout.
+
+Connection to the previous review documents
+
+- The 2025 development plan focused on Security+ renewal CEUs and MD-102 study;
+  it also identified service/respect under pressure and uncertainty about when
+  to contribute in group discussions as development areas.
+- The 2025 check-in described substantial hands-on progress on the Intune build
+  automation and AdminTools scripting work. The supervisor recognized the
+  real-world Intune experience and noted that balancing training with project
+  and operational work would need attention.
+- The 2026 midyear check-in says SNF processing had become more consistent and
+  that related process/scripts were adjusted as timelines and requirements
+  changed. It also says the QA report was on hold while those changes affected
+  scoring, and identifies focus time and prioritization as helpful support.
+  The same check-in describes taking on the ShareGate project as a welcome
+  challenge.
+- The 2026 development plan sets measurable targets for five Intune/Autopilot
+  wiki articles, at least 90% freshness, five SNF lifecycle procedure articles,
+  a weekly QA checklist, and at least 98% provisioning accuracy. It also names
+  MD-102 certification, Excellence and Teamwork, and continued priority
+  alignment as relevant goals and supports.
+- The separate 2026 pay-increase rubric records Job Expectations at level 1,
+  Initiative at level 2, and WHA Values at level 2 (overall level 2). Its
+  examples call out Active Directory account-creation accuracy and independently
+  carrying mid-sized projects through completion as improvement areas. This
+  repository does not appear to contain the SNF/Active Directory provisioning
+  QA workflow or an accuracy metric, so it cannot demonstrate that those
+  concerns have been resolved. Use the SNF and account-creation evidence from
+  the relevant systems or other project repositories for that part of the
+  review.
+
+Evidence boundaries and useful follow-up
+
+- This repository is strongest evidence for SharePoint migration analysis,
+  cautious remediation design, automation, and the dated work records above.
+  It is not a complete record of all of your work, team interactions, or
+  outcomes in other systems.
+- It cannot establish colleague feedback, current user adoption, overall
+  accuracy or timeliness across operational work, or whether the SharePoint
+  environment still matches these reports.
+- Before using a result as a completed accomplishment, distinguish between
+  previewed, approved, applied, and verified work. For the System Editor
+  cleanup, resolve or explain the stopped apply/recheck status before describing
+  the full cleanup as complete.
+- For a later review draft, pair this repository overview with evidence from
+  the SNF/AD account process, Intune/Autopilot documentation and freshness
+  dashboard, MD-102 study status, and direct examples of colleague or manager
+  support.
