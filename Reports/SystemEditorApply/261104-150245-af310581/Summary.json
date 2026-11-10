@@ -1,0 +1,12 @@
+{
+  "Mode": "RecheckOnly",
+  "Status": "Stopped",
+  "PreviewFolder": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\SystemEditorPlans\\20261020-202121-393-a73dde48",
+  "Candidates": 14623,
+  "Verified": 0,
+  "Eligible": 1541,
+  "Skipped": 614,
+  "AlreadySystem": 104,
+  "Errors": 1,
+  "ReportFolder": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\SystemEditorApply\\261104-150245-af310581"
+}
