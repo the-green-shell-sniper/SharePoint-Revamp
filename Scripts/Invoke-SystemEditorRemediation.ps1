@@ -85,11 +85,50 @@ function Read-SystemEditorApprovedPlan {
     return [pscustomobject]@{ Roots = $roots; Rows = $rows }
 }
 
+function ConvertTo-SystemEditorSnapshotValue {
+    param([AllowNull()]$Value, [int]$Depth = 0)
+    if ($Depth -ge 20) { throw 'Field value exceeds the supported snapshot nesting depth.' }
+    if ($Value -is [Microsoft.SharePoint.Client.ClientObjectCollection]) {
+        if (-not $Value.AreItemsAvailable) { throw 'Field collection values are not loaded.' }
+        $entries = [Collections.Generic.List[object]]::new()
+        foreach ($entry in $Value) {
+            $entries.Add((ConvertTo-SystemEditorSnapshotValue -Value $entry -Depth ($Depth + 1)))
+        }
+        # CSOM collections expose Context/Path/TypedObject; none are field data.
+        return [pscustomobject]@{
+            Representation = 'CSOMFieldValueCollection'
+            TypeName = $Value.GetType().FullName
+            Values = $entries.ToArray()
+        }
+    }
+    if ($Value -is [Microsoft.SharePoint.Client.ClientObject]) {
+        throw "Unsupported live client object in field value: $($Value.GetType().FullName)"
+    }
+    if ($Value -is [array] -and $Value -isnot [byte[]]) {
+        $entries = [Collections.Generic.List[object]]::new()
+        $changed = $false
+        foreach ($entry in $Value) {
+            $detached = ConvertTo-SystemEditorSnapshotValue -Value $entry -Depth ($Depth + 1)
+            if (-not [object]::ReferenceEquals($entry, $detached)) { $changed = $true }
+            $entries.Add($detached)
+        }
+        if (-not $changed) { return ,$Value }
+        return ,$entries.ToArray()
+    }
+    return ,$Value
+}
+
 function Get-SystemEditorFieldSnapshot {
     param($Item, [string[]]$Names = @(), $Connection, [switch]$AllowUnavailable)
     $values = @{}
     foreach ($key in $Item.FieldValues.Keys) {
-        $values[$key] = [Management.Automation.PSSerializer]::Serialize($Item[$key], 20)
+        try {
+            $value = ConvertTo-SystemEditorSnapshotValue -Value $Item[$key]
+            $values[$key] = [Management.Automation.PSSerializer]::Serialize($value, 20)
+        } catch {
+            $type = if ($null -eq $Item[$key]) { '<null>' } else { $Item[$key].GetType().FullName }
+            throw "Cannot snapshot field '$key' (type '$type'): $($_.Exception.Message)"
+        }
     }
     $missing = @($Names | Where-Object { -not $values.ContainsKey($_) })
     if ($missing.Count) {
