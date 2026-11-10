@@ -153,6 +153,62 @@ function Get-SystemEditorFieldSnapshot($Item) {
     & $script:realSnapshot $Item
 }
 try {
+    $context = [Microsoft.SharePoint.Client.ClientContext]::new('https://example.invalid')
+    try {
+        $collectionJson = [ordered]@{
+            _ObjectType_ = 'SP.Taxonomy.TaxonomyFieldValueCollection'
+            _Child_Items_ = @(
+                [ordered]@{ _ObjectType_ = 'SP.Taxonomy.TaxonomyFieldValue'; Label = 'Alpha'; TermGuid = '11111111-1111-1111-1111-111111111111'; WssId = 3 }
+                [ordered]@{ _ObjectType_ = 'SP.Taxonomy.TaxonomyFieldValue'; Label = 'Beta'; TermGuid = '22222222-2222-2222-2222-222222222222'; WssId = 4 }
+            )
+        } | ConvertTo-Json -Depth 5 -Compress
+        $terms = $context.ParseObjectFromJsonString($collectionJson)
+        Assert-Equal $terms.AreItemsAvailable $true
+        $snapshotItem = @{ Tags = $terms; Empty = $null; Title = 'unchanged'; Multi = @('A', 'B') }
+        $snapshotItem | Add-Member NoteProperty FieldValues $snapshotItem
+        $first = & $script:realSnapshot -Item $snapshotItem
+        $context.Tag = 'CONTEXT-NOT-FIELD-DATA' + ('x' * 1MB)
+        $raw = [Management.Automation.PSSerializer]::Serialize($terms, 2)
+        if ($raw -notmatch 'CONTEXT-NOT-FIELD-DATA') {
+            throw 'Regression fixture did not reproduce traversal into the client context.'
+        }
+        $second = & $script:realSnapshot -Item $snapshotItem
+        Assert-Equal $first.Tags $second.Tags
+        if ($first.Tags -match 'CONTEXT-NOT-FIELD-DATA|ClientRuntimeContext|ObjectPath' -or
+            [Text.Encoding]::UTF8.GetByteCount($first.Tags) -ge 16KB) {
+            throw 'Collection snapshot captured client infrastructure or exceeded the regression size threshold.'
+        }
+        $savedTerms = [Management.Automation.PSSerializer]::Deserialize($first.Tags)
+        Assert-Equal $savedTerms.Representation 'CSOMFieldValueCollection'
+        Assert-Equal $savedTerms.Values.Count 2
+        Assert-Equal $savedTerms.Values[0].Label 'Alpha'
+        Assert-Equal $savedTerms.Values[0].TermGuid '11111111-1111-1111-1111-111111111111'
+        Assert-Equal $savedTerms.Values[0].WssId 3
+        Assert-Equal $savedTerms.Values[1].Label 'Beta'
+        foreach ($name in 'Empty', 'Title', 'Multi') {
+            Assert-Equal $first[$name] ([Management.Automation.PSSerializer]::Serialize($snapshotItem[$name], 20))
+        }
+        $lookup = [Microsoft.SharePoint.Client.FieldUserValue]::new()
+        $lookup.LookupId = 7
+        $lookupArray = [Microsoft.SharePoint.Client.FieldUserValue[]]@($lookup)
+        $detachedLookups = ConvertTo-SystemEditorSnapshotValue -Value $lookupArray
+        Assert-Equal ([Management.Automation.PSSerializer]::Serialize($detachedLookups, 20)) `
+            ([Management.Automation.PSSerializer]::Serialize($lookupArray, 20))
+        $emptyTerms = $context.ParseObjectFromJsonString('{"_ObjectType_":"SP.Taxonomy.TaxonomyFieldValueCollection","_Child_Items_":[]}')
+        $emptySnapshot = ConvertTo-SystemEditorSnapshotValue -Value $emptyTerms
+        Assert-Equal $emptySnapshot.Values.Count 0
+        $terms[1].Label = 'Changed'
+        $third = & $script:realSnapshot -Item $snapshotItem
+        Assert-Equal (@(Get-SystemEditorPreservationFailure -Before $first -After $third -Names @('Tags')) -join ',') 'Tags'
+        $snapshotItem.Tags = [Microsoft.SharePoint.Client.Taxonomy.TaxonomyFieldValueCollection]::new($context, '', $null)
+        Assert-Throws { & $script:realSnapshot -Item $snapshotItem } "field 'Tags'.*TaxonomyFieldValueCollection.*not loaded"
+        $snapshotItem.Tags = $context.Web
+        $pending = $context.HasPendingRequest
+        Assert-Throws { & $script:realSnapshot -Item $snapshotItem } "field 'Tags'.*Unsupported live client object"
+        Assert-Equal $context.HasPendingRequest $pending
+    } finally { $context.Dispose() }
+    Write-Host 'PASS real CSOM collection snapshots exclude growing contexts, retain ordered values and detect metadata changes offline'
+
     Reset-Fixture
     Assert-Throws { Invoke-SystemEditorApply @options -Apply } 'MaintenanceWindowConfirmed'
     Assert-Equal $script:connections 0
@@ -256,16 +312,23 @@ try {
     Reset-Fixture
     $savedLimit = $script:SPOutputPartLimit
     try {
-        $script:SPOutputPartLimit = 2KB
+        $script:live.Tags = $terms
+        $script:SPOutputPartLimit = 4KB
         $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed
         Assert-Equal $result.Verified 1
         $parts = @(Get-SPCsvSiblingParts (Join-Path $result.ReportFolder 'Before.csv'))
         if (-not $parts.Count) { throw 'Backup CSV did not split in the bounded-output test' }
         foreach ($file in Get-ChildItem -LiteralPath $result.ReportFolder -File) {
-            if ($file.Length -ge 2KB) { throw 'Output limit exceeded' }
+            if ($file.Length -ge 4KB) { throw 'Output limit exceeded' }
         }
         $backupRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Before.csv'))
         Assert-Equal $backupRows.Count $script:live.Count
+        $savedTags = @($backupRows | Where-Object Field -eq 'Tags')
+        Assert-Equal $savedTags.Count 1
+        $restoredTags = [Management.Automation.PSSerializer]::Deserialize($savedTags[0].ValueXml)
+        Assert-Equal $restoredTags.Values.Count 2
+        Assert-Equal $restoredTags.Values[0].Label 'Alpha'
+        Assert-Equal $restoredTags.Values[1].Label 'Changed'
     } finally { $script:SPOutputPartLimit = $savedLimit }
     Write-Host 'PASS bounded backup CSV parts round-trip without missing fields or oversize files'
 } finally {

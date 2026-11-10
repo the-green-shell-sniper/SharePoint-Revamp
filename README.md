@@ -74,6 +74,18 @@ field during the final recheck or post-write verification still stops the run.
 field is treated as empty. This fallback verifies the returned text representation, not
 an unavailable underlying typed value.
 
+Field snapshots detach loaded CSOM collections (including multi-value managed
+metadata) into ordered field values before serialization. Client contexts and
+object paths are not metadata and are never serialized through those collections.
+Unloaded collections and unsupported live client objects stop the run, with the
+field name/type in the error; they are not silently omitted. Ordinary scalar and
+lookup values retain their existing XML representation. Collection snapshots use
+an explicit `CSOMFieldValueCollection` representation inside the same `ValueXml`
+column; the read-only comparison helper uses this shared snapshot code too.
+After a snapshot-memory failure in RecheckOnly, start a fresh PowerShell process
+and recheck the same reviewed plan with the updated script. No new preview is
+needed. Review a completed recheck's skips before scheduling Apply.
+
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
 repository root:
