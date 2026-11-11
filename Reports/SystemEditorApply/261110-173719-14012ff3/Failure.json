@@ -1,0 +1,14 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/Accounting/Private",
+  "ListId": "2e230f17-6d36-45a7-992f-f7479450c093",
+  "ItemId": "3",
+  "Stage": "Failed (Verifying)",
+  "Message": "Preservation verification failed: File_x0020_Size, MetaInfo/ContentTypeId, MetaInfo/vti_pluggableparserversion, MetaInfo/vti_timelastwnssent, MetaInfo/vti_writevalidationtoken",
+  "ExceptionType": "System.Management.Automation.RuntimeException",
+  "ErrorId": "Preservation verification failed: File_x0020_Size, MetaInfo/ContentTypeId, MetaInfo/vti_pluggableparserversion, MetaInfo/vti_timelastwnssent, MetaInfo/vti_writevalidationtoken",
+  "Position": "At C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1:433 char:49\r\n+ … ds.Count) { throw \"Preservation verification failed: $($changedFields …\r\n+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "ScriptStack": "at Invoke-SystemEditorApply, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 433\r\nat <ScriptBlock>, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 476",
+  "Exception": "System.Management.Automation.RuntimeException: Preservation verification failed: File_x0020_Size, MetaInfo/ContentTypeId, MetaInfo/vti_pluggableparserversion, MetaInfo/vti_timelastwnssent, MetaInfo/vti_writevalidationtoken",
+  "RequestedFields": [],
+  "MissingTypedFields": []
+}

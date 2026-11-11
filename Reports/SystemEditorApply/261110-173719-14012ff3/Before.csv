@@ -1,0 +1,520 @@
+WebUrl,ListId,ItemId,ObjectVersion,Field,ValueXml
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_AdditionalStreamSize","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_CheckinComment","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ColorHex","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ColorTag","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_CommentCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_CommentFlags","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ComplianceFlags","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ComplianceTag","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ComplianceTagUserId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ComplianceTagWrittenTime","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_CopySource","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_Dirty","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_DisplayName","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_DraftOwnerId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_Emoji","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ExpirationDate","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ExtendedDescription","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ExtractedMetadata","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_FileArchiveStatus","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_FileArchiveTimeLastModified","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_HasCopyDestinations","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_HasEncryptedContent","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_HasUserDefinedProtection","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelAssignmentMethod","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelHash","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelMetaInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelOwnerEmail","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IpLabelPromotionCtagVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_IsCurrentVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <B>true</B>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_Level","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>1</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_LikeCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ListSchemaVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>25</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ModerationComments","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ModerationStatus","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>0</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_Parsable","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>1</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_RansomwareAnomalyMetaInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_RmsTemplateId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_SharedFileIndex","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ShortcutSiteId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ShortcutUniqueId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ShortcutUrl","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_ShortcutWebId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_SourceUrl","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_StreamScenarioIds","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_StubFile","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_UIVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>2560</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_UIVersionString","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>5.0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_VirusInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_VirusStatus","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","_VirusVendorID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>5964</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","A2ODMountCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","AccessPolicy","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","AppAuthor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","AppEditor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">1</I32>
+      <S N=""LookupValue"">ShareGate Migrate</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Author","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email"">efrandsen.admin@whallc.com</S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">36</I32>
+      <S N=""LookupValue"">Eric !. Frandsen</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","BSN","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">2714</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","CheckedOutTitle","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <Nil N=""LookupValue"" />
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","CheckedOutUserId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <Nil N=""LookupValue"" />
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","CheckoutUser","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ComplianceAssetId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ContentTypeId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.ContentTypeId</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>0x010100B817684F3E71D041BC170B86E4595BCD</ToString>
+    <Props>
+      <S N=""StringValue"">0x010100B817684F3E71D041BC170B86E4595BCD</S>
+      <S N=""TypeId"">{da0f1e90-296f-480e-bc27-cefe51eff241}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ContentVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>32</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Created","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <DT>2022-05-06T18:17:56Z</DT>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Created_x0020_By","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>i:0#.f|membership|!efrandsen@whallc.com</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Created_x0020_Date","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2022-05-06T18:17:56Z</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","DocConcurrencyNumber","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>42</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Editor","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldUserValue</T>
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldUserValue</ToString>
+    <Props>
+      <S N=""Email"">bposey.admin@whallc.com</S>
+      <S N=""TypeId"">{c956ab54-16bd-4c18-89d2-996f57282a6f}</S>
+      <I32 N=""LookupId"">6</I32>
+      <S N=""LookupValue"">Brittany !. Posey</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","File_x0020_Size","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>29527</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","File_x0020_Type","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>xlsx</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","FileDirRef","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>/sites/Accounting/Private/MonthlyQuarterly Checklists</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","FileLeafRef","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>Q1 - 2022 AccountingTasksQuarterly.xlsx</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","FileRef","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>/sites/Accounting/Private/MonthlyQuarterly Checklists/Q1 - 2022 AccountingTasksQuarterly.xlsx</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","FolderChildCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","FSObjType","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","GUID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <G>4dd8fa78-0e37-4486-87be-638845e5e988</G>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","HTML_x0020_File_x0020_Type","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>3</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","InstanceID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","IsCheckedoutToLocal","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ItemChildCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Last_x0020_Modified","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2022-06-01T23:31:29Z</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MediaGeneratedMetadata","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MediaServiceFastMetadata","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MediaServiceMetadata","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MediaServiceSearchProperties","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MediaUserMetadata","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","MetaInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>vti_cachedsupportspoundlinks:IX|1_x000D__x000A_vti_zipItStoreVersion:IW|17_x000D__x000A_ContentType:EW|_x000D__x000A__Status:SW|_x000D__x000A_vti_parserversion:SR|16.0.0.27619_x000D__x000A_vti_modifiedby:SW|i:0#.f|membership|!bposey@whallc.com_x000D__x000A_vti_foldersubfolderitemcount:IR|0_x000D__x000A_vti_title:SW|_x000D__x000A_vti_thumbnailexists:BW|false_x000D__x000A_vti_author:SW|i:0#.f|membership|!efrandsen@whallc.com_x000D__x000A_Keywords:SW|_x000D__x000A__ExtendedDescription:LW|_x000D__x000A__Category:SW|_x000D__x000A_vti_commentcount:IR|0_x000D__x000A_vti_folderitemcount:IR|0_x000D__x000A_vti_stickycachedpluggableparserprops:VX|Subject Keywords _Status _ExtendedDescription vti_title _Author _Category ContentType ContentTypeId _Comments_x000D__x000A_vti_previewexists:BW|false_x000D__x000A_vti_accesscontrolflags:IR|0_x000D__x000A_vti_priorversioncreationtime:TR|02 Sep 2026 19:48:02 -0000_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Author:SW|Eric !. Frandsen_x000D__x000A__Comments:SW|_x000D__x000A_vti_TimeOfLastCobaltVersionCreation:TW|02 Sep 2026 19:47:40 -0000_x000D__x000A_Subject:SW|_x000D__x000A_vti_timelastwnssent:TR|02 Sep 2026 19:48:00 -0000_x000D__x000A_vti_shortcuturl:SW|_x000D__x000A_vti_iplabelpromotionversion:IW|0_x000D__x000A_vti_pluggableparserversion:SR|16.0.0.27619_x000D__x000A_vti_previewinvalidtime:TX|02 Sep 2026 19:47:39 -0000_x000D__x000A_vti_writevalidationtoken:SW|VyeiMi+w3Xwrf5PdEWLFNhT3m1U=_x000D__x000A_ContentTypeId:SW|0x010100B817684F3E71D041BC170B86E4595BCD_x000D__x000A__Author:SW|Eric Frandsen_x000D__x000A_vti_lastbitscommit:SW|2;#95bc1bc1-6661-49ce-bfd2-31d61848afc4;#Q1 - 2022 AccountingTasksQuarterly.xlsx;#e3edaf02-d55a-424b-a23d-02b7a898e941;#""{22E43CBA-9A49-41DE-ACAF-C3C10F0144E5},33"";#""{22E43CBA-9A49-41DE-ACAF-C3C10F0144E5},34"";#0x024BE5D682C970827738D96DA8F368AD841E80A39A;#27636;#0_x000D__x000A_vti_supportsZipIt:BW|true_x000D__x000A_vti_decryptskipreason:IW|1_x000D__x000A_display_urn\:schemas-microsoft-com\:office\:office#Editor:SW|Brittany !. Posey_x000D__x000A_vti_areHybridOrphanHashedBlobsCleaned:BW|true_x000D__x000A_vti_streamSyncTokenSequenceNumber:IW|2432_x000D__x000A_</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Modified","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <DT>2022-06-01T23:31:29Z</DT>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Modified_x0020_By","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>i:0#.f|membership|!bposey@whallc.com</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","NoExecute","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Order","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Db>300</Db>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","OriginatorId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","owshiddenversion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>40</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ParentLeafName","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <Nil N=""LookupValue"" />
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ParentUniqueId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>{95BC1BC1-6661-49CE-BFD2-31D61848AFC4}</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ParentVersionString","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <Nil N=""LookupValue"" />
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ProgId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Restricted","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S></S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","ScopeId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>{EA5C3A4E-7F11-4437-8924-1A9025F9368E}</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SMLastModifiedDate","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>2026-09-29T21:32:15Z</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SMTotalFileCount","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">1</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SMTotalFileStreamSize","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>29527</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SMTotalSize","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">145389</I32>
+      <S N=""LookupValue""></S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SortBehavior","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <S N=""LookupValue"">0</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","StreamHash","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <S>0x02CD1AD351CCCD4B79D3BCBB15EBA4DE04E970CD05</S>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","SyncClientId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <Nil N=""LookupValue"" />
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","TemplateUrl","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","Title","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","TriggerFlowInfo","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","UniqueId","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <G>22e43cba-9a49-41de-acaf-c3c10f0144e5</G>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","VirusStatus","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Obj RefId=""0"">
+    <TN RefId=""0"">
+      <T>Microsoft.SharePoint.Client.FieldLookupValue</T>
+      <T>Microsoft.SharePoint.Client.ClientValueObject</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>Microsoft.SharePoint.Client.FieldLookupValue</ToString>
+    <Props>
+      <I32 N=""LookupId"">3</I32>
+      <S N=""LookupValue"">29527</S>
+      <S N=""TypeId"">{f1d34cc0-9b50-4a78-be78-d5facfcccfb7}</S>
+    </Props>
+  </Obj>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","WorkflowInstanceID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","WorkflowVersion","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <I32>1</I32>
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","xd_ProgID","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
+"https://whallc.sharepoint.com/sites/Accounting/Private","2e230f17-6d36-45a7-992f-f7479450c093","3","40","xd_Signature","<Objs Version=""1.1.0.1"" xmlns=""http://schemas.microsoft.com/powershell/2004/04"">
+  <Nil />
+</Objs>"
