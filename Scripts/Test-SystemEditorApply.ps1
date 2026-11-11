@@ -59,6 +59,9 @@ function Get-PnPUser($Identity, $Connection) {
     [pscustomobject]@{ Id = 7; LoginName = 'i:0#.f|membership|!bposey@whallc.com'; Email = '!bposey@whallc.com' }
 }
 function Get-PnPField($List, $Connection) {
+    if ($script:scenario -eq 'missing-next-list' -and [string]$List -ne $script:listId) {
+        throw 'List does not exist.'
+    }
     foreach ($name in $script:live.Keys) {
         [pscustomobject]@{
             InternalName = $name; ReadOnlyField = ($name -in 'UniqueId', 'owshiddenversion', '_UIVersionString', 'FileRef')
@@ -68,9 +71,14 @@ function Get-PnPField($List, $Connection) {
 }
 function Get-PnPListItem($List, $Id, $Connection) {
     $script:reads++
-    Assert-Equal $Id 1
+    if ($script:scenario -eq 'first-item-read-error') {
+        if ($Id -eq 1) { throw 'Simulated unreadable first item' }
+        Assert-Equal $Id 2
+    } else { Assert-Equal $Id 1 }
     Assert-Equal ([string]$List) $script:listId
     if ($script:scenario -eq 'read-error') { throw 'Simulated access denied' }
+    if ($script:scenario -eq 'recheck-error' -and $script:reads -eq 2) { throw 'Simulated recheck failure' }
+    if ($script:scenario -eq 'after-read-error' -and $script:reads -eq 3) { throw 'Simulated post-write read failure' }
     if ($script:scenario -eq 'race' -and $script:reads -eq 2) { $script:live.Title = 'Concurrent edit' }
     $values = $script:live.Clone()
     $values | Add-Member NoteProperty FieldValues $values
@@ -272,6 +280,114 @@ try {
         if ($scenario -eq 'already') { Assert-Equal $result.AlreadySystem 1 } else { Assert-Equal $result.Skipped 1 }
     }
     Write-Host 'PASS changed/ineligible/replaced/checked-out/concurrent/already-correct items are not written'
+
+    Reset-Fixture 'missing-next-list'
+    $script:live.CheckoutUser = [pscustomobject]@{ LookupId = 7 }
+    $nextRow = $script:row.PSObject.Copy()
+    $nextRow.ListId = 'ffffffff-ffff-ffff-ffff-ffffffffffff'
+    @($script:row, $nextRow) | Export-Csv -LiteralPath (Join-Path $preview 'Plan.csv') -NoTypeInformation
+    @(
+        [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $script:listId; Matches = '1'; Status = 'Scanned' }
+        [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $nextRow.ListId; Matches = '1'; Status = 'Scanned' }
+    ) | Export-Csv -LiteralPath (Join-Path $preview 'Coverage.csv') -NoTypeInformation
+    $previewSummary = Get-Content -LiteralPath (Join-Path $preview 'Summary.json') -Raw | ConvertFrom-Json
+    $previewSummary.Matches = 2
+    Write-SPBoundedJson -InputObject $previewSummary -Path (Join-Path $preview 'Summary.json')
+    Assert-Throws { Invoke-SystemEditorApply @options } 'Stopped: Failed \(Reading list fields\).*List does not exist'
+    Assert-Equal $script:writes 0
+    Assert-Equal $script:reads 1
+    $run = @(Get-ChildItem -LiteralPath $output -Directory | Sort-Object CreationTime -Descending)[0].FullName
+    $failure = Get-Content -LiteralPath (Join-Path $run 'Failure.json') -Raw | ConvertFrom-Json
+    Assert-Equal $failure.WebUrl $script:row.WebUrl
+    Assert-Equal $failure.ListId $nextRow.ListId
+    Assert-Equal $failure.ItemId ''
+    Assert-Equal $failure.Stage 'Failed (Reading list fields)'
+    Assert-Equal $failure.MissingTypedFields.Count 0
+    $journalRows = @(Import-Csv -LiteralPath (Join-Path $run 'Journal.csv'))
+    Assert-Equal $journalRows[0].Status 'Skipped: checked out'
+    Assert-Equal $journalRows[-1].ListId $nextRow.ListId
+    Assert-Equal $journalRows[-1].ItemId ''
+    Write-Host 'PASS missing next list stops with current list identity/stage, not the previous skipped item'
+
+    $script:live.Remove('CheckoutUser')
+    $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed -ContinueOnReadError
+    Assert-Equal $result.Verified 1
+    Assert-Equal $result.Skipped 1
+    Assert-Equal $result.ReadErrors 1
+    Assert-Equal $result.Errors 1
+    Assert-Equal $result.Status 'CompletedWithSkips'
+    $journalRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Journal.csv'))
+    Assert-Equal $journalRows[-1].Status 'Skipped: list read failed'
+    Assert-Equal $journalRows[-1].ListId $nextRow.ListId
+    Assert-Equal $journalRows[-1].ItemId $nextRow.ItemId
+    Assert-Equal $script:writes 1
+    Write-Host 'PASS best-effort Apply updates readable candidates and records every unreadable-list candidate'
+
+    $script:live.Editor = [pscustomobject]@{ LookupId = 7 }
+    $script:writes = 0
+    $nextRow.ListId = '00000001-0000-0000-0000-000000000000'
+    @($nextRow, $script:row) | Export-Csv -LiteralPath (Join-Path $preview 'Plan.csv') -NoTypeInformation
+    @(
+        [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $nextRow.ListId; Matches = '1'; Status = 'Scanned' }
+        [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $script:listId; Matches = '1'; Status = 'Scanned' }
+    ) | Export-Csv -LiteralPath (Join-Path $preview 'Coverage.csv') -NoTypeInformation
+    $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed -ContinueOnReadError
+    Assert-Equal $result.Verified 1
+    Assert-Equal $result.Skipped 1
+    Assert-Equal $result.ReadErrors 1
+    Assert-Equal $script:writes 1
+    $journalRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Journal.csv'))
+    Assert-Equal $journalRows[0].Status 'Skipped: list read failed'
+    Assert-Equal $journalRows[-1].Status 'Updated and verified'
+    Write-Host 'PASS unreadable first list does not block the following readable list'
+
+    foreach ($scenario in 'read-error', 'recheck-error') {
+        Reset-Fixture $scenario
+        $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed -ContinueOnReadError
+        Assert-Equal $result.Verified 0
+        Assert-Equal $result.Skipped 1
+        Assert-Equal $result.ReadErrors 1
+        Assert-Equal $result.Status 'CompletedWithSkips'
+        Assert-Equal $script:writes 0
+    }
+    Reset-Fixture 'read-error'
+    $result = Invoke-SystemEditorApply @options -ContinueOnReadError
+    Assert-Equal $result.ReadErrors 1
+    Assert-Equal $result.Eligible 0
+    Assert-Equal $script:writes 0
+    Write-Host 'PASS best-effort initial/recheck failures are journaled without writes in Apply and RecheckOnly'
+
+    Reset-Fixture 'first-item-read-error'
+    $nextItem = $script:row.PSObject.Copy()
+    $nextItem.ItemId = '2'
+    @($script:row, $nextItem) | Export-Csv -LiteralPath (Join-Path $preview 'Plan.csv') -NoTypeInformation
+    [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $script:listId; Matches = '2'; Status = 'Scanned' } |
+        Export-Csv -LiteralPath (Join-Path $preview 'Coverage.csv') -NoTypeInformation
+    $previewSummary = Get-Content -LiteralPath (Join-Path $preview 'Summary.json') -Raw | ConvertFrom-Json
+    $previewSummary.Matches = 2
+    Write-SPBoundedJson -InputObject $previewSummary -Path (Join-Path $preview 'Summary.json')
+    $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed -ContinueOnReadError
+    Assert-Equal $result.Verified 1
+    Assert-Equal $result.Skipped 1
+    Assert-Equal $result.ReadErrors 1
+    Assert-Equal $script:writes 1
+    $journalRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Journal.csv'))
+    Assert-Equal $journalRows[0].ItemId '1'
+    Assert-Equal $journalRows[0].Status 'Skipped: item read failed'
+    Assert-Equal $journalRows[-1].ItemId '2'
+    Assert-Equal $journalRows[-1].Status 'Updated and verified'
+    Write-Host 'PASS unreadable first item does not block updating and verifying the following candidate'
+
+    foreach ($scenario in 'write-error', 'bad-title', 'after-read-error') {
+        Reset-Fixture $scenario
+        Assert-Throws { Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed -ContinueOnReadError } '^Stopped'
+        Assert-Equal $script:writes 1
+        $run = @(Get-ChildItem -LiteralPath $output -Directory | Sort-Object CreationTime -Descending)[0].FullName
+        $summary = Get-Content -LiteralPath (Join-Path $run 'Summary.json') -Raw | ConvertFrom-Json
+        Assert-Equal $summary.Status 'Stopped'
+        Assert-Equal $summary.ReadErrors 0
+    }
+    Write-Host 'PASS best-effort mode still stops after ambiguous writes and post-write read/preservation failures'
 
     foreach ($scenario in 'bad-title', 'bad-date', 'bad-created', 'bad-author', 'bad-version', 'bad-editor',
         'read-error', 'write-error', 'missing-system') {

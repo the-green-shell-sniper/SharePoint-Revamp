@@ -17,6 +17,8 @@
     No content upload, permissions changes, new version or old-version rewrites.
     Stops on the first read/write/verification error. Never retries or rolls back
     an ambiguous write. Inspect the journal and live state before rerunning.
+    With ContinueOnReadError, list/item reads before writing are journaled as
+    skips and processing continues. Write/post-write/report errors still stop.
     Reports use bounded CSV parts and a small Summary.json. Keep them private.
 .EXAMPLE
     .\Invoke-SystemEditorRemediation.ps1 -PreviewFolder .\Reports\SystemEditorPlans\<run>
@@ -29,6 +31,7 @@ param(
     [string]$ChecklistPath = (Join-Path $PSScriptRoot '..\ReferenceFiles\NewSiteChecklist.csv'),
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\SystemEditorApply'),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
+    [switch]$ContinueOnReadError,
     [switch]$Apply,
     [switch]$MaintenanceWindowConfirmed
 )
@@ -224,7 +227,8 @@ function Invoke-SystemEditorApply {
     [CmdletBinding()]
     param(
         [string]$PreviewFolder, [string]$ChecklistPath, [string]$OutputFolder,
-        [string]$ClientId, [switch]$Apply, [switch]$MaintenanceWindowConfirmed
+        [string]$ClientId, [switch]$Apply, [switch]$MaintenanceWindowConfirmed,
+        [switch]$ContinueOnReadError
     )
     $ErrorActionPreference = 'Stop'
     if ($Apply -and -not $MaintenanceWindowConfirmed) {
@@ -245,7 +249,7 @@ function Invoke-SystemEditorApply {
         Mode = $(if ($Apply) { 'Apply' } else { 'RecheckOnly' }); Status = 'Running'
         PreviewFolder = $PreviewFolder
         Candidates = $approved.Rows.Count; Verified = 0; Eligible = 0; Skipped = 0; AlreadySystem = 0
-        Errors = 0; ReportFolder = $run
+        Errors = 0; ReadErrors = 0; ContinueOnReadError = $ContinueOnReadError.IsPresent; ReportFolder = $run
     }
     Write-Host "$($summary.Mode): $($summary.Candidates) candidates."
     Write-Host "Reports: $run"
@@ -275,22 +279,49 @@ function Invoke-SystemEditorApply {
         }
         foreach ($group in $approved.Rows | Group-Object WebUrl) {
             $url = $group.Name.TrimEnd('/')
-            $active = [pscustomobject]@{ WebUrl = $url; ListId = ''; ItemId = ''; Status = ''; Detail = '' }
+            $active = [pscustomobject]@{ WebUrl = $url; ListId = ''; ItemId = ''; Status = 'Connecting to candidate web'; Detail = '' }
+            $item = $null
+            $readFields = @()
+            $preservationFields = @()
             $startVerified = $summary.Verified
             $startEligible = $summary.Eligible
             $startSkipped = $summary.Skipped + $summary.AlreadySystem
             $connection = if ($connections.ContainsKey($url)) { $connections[$url] } else {
                 Connect-PnPOnline -Url $url -ClientId $ClientId -Interactive -ReturnConnection -ErrorAction Stop
             }
+            $active.Status = 'Checking candidate web'
             $web = Get-PnPWeb -Connection $connection -Includes Url -ErrorAction Stop
             if ((ConvertTo-SystemEditorWebUrl $web.Url) -ine $url) { throw 'Connected candidate web differs from plan.' }
+            $active.Status = 'Resolving System Account'
             $system = Get-PnPUser -Identity 'SHAREPOINT\system' -Connection $connection -ErrorAction Stop
             if (-not $system -or $system.LoginName -ine 'SHAREPOINT\system' -or $system.Id -le 0) {
                 throw 'Native System Account unavailable. No substitute permitted.'
             }
             foreach ($listGroup in $group.Group | Group-Object ListId) {
                 $listId = [guid]$listGroup.Name
-                $fields = @(Get-PnPField -List $listId -Connection $connection -ErrorAction Stop)
+                $active = [pscustomobject]@{
+                    WebUrl = $url; ListId = [string]$listId; ItemId = ''
+                    Status = 'Reading list fields'; Detail = ''
+                }
+                $item = $null
+                $readFields = @()
+                $preservationFields = @()
+                try {
+                    $fields = @(Get-PnPField -List $listId -Connection $connection -ErrorAction Stop)
+                } catch {
+                    if (-not $ContinueOnReadError) { throw }
+                    $summary.Errors++
+                    $summary.ReadErrors++
+                    $detail = "Reading list fields: $($_.Exception.Message) [$($_.FullyQualifiedErrorId)]"
+                    foreach ($candidate in $listGroup.Group) {
+                        $summary.Skipped++
+                        [pscustomobject]@{
+                            WebUrl = $url; ListId = [string]$listId; ItemId = $candidate.ItemId
+                            Status = 'Skipped: list read failed'; Detail = $detail
+                        } | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
+                    }
+                    continue
+                }
                 $verifyNames = @(@($fields | Where-Object {
                     -not $_.ReadOnlyField -and $_.TypeAsString -notin 'Computed', 'Counter' -and
                     $_.InternalName -notin 'Editor', 'owshiddenversion', 'AppEditor',
@@ -303,22 +334,34 @@ function Invoke-SystemEditorApply {
                 foreach ($row in $listGroup.Group) {
                     $active = [pscustomobject]@{ WebUrl = $url; ListId = [string]$listId; ItemId = $row.ItemId; Status = 'Reading'; Detail = '' }
                     Write-Progress -Id 2 -Activity "$($summary.Mode): $url" -Status "Item $($row.ItemId) - $($summary.Verified) verified; $($summary.Skipped) skipped"
-                    $item = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
-                    foreach ($key in 'UniqueId', 'Modified', 'Created', 'Author', 'Editor', '_UIVersionString') {
-                        if (-not $item[$key]) { throw "Required field missing: $key" }
-                    }
-                    $active.Status = 'Resolving current editor'
-                    $editor = Get-PnPUser -Identity $item['Editor'].LookupId -Connection $connection -ErrorAction Stop
-                    $status = Get-SystemEditorCandidateStatus -Item $item -Row $row -Editor $editor -SystemId $system.Id
-                    if ($status -ne 'Eligible') {
-                        if ($status -eq 'Already System Account') { $summary.AlreadySystem++ } else { $summary.Skipped++ }
-                        $active.Status = $status
+                    try {
+                        $item = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
+                        foreach ($key in 'UniqueId', 'Modified', 'Created', 'Author', 'Editor', '_UIVersionString') {
+                            if (-not $item[$key]) { throw "Required field missing: $key" }
+                        }
+                        $active.Status = 'Resolving current editor'
+                        $editor = Get-PnPUser -Identity $item['Editor'].LookupId -Connection $connection -ErrorAction Stop
+                        $status = Get-SystemEditorCandidateStatus -Item $item -Row $row -Editor $editor -SystemId $system.Id
+                        if ($status -ne 'Eligible') {
+                            if ($status -eq 'Already System Account') { $summary.AlreadySystem++ } else { $summary.Skipped++ }
+                            $active.Status = $status
+                            $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
+                            continue
+                        }
+                        $preservationFields = @($verifyNames | Where-Object { $_ -in $fields.InternalName })
+                        $active.Status = 'Reading preservation fields'
+                        $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection -AllowUnavailable
+                    } catch {
+                        if (-not $ContinueOnReadError -or $active.Status -notin
+                            'Reading', 'Resolving current editor', 'Reading preservation fields') { throw }
+                        $summary.Errors++
+                        $summary.ReadErrors++
+                        $summary.Skipped++
+                        $active.Detail = "$($active.Status): $($_.Exception.Message) [$($_.FullyQualifiedErrorId)]"
+                        $active.Status = 'Skipped: item read failed'
                         $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
                         continue
                     }
-                    $preservationFields = @($verifyNames | Where-Object { $_ -in $fields.InternalName })
-                    $active.Status = 'Reading preservation fields'
-                    $before = Get-SystemEditorFieldSnapshot -Item $item -Names $preservationFields -Connection $connection -AllowUnavailable
                     $unavailable = @($preservationFields | Where-Object { -not $before.ContainsKey($_) })
                     if ($unavailable.Count) {
                         $summary.Skipped++
@@ -342,8 +385,19 @@ function Invoke-SystemEditorApply {
                     } | Export-Csv -LiteralPath $backup -Append -NoTypeInformation
                     # Re-read after backup I/O; never write through the re-read object.
                     $active.Status = 'Rechecking before write'
-                    $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
-                    $latestState = Get-SystemEditorFieldSnapshot -Item $latest -Names $preservationFields -Connection $connection
+                    try {
+                        $latest = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
+                        $latestState = Get-SystemEditorFieldSnapshot -Item $latest -Names $preservationFields -Connection $connection
+                    } catch {
+                        if (-not $ContinueOnReadError) { throw }
+                        $summary.Errors++
+                        $summary.ReadErrors++
+                        $summary.Skipped++
+                        $active.Detail = "$($active.Status): $($_.Exception.Message) [$($_.FullyQualifiedErrorId)]"
+                        $active.Status = 'Skipped: pre-write recheck failed'
+                        $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
+                        continue
+                    }
                     $different = @($before.Keys | Where-Object { $before[$_] -cne $latestState[$_] })
                     if ($item.ObjectVersion -cne $latest.ObjectVersion -or $before.Count -ne $latestState.Count -or $different.Count) {
                         $summary.Skipped++
@@ -412,7 +466,7 @@ function Invoke-SystemEditorApply {
         Write-Progress -Id 2 -Activity 'System Editor remediation' -Completed
         if ($summary.Status -eq 'Running') { $summary.Status = 'Interrupted' }
         Write-SPBoundedJson -InputObject $summary -Path (Join-Path $run 'Summary.json') -Depth 5
-        Write-Host "$($summary.Status): $($summary.Verified) verified; $($summary.Eligible) eligible (no write); $($summary.Skipped) skipped; $($summary.AlreadySystem) already System."
+        Write-Host "$($summary.Status): $($summary.Verified) verified; $($summary.Eligible) eligible (no write); $($summary.Skipped) skipped; $($summary.AlreadySystem) already System; $($summary.ReadErrors) read errors."
     }
     return [pscustomobject]$summary
 }
@@ -420,5 +474,6 @@ function Invoke-SystemEditorApply {
 if ($MyInvocation.InvocationName -ne '.') {
     if ([string]::IsNullOrWhiteSpace($PreviewFolder)) { throw '-PreviewFolder is required.' }
     Invoke-SystemEditorApply -PreviewFolder $PreviewFolder -ChecklistPath $ChecklistPath -OutputFolder $OutputFolder `
-        -ClientId $ClientId -Apply:$Apply -MaintenanceWindowConfirmed:$MaintenanceWindowConfirmed | Out-Null
+        -ClientId $ClientId -Apply:$Apply -MaintenanceWindowConfirmed:$MaintenanceWindowConfirmed `
+        -ContinueOnReadError:$ContinueOnReadError | Out-Null
 }

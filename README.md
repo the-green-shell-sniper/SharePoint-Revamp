@@ -68,8 +68,9 @@ is explicitly marked in the backup and compared on all three reads. A field
 absent from both responses during the initial preservation read leaves that item
 untouched, records `Skipped: preservation fields unavailable` and the field names
 in `Journal.csv`, and continues with the remaining candidates. This applies to
-both RecheckOnly and Apply. Access/read exceptions still stop the run; losing a
-field during the final recheck or post-write verification still stops the run.
+both RecheckOnly and Apply. By default access/read exceptions or losing a
+field during the final recheck stop the run; `-ContinueOnReadError` skips those
+pre-write failures. Post-write verification failures always stop the run.
 `CompletedWithSkips` does not mean all candidates were remediated. No missing
 field is treated as empty. This fallback verifies the returned text representation, not
 an unavailable underlying typed value.
@@ -77,14 +78,37 @@ an unavailable underlying typed value.
 Field snapshots detach loaded CSOM collections (including multi-value managed
 metadata) into ordered field values before serialization. Client contexts and
 object paths are not metadata and are never serialized through those collections.
-Unloaded collections and unsupported live client objects stop the run, with the
-field name/type in the error; they are not silently omitted. Ordinary scalar and
+Unloaded collections and unsupported live client objects produce an error with
+the field name/type, stopping by default or skipping the item before writing in
+best-effort mode; they are not silently omitted. Ordinary scalar and
 lookup values retain their existing XML representation. Collection snapshots use
 an explicit `CSOMFieldValueCollection` representation inside the same `ValueXml`
 column; the read-only comparison helper uses this shared snapshot code too.
 After a snapshot-memory failure in RecheckOnly, start a fresh PowerShell process
 and recheck the same reviewed plan with the updated script. No new preview is
 needed. Review a completed recheck's skips before scheduling Apply.
+
+List-field read failures report the current web/list, `Reading list fields`, and
+an empty item ID; previous item/field diagnostics are cleared at list boundaries.
+By default a "List does not exist" response stops processing. It does not establish
+whether the reviewed list was deleted or is inaccessible to the signed-in
+account, and is not automatically converted into a skip. Check that exact list
+under the reported web before changing the reviewed scope.
+
+For a best-effort pass, add `-ContinueOnReadError` to either RecheckOnly or Apply.
+List-field read failures leave every candidate in that list untouched and journal
+each item as `Skipped: list read failed`. Initial item/editor/snapshot read
+failures and final pre-write recheck failures similarly leave that item untouched,
+record the failing stage/error in `Journal.csv`, and continue. Missing fields and
+changed items retain their existing skip behavior. `Summary.json` records
+`ContinueOnReadError`, `ReadErrors` (failed read operations, not candidate count),
+and total `Errors`; `CompletedWithSkips` is explicitly a partial result, not full
+remediation. Review skipped journal rows for case-by-case follow-up; rerunning
+the same plan recognizes already-System items and retries still-qualifying skips.
+Plan/scope validation, web authentication/native System Account failures,
+report/backup failures, writes, and all post-write verification failures still
+stop the run. The switch never permits an update with unreadable metadata,
+retries an uncertain write, or rolls back changes.
 
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
@@ -129,7 +153,8 @@ The apply script:
   versions are rewritten, and no new version is requested. SharePoint-managed
   internal counters and computed representations are not frozen or compared as
   editable metadata. Metadata verification does not independently hash content.
-- Stops on the first read, write, or preservation-verification failure. No blind
+- By default stops on the first read, write, or preservation-verification failure.
+  `-ContinueOnReadError` permits only the pre-write read skips described above. No blind
   retries or automatic rollback. A response failure may mean the last write did
   succeed: inspect live state and `Journal.csv` before rerunning. Earlier verified
   writes remain applied. On rerun they are recognized as already System Account.
