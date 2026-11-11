@@ -74,6 +74,8 @@ function Get-PnPListItem($List, $Id, $Connection) {
     if ($script:scenario -eq 'first-item-read-error') {
         if ($Id -eq 1) { throw 'Simulated unreadable first item' }
         Assert-Equal $Id 2
+    } elseif ($script:scenario -eq 'first-preservation-error') {
+        if ($Id -notin 1, 2) { throw 'Unexpected item ID' }
     } else { Assert-Equal $Id 1 }
     Assert-Equal ([string]$List) $script:listId
     if ($script:scenario -eq 'read-error') { throw 'Simulated access denied' }
@@ -81,6 +83,9 @@ function Get-PnPListItem($List, $Id, $Connection) {
     if ($script:scenario -eq 'after-read-error' -and $script:reads -eq 3) { throw 'Simulated post-write read failure' }
     if ($script:scenario -eq 'race' -and $script:reads -eq 2) { $script:live.Title = 'Concurrent edit' }
     $values = $script:live.Clone()
+    if ($script:scenario -eq 'first-preservation-error' -and $Id -eq 2) {
+        $values.Editor = [pscustomobject]@{ LookupId = $(if ($script:writes -ge 2) { 99 } else { 7 }) }
+    }
     $values | Add-Member NoteProperty FieldValues $values
     $values | Add-Member NoteProperty ObjectVersion '1'
     return $values
@@ -104,6 +109,8 @@ function Set-SystemEditorItemValues($Item, $SystemId, $Modified) {
         'bad-author' { $script:live.Author = [pscustomobject]@{ LookupId = 11 } }
         'bad-version' { $script:live._UIVersionString = '2.0' }
         'bad-editor' { $script:live.Editor = [pscustomobject]@{ LookupId = 7 } }
+        'bad-identity' { $script:live.UniqueId = [guid]::NewGuid() }
+        'first-preservation-error' { if ($script:writes -eq 1) { $script:live.Title = 'Unexpected' } }
     }
 }
 
@@ -388,6 +395,63 @@ try {
         Assert-Equal $summary.ReadErrors 0
     }
     Write-Host 'PASS best-effort mode still stops after ambiguous writes and post-write read/preservation failures'
+
+    foreach ($scenario in 'bad-title', 'bad-date', 'bad-created', 'bad-author', 'bad-version') {
+        Reset-Fixture $scenario
+        $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed `
+            -ContinueOnReadError -ContinueOnPreservationDifference
+        Assert-Equal $result.Status 'CompletedWithExceptions'
+        Assert-Equal $result.Verified 0
+        Assert-Equal $result.PreservationExceptions 1
+        Assert-Equal $result.Errors 1
+        Assert-Equal $script:writes 1
+        $journalRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Journal.csv'))
+        Assert-Equal $journalRows[-1].Status 'Updated System; preservation exception'
+        $failedRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'FailedAfter.csv'))
+        Assert-Equal $failedRows.Count $script:live.Count
+        $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed `
+            -ContinueOnReadError -ContinueOnPreservationDifference
+        Assert-Equal $result.AlreadySystem 1
+        Assert-Equal $result.Verified 0
+        Assert-Equal $script:writes 1
+    }
+    foreach ($scenario in 'bad-editor', 'bad-identity', 'write-error', 'after-read-error') {
+        Reset-Fixture $scenario
+        Assert-Throws {
+            Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed `
+                -ContinueOnReadError -ContinueOnPreservationDifference
+        } '^Stopped'
+        Assert-Equal $script:writes 1
+    }
+    Write-Host 'PASS preservation differences are persistent unverified exceptions; reruns do not rewrite them; identity/editor/write/read failures still stop'
+
+    Reset-Fixture 'first-preservation-error'
+    $nextItem = $script:row.PSObject.Copy()
+    $nextItem.ItemId = '2'
+    @($script:row, $nextItem) | Export-Csv -LiteralPath (Join-Path $preview 'Plan.csv') -NoTypeInformation
+    [pscustomobject]@{ WebUrl = $script:row.WebUrl; ListId = $script:listId; Matches = '2'; Status = 'Scanned' } |
+        Export-Csv -LiteralPath (Join-Path $preview 'Coverage.csv') -NoTypeInformation
+    $previewSummary = Get-Content -LiteralPath (Join-Path $preview 'Summary.json') -Raw | ConvertFrom-Json
+    $previewSummary.Matches = 2
+    Write-SPBoundedJson -InputObject $previewSummary -Path (Join-Path $preview 'Summary.json')
+    $savedLimit = $script:SPOutputPartLimit
+    try {
+        $script:SPOutputPartLimit = 4KB
+        $result = Invoke-SystemEditorApply @options -Apply -MaintenanceWindowConfirmed `
+            -ContinueOnReadError -ContinueOnPreservationDifference
+        Assert-Equal $result.Verified 1
+        Assert-Equal $result.PreservationExceptions 1
+        Assert-Equal $result.Status 'CompletedWithExceptions'
+        Assert-Equal $script:writes 2
+        $journalRows = @(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'Journal.csv'))
+        Assert-Equal $journalRows[1].Status 'Updated System; preservation exception'
+        Assert-Equal $journalRows[-1].Status 'Updated and verified'
+        foreach ($file in Get-ChildItem -LiteralPath $result.ReportFolder -File) {
+            if ($file.Length -ge 4KB) { throw 'Exception output limit exceeded' }
+        }
+        Assert-Equal (@(Import-Csv -LiteralPath (Join-Path $result.ReportFolder 'FailedAfter.csv')).Count) $script:live.Count
+    } finally { $script:SPOutputPartLimit = $savedLimit }
+    Write-Host 'PASS later candidate verified after preservation exception; bounded exception snapshots round-trip'
 
     foreach ($scenario in 'bad-title', 'bad-date', 'bad-created', 'bad-author', 'bad-version', 'bad-editor',
         'read-error', 'write-error', 'missing-system') {

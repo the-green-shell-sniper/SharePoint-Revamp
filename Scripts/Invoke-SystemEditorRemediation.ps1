@@ -19,6 +19,8 @@
     an ambiguous write. Inspect the journal and live state before rerunning.
     With ContinueOnReadError, list/item reads before writing are journaled as
     skips and processing continues. Write/post-write/report errors still stop.
+    ContinueOnPreservationDifference also permits confirmed System updates with
+    readable preservation differences, recorded as exceptions, never verified.
     Reports use bounded CSV parts and a small Summary.json. Keep them private.
 .EXAMPLE
     .\Invoke-SystemEditorRemediation.ps1 -PreviewFolder .\Reports\SystemEditorPlans\<run>
@@ -32,6 +34,7 @@ param(
     [string]$OutputFolder = (Join-Path $PSScriptRoot '..\Reports\SystemEditorApply'),
     [string]$ClientId = '2e20d82f-56ba-418e-b465-9718493f0df8',
     [switch]$ContinueOnReadError,
+    [switch]$ContinueOnPreservationDifference,
     [switch]$Apply,
     [switch]$MaintenanceWindowConfirmed
 )
@@ -228,7 +231,7 @@ function Invoke-SystemEditorApply {
     param(
         [string]$PreviewFolder, [string]$ChecklistPath, [string]$OutputFolder,
         [string]$ClientId, [switch]$Apply, [switch]$MaintenanceWindowConfirmed,
-        [switch]$ContinueOnReadError
+        [switch]$ContinueOnReadError, [switch]$ContinueOnPreservationDifference
     )
     $ErrorActionPreference = 'Stop'
     if ($Apply -and -not $MaintenanceWindowConfirmed) {
@@ -249,7 +252,9 @@ function Invoke-SystemEditorApply {
         Mode = $(if ($Apply) { 'Apply' } else { 'RecheckOnly' }); Status = 'Running'
         PreviewFolder = $PreviewFolder
         Candidates = $approved.Rows.Count; Verified = 0; Eligible = 0; Skipped = 0; AlreadySystem = 0
-        Errors = 0; ReadErrors = 0; ContinueOnReadError = $ContinueOnReadError.IsPresent; ReportFolder = $run
+        Errors = 0; ReadErrors = 0; PreservationExceptions = 0
+        ContinueOnReadError = $ContinueOnReadError.IsPresent
+        ContinueOnPreservationDifference = $ContinueOnPreservationDifference.IsPresent; ReportFolder = $run
     }
     Write-Host "$($summary.Mode): $($summary.Candidates) candidates."
     Write-Host "Reports: $run"
@@ -285,6 +290,7 @@ function Invoke-SystemEditorApply {
             $preservationFields = @()
             $startVerified = $summary.Verified
             $startEligible = $summary.Eligible
+            $startExceptions = $summary.PreservationExceptions
             $startSkipped = $summary.Skipped + $summary.AlreadySystem
             $connection = if ($connections.ContainsKey($url)) { $connections[$url] } else {
                 Connect-PnPOnline -Url $url -ClientId $ClientId -Interactive -ReturnConnection -ErrorAction Stop
@@ -410,6 +416,9 @@ function Invoke-SystemEditorApply {
                     Set-SystemEditorItemValues -Item $item -SystemId $system.Id -Modified (ConvertTo-SystemEditorUtc $item['Modified'])
                     $active.Status = 'Verifying'
                     $after = Get-PnPListItem -List $listId -Id ([int]$row.ItemId) -Connection $connection -ErrorAction Stop
+                    if (-not $after['UniqueId'] -or [guid]$after['UniqueId'] -ne [guid]$row.UniqueId) {
+                        throw 'Post-write item identity verification failed.'
+                    }
                     if ($after['Editor'].LookupId -ne $system.Id) { throw 'Editor verification failed.' }
                     $afterState = Get-SystemEditorFieldSnapshot -Item $after -Names $preservationFields -Connection $connection
                     $changedFields = @(Get-SystemEditorPreservationFailure -Before $before -After $afterState `
@@ -430,7 +439,17 @@ function Invoke-SystemEditorApply {
                             }
                         } | Export-Csv -LiteralPath (Join-Path $run 'FailedAfter.csv') -Append -NoTypeInformation
                     }
-                    if ($changedFields.Count) { throw "Preservation verification failed: $($changedFields -join ', ')" }
+                    if ($changedFields.Count) {
+                        if (-not $ContinueOnPreservationDifference) {
+                            throw "Preservation verification failed: $($changedFields -join ', ')"
+                        }
+                        $summary.Errors++
+                        $summary.PreservationExceptions++
+                        $active.Status = 'Updated System; preservation exception'
+                        $active.Detail = "Not verified: $($changedFields -join ', '). See Before.csv, Changes.csv and FailedAfter.csv."
+                        $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
+                        continue
+                    }
                     $summary.Verified++
                     $active.Status = 'Updated and verified'
                     $active | Export-Csv -LiteralPath $journal -Append -NoTypeInformation
@@ -438,9 +457,10 @@ function Invoke-SystemEditorApply {
             }
             $count = if ($Apply) { $summary.Verified - $startVerified } else { $summary.Eligible - $startEligible }
             $skipped = $summary.Skipped + $summary.AlreadySystem - $startSkipped
-            Write-Host "$(([uri]$url).AbsolutePath): $count $(if ($Apply) { 'verified' } else { 'eligible' }); $skipped skipped/already System."
+            $exceptions = $summary.PreservationExceptions - $startExceptions
+            Write-Host "$(([uri]$url).AbsolutePath): $count $(if ($Apply) { 'verified' } else { 'eligible' }); $skipped skipped/already System; $exceptions preservation exceptions."
         }
-        $summary.Status = if ($summary.Skipped) { 'CompletedWithSkips' } else { 'Completed' }
+        $summary.Status = if ($summary.PreservationExceptions) { 'CompletedWithExceptions' } elseif ($summary.Skipped) { 'CompletedWithSkips' } else { 'Completed' }
     } catch {
         $failure = $_
         $summary.Status = 'Stopped'
@@ -466,7 +486,7 @@ function Invoke-SystemEditorApply {
         Write-Progress -Id 2 -Activity 'System Editor remediation' -Completed
         if ($summary.Status -eq 'Running') { $summary.Status = 'Interrupted' }
         Write-SPBoundedJson -InputObject $summary -Path (Join-Path $run 'Summary.json') -Depth 5
-        Write-Host "$($summary.Status): $($summary.Verified) verified; $($summary.Eligible) eligible (no write); $($summary.Skipped) skipped; $($summary.AlreadySystem) already System; $($summary.ReadErrors) read errors."
+        Write-Host "$($summary.Status): $($summary.Verified) verified; $($summary.Eligible) eligible (no write); $($summary.Skipped) skipped; $($summary.AlreadySystem) already System; $($summary.ReadErrors) read errors; $($summary.PreservationExceptions) preservation exceptions."
     }
     return [pscustomobject]$summary
 }
@@ -475,5 +495,6 @@ if ($MyInvocation.InvocationName -ne '.') {
     if ([string]::IsNullOrWhiteSpace($PreviewFolder)) { throw '-PreviewFolder is required.' }
     Invoke-SystemEditorApply -PreviewFolder $PreviewFolder -ChecklistPath $ChecklistPath -OutputFolder $OutputFolder `
         -ClientId $ClientId -Apply:$Apply -MaintenanceWindowConfirmed:$MaintenanceWindowConfirmed `
-        -ContinueOnReadError:$ContinueOnReadError | Out-Null
+        -ContinueOnReadError:$ContinueOnReadError `
+        -ContinueOnPreservationDifference:$ContinueOnPreservationDifference | Out-Null
 }

@@ -70,7 +70,8 @@ untouched, records `Skipped: preservation fields unavailable` and the field name
 in `Journal.csv`, and continues with the remaining candidates. This applies to
 both RecheckOnly and Apply. By default access/read exceptions or losing a
 field during the final recheck stop the run; `-ContinueOnReadError` skips those
-pre-write failures. Post-write verification failures always stop the run.
+pre-write failures. Post-write verification failures stop unless the separate
+preservation-difference policy below is explicitly enabled.
 `CompletedWithSkips` does not mean all candidates were remediated. No missing
 field is treated as empty. This fallback verifies the returned text representation, not
 an unavailable underlying typed value.
@@ -107,8 +108,21 @@ remediation. Review skipped journal rows for case-by-case follow-up; rerunning
 the same plan recognizes already-System items and retries still-qualifying skips.
 Plan/scope validation, web authentication/native System Account failures,
 report/backup failures, writes, and all post-write verification failures still
-stop the run. The switch never permits an update with unreadable metadata,
+stop the run with this switch alone. The switch never permits an update with unreadable metadata,
 retries an uncertain write, or rolls back changes.
+
+To continue after readable post-write preservation differences, also pass
+`-ContinueOnPreservationDifference`. The re-read must confirm the same UniqueId
+and native System editor. Differences still get full `Before.csv`, `Changes.csv`
+and `FailedAfter.csv` evidence, plus `Updated System; preservation exception`
+journal rows. These items increment `PreservationExceptions` and `Errors`, never
+`Verified`; the final status is `CompletedWithExceptions`. This policy explicitly
+accepts an unverified result, including possible changed file bytes, dates or
+versions. It does not loosen the comparison rules or claim metadata preservation.
+Write-response failures, identity/editor mismatches, unreadable post-write
+snapshots and report errors still stop. Earlier exception reports must be kept
+for follow-up: a future run sees those items as already System, not newly verified,
+and does not retry or repair them automatically.
 
 The reviewed preview completed with 14,623 candidates and zero issues. No repeat
 full scan is required. Use PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+ from the
@@ -154,7 +168,8 @@ The apply script:
   internal counters and computed representations are not frozen or compared as
   editable metadata. Metadata verification does not independently hash content.
 - By default stops on the first read, write, or preservation-verification failure.
-  `-ContinueOnReadError` permits only the pre-write read skips described above. No blind
+  `-ContinueOnReadError` permits only the pre-write read skips described above;
+  `-ContinueOnPreservationDifference` records the separate post-write exceptions. No blind
   retries or automatic rollback. A response failure may mean the last write did
   succeed: inspect live state and `Journal.csv` before rerunning. Earlier verified
   writes remain applied. On rerun they are recognized as already System Account.
