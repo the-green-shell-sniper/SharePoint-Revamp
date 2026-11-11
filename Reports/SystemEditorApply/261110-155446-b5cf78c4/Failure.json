@@ -1,0 +1,16 @@
+{
+  "WebUrl": "https://whallc.sharepoint.com/sites/HR",
+  "ListId": "eb07b562-b2ad-4e66-99dc-0d634dcba30c",
+  "ItemId": "56",
+  "Stage": "Failed (Skipped: preservation fields unavailable)",
+  "Message": "List does not exist.\n\nThe page you selected contains a list that does not exist.  It may have been deleted by another user.",
+  "ExceptionType": "System.Exception",
+  "ErrorId": "PnP.PowerShell.Commands.Fields.GetField",
+  "Position": "At C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1:293 char:29\r\n+ … $fields = @(Get-PnPField -List $listId -Connection $connection -Error …\r\n+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "ScriptStack": "at Invoke-SystemEditorApply, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 293\r\nat <ScriptBlock>, C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Scripts\\Invoke-SystemEditorRemediation.ps1: line 422",
+  "Exception": "System.Exception: List does not exist.\n\nThe page you selected contains a list that does not exist.  It may have been deleted by another user.",
+  "RequestedFields": [],
+  "MissingTypedFields": [
+    "Facilities"
+  ]
+}
