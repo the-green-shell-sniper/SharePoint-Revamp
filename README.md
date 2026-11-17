@@ -15,7 +15,6 @@ does not prove which individual edits were ShareGate substitutions.
 
 - [Invoke-SystemEditorRemediation.ps1](Scripts/Invoke-SystemEditorRemediation.ps1) - guarded write phase for a completed, reviewed System Editor preview. See [Applying the System Editor cleanup](#applying-the-system-editor-cleanup) below.
 - [Get-SystemEditorRemediationPlan.ps1](Scripts/Get-SystemEditorRemediationPlan.ps1) - **preview only**, with no Apply parameter or SharePoint writes. Reads roots exclusively from `New Site URL` in [NewSiteChecklist.csv](ReferenceFiles/NewSiteChecklist.csv), recursively includes their actual subsites, and deduplicates overlapping roots. Other site collections are not discovered; archive URLs are rejected. Scans files, folders and list items across all lists, including hidden lists. Selects only current Modified strictly before **April 1, 2024 midnight Pacific (07:00 UTC)** and Editor matching the exact login/email `!bposey@whallc.com`, not display name. Run `.\Scripts\Get-SystemEditorRemediationPlan.ps1` in PowerShell 7.4.6+ with PnP.PowerShell 3.3.0+; interactive login uses the existing app ID (override with `-ClientId`). Reports go to a unique folder under `Reports\SystemEditorPlans`: `Plan.csv` contains qualifying items and resolved native `SHAREPOINT\system` IDs; `Coverage.csv`, `Webs.csv`, `Errors.csv` and `Summary.json` disclose scope and incomplete reads. Lists without Modified/Editor fields are explicitly reported as ineligible; web/list containers and library root folders without item-level metadata are not update targets. Access/read errors and missing native accounts for matches cause an incomplete status and terminating error after remaining sites are attempted. Count differences are report-only notes. Run with sufficient access to see all items; permission trimming may still hide content, and live enumeration is not a transactionally consistent snapshot. Keep reports private. A future write phase must preserve all other metadata and account for automation/concurrent edits; this script intentionally cannot apply the plan.
-- [Set-TelephoneDirectorySystemEditor.ps1](Scripts/Set-TelephoneDirectorySystemEditor.ps1) - standalone single-document test: sets the current Modified By of WHA Telephone Directory.docx to the native `SHAREPOINT\system` account only. Requires PowerShell 7.4.6+ and PnP.PowerShell 3.3.0+. Run `.\Scripts\Set-TelephoneDirectorySystemEditor.ps1` to preview, then add `-Apply` to write and verify. Preserves Modified, Created, Author and version number; no older versions or contents are rewritten. Stops if the native account cannot be resolved or assigned; never creates a substitute. Uses interactive login and the existing app client ID (override with `-ClientId`). This test does not apply bulk date/editor filters or scan the checklist. Avoid concurrent edits; automation/Power Automate flows may be triggered. Inspect live state after a failed write/verification before retrying.
 - [Get-DocumentAccessReport.ps1](Scripts/Get-DocumentAccessReport.ps1)
 - [Get-DocumentUrlLookup.ps1](Scripts/Get-DocumentUrlLookup.ps1)
 - [Get-FixItListOverviewOnly.ps1](Scripts/Get-FixItListOverviewOnly.ps1)
@@ -29,7 +28,7 @@ does not prove which individual edits were ShareGate substitutions.
 - [Invoke-CSPermissionSync.ps1](Scripts/Invoke-CSPermissionSync.ps1) - CS-only launcher with Match, DryRun, Apply and measured Verify steps; does not select the other checklist sites.
 - [Invoke-SPPermissionChecklist.ps1](Scripts/Invoke-SPPermissionChecklist.ps1) - sequential processing of checklist pairs and their exact/approved matching descendant webs.
 
-Deprecated scripts are archived in [Deprecated-Scripts/](Deprecated-Scripts/).
+Deprecated scripts are archived in [Deprecated/Deprecated-Scripts/](Deprecated/Deprecated-Scripts/).
 
 ## Applying the System Editor cleanup
 
@@ -182,8 +181,8 @@ helpers, and their readers include sibling parts. Backups are evidence, not an
 automatic restore plan. `CompletedWithSkips` means some candidates were left
 untouched; inspect their journal reasons rather than treating that as full apply.
 
-Offline validation: `.\Scripts\Test-SystemEditorApply.ps1`. This mocks SharePoint
-and performs no remote writes.
+Offline validation artifacts are archived in [Deprecated/Tests/](Deprecated/Tests/).
+They mock SharePoint and perform no remote writes.
 
 ## Synchronizing migrated site permissions
 
@@ -952,8 +951,8 @@ in-memory and limited by `-MaxContentMB` (25 by default); expanded Office text i
 limited to 50 MB. `-NoContent` disables downloads. Comparison errors are warnings
 and evidence, not proof of a match. Scores are heuristics, never approval.
 
-The supplied [old CS](SupportFiles/PermissionsMatrixReports/oldCS_Permissions%20matrix%20report.xlsx)
-and [new CS](SupportFiles/PermissionsMatrixReports/newCS_Permissions%20matrix%20report.xlsx)
+The supplied [old CS](Deprecated/SupportFiles/PermissionsMatrixReports/oldCS_Permissions%20matrix%20report.xlsx)
+and [new CS](Deprecated/SupportFiles/PermissionsMatrixReports/newCS_Permissions%20matrix%20report.xlsx)
 reports informed these defaults: the source snapshot contains 108 custom scopes
 (including the web), 91 explicit Team Site Members Read assignments, and the target
 has 81 explicit extra Contribute assignments for CentralPark.CS.Designer. These
