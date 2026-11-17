@@ -1,0 +1,16 @@
+{
+  "Mode": "Apply",
+  "Status": "CompletedWithExceptions",
+  "PreviewFolder": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\SystemEditorPlans\\20261020-202121-393-a73dde48",
+  "Candidates": 14623,
+  "Verified": 2061,
+  "Eligible": 0,
+  "Skipped": 6544,
+  "AlreadySystem": 5171,
+  "Errors": 849,
+  "ReadErrors": 2,
+  "PreservationExceptions": 847,
+  "ContinueOnReadError": true,
+  "ContinueOnPreservationDifference": true,
+  "ReportFolder": "C:\\Users\\!bposey\\Desktop\\GitHub\\SharePoint-Revamp\\Reports\\SystemEditorApply\\261117-113405-be954f18"
+}
